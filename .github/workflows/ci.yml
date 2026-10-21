@@ -1,0 +1,231 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Typecheck · Lint · Format · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - name: Install (lockfile beku)
+        run: bun install --frozen-lockfile
+      - name: Typecheck
+        run: bunx tsc --noEmit
+      - name: Lint
+        run: bun run lint
+      - name: Format
+        run: bun run check
+      - name: Build
+        run: bun --bun run build
+
+  audit:
+    name: Audit dependensi (SCA)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      # continue-on-error: advisory tetap tampil di ringkasan job tanpa memblokir PR.
+      - name: bun audit
+        run: bun audit
+        continue-on-error: true
+
+  test:
+    name: Unit test (Postgres)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pos
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      - name: Tulis .env.local untuk CI
+        run: |
+          cat <<'EOF' > .env.local
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pos
+          BETTER_AUTH_URL=http://localhost:3000
+          BETTER_AUTH_SECRET=ci-secret-ci-secret-ci-secret-1234567890
+          TRUSTED_ORIGINS=http://localhost:3000
+          TRUST_PROXY=false
+          EOF
+      - name: Apply migrations (migrate deploy)
+        run: bun run db:migrate:deploy
+      - name: Seed data
+        run: bun run db:seed
+      - name: Test
+        run: bunx vitest run --coverage
+
+  e2e:
+    name: End-to-end Playwright test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pos
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      - name: Tulis .env.local untuk CI
+        run: |
+          cat <<'EOF' > .env.local
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pos
+          BETTER_AUTH_URL=http://localhost:3000
+          BETTER_AUTH_SECRET=ci-secret-ci-secret-ci-secret-1234567890
+          TRUSTED_ORIGINS=http://localhost:3000
+          TRUST_PROXY=false
+          EOF
+      - name: Apply migrations (migrate deploy)
+        run: bun run db:migrate:deploy
+      - name: Seed data
+        run: bun run db:seed
+      - name: Install Playwright browser
+        run: bunx playwright install --with-deps chromium
+      - name: Run Playwright tests
+        run: bunx playwright test
+      - name: Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  migrasi:
+    name: Migration & schema drift (Postgres)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pos
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      postgres-shadow:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pos_shadow
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      - name: Tulis .env.local untuk CI
+        run: |
+          cat <<'EOF' > .env.local
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pos
+          SHADOW_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/pos_shadow
+          BETTER_AUTH_URL=http://localhost:3000
+          BETTER_AUTH_SECRET=ci-secret-ci-secret-ci-secret-1234567890
+          TRUSTED_ORIGINS=http://localhost:3000
+          TRUST_PROXY=false
+          EOF
+      - name: Apply migrations (migrate deploy)
+        run: bun run db:migrate:deploy
+      - name: Cek status migrasi
+        run: bun run db:migrate:status
+      - name: Cek drift schema vs migrations
+        run: bun run db:migrate:drift

@@ -1,0 +1,34 @@
+name: Sync labels
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    name: Sinkronkan label standar
+    runs-on: ubuntu-latest
+    env:
+      GH_REPO: ${{ github.repository }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Buat atau perbarui label
+        run: |
+          gh label create "type:bug" --color "d73a4a" --description "Perilaku salah atau regresi" --force
+          gh label create "type:feature" --color "a2eeef" --description "Fitur atau peningkatan" --force
+          gh label create "type:chore" --color "cfd3d7" --description "Pemeliharaan tanpa perubahan perilaku" --force
+          gh label create "type:docs" --color "0075ca" --description "Dokumentasi" --force
+          gh label create "type:security" --color "b60205" --description "Keamanan" --force
+          gh label create "priority:P0" --color "b60205" --description "Data uang atau keamanan rusak" --force
+          gh label create "priority:P1" --color "d93f0b" --description "Menghambat operasional" --force
+          gh label create "priority:P2" --color "fbca04" --description "Penting, ada workaround" --force
+          gh label create "priority:P3" --color "c2e0c6" --description "Nice to have" --force
+          gh label create "area:auth" --color "5319e7" --description "Autentikasi dan sesi" --force
+          gh label create "area:db" --color "006b75" --description "Database, Prisma, migrasi" --force
+          gh label create "area:printer" --color "1d76db" --description "Printer dan percetakan" --force
+          gh label create "area:ui" --color "e99695" --description "Antarmuka web" --force
+          gh label create "area:ci" --color "bfd4f2" --description "CI/CD dan GitHub" --force
+          gh label create "needs:triage" --color "ededed" --description "Belum ditinjau" --force

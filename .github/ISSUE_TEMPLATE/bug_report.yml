@@ -1,0 +1,75 @@
+name: Bug report
+description: Laporkan perilaku yang salah atau regresi
+title: '[Bug]: '
+labels: ['type:bug', 'needs:triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Jangan menulis kredensial, token, atau data pelanggan di issue publik.
+        Untuk kerentanan keamanan, gunakan tautan pelaporan privat di halaman
+        pemilihan issue.
+
+  - type: textarea
+    id: ringkasan
+    attributes:
+      label: Ringkasan
+      description: Apa yang salah, dan di halaman/fitur mana?
+      placeholder: 'Contoh: tombol simpan di /produk gagal saat harga kosong.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: langkah
+    attributes:
+      label: Langkah reproduksi
+      description: Tulis langkah yang bisa diikuti orang lain.
+      placeholder: |
+        1. Buka ...
+        2. Isi ...
+        3. Klik ...
+        4. Lihat error ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: harapan
+    attributes:
+      label: Perilaku yang diharapkan
+    validations:
+      required: true
+
+  - type: textarea
+    id: aktual
+    attributes:
+      label: Perilaku aktual
+      description: Sertakan pesan error dan `ref` log bila ada.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - auth
+        - db
+        - printer
+        - ui
+        - ci
+        - lainnya
+    validations:
+      required: true
+
+  - type: input
+    id: versi
+    attributes:
+      label: Versi / commit
+      description: Branch, commit, atau URL deployment.
+      placeholder: 'main @ abc1234'
+
+  - type: textarea
+    id: tambahan
+    attributes:
+      label: Konteks tambahan
+      description: Screenshot, log, atau catatan lain. Sensor data sensitif.

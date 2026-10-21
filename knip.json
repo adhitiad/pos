@@ -1,0 +1,13 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}", "prisma/**/*.ts"],
+  "project": ["src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}", "prisma/**/*.ts"],
+  "ignoreDependencies": [
+    "pino-pretty",
+    "tailwindcss",
+    "tw-animate-css",
+    "@tailwindcss/typography"
+  ],
+  "ignoreBinaries": ["run"],
+  "ignoreExportsUsedInFile": true
+}

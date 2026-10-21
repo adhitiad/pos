@@ -1,0 +1,43 @@
+# Dependensi & build
+node_modules
+dist
+dist-ssr
+.nitro
+.tanstack
+.vinxi
+.wrangler
+.output
+__unconfig*
+
+# Deploy dari GitHub — artefak CLI lokal tak di-commit
+.vercel/
+.netlify/
+
+# Test & laporan
+test-results/
+playwright-report/
+coverage/
+.playwright/
+
+# Env — HANYA template yang di-commit. Jangan pernah commit rahasia.
+.env
+.env.*
+*.local
+!.env.example
+
+# Artefak lokal & cache alat
+build-output.txt
+T.txt
+todos.json
+.cta.json
+.pipeline/
+*.log
+.eslintcache
+*.tsbuildinfo
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+ 
+audit-**.md

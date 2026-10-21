@@ -1,0 +1,14 @@
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+src/paraglide/
+src/generated/
+project.inlang/cache/
+.agents/
+.pipeline/
+.output/
+.vercel/
+.netlify/
+dist/
+test-results/
+playwright-report/

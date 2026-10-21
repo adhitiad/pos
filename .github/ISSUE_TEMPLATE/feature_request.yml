@@ -1,0 +1,63 @@
+name: Feature request
+description: Usulkan fitur atau perbaikan alur kerja
+title: '[Feature]: '
+labels: ['type:feature', 'needs:triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Jelaskan masalah pengguna terlebih dahulu, bukan hanya solusi teknis.
+        Cek `docs/DAFTAR-TUGAS.md` agar tidak menduplikasi item yang sudah ada.
+
+  - type: textarea
+    id: masalah
+    attributes:
+      label: Masalah yang ingin diselesaikan
+      description: Siapa yang terdampak dan dalam situasi apa?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solusi
+    attributes:
+      label: Solusi yang diusulkan
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatif
+    attributes:
+      label: Alternatif yang sudah dipertimbangkan
+      description: Termasuk workaround saat ini, bila ada.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - auth
+        - db
+        - printer
+        - ui
+        - ci
+        - lainnya
+    validations:
+      required: true
+
+  - type: dropdown
+    id: prioritas
+    attributes:
+      label: Usulan prioritas
+      options:
+        - P0 — data uang/keamanan rusak
+        - P1 — menghambat operasional
+        - P2 — penting, ada workaround
+        - P3 — nice to have
+    validations:
+      required: true
+
+  - type: textarea
+    id: konteks
+    attributes:
+      label: Konteks tambahan
+      description: Mockup, referensi, atau batasan yang perlu diketahui.
