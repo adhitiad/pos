@@ -762,10 +762,11 @@
 
 ### Fase 0 — Repositori & proteksi branch
 
-- [ ] **CICD-01** Siapkan repo GitHub: commit awal, remote `origin`, branch default
+- [x] **CICD-01** Siapkan repo GitHub: commit awal, remote `origin`, branch default
       `main` (atau ubah trigger workflow bila tetap `master`), lalu push. Kondisi
       sekarang: branch `master`, **belum ada commit**, **belum ada remote**.
-      Kriteria: `git log` punya commit, `git remote -v` terisi, push pertama memicu CI.
+      Selesai: repo private `https://github.com/adhitiad/pos`, branch `main`,
+      commit awal `8854fa9`, remote `origin`, push pertama memicu CI.
 
 - [ ] **CICD-02** Aktifkan ruleset/branch protection untuk `main`: wajib PR, wajib
       check `quality` + `test` + `e2e`, larang force-push dan hapus branch,
@@ -831,7 +832,8 @@
       Opsi aman: `workflow_dispatch` dengan environment `production` →
       `db:migrate:deploy` → deploy hook/CLI provider → smoke test. Matikan
       auto-deploy provider sementara bila urutan belum dijamin.
-      Kriteria: deploy aplikasi tidak pernah berjalan sebelum migrasi sukses.
+      Keputusan: **Vercel**. Kriteria: deploy aplikasi tidak pernah berjalan
+      sebelum migrasi sukses.
 
 - [ ] **CICD-11** Buat GitHub Environment `production` (required reviewer +
       secrets `DATABASE_URL_UNPOOLED`, kredensial provider) dan `preview`
@@ -851,9 +853,8 @@
       (`type:*`, `priority:P0–P3`, `area:auth|db|printer|ui|ci`).
       Selesai: `bug_report.yml`, `feature_request.yml`, `config.yml` (link
       private advisory), dan `.github/workflows/labels.yml`. Label otomatis
-      terpasang lewat `labels: [...]` di template. Link keamanan masih placeholder
-      `OWNER/REPO` dan diisi otomatis oleh `scripts/siapkan-github.ts --config-only`
-      setelah repo ada.
+      terpasang lewat `labels: [...]` di template. Link keamanan sudah diarahkan
+      ke `adhitiad/pos` oleh `scripts/siapkan-github.ts --config-only`.
 
 - [x] **CICD-14** Tambah `PULL_REQUEST_TEMPLATE.md` berisi checklist gate
       (`tsc`, `lint`, `check`, `test`, `test:e2e`, `build`), catatan migrasi,
@@ -864,8 +865,8 @@
 - [ ] **CICD-15** Buat GitHub Project (board: Backlog → Ready → In Progress →
       Review → Done) dengan field Priority/Area/Estimate, lalu buat issue dari
       item P0/P1, PRN, dan CI/CD di dokumen ini. `DAFTAR-TUGAS.md` tetap sumber
-      kebenaran; issue hanya tautan kerja. **Terblokir:** repo belum ada (CICD-01)
-      dan token `gh` belum punya scope `project`. Persiapan selesai:
+      kebenaran; issue hanya tautan kerja. **Terblokir:** token `gh` belum punya
+      scope `project` (repo `adhitiad/pos` sudah ada). Persiapan selesai:
       `docs/GITHUB-SETUP.md` + `scripts/siapkan-github.ts` (dry-run menghasilkan
       kandidat issue dari item yang belum selesai, idempoten terhadap judul).
 
@@ -873,8 +874,10 @@
       Dependabot alerts/security updates, dan `dependency-review-action` pada PR.
       `dependabot.yml` sudah ada; lengkapi enforcement-nya. CodeQL opsional bila
       ingin SAST berkelanjutan. **Sebagian selesai:** `SECURITY.md` dan
-      `.github/workflows/dependency-review.yml` sudah ada; aktivasi setting repo
-      menunggu CICD-01 dan perintah di `docs/GITHUB-SETUP.md` bagian 6.
+      `.github/workflows/dependency-review.yml` sudah ada; Dependabot alerts dan
+      automated security fixes sudah diaktifkan lewat API. Private vulnerability
+      reporting mengembalikan 404 (fitur tidak tersedia untuk repo private ini),
+      jadi kanal privat masih mengandalkan maintainer sampai fitur tersedia.
 
 ### Fase 4 — Operasional & konsistensi dokumen
 
@@ -889,6 +892,8 @@
       Selesai: bagian 5 kini menyebut `:3100`, `reuseExistingServer: false` di CI,
       dan reuse hanya di lokal; tidak ada lagi instruksi e2e ke `:3000`.
 
-- [ ] **CICD-19** Verifikasi dari clone bersih: jalankan seluruh job CI di GitHub,
+- [x] **CICD-19** Verifikasi dari clone bersih: jalankan seluruh job CI di GitHub,
       catat URL run yang hijau, lalu centang item ini. Jangan mengklaim CI siap
-      sebelum run nyata membuktikannya.
+      sebelum run nyata membuktikannya. Selesai: run hijau
+      `https://github.com/adhitiad/pos/actions/runs/39699156327` — quality,
+      unit test, e2e, audit, dan migration/drift semuanya `success`.
