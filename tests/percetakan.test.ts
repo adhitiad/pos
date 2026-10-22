@@ -21,6 +21,7 @@ const printerIds: string[] = []
 const produkIds: string[] = []
 const transaksiIds: string[] = []
 const jobIds: string[] = []
+const userIds: string[] = []
 
 afterAll(async () => {
   await prisma.printJob.deleteMany({ where: { id: { in: jobIds } } })
@@ -36,6 +37,7 @@ afterAll(async () => {
   await prisma.transaksi.deleteMany({ where: { id: { in: transaksiIds } } })
   await prisma.produk.deleteMany({ where: { id: { in: produkIds } } })
   await prisma.printer.deleteMany({ where: { id: { in: printerIds } } })
+  await prisma.user.deleteMany({ where: { id: { in: userIds } } })
   await prisma.$disconnect()
 })
 
@@ -103,8 +105,19 @@ describe('printer — master', () => {
   })
 
   it('perangkat hasil pindai disimpan per pengguna dan tidak duplikat', async () => {
-    const user = await prisma.user.findFirst({ select: { id: true } })
-    expect(user).not.toBeNull()
+    const penanda = `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+    const user = await prisma.user.create({
+      data: {
+        id: `uji-perangkat-${penanda}`,
+        name: 'Pengguna Uji Perangkat',
+        email: `uji-perangkat-${penanda}@example.test`,
+        emailVerified: true,
+        role: 'KASIR',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    })
+    userIds.push(user.id)
     const perangkat = `uji-perangkat-${Date.now()}`
     const pertama = await daftarkanPrinterPerangkat(
       {
@@ -115,11 +128,11 @@ describe('printer — master', () => {
         serialNumber: 'SN-UJI-1',
         productName: 'TM-Uji',
       },
-      user!.id,
+      user.id,
     )
     printerIds.push(pertama.id)
 
-    expect(pertama.userId).toBe(user!.id)
+    expect(pertama.userId).toBe(user.id)
     expect(pertama.koneksi).toBe('BLUETOOTH')
 
     const kedua = await daftarkanPrinterPerangkat(
@@ -128,14 +141,14 @@ describe('printer — master', () => {
         perangkat,
         koneksi: 'BLUETOOTH',
       },
-      user!.id,
+      user.id,
     )
     expect(kedua.id).toBe(pertama.id)
     expect(kedua.nama).toBe('Printer BT Uji 2')
     expect(kedua.vendorName).toBe('Vendor Uji')
     expect(kedua.serialNumber).toBe('SN-UJI-1')
 
-    const daftar = await daftarPrinterPerangkat(user!.id)
+    const daftar = await daftarPrinterPerangkat(user.id)
     expect(daftar.some((p) => p.id === pertama.id)).toBe(true)
 
     await updatePrinter({

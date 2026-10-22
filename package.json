@@ -9,6 +9,7 @@
     "predev": "prisma generate",
     "dev": "vite dev --port 3000",
     "generate-routes": "tsr generate",
+    "i18n:compile": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint",
