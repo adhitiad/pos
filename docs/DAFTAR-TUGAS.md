@@ -771,7 +771,11 @@
 - [ ] **CICD-02** Aktifkan ruleset/branch protection untuk `main`: wajib PR, wajib
       check `quality` + `test` + `e2e`, larang force-push dan hapus branch,
       minimal 1 approval. Kriteria: push langsung ke `main` ditolak; PR merah tidak
-      bisa di-merge.
+      bisa di-merge. **Terblokir:** repo private di GitHub Free; API ruleset dan
+      branch protection mengembalikan 403 "Upgrade to GitHub Pro or make this
+      repository public". Aturan yang disepakati: wajib PR + check, 0 approval
+      (solo), larang force-push/hapus branch. Pilihan: upgrade Pro, ubah repo jadi
+      public, atau terima tanpa proteksi.
 
 ### Fase 1 — Perbaiki pipeline yang sekarang rusak
 
@@ -832,17 +836,20 @@
       Opsi aman: `workflow_dispatch` dengan environment `production` →
       `db:migrate:deploy` → deploy hook/CLI provider → smoke test. Matikan
       auto-deploy provider sementara bila urutan belum dijamin.
-      Keputusan: **Vercel**. Kriteria: deploy aplikasi tidak pernah berjalan
-      sebelum migrasi sukses.
+      Keputusan: **Vercel**. **Terblokir:** butuh `VERCEL_TOKEN`,
+      `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, dan deploy hook/CLI yang disetujui.
+      Kriteria: deploy aplikasi tidak pernah berjalan sebelum migrasi sukses.
 
 - [ ] **CICD-11** Buat GitHub Environment `production` (required reviewer +
       secrets `DATABASE_URL_UNPOOLED`, kredensial provider) dan `preview`
       (database terpisah). Jangan pernah menjalankan `db:seed` di produksi.
+      **Terblokir:** butuh kredensial Vercel dan database preview/produksi.
       Kriteria: job produksi menunggu approval; secret tidak muncul di log.
 
 - [ ] **CICD-12** Smoke test pasca-deploy: `GET /api/health` = 200
       `{database:"ok"}`, halaman login tampil, `db:migrate:status` up to date.
       Sertakan rencana rollback (redeploy versi sebelumnya + migrasi expand/contract).
+      **Terblokir:** menunggu CICD-10/11 (deploy Vercel + environment).
       Kriteria: deploy gagal terdeteksi otomatis, bukan menunggu laporan user.
 
 ### Fase 3 — GitHub Issues, Project, dan tata kelola
@@ -854,7 +861,8 @@
       Selesai: `bug_report.yml`, `feature_request.yml`, `config.yml` (link
       private advisory), dan `.github/workflows/labels.yml`. Label otomatis
       terpasang lewat `labels: [...]` di template. Link keamanan sudah diarahkan
-      ke `adhitiad/pos` oleh `scripts/siapkan-github.ts --config-only`.
+      ke `adhitiad/pos` oleh `scripts/siapkan-github.ts --config-only`; workflow
+      label sudah dijalankan dan 15 label standar terpasang.
 
 - [x] **CICD-14** Tambah `PULL_REQUEST_TEMPLATE.md` berisi checklist gate
       (`tsc`, `lint`, `check`, `test`, `test:e2e`, `build`), catatan migrasi,
@@ -867,8 +875,9 @@
       item P0/P1, PRN, dan CI/CD di dokumen ini. `DAFTAR-TUGAS.md` tetap sumber
       kebenaran; issue hanya tautan kerja. **Terblokir:** token `gh` belum punya
       scope `project` (repo `adhitiad/pos` sudah ada). Persiapan selesai:
-      `docs/GITHUB-SETUP.md` + `scripts/siapkan-github.ts` (dry-run menghasilkan
-      kandidat issue dari item yang belum selesai, idempoten terhadap judul).
+      `docs/GITHUB-SETUP.md` + `scripts/siapkan-github.ts` (dry-run 21 kandidat
+      issue dari item yang belum selesai, idempoten terhadap judul). Jalankan
+      `gh auth refresh -s project` lalu `bun run scripts/siapkan-github.ts --project <nomor>`.
 
 - [ ] **CICD-16** Tambah `SECURITY.md`, aktifkan private vulnerability reporting,
       Dependabot alerts/security updates, dan `dependency-review-action` pada PR.
