@@ -37,7 +37,9 @@ export type PrinterMinAggregateOutputType = {
   serialNumber: string | null
   productName: string | null
   dipindaiPada: Date | null
+  terakhirDipakai: Date | null
   default: boolean | null
+  defaultPengguna: boolean | null
   aktif: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -56,7 +58,9 @@ export type PrinterMaxAggregateOutputType = {
   serialNumber: string | null
   productName: string | null
   dipindaiPada: Date | null
+  terakhirDipakai: Date | null
   default: boolean | null
+  defaultPengguna: boolean | null
   aktif: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -75,7 +79,9 @@ export type PrinterCountAggregateOutputType = {
   serialNumber: number
   productName: number
   dipindaiPada: number
+  terakhirDipakai: number
   default: number
+  defaultPengguna: number
   aktif: number
   createdAt: number
   updatedAt: number
@@ -96,7 +102,9 @@ export type PrinterMinAggregateInputType = {
   serialNumber?: true
   productName?: true
   dipindaiPada?: true
+  terakhirDipakai?: true
   default?: true
+  defaultPengguna?: true
   aktif?: true
   createdAt?: true
   updatedAt?: true
@@ -115,7 +123,9 @@ export type PrinterMaxAggregateInputType = {
   serialNumber?: true
   productName?: true
   dipindaiPada?: true
+  terakhirDipakai?: true
   default?: true
+  defaultPengguna?: true
   aktif?: true
   createdAt?: true
   updatedAt?: true
@@ -134,7 +144,9 @@ export type PrinterCountAggregateInputType = {
   serialNumber?: true
   productName?: true
   dipindaiPada?: true
+  terakhirDipakai?: true
   default?: true
+  defaultPengguna?: true
   aktif?: true
   createdAt?: true
   updatedAt?: true
@@ -226,7 +238,9 @@ export type PrinterGroupByOutputType = {
   serialNumber: string | null
   productName: string | null
   dipindaiPada: Date | null
+  terakhirDipakai: Date | null
   default: boolean
+  defaultPengguna: boolean
   aktif: boolean
   createdAt: Date
   updatedAt: Date
@@ -266,7 +280,9 @@ export type PrinterWhereInput = {
   serialNumber?: Prisma.StringNullableFilter<"Printer"> | string | null
   productName?: Prisma.StringNullableFilter<"Printer"> | string | null
   dipindaiPada?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
+  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
   default?: Prisma.BoolFilter<"Printer"> | boolean
+  defaultPengguna?: Prisma.BoolFilter<"Printer"> | boolean
   aktif?: Prisma.BoolFilter<"Printer"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
@@ -287,7 +303,9 @@ export type PrinterOrderByWithRelationInput = {
   serialNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   productName?: Prisma.SortOrderInput | Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrderInput | Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrderInput | Prisma.SortOrder
   default?: Prisma.SortOrder
+  defaultPengguna?: Prisma.SortOrder
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -312,7 +330,9 @@ export type PrinterWhereUniqueInput = Prisma.AtLeast<{
   serialNumber?: Prisma.StringNullableFilter<"Printer"> | string | null
   productName?: Prisma.StringNullableFilter<"Printer"> | string | null
   dipindaiPada?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
+  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
   default?: Prisma.BoolFilter<"Printer"> | boolean
+  defaultPengguna?: Prisma.BoolFilter<"Printer"> | boolean
   aktif?: Prisma.BoolFilter<"Printer"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
@@ -333,7 +353,9 @@ export type PrinterOrderByWithAggregationInput = {
   serialNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   productName?: Prisma.SortOrderInput | Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrderInput | Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrderInput | Prisma.SortOrder
   default?: Prisma.SortOrder
+  defaultPengguna?: Prisma.SortOrder
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -358,7 +380,9 @@ export type PrinterScalarWhereWithAggregatesInput = {
   serialNumber?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   productName?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   dipindaiPada?: Prisma.DateTimeNullableWithAggregatesFilter<"Printer"> | Date | string | null
+  terakhirDipakai?: Prisma.DateTimeNullableWithAggregatesFilter<"Printer"> | Date | string | null
   default?: Prisma.BoolWithAggregatesFilter<"Printer"> | boolean
+  defaultPengguna?: Prisma.BoolWithAggregatesFilter<"Printer"> | boolean
   aktif?: Prisma.BoolWithAggregatesFilter<"Printer"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Printer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Printer"> | Date | string
@@ -376,7 +400,9 @@ export type PrinterCreateInput = {
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
+  terakhirDipakai?: Date | string | null
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -397,7 +423,9 @@ export type PrinterUncheckedCreateInput = {
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
+  terakhirDipakai?: Date | string | null
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -416,7 +444,9 @@ export type PrinterUpdateInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -437,7 +467,9 @@ export type PrinterUncheckedUpdateInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -457,7 +489,9 @@ export type PrinterCreateManyInput = {
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
+  terakhirDipakai?: Date | string | null
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -475,7 +509,9 @@ export type PrinterUpdateManyMutationInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -494,7 +530,9 @@ export type PrinterUncheckedUpdateManyInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -528,7 +566,9 @@ export type PrinterCountOrderByAggregateInput = {
   serialNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrder
   default?: Prisma.SortOrder
+  defaultPengguna?: Prisma.SortOrder
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -547,7 +587,9 @@ export type PrinterMaxOrderByAggregateInput = {
   serialNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrder
   default?: Prisma.SortOrder
+  defaultPengguna?: Prisma.SortOrder
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -566,7 +608,9 @@ export type PrinterMinOrderByAggregateInput = {
   serialNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrder
   default?: Prisma.SortOrder
+  defaultPengguna?: Prisma.SortOrder
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -647,7 +691,9 @@ export type PrinterCreateWithoutUserInput = {
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
+  terakhirDipakai?: Date | string | null
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -666,7 +712,9 @@ export type PrinterUncheckedCreateWithoutUserInput = {
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
+  terakhirDipakai?: Date | string | null
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -715,7 +763,9 @@ export type PrinterScalarWhereInput = {
   serialNumber?: Prisma.StringNullableFilter<"Printer"> | string | null
   productName?: Prisma.StringNullableFilter<"Printer"> | string | null
   dipindaiPada?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
+  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
   default?: Prisma.BoolFilter<"Printer"> | boolean
+  defaultPengguna?: Prisma.BoolFilter<"Printer"> | boolean
   aktif?: Prisma.BoolFilter<"Printer"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
@@ -733,7 +783,9 @@ export type PrinterCreateWithoutJobsInput = {
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
+  terakhirDipakai?: Date | string | null
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -753,7 +805,9 @@ export type PrinterUncheckedCreateWithoutJobsInput = {
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
+  terakhirDipakai?: Date | string | null
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -787,7 +841,9 @@ export type PrinterUpdateWithoutJobsInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -807,7 +863,9 @@ export type PrinterUncheckedUpdateWithoutJobsInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -825,7 +883,9 @@ export type PrinterCreateManyUserInput = {
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
+  terakhirDipakai?: Date | string | null
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -843,7 +903,9 @@ export type PrinterUpdateWithoutUserInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -862,7 +924,9 @@ export type PrinterUncheckedUpdateWithoutUserInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -881,7 +945,9 @@ export type PrinterUncheckedUpdateManyWithoutUserInput = {
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -931,7 +997,9 @@ export type PrinterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   serialNumber?: boolean
   productName?: boolean
   dipindaiPada?: boolean
+  terakhirDipakai?: boolean
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -953,7 +1021,9 @@ export type PrinterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   serialNumber?: boolean
   productName?: boolean
   dipindaiPada?: boolean
+  terakhirDipakai?: boolean
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -973,7 +1043,9 @@ export type PrinterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   serialNumber?: boolean
   productName?: boolean
   dipindaiPada?: boolean
+  terakhirDipakai?: boolean
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -993,13 +1065,15 @@ export type PrinterSelectScalar = {
   serialNumber?: boolean
   productName?: boolean
   dipindaiPada?: boolean
+  terakhirDipakai?: boolean
   default?: boolean
+  defaultPengguna?: boolean
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PrinterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "nama" | "tipe" | "lokasi" | "perangkat" | "koneksi" | "vendorId" | "vendorName" | "serialNumber" | "productName" | "dipindaiPada" | "default" | "aktif" | "createdAt" | "updatedAt", ExtArgs["result"]["printer"]>
+export type PrinterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "nama" | "tipe" | "lokasi" | "perangkat" | "koneksi" | "vendorId" | "vendorName" | "serialNumber" | "productName" | "dipindaiPada" | "terakhirDipakai" | "default" | "defaultPengguna" | "aktif" | "createdAt" | "updatedAt", ExtArgs["result"]["printer"]>
 export type PrinterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Printer$userArgs<ExtArgs>
   jobs?: boolean | Prisma.Printer$jobsArgs<ExtArgs>
@@ -1031,7 +1105,9 @@ export type $PrinterPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     serialNumber: string | null
     productName: string | null
     dipindaiPada: Date | null
+    terakhirDipakai: Date | null
     default: boolean
+    defaultPengguna: boolean
     aktif: boolean
     createdAt: Date
     updatedAt: Date
@@ -1472,7 +1548,9 @@ export interface PrinterFieldRefs {
   readonly serialNumber: Prisma.FieldRef<"Printer", 'String'>
   readonly productName: Prisma.FieldRef<"Printer", 'String'>
   readonly dipindaiPada: Prisma.FieldRef<"Printer", 'DateTime'>
+  readonly terakhirDipakai: Prisma.FieldRef<"Printer", 'DateTime'>
   readonly default: Prisma.FieldRef<"Printer", 'Boolean'>
+  readonly defaultPengguna: Prisma.FieldRef<"Printer", 'Boolean'>
   readonly aktif: Prisma.FieldRef<"Printer", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Printer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Printer", 'DateTime'>

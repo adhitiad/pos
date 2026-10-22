@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest'
 
-import { prisma } from '../src/db.js'
+import { prisma } from '../../src/db.js'
 import { buatRetur } from '#/server/retur'
 import { BuatReturSchema } from '#/validations/retur'
 

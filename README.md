@@ -1,7 +1,14 @@
-# POS — Kasir + Buku Besar
+# POS — Kasir, Buku Besar + Percetakan
 
-Aplikasi kasir (POS) + akuntansi buku besar. TanStack Start (React, file-router),
-PostgreSQL via Prisma 7, login Google via Better Auth. Bahasa: en/id/zh/ko (Paraglide).
+Aplikasi point-of-sale untuk kasir, akuntansi buku besar, dan antrean cetak
+(termasuk pemindaian printer). TanStack Start (React, file-router), PostgreSQL
+via Prisma 7, login Google via Better Auth. Bahasa: en/id/zh/ko (Paraglide).
+
+Indeks dokumentasi: [`docs/README.md`](docs/README.md) · PRD manusia:
+[`docs/PRD.md`](docs/PRD.md) · kontrak agen:
+[`docs/PRD-AI.md`](docs/PRD-AI.md) · status tugas:
+[`docs/DAFTAR-TUGAS.md`](docs/DAFTAR-TUGAS.md) · performa:
+[`docs/PERFORMA.md`](docs/PERFORMA.md) · lisensi: [`LICENSE`](LICENSE).
 
 ## Prasyarat
 
@@ -20,60 +27,60 @@ bun --bun run dev   # http://localhost:3000
 
 Setup Google OAuth langkah-demi-langkah: `docs/setup-google-oauth.md`.
 
-## Deploy via GitHub (Vercel / Netlify)
+## Deploy produksi (Vercel)
 
-Deploy dilakukan dari repo GitHub, bukan CLI lokal. Push ke `main`, impor repo
-sekali di provider, lalu setiap push berikutnya dibangun otomatis.
+Provider produksi: **Vercel**. Alurnya `workflow_dispatch` → environment
+`production` → `db:migrate:deploy` → deploy Vercel → smoke test. Auto-deploy
+`main` dimatikan di `vercel.json` agar deploy tidak pernah mendahului migrasi.
+Bootstrap pertama: lihat `docs/DEPLOY.md` §3.3. Repo memakai **GitHub Free**,
+jadi required reviewer tidak dipakai; gate produksi adalah dispatch manual dari
+`main` + branch policy `main`, bukan auto-deploy. Panduan lengkap:
+[`docs/DEPLOY.md`](docs/DEPLOY.md).
 
-| Provider | Konfigurasi repo | Build                                                                               |
-| -------- | ---------------- | ----------------------------------------------------------------------------------- |
-| Vercel   | `vercel.json`    | `bun install`, `NITRO_PRESET=vercel bun run build`, runtime Bun 1.x                 |
-| Netlify  | `netlify.toml`   | Bun 1.4.2, `bun run build`, publish `dist`, rewrite ke `/.netlify/functions/server` |
+| Provider | Konfigurasi repo | Status                     |
+| -------- | ---------------- | -------------------------- |
+| Vercel   | `vercel.json`    | produksi aktif             |
+| Netlify  | `netlify.toml`   | cadangan, bukan alur aktif |
 
-Langkah:
+Langkah singkat:
 
-1. Push repo ke GitHub (privat disarankan). `.env.local`, `.vercel/`, dan
-   `.netlify/` tidak ikut ter-commit.
-2. Vercel: **Add New → Project → Import Git Repository**. Biarkan root directory
-   di root repo; `vercel.json` mengatur install/build/framework. Netlify:
-   **Add new site → Import an existing project → GitHub**; `netlify.toml`
-   mengatur build, publish, dan rewrite.
-3. Isi environment untuk Production (dan Preview bila dipakai):
-   `DATABASE_URL` (Neon pooled), `DATABASE_URL_UNPOOLED` (direct, untuk migrasi),
-   `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID`,
-   `GOOGLE_CLIENT_SECRET`, `OWNER_EMAILS`, `KASIR_EMAILS` (opsional),
-   `TRUSTED_ORIGINS`, `TRUST_PROXY=true`, serta kredensial Cloudinary bila
-   upload foto dipakai. `LOG_LEVEL=info` opsional.
-4. Set `BETTER_AUTH_URL` ke URL produksi dan `TRUSTED_ORIGINS` ke origin yang
-   sama; daftarkan callback Google `https://<domain>/api/auth/callback/google`.
-5. Migrasi **tidak** dijalankan oleh build provider. Sebelum deploy yang
-   membawa migration baru, jalankan `bun run db:migrate:deploy` dengan env
-   produksi (`DATABASE_URL_UNPOOLED`). Skrip DB membaca `.env.local`, jadi isi
-   sementara dengan kredensial Neon produksi atau jalankan dari CI yang menulis
-   file itu dari secret. Jangan memakai `db:push` di produksi.
+1. Hubungkan repo ke Vercel sekali; biarkan root directory di root repo.
+2. Isi Vercel Production env: `DATABASE_URL` (pooled), `BETTER_AUTH_URL`,
+   `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`, `OWNER_EMAILS`,
+   `KASIR_EMAILS` (opsional), `TRUSTED_ORIGINS`, `TRUST_PROXY=true`, plus
+   Cloudinary bila dipakai.
+3. Isi secret environment `production`: `DATABASE_URL_UNPOOLED`, `VERCEL_TOKEN`,
+   `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`. Di GitHub Free, lewati required
+   reviewer dan andalkan dispatch manual; aktifkan reviewer hanya bila plan
+   di-upgrade.
+4. Daftarkan callback Google `https://<domain>/api/auth/callback/google`.
+5. Jalankan `gh workflow run deploy-production.yml` dari `main` (setujui
+   environment bila reviewer aktif), lalu pantau smoke test.
+6. Jangan memakai `db:push` atau `db:seed` di produksi.
 
-Preview deployment memakai env Preview; arahkan ke database terpisah bila tidak
-ingin data produksi tersentuh. Detail operasional: `docs/OPERASIONAL.md`.
+Preview PR memakai Vercel Preview environment dan database terpisah; jangan
+mengarahkannya ke database produksi. Detail operasional:
+[`docs/OPERASIONAL.md`](docs/OPERASIONAL.md).
 
 ## Env (`.env.local`)
 
-| Key                                            | Isi                                                                       |
-| ---------------------------------------------- | ------------------------------------------------------------------------- |
-| `DATABASE_URL`                                 | `postgresql://postgres:postgres@localhost:5432/pos` (atau Neon pooled)    |
-| `DATABASE_URL_UNPOOLED`                        | koneksi langsung Neon (tanpa `-pooler`) untuk `db:push`/`db:seed`         |
-| `BETTER_AUTH_URL`                              | `http://localhost:3000`                                                   |
-| `BETTER_AUTH_SECRET`                           | base64 32 byte                                                            |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`    | dari Google Cloud Console                                                 |
-| `OWNER_EMAILS`                                 | email owner, koma-separated — otomatis role OWNER                         |
-| `KASIR_EMAILS`                                 | email kasir tetap, koma-separated (opsional)                              |
-| `TRUSTED_ORIGINS`                              | origin produksi, koma-separated                                           |
-| `OWNER_EMAILS` / `KASIR_EMAILS`                | default peran dari email (dapat diubah manual di `/user` — manual menang) |
-| `TRUST_PROXY`                                  | `true` bila di belakang proxy tepercaya (pakai XFF)                       |
-| `ENABLE_CSP`                                   | paksa CSP on/off; kosong = on saat produksi                               |
-| `LOG_LEVEL`                                    | level pino; kosong = debug (dev) / info (prod)                            |
-| `CLOUDINARY_CLOUD_NAME`                        | cloud name Cloudinary (server)                                            |
-| `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | kredensial Cloudinary (server; rahasia)                                   |
-| `CLOUDINARY_FOLDER`                            | folder aset POS (default `pos/produk`)                                    |
+| Key                                            | Isi                                                                    |
+| ---------------------------------------------- | ---------------------------------------------------------------------- |
+| `DATABASE_URL`                                 | `postgresql://postgres:postgres@localhost:5432/pos` (atau Neon pooled) |
+| `DATABASE_URL_UNPOOLED`                        | koneksi langsung Neon (tanpa `-pooler`) untuk `db:push`/`db:seed`      |
+| `BETTER_AUTH_URL`                              | `http://localhost:3000`                                                |
+| `BETTER_AUTH_SECRET`                           | base64 32 byte                                                         |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`    | dari Google Cloud Console                                              |
+| `OWNER_EMAILS`                                 | email owner, koma-separated — otomatis role OWNER                      |
+| `KASIR_EMAILS`                                 | email kasir tetap, koma-separated (opsional)                           |
+| `TRUSTED_ORIGINS`                              | origin produksi, koma-separated                                        |
+| `SHADOW_DATABASE_URL`                          | DB kosong untuk cek drift (`db:migrate:drift`), opsional di lokal      |
+| `TRUST_PROXY`                                  | `true` bila di belakang proxy tepercaya (pakai XFF)                    |
+| `ENABLE_CSP`                                   | paksa CSP on/off; kosong = on saat produksi                            |
+| `LOG_LEVEL`                                    | level pino; kosong = debug (dev) / info (prod)                         |
+| `CLOUDINARY_CLOUD_NAME`                        | cloud name Cloudinary (server)                                         |
+| `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | kredensial Cloudinary (server; rahasia)                                |
+| `CLOUDINARY_FOLDER`                            | folder aset POS (default `pos/produk`)                                 |
 
 ## Rute & peran
 
@@ -101,18 +108,21 @@ Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` di
 
 ## Skrip
 
-| Perintah                                                         | Fungsi                                                |
-| ---------------------------------------------------------------- | ----------------------------------------------------- |
-| `bun --bun run dev`                                              | dev server :3000                                      |
-| `bun --bun run build`                                            | production build                                      |
-| `bun run generate-routes`                                        | regenerasi route tree (wajib tiap tambah route)       |
-| `bun run db:migrate` / `db:migrate:deploy` / `db:migrate:status` | buat migration (dev), apply (dev/prod/CI), cek status |
-| `bun run db:generate` / `db:seed` / `db:studio`                  | generate client, seed data, studio                    |
-| `bun run db:push`                                                | sinkron cepat tanpa migration (dev sekali-pakai)      |
-| `bun run db:reset`                                               | isi ulang data demo (setara `db:seed`)                |
-| `bun run lint` / `bun run format` / `bun run check`              | eslint, prettier                                      |
-| `bun run test`                                                   | unit (vitest, dotenv `.env.local` otomatis)           |
-| `bun run test:e2e`                                               | smoke browser (playwright + chromium, port 3100)      |
+| Perintah                                                         | Fungsi                                                           |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `bun --bun run dev`                                              | dev server :3000                                                 |
+| `bun --bun run build`                                            | production build                                                 |
+| `bun run generate-routes`                                        | regenerasi route tree (wajib tiap tambah route)                  |
+| `bun run db:migrate` / `db:migrate:deploy` / `db:migrate:status` | buat migration (dev), apply (dev/prod/CI), cek status            |
+| `bun run db:migrate:drift`                                       | cek schema vs migration (butuh `SHADOW_DATABASE_URL`)            |
+| `bun run db:generate` / `db:seed` / `db:studio`                  | generate client, seed data, studio                               |
+| `bun run db:push`                                                | sinkron cepat tanpa migration (dev sekali-pakai)                 |
+| `bun run db:reset`                                               | isi ulang data demo (setara `db:seed`)                           |
+| `bun run lint` / `bun run format` / `bun run check`              | eslint / prettier --write / prettier --check                     |
+| `bun run docs:sync` / `bun run docs:check`                       | perbarui / cek snapshot PRD dari `DAFTAR-TUGAS.md`               |
+| `bun run perf:budget`                                            | cek anggaran bundle setelah `bun --bun run build`                |
+| `bun run test:vitest` / `bun run test`                           | unit (vitest, `tests/vitest/**`, dotenv `.env.local`)            |
+| `bun run test:e2e`                                               | smoke browser (playwright + chromium, `tests/e2e/**`, port 3100) |
 
 Setelah mengubah `prisma/schema.prisma`: jalankan `bun run db:migrate` (dev) atau
 `bun run db:migrate:deploy` (CI/prod) **sebelum** `bun run test` — unit test
@@ -121,7 +131,9 @@ pakai database yang sama, bukan mock.
 ## Aturan repo (ringkas)
 
 - Perintah hanya `bun`/`bunx` — tanpa npm/npx/pnpm (lihat `.agents/rules/01-bun.md`).
-- Gate tiap perubahan: `bunx tsc --noEmit` + `bun run lint` + `bun run check` + `bun run test` + `bun run test:e2e` + `bun --bun run build`.
+- Gate tiap perubahan: `bunx tsc --noEmit` + `bun run lint` + `bun run check` +
+  `bun run docs:check` + `bun run test` + `bun run test:e2e` + `bun --bun run build` +
+  `bun run perf:budget`.
 - **Unit test membersihkan tabel master** (produk/bahan/kategori/member/…) agar tiap
   suite mulai dari data kosong. Setelah `bun run test`, isi ulang data demo dengan
   `bun run db:reset` sebelum uji manual.
@@ -142,8 +154,8 @@ pakai database yang sama, bukan mock.
 
 ## Audit & status
 
-- Status tugas: [`docs/DAFTAR-TUGAS.md`](docs/DAFTAR-TUGAS.md) (SEMUA item audit selesai;
-  temuan terbaru dicatat sebagai backlog `[ ]`).
+- Status tugas: [`docs/DAFTAR-TUGAS.md`](docs/DAFTAR-TUGAS.md) (checkbox `[x]` =
+  selesai, `[ ]` = backlog/blocked; jangan menganggap semua item selesai).
 - Checklist uji manual web + backend (3–4 hari, sebelum lanjut ke app Expo):
   [`docs/TEST-MANUAL.md`](docs/TEST-MANUAL.md).
 - Panduan integrasi mobile (Expo): [`docs/EXPO.md`](docs/EXPO.md).
@@ -175,6 +187,11 @@ src/
   components/    UI domain (kasir, produk, pesanan) + ui/ shadcn
   prisma/        schema.prisma, seed.ts
   messages/      en/id/zh/ko → compile ke src/paraglide
-  tests/         unit (*.test.ts) + e2e (playwright)
-  docs/          DAFTAR-TUGAS, API, execution-plan, setup-google-oauth
+  tests/         unit (vitest/) + e2e (playwright/)
+  docs/          DAFTAR-TUGAS, API, DEPLOY, execution-plan, setup-google-oauth
 ```
+
+## Lisensi
+
+MIT © 2026 **adhitiad**. Aplikasi POS untuk kasir, buku besar, dan percetakan;
+lihat [`LICENSE`](LICENSE).

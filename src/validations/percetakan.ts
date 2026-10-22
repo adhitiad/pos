@@ -3,16 +3,33 @@ import { z } from 'zod'
 export const TIPE_PRINTER = ['ESC_POS', 'RAW'] as const
 export const KONEKSI_PRINTER = ['USB', 'BLUETOOTH', 'WIFI', 'SERIAL'] as const
 
+function adaKarakterKontrol(nilai: string): boolean {
+  return [...nilai].some((karakter) => {
+    const kode = karakter.charCodeAt(0)
+    return kode < 32 || kode === 127
+  })
+}
+
+const teksPrinter = (maks: number) =>
+  z
+    .string()
+    .trim()
+    .max(maks)
+    .refine(
+      (nilai) => !adaKarakterKontrol(nilai),
+      'Tidak boleh mengandung karakter kontrol',
+    )
+
 export const PrinterInputSchema = z.object({
-  nama: z.string().trim().min(1, 'Nama printer wajib diisi').max(80),
+  nama: teksPrinter(80).min(1, 'Nama printer wajib diisi'),
   tipe: z.enum(TIPE_PRINTER).default('ESC_POS'),
-  lokasi: z.string().trim().max(80).optional(),
-  perangkat: z.string().trim().max(200).optional(),
+  lokasi: teksPrinter(80).optional(),
+  perangkat: teksPrinter(200).optional(),
   koneksi: z.enum(KONEKSI_PRINTER).default('USB'),
-  vendorId: z.string().trim().max(120).optional(),
-  vendorName: z.string().trim().max(120).optional(),
-  serialNumber: z.string().trim().max(160).optional(),
-  productName: z.string().trim().max(160).optional(),
+  vendorId: teksPrinter(120).optional(),
+  vendorName: teksPrinter(120).optional(),
+  serialNumber: teksPrinter(160).optional(),
+  productName: teksPrinter(160).optional(),
   default: z.boolean().default(false),
   aktif: z.boolean().default(true),
 })
@@ -22,7 +39,7 @@ export type PrinterInput = z.input<typeof PrinterInputSchema>
 export const PrinterDeviceInputSchema = PrinterInputSchema.omit({
   default: true,
 }).extend({
-  perangkat: z.string().trim().min(1, 'ID perangkat wajib diisi').max(200),
+  perangkat: teksPrinter(200).min(1, 'ID perangkat wajib diisi'),
   koneksi: z.enum(KONEKSI_PRINTER),
 })
 
@@ -31,10 +48,10 @@ export type PrinterDeviceInput = z.input<typeof PrinterDeviceInputSchema>
 export const UpdatePrinterSchema = PrinterInputSchema.extend({
   id: z.string().min(1),
   koneksi: z.enum(KONEKSI_PRINTER).optional(),
-  vendorId: z.string().trim().max(120).optional(),
-  vendorName: z.string().trim().max(120).optional(),
-  serialNumber: z.string().trim().max(160).optional(),
-  productName: z.string().trim().max(160).optional(),
+  vendorId: teksPrinter(120).optional(),
+  vendorName: teksPrinter(120).optional(),
+  serialNumber: teksPrinter(160).optional(),
+  productName: teksPrinter(160).optional(),
 })
 
 export type UpdatePrinterInput = z.input<typeof UpdatePrinterSchema>

@@ -1,9 +1,12 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
-import { prisma } from '../src/db.js'
-import { createModifier, createModifierGrup } from '../src/server/modifier.js'
-import { createMeja } from '../src/server/meja.js'
-import { postingTransaksi, ringkasHasil } from '../src/server/transaksi.js'
+import { prisma } from '../../src/db.js'
+import {
+  createModifier,
+  createModifierGrup,
+} from '../../src/server/modifier.js'
+import { createMeja } from '../../src/server/meja.js'
+import { postingTransaksi, ringkasHasil } from '../../src/server/transaksi.js'
 
 async function buatBahan(nama: string, stok: number, hargaSatuan: number) {
   return prisma.bahan.create({

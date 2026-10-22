@@ -3717,7 +3717,9 @@ export const PrinterScalarFieldEnum = {
   serialNumber: 'serialNumber',
   productName: 'productName',
   dipindaiPada: 'dipindaiPada',
+  terakhirDipakai: 'terakhirDipakai',
   default: 'default',
+  defaultPengguna: 'defaultPengguna',
   aktif: 'aktif',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -9,22 +9,25 @@
 - [ ] Uji restore **sekali**: Branches → Restore ke titik waktu lama, cek tabel inti
       (`Transaksi`, `Jurnal`), lalu hapus branch uji. Backup yang belum pernah
       dites = belum ada backup.
-- [ ] Deploy dari GitHub: hubungkan repo ke Vercel **atau** Netlify (Import Git
-      Repository), lalu push ke `main` untuk build otomatis. Tidak perlu CLI lokal.
-- [ ] Environment Vercel/Netlify: `DATABASE_URL` (pooled, runtime) + `DATABASE_URL_UNPOOLED`
-      (direct, untuk `db:migrate:deploy`), `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`,
-      `GOOGLE_CLIENT_ID/SECRET`, `OWNER_EMAILS`, `TRUSTED_ORIGINS`, `TRUST_PROXY=true`.
+- [ ] Deploy produksi lewat GitHub Actions `deploy-production.yml`
+      (`workflow_dispatch`, environment `production`, branch policy `main`),
+      bukan push ke `main`. Required reviewer mengikuti plan GitHub; repo private
+      Free belum mendukung. Panduan lengkap: [`docs/DEPLOY.md`](DEPLOY.md).
+- [ ] Environment Vercel Production: `DATABASE_URL` (pooled, runtime),
+      `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`,
+      `OWNER_EMAILS`, `TRUSTED_ORIGINS`, `TRUST_PROXY=true`. Secret migrasi
+      `DATABASE_URL_UNPOOLED` disimpan di GitHub environment `production`.
 - Skema produksi **hanya** lewat migration (`bun run db:migrate:deploy`), bukan `db:push`.
-- Build provider **tidak** menjalankan migration. Jalankan migration lebih dulu dari
-  terminal/CI yang memakai env produksi (`.env.local` sementara berisi
-  `DATABASE_URL_UNPOOLED` Neon produksi).
+- Auto-deploy `main` Vercel dimatikan (`vercel.json` →
+  `git.deploymentEnabled.main = false`). Workflow menjalankan migrasi lebih dulu,
+  baru deploy aplikasi, lalu smoke test.
 - Vercel: `vercel.json` memakai `bun install`, `NITRO_PRESET=vercel`, runtime Bun 1.x.
-- Netlify: `netlify.toml` memakai Bun 1.4.2, `NITRO_PRESET=netlify`, publish `dist`,
-  dan rewrite semua path ke `/.netlify/functions/server`.
+- Netlify: `netlify.toml` tetap ada sebagai cadangan, bukan alur produksi aktif.
 - `BETTER_AUTH_URL` dan `TRUSTED_ORIGINS` memakai domain produksi; callback Google:
   `https://<domain>/api/auth/callback/google`.
-- Preview deployment memakai env Preview — arahkan ke database terpisah bila perlu.
-- Keduanya memakai Postgres yang sama; tidak ada cron karena notifikasi dihitung per request.
+- Preview PR memakai Vercel Preview environment dan database terpisah; jangan pakai
+  database produksi.
+- Tidak ada cron karena notifikasi dihitung per request.
 
 ## 2. Uptime monitor
 
@@ -33,6 +36,16 @@
       `{ "database": "ok", "app": "healthy" }`; HTTP 503 saat database gagal.
 - [ ] Alert ke email/WhatsApp yang benar-benar dibaca; uji sekali dengan sengaja
       mematikan deploy.
+
+## 2b. Performa produksi
+
+- [ ] Setelah deploy, ukur LCP/INP/CLS p75 dan p95 API baca/tulis; bandingkan
+      dengan anggaran di [`PERFORMA.md`](PERFORMA.md). Jangan mengklaim target
+      tercapai tanpa data.
+- [ ] Jalankan `bun --bun run build` + `bun run perf:budget` pada commit yang
+      akan dideploy; over budget berarti perbaiki dulu.
+- [ ] Pantau cold start Vercel dan query lambat di log; catat perubahan baseline
+      bila memang disengaja.
 
 ## 3. Sentry (menyusul — OBS-02)
 
@@ -43,9 +56,13 @@
 
 ## 4. Rutin
 
-- Deploy via GitHub hanya membangun aplikasi; migration **tidak** otomatis.
-  Jalankan `bun run db:migrate:deploy` dengan env produksi sebelum deploy yang
-  membawa migration baru, lalu verifikasi `bun run db:migrate:status` = "up to date".
+- Deploy produksi: `gh workflow run deploy-production.yml` dari `main`
+  (setujui environment bila reviewer aktif). Workflow menjalankan `db:migrate:deploy` →
+  `db:migrate:status` → deploy Vercel → smoke test. Jangan deploy lewat push `main`.
+- Jangan pernah menjalankan `db:seed` di produksi.
+- Smoke test manual: `bash scripts/smoke-deploy.sh https://<domain-produksi>`.
+- Rollback aplikasi: promote deployment Vercel sebelumnya. Rollback DB: pola
+  expand/contract atau restore PITR Neon — lihat [`docs/DEPLOY.md`](DEPLOY.md).
 - Backup manual berkala (opsional): `pg_dump` memakai `DATABASE_URL_UNPOOLED`.
 
 ## 5. Lokal: port dev server e2e (`:3100`)

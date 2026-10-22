@@ -1,6 +1,6 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
-import { prisma } from '../src/db.js'
+import { prisma } from '../../src/db.js'
 import {
   POIN_NILAI_RUPIAH,
   RUPIAH_PER_POIN,

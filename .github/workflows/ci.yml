@@ -40,8 +40,12 @@ jobs:
         run: bun run lint
       - name: Format
         run: bun run check
+      - name: Dokumen PRD sinkron
+        run: bun run docs:check
       - name: Build
         run: bun --bun run build
+      - name: Anggaran performa
+        run: bun run perf:budget
 
   audit:
     name: Audit dependensi (SCA)

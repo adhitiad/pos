@@ -39,10 +39,10 @@ const DAFTAR_BAHAN: BahanSeed[] = [
   {
     key: 'terigu',
     nama: 'Terigu',
-    satuan: 'kg',
-    stok: 100,
-    stokMinimum: 10,
-    hargaSatuan: 8000,
+    satuan: 'gr',
+    stok: 250_000,
+    stokMinimum: 25_000,
+    hargaSatuan: 0.008,
   },
   {
     key: 'telur',

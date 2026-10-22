@@ -1,6 +1,8 @@
 import { prisma } from '#/db'
-import type { Printer, Prisma } from '#/generated/prisma/client.js'
-import { GalatDomain } from './galat.js'
+import { Prisma } from '#/generated/prisma/client.js'
+import type { Printer } from '#/generated/prisma/client.js'
+import { catatAudit, selisihField } from './audit.js'
+import { GalatDomain, GalatKonflik } from './galat.js'
 import {
   BuatPrintJobSchema,
   DaftarPrintJobSchema,
@@ -18,6 +20,9 @@ import type {
 } from '#/validations/percetakan'
 import type { PrintJobRow, PrinterRow, StrukPayload } from '#/types/percetakan'
 
+const BATAS_PERANGKAT = 20
+const INTERVAL_SCAN_MS = 5 * 60_000
+
 function keBarisPrinter(p: Printer): PrinterRow {
   return {
     id: p.id,
@@ -32,8 +37,41 @@ function keBarisPrinter(p: Printer): PrinterRow {
     serialNumber: p.serialNumber,
     productName: p.productName,
     dipindaiPada: p.dipindaiPada?.toISOString() ?? null,
+    terakhirDipakai: p.terakhirDipakai?.toISOString() ?? null,
     default: p.default,
+    defaultPengguna: p.defaultPengguna,
     aktif: p.aktif,
+  }
+}
+
+// Snapshot audit tidak memuat serial/vendor: metadata perangkat tidak boleh
+// ikut terbaca lewat UI audit. `metadataBerubah` cukup menandai perubahannya.
+function snapshotAuditPrinter(p: {
+  nama: string
+  tipe: string
+  lokasi: string | null
+  perangkat: string | null
+  koneksi: string
+  vendorId: string | null
+  vendorName: string | null
+  serialNumber: string | null
+  productName: string | null
+  default: boolean
+  defaultPengguna: boolean
+  aktif: boolean
+}) {
+  return {
+    nama: p.nama,
+    tipe: p.tipe,
+    lokasi: p.lokasi,
+    perangkat: p.perangkat,
+    koneksi: p.koneksi,
+    default: p.default,
+    defaultPengguna: p.defaultPengguna,
+    aktif: p.aktif,
+    metadataBerubah: Boolean(
+      p.vendorId || p.vendorName || p.serialNumber || p.productName,
+    ),
   }
 }
 
@@ -52,6 +90,7 @@ export async function daftarPrinterPerangkat(
   const rows = await prisma.printer.findMany({
     where: { userId, aktif: true },
     orderBy: [{ dipindaiPada: 'desc' }, { nama: 'asc' }],
+    take: 50,
   })
   return rows.map(keBarisPrinter)
 }
@@ -62,63 +101,290 @@ export async function daftarPrinterPerangkat(
 export async function daftarkanPrinterPerangkat(
   input: PrinterDeviceInput,
   userId: string,
+  aktorId?: string,
 ): Promise<PrinterRow> {
   const data = PrinterDeviceInputSchema.parse(input)
   const sekarang = new Date()
-  const row = await prisma.printer.upsert({
-    where: {
-      userId_perangkat: { userId, perangkat: data.perangkat },
-    },
-    update: {
-      nama: data.nama,
-      tipe: data.tipe,
-      lokasi: data.lokasi ?? null,
-      koneksi: data.koneksi,
-      vendorId: data.vendorId ?? undefined,
-      vendorName: data.vendorName ?? undefined,
-      serialNumber: data.serialNumber ?? undefined,
-      productName: data.productName ?? undefined,
-      dipindaiPada: sekarang,
-      aktif: true,
-    },
-    create: {
-      userId,
-      nama: data.nama,
-      tipe: data.tipe,
-      lokasi: data.lokasi ?? null,
-      perangkat: data.perangkat,
-      koneksi: data.koneksi,
-      vendorId: data.vendorId ?? null,
-      vendorName: data.vendorName ?? null,
-      serialNumber: data.serialNumber ?? null,
-      productName: data.productName ?? null,
-      dipindaiPada: sekarang,
-      default: false,
-      aktif: true,
-    },
-  })
+  const simpan = async () => {
+    return prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM "user" WHERE id = ${userId} FOR UPDATE`
+      const lama = await tx.printer.findUnique({
+        where: {
+          userId_perangkat: { userId, perangkat: data.perangkat },
+        },
+      })
+      if (!lama) {
+        const jumlah = await tx.printer.count({ where: { userId } })
+        if (jumlah >= BATAS_PERANGKAT) {
+          throw new GalatKonflik(
+            'LIMIT_PERANGKAT',
+            `Maksimal ${BATAS_PERANGKAT} perangkat per pengguna`,
+          )
+        }
+      }
+      const metadataBerubah =
+        !lama ||
+        lama.nama !== data.nama ||
+        lama.tipe !== data.tipe ||
+        lama.lokasi !== (data.lokasi ?? null) ||
+        lama.koneksi !== data.koneksi ||
+        lama.vendorId !== (data.vendorId ?? lama.vendorId) ||
+        lama.vendorName !== (data.vendorName ?? lama.vendorName) ||
+        lama.serialNumber !== (data.serialNumber ?? lama.serialNumber) ||
+        lama.productName !== (data.productName ?? lama.productName)
+      const scanJatuhTempo =
+        !lama?.dipindaiPada ||
+        sekarang.getTime() - lama.dipindaiPada.getTime() >= INTERVAL_SCAN_MS
+      const perluPerbarui =
+        !lama || !lama.aktif || metadataBerubah || scanJatuhTempo
+      if (lama && !perluPerbarui) return { row: lama, lama }
+      const row = await tx.printer.upsert({
+        where: {
+          userId_perangkat: { userId, perangkat: data.perangkat },
+        },
+        update: {
+          nama: data.nama,
+          tipe: data.tipe,
+          lokasi: data.lokasi ?? null,
+          koneksi: data.koneksi,
+          vendorId: data.vendorId ?? undefined,
+          vendorName: data.vendorName ?? undefined,
+          serialNumber: data.serialNumber ?? undefined,
+          productName: data.productName ?? undefined,
+          dipindaiPada: scanJatuhTempo ? sekarang : undefined,
+          aktif: true,
+        },
+        create: {
+          userId,
+          nama: data.nama,
+          tipe: data.tipe,
+          lokasi: data.lokasi ?? null,
+          perangkat: data.perangkat,
+          koneksi: data.koneksi,
+          vendorId: data.vendorId ?? null,
+          vendorName: data.vendorName ?? null,
+          serialNumber: data.serialNumber ?? null,
+          productName: data.productName ?? null,
+          dipindaiPada: sekarang,
+          default: false,
+          aktif: true,
+        },
+      })
+      return { row, lama }
+    })
+  }
+
+  let hasil: Awaited<ReturnType<typeof simpan>>
+  try {
+    hasil = await simpan()
+  } catch (e) {
+    const kode =
+      e instanceof Prisma.PrismaClientKnownRequestError ? e.code : null
+    if (kode !== 'P2002') throw e
+    hasil = await simpan()
+  }
+
+  const { row, lama } = hasil
+  const sebelum = lama ? snapshotAuditPrinter(lama) : null
+  const baru = !lama
+  const sesudah = snapshotAuditPrinter(row)
+  if (baru) {
+    await catatAudit({
+      aktorId: aktorId ?? userId,
+      aksi: 'printer.perangkat.daftar',
+      entitas: 'Printer',
+      entitasId: row.id,
+      sesudah,
+    })
+  } else if (sebelum) {
+    const selisih = selisihField(sebelum, sesudah)
+    if (Object.keys(selisih.sesudah).length > 0) {
+      await catatAudit({
+        aktorId: aktorId ?? userId,
+        aksi: 'printer.perangkat.daftar',
+        entitas: 'Printer',
+        entitasId: row.id,
+        sebelum: selisih.sebelum,
+        sesudah: selisih.sesudah,
+      })
+    }
+  }
+
   return keBarisPrinter(row)
 }
 
+// Nonaktifkan perangkat milik sesi. Hapus permanen hanya bila belum punya
+// riwayat cetak; perangkat orang lain selalu tampak "tidak ditemukan".
+export async function hapusPrinterPerangkat(
+  input: { id: string; permanen?: boolean },
+  userId: string,
+  aktorId?: string,
+): Promise<{ id: string; dihapus: boolean }> {
+  const data = PrinterIdSchema.parse(input)
+  const lama = await prisma.printer.findFirst({
+    where: { id: data.id, userId },
+    include: { _count: { select: { jobs: true } } },
+  })
+  if (!lama) throw new GalatDomain('Perangkat tidak ditemukan')
+
+  if (input.permanen) {
+    if (lama._count.jobs > 0) {
+      throw new GalatKonflik(
+        'PERANGKAT_BERJOB',
+        `Perangkat punya ${lama._count.jobs} riwayat cetak — nonaktifkan saja`,
+      )
+    }
+    await prisma.printer.delete({ where: { id: data.id } })
+    await catatAudit({
+      aktorId: aktorId ?? userId,
+      aksi: 'printer.perangkat.hapus',
+      entitas: 'Printer',
+      entitasId: data.id,
+      sebelum: snapshotAuditPrinter(lama),
+    })
+    return { id: data.id, dihapus: true }
+  }
+
+  const sesudah = {
+    ...snapshotAuditPrinter(lama),
+    defaultPengguna: false,
+    aktif: false,
+  }
+  const selisih = selisihField(snapshotAuditPrinter(lama), sesudah)
+  if (Object.keys(selisih.sesudah).length > 0) {
+    await prisma.printer.update({
+      where: { id: data.id },
+      data: { aktif: false, defaultPengguna: false },
+    })
+    await catatAudit({
+      aktorId: aktorId ?? userId,
+      aksi: 'printer.perangkat.nonaktif',
+      entitas: 'Printer',
+      entitasId: data.id,
+      sebelum: selisih.sebelum,
+      sesudah: selisih.sesudah,
+    })
+  }
+  return { id: data.id, dihapus: false }
+}
+
 // Printer default yang aktif — dipakai saat klien tak menyebut printer.
-export async function printerDefault(): Promise<PrinterRow | null> {
+export async function printerDefault(
+  userId?: string,
+): Promise<PrinterRow | null> {
+  const milikPengguna = userId
+    ? await prisma.printer.findFirst({
+        where: { userId, defaultPengguna: true, aktif: true },
+      })
+    : null
   const row =
+    milikPengguna ??
     (await prisma.printer.findFirst({
       where: { default: true, aktif: true },
       orderBy: { nama: 'asc' },
-    })) ?? (await prisma.printer.findFirst({ where: { aktif: true } }))
+    })) ??
+    (await prisma.printer.findFirst({ where: { aktif: true } }))
   if (!row) return null
+  return keBarisPrinter(row)
+}
+
+// Retry sekali untuk konflik transaksi/unique. Partial unique index yang
+// menutup race; transaksi menjamin state lama kembali bila operasi gagal.
+async function transaksiRetry<T>(
+  operasi: (tx: Prisma.TransactionClient) => Promise<T>,
+): Promise<T> {
+  for (let percobaan = 0; percobaan < 2; percobaan++) {
+    try {
+      return await prisma.$transaction(operasi)
+    } catch (e) {
+      const kode =
+        e instanceof Prisma.PrismaClientKnownRequestError ? e.code : null
+      if (percobaan === 0 && (kode === 'P2002' || kode === 'P2034')) continue
+      throw e
+    }
+  }
+  throw new Error('Transaksi printer gagal')
+}
+
+async function transaksiDefault<T>(
+  operasi: (tx: Prisma.TransactionClient) => Promise<T>,
+): Promise<T> {
+  return transaksiRetry(async (tx) => {
+    await tx.printer.updateMany({
+      where: { default: true },
+      data: { default: false },
+    })
+    return operasi(tx)
+  })
+}
+
+export async function setDefaultPrinterPerangkat(
+  input: { id: string },
+  userId: string,
+  aktorId?: string,
+): Promise<PrinterRow> {
+  const data = PrinterIdSchema.parse(input)
+  const lama = await prisma.printer.findFirst({
+    where: { id: data.id, userId, aktif: true },
+  })
+  if (!lama) throw new GalatDomain('Perangkat tidak ditemukan')
+  if (lama.defaultPengguna) return keBarisPrinter(lama)
+
+  const row = await transaksiRetry(async (tx) => {
+    await tx.printer.updateMany({
+      where: { userId, defaultPengguna: true },
+      data: { defaultPengguna: false },
+    })
+    return tx.printer.update({
+      where: { id: data.id },
+      data: { defaultPengguna: true },
+    })
+  })
+
+  await catatAudit({
+    aktorId: aktorId ?? userId,
+    aksi: 'printer.perangkat.default',
+    entitas: 'Printer',
+    entitasId: data.id,
+    sebelum: { defaultPengguna: false },
+    sesudah: { defaultPengguna: true },
+  })
   return keBarisPrinter(row)
 }
 
 export async function createPrinter(
   input: PrinterInput,
   userId?: string,
+  aktorId?: string,
 ): Promise<{ id: string }> {
   const data = PrinterInputSchema.parse(input)
-  const dibuat = await prisma.printer.create({
-    data: {
-      userId: userId ?? null,
+  const dataBaru = {
+    userId: userId ?? null,
+    nama: data.nama,
+    tipe: data.tipe,
+    lokasi: data.lokasi ?? null,
+    perangkat: data.perangkat ?? null,
+    koneksi: data.koneksi,
+    vendorId: data.vendorId ?? null,
+    vendorName: data.vendorName ?? null,
+    serialNumber: data.serialNumber ?? null,
+    productName: data.productName ?? null,
+    dipindaiPada: data.perangkat ? new Date() : null,
+    default: data.default,
+    defaultPengguna: false,
+    aktif: data.aktif,
+  }
+  const dibuat = data.default
+    ? await transaksiDefault((tx) =>
+        tx.printer.create({ data: dataBaru, select: { id: true } }),
+      )
+    : await prisma.printer.create({ data: dataBaru, select: { id: true } })
+  await catatAudit({
+    aktorId: aktorId ?? userId ?? null,
+    aksi: 'printer.buat',
+    entitas: 'Printer',
+    entitasId: dibuat.id,
+    sesudah: snapshotAuditPrinter({
       nama: data.nama,
       tipe: data.tipe,
       lokasi: data.lokasi ?? null,
@@ -128,65 +394,94 @@ export async function createPrinter(
       vendorName: data.vendorName ?? null,
       serialNumber: data.serialNumber ?? null,
       productName: data.productName ?? null,
-      dipindaiPada: data.perangkat ? new Date() : null,
       default: data.default,
+      defaultPengguna: false,
       aktif: data.aktif,
-    },
-    select: { id: true },
+    }),
   })
-  // Hanya satu printer default yang aktif.
-  if (data.default) {
-    await prisma.printer.updateMany({
-      where: { id: { not: dibuat.id }, default: true },
-      data: { default: false },
-    })
-  }
   return dibuat
 }
 
 export async function updatePrinter(
   input: UpdatePrinterInput,
+  aktorId?: string,
 ): Promise<{ id: string }> {
   const data = UpdatePrinterSchema.parse(input)
   const lama = await prisma.printer.findUnique({ where: { id: data.id } })
   if (!lama) throw new GalatDomain('Printer tidak ditemukan')
-  await prisma.printer.update({
-    where: { id: data.id },
-    data: {
+  const dataUbah = {
+    nama: data.nama,
+    tipe: data.tipe,
+    lokasi: data.lokasi ?? null,
+    perangkat: data.perangkat ?? null,
+    ...(data.koneksi ? { koneksi: data.koneksi } : {}),
+    ...(data.vendorId !== undefined ? { vendorId: data.vendorId || null } : {}),
+    ...(data.vendorName !== undefined
+      ? { vendorName: data.vendorName || null }
+      : {}),
+    ...(data.serialNumber !== undefined
+      ? { serialNumber: data.serialNumber || null }
+      : {}),
+    ...(data.productName !== undefined
+      ? { productName: data.productName || null }
+      : {}),
+    default: data.default,
+    aktif: data.aktif,
+  }
+  if (data.default) {
+    await transaksiDefault((tx) =>
+      tx.printer.update({ where: { id: data.id }, data: dataUbah }),
+    )
+  } else {
+    await prisma.printer.update({ where: { id: data.id }, data: dataUbah })
+  }
+
+  const selisih = selisihField(
+    snapshotAuditPrinter(lama),
+    snapshotAuditPrinter({
       nama: data.nama,
       tipe: data.tipe,
       lokasi: data.lokasi ?? null,
       perangkat: data.perangkat ?? null,
-      ...(data.koneksi ? { koneksi: data.koneksi } : {}),
-      ...(data.vendorId !== undefined
-        ? { vendorId: data.vendorId || null }
-        : {}),
-      ...(data.vendorName !== undefined
-        ? { vendorName: data.vendorName || null }
-        : {}),
-      ...(data.serialNumber !== undefined
-        ? { serialNumber: data.serialNumber || null }
-        : {}),
-      ...(data.productName !== undefined
-        ? { productName: data.productName || null }
-        : {}),
+      koneksi: data.koneksi ?? lama.koneksi,
+      vendorId:
+        data.vendorId !== undefined ? data.vendorId || null : lama.vendorId,
+      vendorName:
+        data.vendorName !== undefined
+          ? data.vendorName || null
+          : lama.vendorName,
+      serialNumber:
+        data.serialNumber !== undefined
+          ? data.serialNumber || null
+          : lama.serialNumber,
+      productName:
+        data.productName !== undefined
+          ? data.productName || null
+          : lama.productName,
       default: data.default,
+      defaultPengguna: lama.defaultPengguna,
       aktif: data.aktif,
-    },
-  })
-  // Hanya satu printer default yang aktif.
-  if (data.default) {
-    await prisma.printer.updateMany({
-      where: { id: { not: data.id }, default: true },
-      data: { default: false },
+    }),
+  )
+  if (Object.keys(selisih.sesudah).length > 0) {
+    await catatAudit({
+      aktorId,
+      aksi: 'printer.ubah',
+      entitas: 'Printer',
+      entitasId: data.id,
+      sebelum: selisih.sebelum,
+      sesudah: selisih.sesudah,
     })
   }
   return { id: data.id }
 }
 
-export async function hapusPrinter(input: {
-  id: string
-}): Promise<{ id: string }> {
+export async function hapusPrinter(
+  input: {
+    id: string
+  },
+  aktorId?: string,
+): Promise<{ id: string }> {
   const data = PrinterIdSchema.parse(input)
   const ada = await prisma.printer.findUnique({
     where: { id: data.id },
@@ -199,6 +494,13 @@ export async function hapusPrinter(input: {
     )
   }
   await prisma.printer.delete({ where: { id: data.id } })
+  await catatAudit({
+    aktorId,
+    aksi: 'printer.hapus',
+    entitas: 'Printer',
+    entitasId: data.id,
+    sebelum: snapshotAuditPrinter(ada),
+  })
   return { id: data.id }
 }
 
@@ -281,6 +583,7 @@ export async function muatPayloadStruk(
 // offline dikirim ulang) mengembalikan job yang sama, bukan job ganda.
 export async function buatPrintJob(
   input: BuatPrintJobInput,
+  userId?: string,
 ): Promise<PrintJobRow> {
   const data = BuatPrintJobSchema.parse(input)
 
@@ -294,7 +597,7 @@ export async function buatPrintJob(
   const payload = await muatPayloadStruk(data.transaksiId)
   if (!payload) throw new GalatDomain('Transaksi tidak ditemukan')
 
-  const printerId = data.printerId ?? (await printerDefault())?.id ?? null
+  const printerId = data.printerId ?? (await printerDefault(userId))?.id ?? null
   if (printerId) {
     const printer = await prisma.printer.findUnique({
       where: { id: printerId },
@@ -304,15 +607,24 @@ export async function buatPrintJob(
     if (!printer.aktif) throw new GalatDomain('Printer sedang nonaktif')
   }
 
-  const job = await prisma.printJob.create({
-    data: {
-      printerId,
-      transaksiId: data.transaksiId,
-      tipe: data.tipe,
-      idempotencyKey: data.idempotencyKey ?? null,
-      payload: payload as unknown as Prisma.InputJsonValue,
-    },
-    select: { id: true },
+  const job = await prisma.$transaction(async (tx) => {
+    const dibuat = await tx.printJob.create({
+      data: {
+        printerId,
+        transaksiId: data.transaksiId,
+        tipe: data.tipe,
+        idempotencyKey: data.idempotencyKey ?? null,
+        payload: payload as unknown as Prisma.InputJsonValue,
+      },
+      select: { id: true },
+    })
+    if (printerId) {
+      await tx.printer.updateMany({
+        where: { id: printerId },
+        data: { terakhirDipakai: new Date() },
+      })
+    }
+    return dibuat
   })
   return await muatJob(job.id)
 }

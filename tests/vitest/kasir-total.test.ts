@@ -4,7 +4,7 @@ import {
   hitungPajak,
   hitungTotal,
   POIN_RUPIAH,
-} from '../src/lib/kasir-total.js'
+} from '../../src/lib/kasir-total.js'
 
 const dasar = {
   subtotal: 100000,

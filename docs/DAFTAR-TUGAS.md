@@ -1,6 +1,9 @@
 # DAFTAR TUGAS — POS
 
-> Centang `[x]` bila selesai. File ini sumber utama status tugas; gunakan bahasa Indonesia yang jelas agar mudah dibaca oleh manusia dan AI. Setiap perubahan kode wajib lolos `tsc --noEmit`, `lint`, `build`, `test`, dan `test:e2e` sebelum dicentang.
+> Centang `[x]` bila selesai. File ini sumber utama status tugas; gunakan bahasa Indonesia yang jelas agar mudah dibaca oleh manusia dan AI. Setiap perubahan kode wajib lolos `tsc --noEmit`, `lint`, `check`, `docs:check`, `test:vitest`, `test:e2e` (bila route/guard/endpoint berubah), `build`, dan `perf:budget` sebelum dicentang.
+>
+> Snapshot status di [`PRD.md`](PRD.md) dan [`PRD-AI.md`](PRD-AI.md) dihasilkan
+> dari file ini oleh `bun run docs:sync`. Jangan menyalin status manual ke PRD.
 
 ---
 
@@ -40,8 +43,9 @@
 - [x] UX polish: stepper qty di ProdukGrid + PanelBayar (tambah/kurangi/hapus), tombol kosongkan keranjang, toast feedback real-time (add/remove/clear/success/error) mengganti inline alert berwarna tetap, skeleton loading di login, struk cetak dengan tombol salin nomor + ikon check tema-hijau
 - [x] Dark/light theme toggle (next-themes ThemeProvider + ThemeToggle di Header & kasir nav), locale switcher → dropdown dengan bendera negara
 - [x] Landing & identitas dinamis: hero/alur/segmen/CTA redesign (palet brand teal+brass, mobile-first, tanpa metrik palsu); owner unggah ikon (file-only → Cloudinary) dan judul app dipakai di header/footer/struk/tab; `/api/v1/app-icon` membuat SVG favicon/manifest otomatis, `/api/v1/identitas` untuk web+Expo
-- [x] Printer perangkat: pindai otomatis Web Serial setelah login OWNER/KASIR, objek koneksi cache memori+`sessionStorage`, metadata perangkat (jalur, vendor, serial, produk) disimpan ke DB untuk akun OWNER/KASIR via `POST /api/v1/printer/perangkat`; dialog pindai cepat di header + `/printer`; kontrak siklus sesi Expo di `docs/EXPO.md`; unit test `tests/ikon.test.ts`
+- [x] Printer perangkat: pindai otomatis Web Serial setelah login OWNER/KASIR, objek koneksi cache memori+`sessionStorage`, metadata perangkat (jalur, vendor, serial, produk) disimpan ke DB untuk akun OWNER/KASIR via `POST /api/v1/printer/perangkat`; dialog pindai cepat di header + `/printer`; kontrak siklus sesi Expo di `docs/EXPO.md`; unit test `tests/vitest/ikon.test.ts`
 - [x] `/printer`: label port USB/Bluetooth/WiFi + jalur perangkat terdeteksi (USB atau serial virtual Bluetooth/WiFi), kolom koneksi di tabel; e2e memeriksa label `Dari port: USB`
+- [x] Test print struk dari quick scan & `/printer`: dialog struk format asli dengan pesanan/member dummy, opsi cetak otomatis ESC/POS atau manual lewat dialog browser, tombol lewati; helper `src/lib/struk-uji.ts`, unit test `tests/vitest/struk-uji.test.ts`
 - [x] DB printer perangkat: `Printer.userId` + `koneksi` + `vendorId`/`vendorName`/`serialNumber`/`productName`/`dipindaiPada`, upsert per `(userId, perangkat)`, endpoint OWNER/KASIR, migrasi `20261021000000_printer_device_identity`
 - [x] `GET /api/health`: status `{ database: "ok"|"gagal", app: "healthy"|"degraded" }`, HTTP 503 saat database gagal, rate limit 60/menit; docs API/operasional + e2e
 
@@ -85,7 +89,7 @@
 - [x] Riwayat belanja member: `memberRiwayat` + halaman `/member/$id` + REST `GET /api/v1/member/riwayat?id=`
 - [x] Saat pembayaran pilih member atau non-member (toggle + cari member di `PanelBayar`)
 - [x] Struk menampilkan info member (nama, tier, diskon member)
-- [x] Unit test (`tests/member.test.ts`) + i18n ×4 + `docs/API.md`
+- [x] Unit test (`tests/vitest/member.test.ts`) + i18n ×4 + `docs/API.md`
 - [x] Filter tanggal/nomor struk + detail item per transaksi di halaman riwayat member
 
 ### Kelompok C — Pemesanan Online & Pembayaran Online
@@ -93,7 +97,7 @@
 - [x] Pemesanan online dengan pembayaran online: halaman publik `/pesanan` (menu + keranjang), POST `public /api/v1/pesan` membuat transaksi `kasirId=null`, `statusPesanan=MENUNGGU`, metode `QRIS`/`TRANSFER`/`EWALLET`; muncul di `/dapur` (KDS) dan kasir
 - [x] Pesanan online member — sesi `MEMBER` aktif otomatis menautkan pesanan ke data member (diskon/poin/tier), banner member di `/pesanan`, poin dan total belanja ikut diperbarui; `memberId` tidak pernah diterima dari klien
 - [x] Opsi pengiriman: ambil sendiri (take-away) / dine-in (pilih meja); pesanan antar tidak tersedia untuk pesanan online
-- [x] Unit test (`tests/pesanan.test.ts`, 4 tes) + i18n ×4 + `docs/API.md` (endpoint `GET/POST /api/v1/pesan`)
+- [x] Unit test (`tests/vitest/pesanan.test.ts`, 4 tes) + i18n ×4 + `docs/API.md` (endpoint `GET/POST /api/v1/pesan`)
 
 ### T.txt — Implementasi Selesai
 
@@ -159,23 +163,23 @@
 
 ### Keamanan
 
-- [x] **SEC-01 (High)** `apiError()` menyampaikan `Error.message` apa adanya → pesan Prisma/Zod mentah bocor ke klien (`src/server/api.ts`). Dibuat `src/server/galat.ts` (`GalatDomain` + `terjemahGalat`: domain→422, Zod→400, guard→401/403, selainnya→log ref + 500 generik); `apiError` pakai translator; throw domain di 9 modul server dikonversi ke `GalatDomain`; `galatMiddleware` (`src/server/galatMiddleware.ts`, function middleware) sanitasi error server function di `src/start.ts`; unit test `tests/galat.test.ts`
-- [x] **SEC-02 (High)** `POST /api/v1/pesan` publik menerima `memberId`/`deliveryId`/`diskon`/`pajak`/`pembayaran` → potensi pesanan gratis & penyalahgunaan poin member (`src/server/pesanan.ts`). Tambah `PesananOnlineSchema` (`src/validations/transaksi.ts`, hanya `items`/`mejaId`/`metodeBayar` QRIS-TRANSFER-EWALLET/`catatan`); `pesanTransaksi` paksa `diskon=0`, `pajak=0`, `tukarPoin=0`, `statusPesanan=MENUNGGU`; route tak lagi parse skema penuh; unit test `tests/pesanan-schema.test.ts`
+- [x] **SEC-01 (High)** `apiError()` menyampaikan `Error.message` apa adanya → pesan Prisma/Zod mentah bocor ke klien (`src/server/api.ts`). Dibuat `src/server/galat.ts` (`GalatDomain` + `terjemahGalat`: domain→422, Zod→400, guard→401/403, selainnya→log ref + 500 generik); `apiError` pakai translator; throw domain di 9 modul server dikonversi ke `GalatDomain`; `galatMiddleware` (`src/server/galatMiddleware.ts`, function middleware) sanitasi error server function di `src/start.ts`; unit test `tests/vitest/galat.test.ts`
+- [x] **SEC-02 (High)** `POST /api/v1/pesan` publik menerima `memberId`/`deliveryId`/`diskon`/`pajak`/`pembayaran` → potensi pesanan gratis & penyalahgunaan poin member (`src/server/pesanan.ts`). Tambah `PesananOnlineSchema` (`src/validations/transaksi.ts`, hanya `items`/`mejaId`/`metodeBayar` QRIS-TRANSFER-EWALLET/`catatan`); `pesanTransaksi` paksa `diskon=0`, `pajak=0`, `tukarPoin=0`, `statusPesanan=MENUNGGU`; route tak lagi parse skema penuh; unit test `tests/vitest/pesanan-schema.test.ts`
 - [x] **SEC-03 (High)** Belum ada CSRF middleware untuk server function (`src/start.ts`). Tambah `createCsrfMiddleware` (`filter: handlerType === 'serverFn'`) di `requestMiddleware`
-- [x] **SEC-04 (Medium)** Matriks peran tidak konsisten antara route, `*Fn.ts`, dan REST (`/kasir`, `/dapur`, `/meja`, `/pengaturan`). Dibuat `src/server/peran.ts` (`AKSES.operasional`=OWNER+KASIR, `manajerial`=OWNER, `semua`=OWNER+KASIR+MEMBER + `punyaAkses`); guard server function (`auth.ts` → `requireKasir`/`requireOwner`), REST (`apiPengguna` di 19 route), guard halaman (`beforeLoad` via `punyaAkses`), dan nav (`RelNav`) semua memakai konstanta ini. Kekeliruan diperbaiki: `kasirDataFn`/`dapurFn` requireOwner→KASIR; REST GET `/meja` OWNER→operasional; unit test `tests/peran.test.ts`
+- [x] **SEC-04 (Medium)** Matriks peran tidak konsisten antara route, `*Fn.ts`, dan REST (`/kasir`, `/dapur`, `/meja`, `/pengaturan`). Dibuat `src/server/peran.ts` (`AKSES.operasional`=OWNER+KASIR, `manajerial`=OWNER, `semua`=OWNER+KASIR+MEMBER + `punyaAkses`); guard server function (`auth.ts` → `requireKasir`/`requireOwner`), REST (`apiPengguna` di 19 route), guard halaman (`beforeLoad` via `punyaAkses`), dan nav (`RelNav`) semua memakai konstanta ini. Kekeliruan diperbaiki: `kasirDataFn`/`dapurFn` requireOwner→KASIR; REST GET `/meja` OWNER→operasional; unit test `tests/vitest/peran.test.ts`
 - [x] **SEC-05 (Medium)** `recordDeviceVisitFn`/`recordPageVisitFn` publik tanpa rate limit (REST-nya punya, server function tidak) → storage DoS. Rate limit dipindah ke server function (`batasiNama`: device-visit 60/menit, kunjungan 120/menit di `deviceVisitFn.ts`/`kunjunganFn.ts`); pembatas di route REST `device-visit` & `kunjungan/index` dihapus
 - [x] **SEC-06 (Medium)** `signInSocial` mengembalikan token sesi di body JSON (bisa dibaca XSS). `src/routes/api/v1/auth-social.ts` kini mengirim `{ user }` saja untuk web (cookie httpOnly tetap di-set); token sesi di body hanya bila klien mengirim header `x-client: expo`
 - [x] **SEC-07 (Medium)** `trustedOrigins` bisa `undefined` di produksi; `useSecureCookies` bentrok dengan atribut `secure`. `src/lib/auth.ts`: `trustedOrigins` selalu terdefinisi (origin `BETTER_AUTH_URL` + `TRUSTED_ORIGINS`); `useSecureCookies` murni dari `NODE_ENV`; atribut `secure` ganda dihapus dari `defaultCookieAttributes`
-- [x] **SEC-08 (Medium)** Rate limiter in-memory + IP dari header yang bisa dipalsukan; tidak efektif di serverless. Diganti store bersama Postgres (model `RateLimit`, upsert atomik `INSERT ... ON CONFLICT ... RETURNING` di `src/server/rateLimit.ts`); IP dari `getRequestIP` (header proxy hanya bila `TRUST_PROXY`); `batasi` async dipakai `rateLimit` (REST 429) & `batasiNama` (server fn → `GalatRateLimit`/429); tambah `TRUST_PROXY` di `src/env.ts`; unit test `tests/api.test.ts`
+- [x] **SEC-08 (Medium)** Rate limiter in-memory + IP dari header yang bisa dipalsukan; tidak efektif di serverless. Diganti store bersama Postgres (model `RateLimit`, upsert atomik `INSERT ... ON CONFLICT ... RETURNING` di `src/server/rateLimit.ts`); IP dari `getRequestIP` (header proxy hanya bila `TRUST_PROXY`); `batasi` async dipakai `rateLimit` (REST 429) & `batasiNama` (server fn → `GalatRateLimit`/429); tambah `TRUST_PROXY` di `src/env.ts`; unit test `tests/vitest/api.test.ts`
 - [x] **SEC-09 (Low)** CSP hanya di produksi, `style-src 'unsafe-inline'`, `img-src https:` terlalu luas. `src/lib/csp.ts` kini digate flag eksplisit `ENABLE_CSP` (default menyala di produksi, bisa dipaksa di staging/dev); `img-src` dipersempit ke `'self' data: blob: https://res.cloudinary.com https://*.googleusercontent.com`; komentar menjelaskan `style-src 'unsafe-inline'` masih perlu untuk style inline Radix/next-themes; env baru di `src/env.ts` + `.env.example`/`README.md`
-- [x] **SEC-10 (Low)** Metadata analytics dari klien (`x-path`, `x-real-ip`, `userId` body) → racun data. `kunjungan/index.ts`: `userId` dari sesi, IP dari `ipSaatIni()` (`getRequestIP`, soket tepercaya), path dari `Referer` dengan fallback `x-path` ternormalisasi (`normalkanPath`: relatif internal, tanpa query/hash, ≤200); `device-visit.ts`: `userId` diturunkan dari sesi (`apiPenggunaOpsional`), body klien tak lagi dipercaya; `__root.tsx` tak lagi mengirim `x-path`/`path`/`userId`; unit test `tests/kunjungan.test.ts`
+- [x] **SEC-10 (Low)** Metadata analytics dari klien (`x-path`, `x-real-ip`, `userId` body) → racun data. `kunjungan/index.ts`: `userId` dari sesi, IP dari `ipSaatIni()` (`getRequestIP`, soket tepercaya), path dari `Referer` dengan fallback `x-path` ternormalisasi (`normalkanPath`: relatif internal, tanpa query/hash, ≤200); `device-visit.ts`: `userId` diturunkan dari sesi (`apiPenggunaOpsional`), body klien tak lagi dipercaya; `__root.tsx` tak lagi mengirim `x-path`/`path`/`userId`; unit test `tests/vitest/kunjungan.test.ts`
 
 ### Performa
 
 - [x] **PERF-01 (High)** N+1 tulis di loop posting transaksi (modifier & stok bahan). Modifier dibuat sebagai nested `create` di dalam satu `transaksi.create` (bukan loop tulis terpisah); stok produk & bahan dikurangi lewat satu `UPDATE ... FROM (VALUES ...)` per tabel dengan id di-dedupe & kebutuhan dijumlahkan (`src/server/postingTransaksi.ts`)
 - [x] **PERF-02 (High)** Agregasi JS atas seluruh tabel. `laporanPenjualan.ts` → `select` skalar + `groupBy` (`transaksiItem`, `transaksi`) + ambil nama kasir sekaligus; `kunjungan.ts` → `select` minimal + `groupBy` halaman terpopuler; `deviceVisit.ts` → `take` berlimit (`limit` opsional ≤500); `kasir.ts` → `select`/`include` ramping. Fungsi murni periode tetap (batas `date_trunc` Prisma)
 - [x] **PERF-03 (High)** Indeks FK/filter belum ada di `schema.prisma`. Ditambah `@@index` (`Transaksi` tanggal/FK/filter + composite, `TransaksiItem`, `Pembayaran`, `Jurnal`, `JurnalDetail`, `Produk`, `Bahan`/`PembelianBahan`, `Modifier`/`ProdukModifierGrup`/`TransaksiItemModifier`, `session`/`account`) lalu `db:push`; verifikasi daftar indeks + `EXPLAIN` di DB dev
-- [x] **PERF-04 (Medium)** Query ulang transaksi yang baru dibuat (`transaksi.ts`) — pakai hasil `create`. Modifier kini ikut sebagai nested `create` pada `items`, sehingga `transaksi` hasil `create` sudah memuat `items[].modifiers[].modifier`; `findUnique` sesudahnya dihapus (`src/server/postingTransaksi.ts`); diverifikasi `tests/transaksi-fnb.test.ts`
+- [x] **PERF-04 (Medium)** Query ulang transaksi yang baru dibuat (`transaksi.ts`) — pakai hasil `create`. Modifier kini ikut sebagai nested `create` pada `items`, sehingga `transaksi` hasil `create` sudah memuat `items[].modifiers[].modifier`; `findUnique` sesudahnya dihapus (`src/server/postingTransaksi.ts`); diverifikasi `tests/vitest/transaksi-fnb.test.ts`
 - [x] **PERF-05 (Medium)** Over-fetch tanpa `select` (`produk.ts`, `kasir.ts`, `/api/v1/kategori` memanggil `produkData()` penuh). `produkData` memakai `select` kolom yang dipakai saja (produk/resep/bahan/kategori); `kategoriData()` khusus ditambahkan dan dipakai GET `/api/v1/kategori`; `kasirData` (kategori/member/delivery/transaksiHariIni) dan `laporanBukuBesar` (akun/jurnalDetail) memakai `select`
 - [x] **PERF-06 (Medium)** Nomor struk harian pakai `count()` di dalam transaksi tulis → contention. Ditambah model `NomorHarian` (`nomor_harian`) + `nomorBerikut` atomik (`UPDATE ... +1 RETURNING`, inisialisasi sekali per hari dari count hanya bila baris belum ada, tahan balapan) — `count()` tak lagi di jalur panas (`src/server/penomoran.ts`); test membersihkan `nomorHarian`
 
@@ -229,22 +233,22 @@
 
 ### Tinggi
 
-- [x] **OW-09 (High, A06/A10)** Oversell stok **tanpa login**: qty kini diagregasi per produk/bahan lalu divalidasi terhadap snapshot sebelum menulis (langkah 2b `postingTransaksi.ts`). Uji: `tests/posting.test.ts` → 2 baris qty=3 pada stok 5 ditolak, stok tetap 5.
+- [x] **OW-09 (High, A06/A10)** Oversell stok **tanpa login**: qty kini diagregasi per produk/bahan lalu divalidasi terhadap snapshot sebelum menulis (langkah 2b `postingTransaksi.ts`). Uji: `tests/vitest/posting.test.ts` → 2 baris qty=3 pada stok 5 ditolak, stok tetap 5.
 - [x] **OW-10 (High, A06)** `pajak` diabaikan; server menghitung dari pengaturan `pajak_persen` (`hitungPajak` di `postingHitung.ts`, dibaca di dalam transaksi). Input pajak kasir dihapus; halaman `/pengaturan` menambah kartu "Tarif pajak (%)". `diskon` dibatasi (`diskonTotal > subtotal` → tolak) & `total < 0` → tolak. Uji: `pajak: 500000` dari klien → `pajak 0`.
 - [x] **OW-18 (High, A10)** TOCTOU stok: dekrementasi jadi `UPDATE ... WHERE stok >= qty` + cek jumlah baris terpengaruh (langkah 5) → penjualan paralel tak bisa membuat stok negatif. Catatan: `CHECK (stok >= 0)` tak bisa dinyatakan di schema Prisma (proyek pakai `db:push`, tanpa migrasi), jadi dijaga di level aplikasi.
 
 ### Menengah
 
-- [x] **OW-11 (Medium, A06)** Diskon menumpuk: ditambahkan penjaga `diskonTotal > subtotal` → tolak ("Diskon melebihi subtotal") dan `total < 0` → tolak, sehingga `total` tak lagi bisa negatif (`postingTransaksi.ts`). Uji di `tests/posting.test.ts`.
-- [x] **OW-19 (Medium, A10)** Double-spend poin: dekremen poin kini atomik & bersyarat (`UPDATE "Member" SET poin = poin - X WHERE id = ? AND poin >= X` via `$executeRaw`); `terpakai !== 1` → tolak "Poin member tidak mencukupi". Uji: `tests/posting.test.ts`.
-- [x] **OW-01 (Medium, A01)** `updateUserRole` menolak ubah peran akun sendiri (`aktorId === target.id`), menolak demosi OWNER terakhir (hitungan OWNER lain = 0), dan menulis audit `[AUDIT] user.role.changed` (id disensor, non-development). `updateUserRoleFn` mengirim id pemanggil dari `requireOwner()`. Uji: `tests/user.test.ts`.
-- [x] **OW-12 (Medium, A06)** `validasiModifier` di `postingHitung.ts` menegakkan: modifier harus milik produk, jumlah per grup ≤ `max`, dan grup `wajib`/`min` terpenuhi (min efektif = max(min,1) bila wajib). Dipanggil dari `hitungBaris`. Uji: `tests/posting.test.ts`.
+- [x] **OW-11 (Medium, A06)** Diskon menumpuk: ditambahkan penjaga `diskonTotal > subtotal` → tolak ("Diskon melebihi subtotal") dan `total < 0` → tolak, sehingga `total` tak lagi bisa negatif (`postingTransaksi.ts`). Uji di `tests/vitest/posting.test.ts`.
+- [x] **OW-19 (Medium, A10)** Double-spend poin: dekremen poin kini atomik & bersyarat (`UPDATE "Member" SET poin = poin - X WHERE id = ? AND poin >= X` via `$executeRaw`); `terpakai !== 1` → tolak "Poin member tidak mencukupi". Uji: `tests/vitest/posting.test.ts`.
+- [x] **OW-01 (Medium, A01)** `updateUserRole` menolak ubah peran akun sendiri (`aktorId === target.id`), menolak demosi OWNER terakhir (hitungan OWNER lain = 0), dan menulis audit `[AUDIT] user.role.changed` (id disensor, non-development). `updateUserRoleFn` mengirim id pemanggil dari `requireOwner()`. Uji: `tests/vitest/user.test.ts`.
+- [x] **OW-12 (Medium, A06)** `validasiModifier` di `postingHitung.ts` menegakkan: modifier harus milik produk, jumlah per grup ≤ `max`, dan grup `wajib`/`min` terpenuhi (min efektif = max(min,1) bila wajib). Dipanggil dari `hitungBaris`. Uji: `tests/vitest/posting.test.ts`.
 - [x] **OW-03 (Medium, A02)** `errorComponent` root generik (`src/routes/__root.tsx`) — tak pernah menampilkan `error.message`; kunci i18n `error_title`/`error_desc`/`error_retry` (4 bahasa).
 - [x] **OW-17 (Medium, A09)** Hook audit tak lagi menulis PII: email dihapus, id user/sesi dihapus (`src/lib/auth.ts`). Hanya transisi peran yang dicatat (tanpa id).
 
 ### Rendah
 
-- [x] **OW-02 (Low, A01)** Query id divalidasi Zod cuid (`src/validations/id.ts`) di `GET /api/v1/member/riwayat`, `GET /api/v1/modifier`, dan `DELETE /api/v1/modifier`; `?id=bad` kini 400, bukan 500. Uji: `tests/validasi-query.test.ts`.
+- [x] **OW-02 (Low, A01)** Query id divalidasi Zod cuid (`src/validations/id.ts`) di `GET /api/v1/member/riwayat`, `GET /api/v1/modifier`, dan `DELETE /api/v1/modifier`; `?id=bad` kini 400, bukan 500. Uji: `tests/vitest/validasi-query.test.ts`.
 - [x] **OW-04 (Low, A02)** Peringatan `[KEAMANAN]` dilog saat CSP mati eksplisit di produksi (`src/lib/csp.ts`).
 - [x] **OW-05 (Low, A02)** `Cache-Control: no-store` untuk `/api/*` + header `Cross-Origin-Opener-Policy`/`Cross-Origin-Resource-Policy: same-origin` (`src/lib/csp.ts`).
 - [x] **OW-06 (Low-Med, A03)** CI GitHub Actions (`.github/workflows/ci.yml`): `bun install --frozen-lockfile`, tsc, lint, format, build, `bun audit` (SCA), dan unit test dengan service Postgres. Update otomatis via `.github/dependabot.yml`. Skrip `bun run audit` ditambahkan. Temuan pertama SCA: `xlsx@0.18.5` (2 high) → di-upgrade ke `xlsx@0.20.3` (tarball resmi SheetJS). Sisa 1 advisory **moderate** `postcss-selector-parser` (transitif `@tailwindcss/typography`, hanya saat build, tak dikirim ke runtime) — tanpa perbaikan dalam rentang; dibiarkan & dipantau.
@@ -253,7 +257,7 @@
 - [x] **OW-15 (Info, A07)** Persyaratan proxy tepercaya didokumentasikan (`.env.example` + catatan operasional laporan audit).
 - [x] **OW-16 (Low, A08)** Pengerasan preset Cloudinary (batasi format/ukuran/folder + rotasi) didokumentasikan di `.env.example` + laporan audit.
 - [x] **OW-20 (Low, A10)** `produk-terpopuler.ts` mengembalikan 400 eksplisit; galat domain `member.ts`/`produk.ts` memakai `GalatDomain` → 422 (bukan 500).
-- [x] **OW-21 (Low, A10)** `totalBelanja` ditambah via `increment` atomik lalu tier dihitung ulang dari nilai tersimpan (`postingTransaksi.ts`). Uji: `tests/posting.test.ts`.
+- [x] **OW-21 (Low, A10)** `totalBelanja` ditambah via `increment` atomik lalu tier dihitung ulang dari nilai tersimpan (`postingTransaksi.ts`). Uji: `tests/vitest/posting.test.ts`.
 
 ---
 
@@ -271,7 +275,7 @@
       otomatis-per-mode; kunci i18n `pengaturan_pajak_resto`/`pengaturan_pajak_retail`
       ×4 bahasa. Struk & RingkasanBayar menampilkan label jenis (PB1/PPN).
 - [x] **PAJAK-03** Seed menambah `pajak_resto_persen`/`pajak_retail_persen` = 0;
-      validasi pengaturan diperluas. Uji: `tests/pajak.test.ts` (8).
+      validasi pengaturan diperluas. Uji: `tests/vitest/pajak.test.ts` (8).
 
 ### Logging terstruktur (pino)
 
@@ -298,7 +302,7 @@
 - [x] **CLOUD-03** Hapus gambar produk lama diproses server saat produk diubah
       (gambar diganti/dikosongkan) atau dihapus — `bersihkanGambar` di `produk.ts`
       (best-effort). Env: `CLOUDINARY_CLOUD_NAME/API_KEY/API_SECRET/FOLDER`;
-      variabel `VITE_CLOUDINARY_*` dihapus. Uji: `tests/cloudinary.test.ts` (9).
+      variabel `VITE_CLOUDINARY_*` dihapus. Uji: `tests/vitest/cloudinary.test.ts` (9).
 - Catatan: `POS-13` (upload unsigned dari browser) **digantikan** oleh CLOUD-01..03
   (upload bertanda tangan + unduh/hapus lewat server).
 
@@ -425,15 +429,15 @@
       (GET/POST/PUT/DELETE + `?hutang=` + `{ bayar }`), pilih supplier + centang "beli
       hutang" di form pembelian bahan, laporan belanja `/laporan-belanja` (+ ekspor
       CSV/XLSX/PDF, `GET /api/v1/laporan-belanja`), hutang usaha: `PembelianBahan.belumDibayar` + model `PembayaranHutang` (migrasi `20261020015259_add_hutang_supplier`) + pelunasan
-      parsial; i18n ×4 + `docs/API.md` + unit test (`tests/supplier.test.ts`,
-      `tests/laporan-belanja.test.ts`).
+      parsial; i18n ×4 + `docs/API.md` + unit test (`tests/vitest/supplier.test.ts`,
+      `tests/vitest/laporan-belanja.test.ts`).
 - [x] **AUDIT-02** Tulis `AuditLog` di mutasi sensitif (perubahan harga, role, hapus data,
       pengaturan) + halaman/endpoint untuk melihat log. Selesai: helper `src/server/audit.ts`
       (`catatAudit` best-effort + `selisihField` hanya simpan field yang berubah), penulisan
       di produk (ubah/aktif/hapus), bahan (ubah/hapus), kategori (hapus), role user,
       pengaturan, supplier (buat/ubah/hapus) & pelunasan hutang; halaman `/audit-log`
       (filter entitas/aksi/tanggal + paging) + REST `GET /api/v1/audit-log`; i18n ×4 +
-      `docs/API.md` + unit test (`tests/audit.test.ts`).
+      `docs/API.md` + unit test (`tests/vitest/audit.test.ts`).
 - [x] **MOBIL-01** Kesiapan backend untuk aplikasi Expo (native) — plugin `bearer`
       Better Auth aktif (`src/lib/auth.ts`) sehingga sesi mobile bisa dikirim lewat
       header `Authorization: Bearer <token>` (React Native tak punya cookie jar);
@@ -441,7 +445,7 @@
       `src/lib/csp.ts`; endpoint baru `GET /api/v1/saya` (profil + riwayat milik
       pengguna yang login, untuk app member); panduan integrasi mobile
       `docs/EXPO.md` (auth, peta endpoint per layar, env, batasan, yang belum ada);
-      unit test `tests/auth-bearer.test.ts`; `docs/API.md` + `.env.example` diperbarui.
+      unit test `tests/vitest/auth-bearer.test.ts`; `docs/API.md` + `.env.example` diperbarui.
 - [x] **UI-04** UI web master printer & antrean cetak — halaman `/printer`
       (CRUD printer: nama, tipe ESC_POS/RAW, lokasi, perangkat, default, aktif;
       satu printer default) & `/percetakan` (antrean job: filter status, ambil →
@@ -455,7 +459,7 @@
       tabel baru tertinggal & seed kedua gagal karena SKU bentrok); seed menambah
       master baru: 2 printer (1 default), 2 supplier, 3 meja, 3 grup modifier +
       7 modifier (dipasang ke produk terpilih), member contoh ber-email (untuk uji
-      `/api/v1/saya`); test `tests/retur.test.ts` kini membersihkan sisa
+      `/api/v1/saya`); test `tests/vitest/retur.test.ts` kini membersihkan sisa
       data uji (sebelumnya meninggalkan user/kategori/produk di DB).
 - [x] **WARN-01** Warning "SECURITY WARNING: sslmode=require" dari driver `pg`
       hilang — `src/ssl.ts` menormalisasi `sslmode=require|prefer|verify-ca` →
@@ -474,7 +478,7 @@
       `FormatEksporBelanja`, `SupplierIdInput`, `FormatEksporPajak`,
       `OpnameItemInput`, `JenisMasterInput`, `ReturItemInput`, `AksiShiftInput`.
       Hasil `bunx knip`: 0 unused file/export (kecuali 2 hint konfigurasi).
-- [x] **TEST-UI-01** Uji render UI printer & antrean cetak — `tests/ui-percetakan.test.tsx`
+- [x] **TEST-UI-01** Uji render UI printer & antrean cetak — `tests/vitest/ui-percetakan.test.tsx`
       merender komponen tabel ke HTML statis (`react-dom/server`) sehingga error
       runtime komponen tertangkap; `vitest.config.ts` kini menyertakan `*.test.tsx`.
 - [x] **TEST-ISO-01** Isolasi data uji dicoba lewat skema `pos_test` (search_path),
@@ -524,14 +528,14 @@
       otomatis `OWNER_EMAILS`/`KASIR_EMAILS` **melewati** akun manual (pilihan owner
       menang), dan halaman `/user` menampilkan keterangan "Diatur manual" vs
       "Mengikuti env". Migrasi `20261020085419_add_role_manual`; unit test
-      (`tests/user.test.ts`: manual ditandai, env tidak menimpa manual).
+      (`tests/vitest/user.test.ts`: manual ditandai, env tidak menimpa manual).
 - [x] **BUG-01** Halaman `/kasir` crash (`Cannot read properties of undefined
 (reading 'qty')`) — `cart[p.id].qty` diakses tanpa fallback padahal produk
       belum ada di keranjang. Perbaikan: `cart[p.id]?.qty ?? 0` (ProdukGrid) dan
       `PanelBayar` melompati baris keranjang yang produknya sudah tak ada di
       master. Tipe store `kasir-store.ts` dibenahi jadi `Partial<Record<...>>`
       (sebelumnya `Record` berbohong → bug lolos typecheck). Tes regresi render
-      `tests/ui-kasir.test.tsx` (terbukti gagal tanpa perbaikan).
+      `tests/vitest/ui-kasir.test.tsx` (terbukti gagal tanpa perbaikan).
 - [x] **AUTH-01** Peran user tidak sinkron dengan `OWNER_EMAILS` — akun yang dibuat
       **sebelum** env diisi tersimpan sebagai MEMBER selamanya (hook
       `databaseHooks.user.create` hanya jalan saat pembuatan), jadi tombol
@@ -539,7 +543,7 @@
       `src/lib/peran-email.ts` (`peranDariEmail`) + sinkronisasi role di
       `databaseHooks.session.create.after` (promosi saja; OWNER tak pernah
       diturunkan otomatis) + akun lama yang tertinggal diperbarui di DB
-      (`adhitiadwima@gmail.com` → OWNER). Unit test `tests/peran-email.test.ts`.
+      (`adhitiadwima@gmail.com` → OWNER). Unit test `tests/vitest/peran-email.test.ts`.
 - [x] **LOG-01** `pino.transport` gagal di Vite/ESM ("unable to determine
       transport target for pino-pretty") → `src/lib/logger.ts` memakai
       **pino-pretty sebagai stream** di proses yang sama (tanpa worker thread,
@@ -570,14 +574,14 @@
       pendapatan tak dobel); konflik P2002 ditangani sebagai replay; outbox web
       (`src/lib/outbox.ts`) kini memakai `id` antrean sebagai kunci idempotensi;
       migrasi `20261020031500_add_idempotensi_dan_print_job`; unit test
-      `tests/idempotensi.test.ts`.
+      `tests/vitest/idempotensi.test.ts`.
 - [x] **MOBIL-03** Kontrak printer di backend — model `Printer` (master perangkat) &
       `PrintJob` (antrean cetak: MENUNGGU → DIPROSES → DICETAK/GAGAL, payload struk
       disusun server); REST `/api/v1/printer` (CRUD + `/printer/default`),
       `/api/v1/percetakan` (buat job + polling), `/percetakan/$id/ambil|selesai|gagal`
       (klaim satu kali, laporan hasil); `idempotencyKey` pada job agar retry tak
       menghasilkan job ganda; server fn `src/server/percetakanFn.ts`; unit test
-      `tests/percetakan.test.ts`; didokumentasikan di `docs/API.md` + `docs/EXPO.md`.
+      `tests/vitest/percetakan.test.ts`; didokumentasikan di `docs/API.md` + `docs/EXPO.md`.
 - [x] **API-01** REST retur/opname untuk Expo: `GET/POST /api/v1/retur` (+
       `retur/produk-aktif`, `retur/transaksi?id=`), `GET/POST /api/v1/opname` (+
       `opname/master?jenis=`), guard OWNER+KASIR, envelope standar; didokumentasikan di
@@ -590,8 +594,8 @@
       (422); form pembelian menampilkan pilihan "Pasar Online/Offline" + kolom tempat
       belanja saat supplier dikosongkan; riwayat pembelian & laporan belanja menampilkan
       sumber (rekap `perSumber`, filter per sumber, ekspor CSV/XLSX/PDF); i18n ×4 +
-      `docs/API.md` + unit test (`tests/pembelianBahan.test.ts`,
-      `tests/laporan-belanja.test.ts`).
+      `docs/API.md` + unit test (`tests/vitest/pembelianBahan.test.ts`,
+      `tests/vitest/laporan-belanja.test.ts`).
 
 ### P2 — Opsional / pertumbuhan (bukan bug)
 
@@ -624,7 +628,7 @@
 
 ### Fase 1 — Keamanan (P1)
 
-- [ ] **PRN-SEC-01** Tambah rate limit di seluruh endpoint printer/percetakan:
+- [x] **PRN-SEC-01** Tambah rate limit di seluruh endpoint printer/percetakan:
       `GET/POST /api/v1/printer/perangkat`, seluruh `/api/v1/printer`,
       `GET /api/v1/printer/default`, dan `/api/v1/percetakan` beserta aksi
       `ambil|selesai|gagal`.
@@ -634,7 +638,7 @@
       Kriteria: request melebihi batas → 429; user lain tidak terpengaruh; test
       unit untuk ambang batas dan header.
 
-- [ ] **PRN-SEC-02** Batasi jumlah perangkat per user.
+- [x] **PRN-SEC-02** Batasi jumlah perangkat per user.
       Sebelum upsert, hitung seluruh baris `Printer` milik user (bukan hanya
       `aktif`). Bila perangkat baru dan jumlah sudah 20 → `409 LIMIT_PERANGKAT`
       dengan pesan aman. Lakukan cek + upsert dalam transaksi dan kunci baris
@@ -643,7 +647,7 @@
       Kriteria: perangkat ke-21 ditolak; update perangkat lama tetap 201/200;
       uji paralel tidak menghasilkan 21 baris.
 
-- [ ] **PRN-SEC-03** Audit log untuk mutasi printer.
+- [x] **PRN-SEC-03** Audit log untuk mutasi printer.
       Tulis `catatAudit` di create/update/delete master printer dan registrasi
       perangkat. Aksi: `printer.buat`, `printer.ubah`, `printer.hapus`,
       `printer.perangkat.daftar`, `printer.perangkat.nonaktif`. Simpan hanya field
@@ -652,14 +656,14 @@
       Kriteria: baris audit berisi aktor, entitas, `before/after`; tidak ada
       serial/vendor bocor ke klien; kegagalan audit tidak menggagalkan mutasi.
 
-- [ ] **PRN-SEC-04** Lengkapi matriks otorisasi printer.
+- [x] **PRN-SEC-04** Lengkapi matriks otorisasi printer.
       Tambah test untuk: OWNER boleh CRUD master; KASIR boleh GET/POST perangkat
       miliknya tetapi 403 untuk CRUD master; MEMBER 403 di semua endpoint;
       anonymous 401; user B tidak bisa melihat/menonaktifkan perangkat user A;
       `userId` di body diabaikan dan selalu memakai sesi.
       Kriteria: test E2E/unit di atas lulus dan menjadi regression gate.
 
-- [ ] **PRN-SEC-05** Tegaskan status metadata perangkat.
+- [x] **PRN-SEC-05** Tegaskan status metadata perangkat.
       Dokumentasikan di `docs/API.md` dan `docs/EXPO.md` bahwa `vendorId`,
       `vendorName`, `serialNumber`, dan `productName` adalah metadata informatif
       dari klien, bukan bukti identitas/otorisasi. Tambah validasi karakter kontrol
@@ -670,7 +674,7 @@
 
 ### Fase 2 — Performa & konsistensi (P1/P2)
 
-- [ ] **PRN-PERF-01** Perbaiki pengelolaan printer default agar tahan concurrent.
+- [x] **PRN-PERF-01** Perbaiki pengelolaan printer default agar tahan concurrent.
       `createPrinter`/`updatePrinter` saat ini mengubah default dalam dua query
       terpisah. Refactor ke satu `$transaction`: kosongkan default lama lebih dulu,
       lalu set target. Tambah partial unique index Postgres
@@ -680,28 +684,28 @@
       Kriteria: dua request default bersamaan berakhir tepat satu default aktif;
       create/update yang gagal tidak menghapus default lama.
 
-- [ ] **PRN-PERF-02** Tangani race upsert perangkat.
+- [x] **PRN-PERF-02** Tangani race upsert perangkat.
       Bungkus `upsert` dengan penanganan `P2002`: bila baris `(userId, perangkat)`
       sudah dibuat request lain, ulangi sebagai update. Pertahankan perilaku
       metadata yang tidak dikirim tidak menghapus nilai lama.
       Kriteria: 10 request paralel untuk perangkat yang sama menghasilkan satu
       baris dan tidak ada error 500.
 
-- [ ] **PRN-PERF-03** Batasi query daftar perangkat dan tambah index komposit.
+- [x] **PRN-PERF-03** Batasi query daftar perangkat dan tambah index komposit.
       `daftarPrinterPerangkat` memakai `take: 50` (batas perangkat 20) dan index
       `@@index([userId, aktif, dipindaiPada])`. Pertimbangkan `select` kolom yang
       dipakai saja.
       Kriteria: migration index diterapkan; `EXPLAIN` memakai index; respons tetap
       sama untuk data normal.
 
-- [ ] **PRN-PERF-04** Hindari write amplification `dipindaiPada`.
+- [x] **PRN-PERF-04** Hindari write amplification `dipindaiPada`.
       Tunda item ini selama scan hanya terjadi saat login/manual. Bila nanti ada
       scan periodik, update `dipindaiPada` maksimal sekali per 5 menit atau hanya
       saat metadata berubah; jangan menulis ulang baris yang identik.
       Kriteria: dua scan berurutan dalam <5 menit tidak mengubah `dipindaiPada`;
       metadata yang berubah tetap tersimpan.
 
-- [ ] **PRN-PERF-05** Observability sinkronisasi perangkat.
+- [x] **PRN-PERF-05** Observability sinkronisasi perangkat.
       `simpanPerangkatPrinter` saat ini menelan semua kegagalan
       (`Promise.allSettled`) tanpa jejak. Kembalikan ringkasan
       `{ berhasil, gagal }`, catat kegagalan dengan aman (tanpa serial number),
@@ -711,7 +715,7 @@
 
 ### Fase 3 — Fitur (P2)
 
-- [ ] **PRN-FEAT-01** Endpoint nonaktif/hapus perangkat.
+- [x] **PRN-FEAT-01** Endpoint nonaktif/hapus perangkat.
       Tambah `DELETE /api/v1/printer/perangkat/$id` yang selalu memverifikasi
       kepemilikan sesi. Default: set `aktif=false` (soft delete). Dengan
       `?permanen=1`, hapus hanya bila tidak ada `PrintJob`; bila ada, tolak dan
@@ -719,7 +723,7 @@
       Kriteria: user B tidak bisa menonaktifkan perangkat user A; perangkat
       nonaktif hilang dari GET; perangkat berjob tidak bisa dihapus permanen.
 
-- [ ] **PRN-FEAT-02** Printer default per user.
+- [x] **PRN-FEAT-02** Printer default per user.
       Tambah `Printer.defaultPengguna` + endpoint
       `PATCH /api/v1/printer/perangkat/$id/default` (OWNER/KASIR, hanya milik
       sendiri). Endpoint mengosongkan `defaultPengguna` pada baris lain milik
@@ -729,7 +733,7 @@
       Kriteria: default user A tidak memengaruhi user B; fallback global tetap
       bekerja; migrasi + UI/API docs diperbarui.
 
-- [ ] **PRN-FEAT-03** Riwayat scan dan terakhir digunakan.
+- [x] **PRN-FEAT-03** Riwayat scan dan terakhir digunakan.
       Audit log menjadi riwayat registrasi/perubahan perangkat (setelah
       PRN-SEC-03); `dipindaiPada` tetap berarti scan terakhir. Tambah
       `Printer.terakhirDipakai` yang diperbarui saat `PrintJob` memakai printer,
@@ -742,7 +746,7 @@
 
 ### Fase 4 — Verifikasi akhir
 
-- [ ] **PRN-QA-01** Jalankan gate penuh dan perbarui dokumentasi.
+- [x] **PRN-QA-01** Jalankan gate penuh dan perbarui dokumentasi.
       `tsc --noEmit`, `lint`, `check`, `test`, `test:e2e`, `build`; lalu
       `db:seed` untuk mengembalikan data demo. Perbarui `docs/API.md` (rate limit,
       kode `LIMIT_PERANGKAT`, endpoint nonaktif/default), `docs/EXPO.md`,
@@ -831,26 +835,35 @@
 
 ### Fase 2 — Deploy & migrasi produksi
 
-- [ ] **CICD-10** Tentukan satu provider (Vercel **atau** Netlify; konfigurasi
+- [x] **CICD-10** Tentukan satu provider (Vercel **atau** Netlify; konfigurasi
       keduanya sudah ada) dan buat alur deploy yang tidak mendahului migrasi.
       Opsi aman: `workflow_dispatch` dengan environment `production` →
       `db:migrate:deploy` → deploy hook/CLI provider → smoke test. Matikan
       auto-deploy provider sementara bila urutan belum dijamin.
-      Keputusan: **Vercel**. **Terblokir:** butuh `VERCEL_TOKEN`,
-      `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, dan deploy hook/CLI yang disetujui.
-      Kriteria: deploy aplikasi tidak pernah berjalan sebelum migrasi sukses.
+      Selesai: provider **Vercel**; `.github/workflows/deploy-production.yml`
+      menjalankan migrasi → `migrate status` → `vercel pull/build/deploy --prod`
+      → smoke test. `vercel.json` mematikan auto-deploy `main`
+      (`git.deploymentEnabled.main = false`). Bukti runtime menunggu CICD-11
+      (secret) dan CICD-19 (run nyata).
 
 - [ ] **CICD-11** Buat GitHub Environment `production` (required reviewer +
       secrets `DATABASE_URL_UNPOOLED`, kredensial provider) dan `preview`
       (database terpisah). Jangan pernah menjalankan `db:seed` di produksi.
-      **Terblokir:** butuh kredensial Vercel dan database preview/produksi.
-      Kriteria: job produksi menunggu approval; secret tidak muncul di log.
+      **Sebagian selesai:** environment `production` dan `preview` dibuat lewat
+      API; `production` memakai branch policy `main`. Required reviewer ditolak
+      GitHub Free untuk repo private (HTTP 422). **Keputusan:** gate produksi =
+      `workflow_dispatch` manual dari `main` oleh user ber-write access; required
+      reviewer diaktifkan hanya bila plan di-upgrade. Secrets produksi masih
+      kosong karena nilai Vercel/Neon belum tersedia.
+      Kriteria: gate manual disetujui; secret tidak muncul di log.
 
-- [ ] **CICD-12** Smoke test pasca-deploy: `GET /api/health` = 200
+- [x] **CICD-12** Smoke test pasca-deploy: `GET /api/health` = 200
       `{database:"ok"}`, halaman login tampil, `db:migrate:status` up to date.
       Sertakan rencana rollback (redeploy versi sebelumnya + migrasi expand/contract).
-      **Terblokir:** menunggu CICD-10/11 (deploy Vercel + environment).
-      Kriteria: deploy gagal terdeteksi otomatis, bukan menunggu laporan user.
+      Selesai: `scripts/smoke-deploy.sh` memeriksa health (retry) + `/login`,
+      dipanggil workflow setelah deploy; `db:migrate:status` berjalan sebelum
+      deploy. Rollback aplikasi/DB didokumentasikan di `docs/DEPLOY.md`.
+      Bukti runtime menunggu deploy nyata (CICD-11).
 
 ### Fase 3 — GitHub Issues, Project, dan tata kelola
 
@@ -887,6 +900,8 @@
       automated security fixes sudah diaktifkan lewat API. Private vulnerability
       reporting mengembalikan 404 (fitur tidak tersedia untuk repo private ini),
       jadi kanal privat masih mengandalkan maintainer sampai fitur tersedia.
+      Verifikasi API 2026-10-22: vulnerability alerts `204`, automated fixes
+      `200`, private reporting `404`.
 
 ### Fase 4 — Operasional & konsistensi dokumen
 
@@ -906,3 +921,40 @@
       sebelum run nyata membuktikannya. Selesai: run hijau
       `https://github.com/adhitiad/pos/actions/runs/39699156327` — quality,
       unit test, e2e, audit, dan migration/drift semuanya `success`.
+
+- [x] **CICD-20** Higiene repo dan dokumentasi: tutup semua file `.env*` di
+      `.gitignore` kecuali `.env.example`, jadikan `docs/README.md` indeks yang
+      akurat, tambah `LICENSE` MIT atas nama **adhitiad** untuk aplikasi POS
+      (kasir, buku besar, percetakan), dan catat aturan commit/push/deploy di
+      `.agents/rules/15-git-dan-deploy.md`. Selesai 2026-10-22.
+
+- [x] **CICD-21** Perbaiki error runtime `Unknown argument 'userId'` pada
+      `prisma.printer.findMany()` di `src/server/percetakan.ts`: Prisma Client
+      yang dipakai dev server sudah stale. Generate ulang (`bun run db:generate`),
+      verifikasi query dengan client baru, lalu restart dev server. Hasil:
+      query OK (`printer=0`), `/api/health` 200, dan server baru memakai client
+      Prisma 7.10.1.
+
+- [x] **CICD-22** Stabilkan e2e halaman owner: suite penuh membuat analytics
+      `device-visit`/`kunjungan` kena rate limit 429 dan dulu dianggap error
+      konsol. Filter hanya 429 analytics (bukan error server), lalu verifikasi
+      ulang. Hasil: `tests/e2e/auth.spec.ts` 24 tes lulus; suite e2e penuh
+      57 tes lulus.
+
+- [x] **CICD-23** Buat PRD ganda: `docs/PRD.md` untuk manusia dan
+      `docs/PRD-AI.md` untuk agen/LLM, lalu hubungkan peta dokumen
+      `AGENTS.md ↔ DAFTAR-TUGAS ↔ .agents/rules/** ↔ PRD ↔ docs/**`.
+      Tambah `scripts/sinkron-dokumen.ts`, `docs:sync`, `docs:check`, dan
+      `predev` agar snapshot status/rute/model/test otomatis diperbarui.
+      Selesai 2026-10-22.
+
+- [x] **CICD-24** Tambah anggaran performa yang dapat digagalkan CI:
+      `docs/PERFORMA.md`, `scripts/cek-performa.ts`, dan `perf:budget`
+      (total JS+CSS gzip ≤600 KB, aset terbesar ≤160 KB, CSS ≤50 KB).
+      Baseline build lokal 2026-10-22: 449,5 KB gzip total, aset terbesar
+      108,6 KB, CSS 17,4 KB. Selesai 2026-10-22.
+
+- [ ] **CICD-25** Ukur baseline produksi setelah deploy: Core Web Vitals
+      (LCP/INP/CLS p75), p95 API baca/tulis, dan `/api/health`, lalu bandingkan
+      dengan `docs/PERFORMA.md`. Jangan mengklaim target tercapai tanpa data.
+      **Terblokir:** menunggu secret produksi (CICD-11) dan deploy nyata.

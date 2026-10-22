@@ -21,7 +21,9 @@ const printer: PrinterRow = {
   serialNumber: null,
   productName: null,
   dipindaiPada: null,
+  terakhirDipakai: null,
   default: true,
+  defaultPengguna: false,
   aktif: true,
 }
 

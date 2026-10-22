@@ -6,6 +6,7 @@ import {
   daftarkanPrinterPerangkat,
   daftarPrinterPerangkat,
 } from '#/server/percetakan'
+import { rateLimitPrinter } from '#/server/rateLimit'
 import { PrinterDeviceInputSchema } from '#/validations/percetakan'
 
 export const Route = createFileRoute('/api/v1/printer/perangkat')({
@@ -15,6 +16,8 @@ export const Route = createFileRoute('/api/v1/printer/perangkat')({
         try {
           const pengguna = await apiPengguna(request, AKSES.operasional)
           if (pengguna instanceof Response) return pengguna
+          const batas = await rateLimitPrinter(pengguna.id, 'perangkat:get', 60)
+          if (batas) return batas
           return ok(await daftarPrinterPerangkat(pengguna.id))
         } catch (e) {
           return apiError(e)
@@ -24,8 +27,17 @@ export const Route = createFileRoute('/api/v1/printer/perangkat')({
         try {
           const pengguna = await apiPengguna(request, AKSES.operasional)
           if (pengguna instanceof Response) return pengguna
+          const batas = await rateLimitPrinter(
+            pengguna.id,
+            'perangkat:post',
+            20,
+          )
+          if (batas) return batas
           const data = PrinterDeviceInputSchema.parse(await request.json())
-          return ok(await daftarkanPrinterPerangkat(data, pengguna.id), 201)
+          return ok(
+            await daftarkanPrinterPerangkat(data, pengguna.id, pengguna.id),
+            201,
+          )
         } catch (e) {
           return apiError(e)
         }

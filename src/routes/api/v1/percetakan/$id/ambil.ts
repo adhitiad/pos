@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { apiError, apiPengguna, ok } from '#/server/api'
 import { AKSES } from '#/server/peran'
 import { ambilPrintJob } from '#/server/percetakan'
+import { rateLimitPrinter } from '#/server/rateLimit'
 
 export const Route = createFileRoute('/api/v1/percetakan/$id/ambil')({
   server: {
@@ -11,6 +12,12 @@ export const Route = createFileRoute('/api/v1/percetakan/$id/ambil')({
         try {
           const pengguna = await apiPengguna(request, AKSES.operasional)
           if (pengguna instanceof Response) return pengguna
+          const batas = await rateLimitPrinter(
+            pengguna.id,
+            'percetakan:ambil',
+            20,
+          )
+          if (batas) return batas
           return ok(await ambilPrintJob(params.id))
         } catch (e) {
           return apiError(e)

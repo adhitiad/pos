@@ -2,6 +2,8 @@ import { seedBahan } from './seed/bahan.js'
 import { bersihkanSemua } from './seed/bersihkan.js'
 import { prisma } from './seed/dasar.js'
 import { seedMaster } from './seed/master.js'
+import { seedOperasional } from './seed/operasional.js'
+import { seedPengguna } from './seed/pengguna.js'
 import { menuMakanan } from './seed/menu-makanan.js'
 import { menuMinuman } from './seed/menu-minuman.js'
 import {
@@ -9,9 +11,12 @@ import {
   seedProdukDasar,
   seedProdukMenu,
 } from './seed/produk.js'
+import { verifikasiSeed } from './seed/verifikasi.js'
 
-// Seed database demo: master data, bahan baku, produk + resep, modifier,
-// printer, supplier, meja, akun buku besar, dan pengaturan.
+// Seed database demo: master data, pengguna, bahan baku, produk + resep,
+// modifier, printer, supplier, meja, akun buku besar, pengaturan, lalu data
+// operasional (shift, transaksi, pembayaran, jurnal, retur, opname, cetak,
+// audit, kunjungan).
 //
 // Dijalankan lewat `bun run db:seed`. Modul-modulnya dipisah agar tiap
 // berkas tetap ringkas (lihat .agents/rules/04-batas-file.md).
@@ -21,6 +26,7 @@ async function main() {
   await bersihkanSemua()
 
   const kategori = await seedMaster()
+  const pengguna = await seedPengguna()
   const bahan = await seedBahan()
 
   await seedProdukDasar(kategori, bahan)
@@ -32,10 +38,11 @@ async function main() {
   await seedModifierProduk('Kopi Susu Gula Aren', 'Ukuran')
   await seedModifierProduk('Corndog Mozza Coklat', 'Topping')
 
+  await seedOperasional(pengguna)
+  await verifikasiSeed()
+
   const jumlah = await prisma.produk.count()
-  console.log(
-    `✅ Seed selesai: ${jumlah} produk, bahan baku, member, kurir, meja, modifier, printer, supplier, akun, pengaturan`,
-  )
+  console.log(`✅ Seed selesai: ${jumlah} produk + data transaksi demo`)
 }
 
 main()

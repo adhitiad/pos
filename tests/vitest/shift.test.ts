@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest'
 
-import { prisma } from '../src/db.js'
+import { prisma } from '../../src/db.js'
 import { bukaShift, dataShift, tutupShift } from '#/server/shift'
 
 const userIds: string[] = []

@@ -11,7 +11,9 @@ export interface PrinterRow {
   serialNumber: string | null
   productName: string | null
   dipindaiPada: string | null
+  terakhirDipakai: string | null
   default: boolean
+  defaultPengguna: boolean
   aktif: boolean
 }
 

@@ -12,6 +12,16 @@ import {
   TableRow,
 } from '#/components/ui/table'
 
+function waktuTerakhir(iso: string | null): string {
+  if (!iso) return '-'
+  const tanggal = new Date(iso)
+  if (Number.isNaN(tanggal.getTime())) return '-'
+  return tanggal.toLocaleString('id-ID', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  })
+}
+
 export default function TabelPrinter({
   baris,
   onEdit,
@@ -31,6 +41,7 @@ export default function TabelPrinter({
             <TableHead>{m.printer_lokasi()}</TableHead>
             <TableHead>{m.printer_perangkat()}</TableHead>
             <TableHead>{m.printer_koneksi()}</TableHead>
+            <TableHead>{m.printer_terakhir_dipakai()}</TableHead>
             <TableHead>{m.printer_status()}</TableHead>
             <TableHead>{m.printer_aksi()}</TableHead>
           </TableRow>
@@ -49,6 +60,9 @@ export default function TabelPrinter({
               <TableCell>{p.perangkat ?? '—'}</TableCell>
               <TableCell>
                 <Badge variant="outline">{p.koneksi}</Badge>
+              </TableCell>
+              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                {waktuTerakhir(p.terakhirDipakai)}
               </TableCell>
               <TableCell>
                 {p.aktif ? (

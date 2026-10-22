@@ -1,13 +1,13 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
-import { prisma } from '../src/db.js'
+import { prisma } from '../../src/db.js'
 import {
   createMeja,
   hapusMeja,
   mejaData,
   toggleMeja,
   updateMeja,
-} from '../src/server/meja.js'
+} from '../../src/server/meja.js'
 
 async function bersihkan() {
   await prisma.transaksiItemModifier.deleteMany()

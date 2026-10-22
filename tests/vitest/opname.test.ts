@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from 'vitest'
 
-import { prisma } from '../src/db.js'
+import { prisma } from '../../src/db.js'
 import { simpanOpname } from '#/server/opname'
 import { SimpanOpnameSchema } from '#/validations/opname'
 

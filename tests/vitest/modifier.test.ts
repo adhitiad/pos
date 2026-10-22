@@ -1,6 +1,6 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
-import { prisma } from '../src/db.js'
+import { prisma } from '../../src/db.js'
 import {
   createModifier,
   createModifierGrup,
@@ -12,7 +12,7 @@ import {
   toggleModifierGrup,
   updateModifier,
   updateModifierGrup,
-} from '../src/server/modifier.js'
+} from '../../src/server/modifier.js'
 
 async function bersihkan() {
   await prisma.transaksiItemModifier.deleteMany()

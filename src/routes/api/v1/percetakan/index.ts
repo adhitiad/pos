@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { apiError, apiPengguna, ok } from '#/server/api'
 import { AKSES } from '#/server/peran'
 import { buatPrintJob, daftarPrintJob } from '#/server/percetakan'
+import { rateLimitPrinter } from '#/server/rateLimit'
 import {
   BuatPrintJobSchema,
   DaftarPrintJobSchema,
@@ -15,6 +16,12 @@ export const Route = createFileRoute('/api/v1/percetakan/')({
         try {
           const pengguna = await apiPengguna(request, AKSES.operasional)
           if (pengguna instanceof Response) return pengguna
+          const batas = await rateLimitPrinter(
+            pengguna.id,
+            'percetakan:get',
+            60,
+          )
+          if (batas) return batas
           const q = new URL(request.url).searchParams
           const data = DaftarPrintJobSchema.parse({
             status: q.get('status') ?? undefined,
@@ -30,8 +37,14 @@ export const Route = createFileRoute('/api/v1/percetakan/')({
         try {
           const pengguna = await apiPengguna(request, AKSES.operasional)
           if (pengguna instanceof Response) return pengguna
+          const batas = await rateLimitPrinter(
+            pengguna.id,
+            'percetakan:post',
+            20,
+          )
+          if (batas) return batas
           const data = BuatPrintJobSchema.parse(await request.json())
-          return ok(await buatPrintJob(data), 201)
+          return ok(await buatPrintJob(data, pengguna.id), 201)
         } catch (e) {
           return apiError(e)
         }

@@ -750,26 +750,29 @@ model StokOpnameItem {
 // Printer adalah Registered Device (bluetooth/USB/IP). Client pencetak
 // mengambil job dari server lewat polling, lalu reportsesuai selesai.
 model Printer {
-  id           String    @id @default(cuid())
+  id              String    @id @default(cuid())
   // Pemilik pendaftaran perangkat: hanya OWNER/KASIR (dijaga di API).
-  userId       String?
-  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  nama         String
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  nama            String
   // "ESC_POS" (thermal 58mm) atau "RAW" (printer biasa).
-  tipe         String    @default("ESC_POS")
-  lokasi       String? // mis. "Kasir 1", "Dapur"
-  perangkat    String? // id stabil perangkat (MAC, IP, USB path, atau ID Web Serial)
+  tipe            String    @default("ESC_POS")
+  lokasi          String? // mis. "Kasir 1", "Dapur"
+  perangkat       String? // id stabil perangkat (MAC, IP, USB path, atau ID Web Serial)
   // Jalur koneksi perangkat: "USB" | "BLUETOOTH" | "WIFI" | "SERIAL".
-  koneksi      String    @default("USB")
+  koneksi         String    @default("USB")
   // Metadata perangkat bila tersedia dari API native / Web Serial.
-  vendorId     String?
-  vendorName   String?
-  serialNumber String?
-  productName  String?
-  dipindaiPada DateTime?
+  vendorId        String?
+  vendorName      String?
+  serialNumber    String?
+  productName     String?
+  dipindaiPada    DateTime?
+  terakhirDipakai DateTime?
   // Printer default: dipakai bila klien tak menyebut printer.
-  default      Boolean   @default(false)
-  aktif        Boolean   @default(true)
+  default         Boolean   @default(false)
+  // Default per pengguna (perangkat hasil pindai).
+  defaultPengguna Boolean   @default(false)
+  aktif           Boolean   @default(true)
 
   jobs PrintJob[]
 
@@ -778,6 +781,7 @@ model Printer {
 
   @@unique([userId, perangkat])
   @@index([userId])
+  @@index([userId, aktif, dipindaiPada])
   @@index([koneksi])
 }
 

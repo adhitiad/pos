@@ -13,14 +13,36 @@ export async function seedMaster() {
   ])
 
   // Member contoh (email dipakai agar endpoint `/api/v1/saya` bisa diuji).
-  await prisma.member.create({
-    data: {
-      nama: 'Budi Santoso',
-      telepon: '081234567890',
-      email: 'budi@example.com',
-      alamat: 'Jl. Merdeka No. 1',
-      poin: 0,
-    },
+  await prisma.member.createMany({
+    data: [
+      {
+        nama: 'Budi Santoso',
+        telepon: '081234567890',
+        email: 'budi@example.com',
+        alamat: 'Jl. Merdeka No. 1',
+        poin: 0,
+      },
+      {
+        nama: 'Siti Rahma',
+        telepon: '081298765432',
+        email: 'siti@example.com',
+        alamat: 'Jl. Melati No. 8',
+        poin: 350,
+        totalBelanja: 3_500_000,
+        diskonPersen: 5,
+        tier: 'SILVER',
+      },
+      {
+        nama: 'Andi Pratama',
+        telepon: '081377788899',
+        email: 'andi@example.com',
+        alamat: 'Jl. Kenanga No. 3',
+        poin: 1_250,
+        totalBelanja: 12_500_000,
+        diskonPersen: 10,
+        tier: 'GOLD',
+      },
+    ],
   })
 
   // Kurir / layanan antar.

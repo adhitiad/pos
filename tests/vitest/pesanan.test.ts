@@ -1,8 +1,8 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
-import { prisma } from '../src/db.js'
-import { notifikasiData } from '../src/server/notifikasi.js'
-import { pesanTransaksi } from '../src/server/pesanan.js'
+import { prisma } from '../../src/db.js'
+import { notifikasiData } from '../../src/server/notifikasi.js'
+import { pesanTransaksi } from '../../src/server/pesanan.js'
 
 async function buatProduk(
   nama: string,

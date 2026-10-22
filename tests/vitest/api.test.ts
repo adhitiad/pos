@@ -3,7 +3,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 import { prisma } from '#/db'
 import { apiError, gagal, ok } from '#/server/api'
 import { GalatDomain, GalatRateLimit } from '#/server/galat'
-import { batasi } from '#/server/rateLimit'
+import { batasi, rateLimitPrinter } from '#/server/rateLimit'
 
 const kunciUji: string[] = []
 const kunciBaru = (nama: string) => {
@@ -85,5 +85,32 @@ describe('api — rate limit (store bersama)', () => {
     expect((await batasi(a, 1)).boleh).toBe(true)
     expect((await batasi(a, 1)).boleh).toBe(false)
     expect((await batasi(b, 1)).boleh).toBe(true)
+  })
+})
+
+describe('api — rate limit printer per user', () => {
+  it('menolak setelah batas dengan envelope dan Retry-After', async () => {
+    const userA = crypto.randomUUID()
+    const userB = crypto.randomUUID()
+    kunciUji.push(`printer:uji:${userA}`, `printer:uji:${userB}`)
+
+    expect(await rateLimitPrinter(userA, 'uji', 2)).toBeNull()
+    expect(await rateLimitPrinter(userA, 'uji', 2)).toBeNull()
+
+    const tolak = await rateLimitPrinter(userA, 'uji', 2)
+    expect(tolak?.status).toBe(429)
+    expect(tolak?.headers.get('Retry-After')).toMatch(/^\d+$/)
+    expect(tolak?.headers.get('X-RateLimit-Limit')).toBe('2')
+    expect(tolak?.headers.get('X-RateLimit-Remaining')).toBe('0')
+    expect(await tolak?.json()).toEqual({
+      ok: false,
+      error: {
+        code: 'TOO_MANY_REQUESTS',
+        message: 'Terlalu banyak permintaan',
+      },
+    })
+
+    expect(await rateLimitPrinter(userB, 'uji', 1)).toBeNull()
+    expect(await rateLimitPrinter(userB, 'uji', 1)).not.toBeNull()
   })
 })

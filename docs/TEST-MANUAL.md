@@ -11,13 +11,17 @@
 | 0.1 | Env siap      | `bun run db:migrate:status` → "up to date"                                                                |                                                                            |
 | 0.2 | Seed data     | `bun run db:reset` → "Seed selesai"                                                                       | Wajib bila sebelumnya `bun run test` (unit test mengosongkan tabel master) |
 | 0.3 | Dev server    | `bun --bun run dev` → http://localhost:3000                                                               |                                                                            |
-| 0.4 | Login OWNER   | Google dengan email di `OWNER_EMAILS` (.env.local)                                                        | Role otomatis OWNER                                                        |
-| 0.5 | Login KASIR   | Tambahkan email kasir ke `KASIR_EMAILS` → login ulang                                                     | Tanpa ini semua user jadi MEMBER                                           |
+| 0.4 | Login OWNER   | Google dengan email di `OWNER_EMAILS` (.env.local)                                                        | Role otomatis OWNER; shift demo sudah terbuka                              |
+| 0.5 | Login KASIR   | Google dengan email di `KASIR_EMAILS` (`uewfau@gmail.com`, `kirara1nr@gmail.com`)                         | Role KASIR; shift demo sudah terbuka                                       |
 | 0.6 | Gate otomatis | `bunx tsc --noEmit && bun run lint && bun run check && bun run test && bun run test:e2e && bun run build` | Semua harus hijau                                                          |
 
-**Data seed yang tersedia:** 47 produk + resep · 24 bahan · 2 kategori · 3 meja ·
-3 grup modifier (Topping/Tingkat Manis/Ukuran) · 2 printer (1 default) ·
-2 supplier · member Budi · 2 kurir · 7 akun buku besar · 11 pengaturan.
+**Data seed yang tersedia:** 47 produk + resep · 24 bahan · 3 member (BRONZE/
+SILVER/GOLD) · 8 transaksi (termasuk split payment, dapur, online, retur) ·
+3 pembelian + 1 hutang · 2 opname · 3 print job · 8 audit log · 6 page visit ·
+3 device visit · 5 shift (3 terbuka) · 2 kategori · 3 meja · 3 grup modifier ·
+2 printer (1 default) · 2 supplier · 2 kurir · 7 akun buku besar · 11 pengaturan.
+Akun login seed: OWNER dari `OWNER_EMAILS`, KASIR `uewfau@gmail.com` dan
+`kirara1nr@gmail.com` (login Google, tanpa password).
 
 ---
 

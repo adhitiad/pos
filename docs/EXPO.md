@@ -229,7 +229,11 @@ sama-sama mencetak struk yang sama.
 
 Objek koneksi aktif tetap hanya di state sesi, tetapi **metadata perangkat
 disimpan ke DB** untuk akun OWNER/KASIR. Server memakai `userId` dari token
-sesi; jangan pernah mengirim `userId` dari klien.
+sesi; jangan pernah mengirim `userId` dari klien. `vendorId`, `vendorName`,
+`serialNumber`, dan `productName` adalah metadata informatif dari klien, bukan
+bukti identitas/otorisasi — jangan pakai untuk keputusan akses. Server menolak
+karakter kontrol pada field teks dan membatasi 20 perangkat per pengguna
+(`409 LIMIT_PERANGKAT`).
 
 - Saat login OWNER/KASIR berhasil: pindai perangkat yang sudah berizin
   (Android: bonded Bluetooth printers; iOS: `expo-print`/BLE yang tersedia).
@@ -240,6 +244,14 @@ sesi; jangan pernah mengirim `userId` dari klien.
 - `GET /api/v1/printer/perangkat` mengembalikan perangkat aktif milik pengguna;
   pakai untuk menampilkan "printer yang dikenal" setelah login. Pilihan/port
   aktif tetap di state memori.
+- `DELETE /api/v1/printer/perangkat/$id` menonaktifkan perangkat milik sesi
+  (default). `?permanen=1` hanya berhasil bila belum ada riwayat cetak; bila ada,
+  server membalas `409 PERANGKAT_BERJOB` — arahkan pengguna ke nonaktif.
+- `PATCH /api/v1/printer/perangkat/$id/default` menjadikan perangkat sebagai
+  default akun. Default user lain tidak berubah. `GET /api/v1/printer/default`
+  memilih default akun lebih dulu, lalu default global, lalu printer aktif
+  pertama. `dipindaiPada` = scan terakhir; `terakhirDipakai` = job cetak
+  terakhir yang dibuat dengan printer itu.
 - Saat logout: kosongkan state koneksi dan batalkan langganan perangkat.
   Metadata di DB tidak dihapus (tetap milik akun).
 - Printer baru tetap butuh aksi pengguna (pairing/pilih perangkat) sebelum dipakai.

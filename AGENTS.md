@@ -14,17 +14,40 @@ bun run db:migrate          # buat migration baru (dev, prisma migrate dev)
 bun run db:migrate:deploy   # apply migration (dev/prod/CI, migrate deploy)
 bun run db:migrate:status   # cek status migration
 bun run lint | bun run format | bun run check
-bun run test               # vitest (unit, tests/*.test.ts)
+bun run docs:sync          # sinkronkan snapshot PRD dari DAFTAR-TUGAS
+bun run docs:check         # gagal bila snapshot PRD basi
+bun run perf:budget        # cek anggaran bundle setelah build
+bun run test:vitest        # vitest (unit, tests/vitest/*.test.ts)
+bun run test               # alias test:vitest
 bun run test:e2e            # playwright (tests/e2e/*.spec.ts, chromium)
 bunx tsc --noEmit          # typecheck
 ```
 
 ## Gate definisi-selesai
 
-Setiap perubahan kode WAJIB lolos ketiganya: `tsc --noEmit`, `lint`, `build`.
+Setiap perubahan kode WAJIB lolos: `tsc --noEmit`, `lint`, `check`,
+`docs:check`, `test:vitest`, `test:e2e` (bila route/guard/endpoint berubah),
+`build`, dan `perf:budget` setelah build.
 Uji DB manual pakai skrip sekali-pakai di `C:\Users\humas\AppData\Local\Temp\opencode\`,
 impor absolut (`E:/code/pos/src/...`), jalankan via
 `bunx dotenv run -f .env.local -- bun <skrip>` — lalu `db:seed` untuk reset.
+
+## Peta dokumen (wajib)
+
+Urutan baca dan sinkronisasi:
+
+```text
+AGENTS.md → docs/DAFTAR-TUGAS.md → .agents/rules/** → docs/PRD.md
+  → docs/PRD-AI.md → docs/** (API, DEPLOY, OPERASIONAL, PERFORMA, …)
+```
+
+- `docs/DAFTAR-TUGAS.md` satu-satunya sumber status tugas.
+- `docs/PRD.md` = niat produk untuk manusia; `docs/PRD-AI.md` = kontrak kerja
+  agen/LLM dan invariant teknis.
+- Blok `AUTO:PRD` di kedua PRD dihasilkan `bun run docs:sync`; jangan edit manual.
+- Perubahan fitur/perilaku wajib memperbarui PRD terkait, `API.md` bila kontrak
+  berubah, dan aturan `.agents/rules/` bila konvensi berubah.
+- Detail: `.agents/rules/16-prd-dan-dokumen.md`.
 
 ## Konvensi kode
 
@@ -46,3 +69,6 @@ impor absolut (`E:/code/pos/src/...`), jalankan via
 - API: kontrak resmi di `docs/API.md` (dipakai web + Expo). Fitur data baru WAJIB
   lewat endpoint itu; route REST di `src/routes/api/v1/*` hanya guard + envelope.
 - Status tugas: update `docs/DAFTAR-TUGAS.md` (centang bila selesai).
+- Git/deploy: **jangan commit/push/deploy tanpa perintah eksplisit** — commit
+  hanya setelah "ok Commit", push hanya setelah "ok push"; detail di
+  `15-git-dan-deploy.md`.

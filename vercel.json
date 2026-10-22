@@ -3,5 +3,10 @@
   "framework": "tanstack-start",
   "installCommand": "bun install",
   "buildCommand": "NITRO_PRESET=vercel bun run build",
-  "bunVersion": "1.x"
+  "bunVersion": "1.x",
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  }
 }

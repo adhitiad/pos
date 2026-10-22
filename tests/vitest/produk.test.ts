@@ -1,11 +1,11 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
-import { prisma } from '../src/db.js'
+import { prisma } from '../../src/db.js'
 import {
   produkLanding,
   produkTerbaru,
   produkTerpopuler,
-} from '../src/server/produk.js'
+} from '../../src/server/produk.js'
 
 async function bersihkan() {
   await prisma.transaksiItemModifier.deleteMany()

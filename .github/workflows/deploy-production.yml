@@ -1,0 +1,109 @@
+name: Deploy Production
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Migrate · Deploy Vercel · Smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    env:
+      DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache Bun
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install (lockfile beku)
+        run: bun install --frozen-lockfile
+
+      - name: Validasi secrets environment production
+        shell: bash
+        run: |
+          set -euo pipefail
+          for nama in DATABASE_URL_UNPOOLED VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!nama:-}" ]; then
+              echo "::error::Secret $nama belum diset di environment production."
+              exit 1
+            fi
+          done
+
+      - name: Tulis .env.local untuk Prisma CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          printf 'DATABASE_URL_UNPOOLED=%s\n' "$DATABASE_URL_UNPOOLED" > .env.local
+
+      - name: Apply migrations (migrate deploy)
+        run: bun run db:migrate:deploy
+
+      - name: Cek status migrasi
+        run: bun run db:migrate:status
+
+      - name: Hapus .env.local
+        if: always()
+        shell: bash
+        run: rm -f .env.local
+
+      - name: Vercel pull (production)
+        run: bunx vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Vercel build (production)
+        run: bunx vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Deploy ke Vercel
+        id: deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$(mktemp)"
+          bunx vercel deploy --prebuilt --prod --yes --token="$VERCEL_TOKEN" | tee "$log"
+          url="$(grep -Eo 'https://[^[:space:]]+' "$log" | tail -n 1 | tr -d '\r' || true)"
+          case "$url" in
+            https://*) ;;
+            *)
+              echo "::error::URL deployment tidak ditemukan di output Vercel."
+              exit 1
+              ;;
+          esac
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Smoke test pasca-deploy
+        env:
+          BASE_URL: ${{ steps.deploy.outputs.url }}
+        run: bash scripts/smoke-deploy.sh "$BASE_URL"
+
+      - name: Instruksi rollback
+        if: failure()
+        shell: bash
+        run: |
+          echo "::warning::Deploy/migrasi gagal. Rollback aplikasi: Vercel Dashboard → Deployments → Promote deployment sebelumnya. Rollback DB: migrasi expand/contract atau restore PITR Neon. Lihat docs/DEPLOY.md."

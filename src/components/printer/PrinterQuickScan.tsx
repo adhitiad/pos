@@ -5,6 +5,10 @@ import { toast } from 'sonner'
 import { m } from '#/paraglide/messages'
 import { simpanPerangkatPrinter } from '#/lib/printer-daftar'
 import {
+  daftarPrinterPerangkatFn,
+  setDefaultPrinterPerangkatFn,
+} from '#/server/percetakanFn'
+import {
   berlanggananPrinter,
   daftarPrinterSesi,
   dukunganSerial,
@@ -14,6 +18,8 @@ import {
   tambahPrinterDenganIzin,
 } from '#/lib/printer-scan'
 import type { JalurPrinter, PrinterPerangkat } from '#/types/printer'
+
+import { TestPrintStruk } from './TestPrintStruk'
 
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
@@ -44,30 +50,51 @@ function labelJalur(jalur?: JalurPrinter): string {
 // menyimpan apa pun ke database.
 export default function PrinterQuickScan() {
   const [terbuka, setTerbuka] = useState(false)
+  const [tahap, setTahap] = useState<'pindai' | 'test'>('pindai')
   const [daftar, setDaftar] = useState<PrinterPerangkat[]>([])
   const [terpilih, setTerpilih] = useState<string | null>(null)
   const [sibuk, setSibuk] = useState(false)
+  const [perangkatDb, setPerangkatDb] = useState<Record<string, string>>({})
+  const [defaultPerangkat, setDefaultPerangkat] = useState<string | null>(null)
   const didukung = dukunganSerial()
+
+  const muatDefault = async () => {
+    const rows = await daftarPrinterPerangkatFn()
+    const peta: Record<string, string> = {}
+    let defaultId: string | null = null
+    for (const row of rows) {
+      if (!row.perangkat) continue
+      peta[row.perangkat] = row.id
+      if (row.defaultPengguna) defaultId = row.perangkat
+    }
+    setPerangkatDb(peta)
+    setDefaultPerangkat(defaultId)
+  }
 
   useEffect(() => {
     setDaftar(daftarPrinterSesi())
     setTerpilih(printerTerpilih()?.id ?? null)
+    void muatDefault().catch(() => {
+      // daftar default opsional; jangan ganggu halaman
+    })
     return berlanggananPrinter((baru) => {
       setDaftar(baru)
       setTerpilih(printerTerpilih()?.id ?? null)
     })
   }, [])
 
-  const pindai = async () => {
+  const pindai = async (lanjutKeTest = false) => {
     setSibuk(true)
     try {
       const hasil = await pindaiPrinterOtomatis()
       await simpanPerangkatPrinter(hasil)
+      await muatDefault()
       setTerpilih(printerTerpilih()?.id ?? null)
     } catch (e) {
       toast.error(e instanceof Error ? e.message : m.printer_scan_gagal())
     } finally {
       setSibuk(false)
+      if (lanjutKeTest) setTahap('test')
     }
   }
 
@@ -76,8 +103,25 @@ export default function PrinterQuickScan() {
     try {
       const entri = await tambahPrinterDenganIzin()
       await simpanPerangkatPrinter([entri])
+      await muatDefault()
       setTerpilih(entri.id)
       toast.success(m.printer_scan_berhasil())
+      setTahap('test')
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : m.printer_scan_gagal())
+    } finally {
+      setSibuk(false)
+    }
+  }
+
+  const jadikanDefault = async (perangkat: string) => {
+    const id = perangkatDb[perangkat]
+    if (!id) return
+    setSibuk(true)
+    try {
+      await setDefaultPrinterPerangkatFn({ data: { id } })
+      setDefaultPerangkat(perangkat)
+      toast.success(m.printer_scan_default())
     } catch (e) {
       toast.error(e instanceof Error ? e.message : m.printer_scan_gagal())
     } finally {
@@ -95,7 +139,10 @@ export default function PrinterQuickScan() {
       open={terbuka}
       onOpenChange={(open) => {
         setTerbuka(open)
-        if (open) void pindai()
+        if (open) {
+          setTahap('pindai')
+          void pindai(true)
+        }
       }}
     >
       <DialogTrigger asChild>
@@ -118,11 +165,27 @@ export default function PrinterQuickScan() {
 
       <DialogContent className="max-h-[85svh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{m.printer_scan_title()}</DialogTitle>
-          <DialogDescription>{m.printer_scan_desc()}</DialogDescription>
+          <DialogTitle>
+            {tahap === 'test' ? m.printer_test_judul() : m.printer_scan_title()}
+          </DialogTitle>
+          <DialogDescription>
+            {tahap === 'test' ? m.printer_test_desc() : m.printer_scan_desc()}
+          </DialogDescription>
         </DialogHeader>
 
-        {!didukung ? (
+        {tahap === 'test' ? (
+          <TestPrintStruk
+            onLewati={() => {
+              setTerbuka(false)
+            }}
+            onSelesai={() => {
+              setTerbuka(false)
+            }}
+            onKembali={() => {
+              setTahap('pindai')
+            }}
+          />
+        ) : !didukung ? (
           <p className="rounded-lg border border-border bg-muted/40 p-3 text-sm text-muted-foreground">
             {m.printer_scan_tidak_support()}
           </p>
@@ -185,8 +248,13 @@ export default function PrinterQuickScan() {
                       <div className="flex min-w-0 flex-1 items-start gap-2">
                         <Ikon className="mt-0.5 size-4 shrink-0 text-brand" />
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-medium">
+                          <p className="flex items-center gap-1.5 truncate text-sm font-medium">
                             {printer.nama}
+                            {defaultPerangkat === printer.id && (
+                              <Badge variant="secondary" className="h-5 px-1.5">
+                                {m.printer_scan_default()}
+                              </Badge>
+                            )}
                           </p>
                           <p className="truncate text-xs text-muted-foreground">
                             {m.printer_scan_dari_port()}:{' '}
@@ -199,6 +267,18 @@ export default function PrinterQuickScan() {
                           </p>
                         </div>
                       </div>
+                      {defaultPerangkat !== printer.id &&
+                        perangkatDb[printer.id] && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-11"
+                            disabled={sibuk}
+                            onClick={() => void jadikanDefault(printer.id)}
+                          >
+                            {m.printer_scan_jadikan_default()}
+                          </Button>
+                        )}
                       {aktif ? (
                         <Badge variant="secondary" className="gap-1">
                           <Check className="size-3" />
@@ -240,11 +320,13 @@ export default function PrinterQuickScan() {
           </div>
         )}
 
-        <DialogFooter>
-          <p className="text-xs text-muted-foreground">
-            {m.printer_scan_server_note()}
-          </p>
-        </DialogFooter>
+        {tahap === 'pindai' && (
+          <DialogFooter>
+            <p className="text-xs text-muted-foreground">
+              {m.printer_scan_server_note()}
+            </p>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   )

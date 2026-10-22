@@ -19,6 +19,7 @@ import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import FormPrinter from '#/components/printer/FormPrinter'
 import PrinterQuickScan from '#/components/printer/PrinterQuickScan'
+import { DialogTestPrint } from '#/components/printer/TestPrintStruk'
 import TabelPrinter from '#/components/printer/TabelPrinter'
 import {
   Card,
@@ -133,6 +134,7 @@ function Printer() {
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-3">
           <PrinterQuickScan />
+          <DialogTestPrint />
           <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
             {m.printer_scan_server_note()}
           </p>

@@ -18,14 +18,16 @@ export default function PemindaiPrinterOtomatis() {
       return
     }
     let aktif = true
+    const masihAktif = () => aktif
     void getPenggunaFn()
       .then(async (pengguna) => {
-        if (!aktif) return
+        if (!masihAktif()) return
         if (pengguna?.role !== 'OWNER' && pengguna?.role !== 'KASIR') {
           hapusCachePrinter()
           return
         }
         const daftar = await pindaiPrinterOtomatis()
+        if (!masihAktif()) return
         await simpanPerangkatPrinter(daftar)
       })
       .catch(() => {

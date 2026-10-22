@@ -1,154 +1,60 @@
-# POS — Task Log & Roadmap
+# Dokumentasi POS
 
-> Dokumen tunggal daftar pekerjaan (done / ongoing / next). Update saat rencana berubah.
-> Task ID prefix `POS-N`.
+Indeks dokumen teknis dan operasional. Status pekerjaan ada di
+[`DAFTAR-TUGAS.md`](DAFTAR-TUGAS.md), bukan di halaman ini.
 
-## Conventions
+## Mulai di sini
 
-- Status: `✅ Done` · `🛠 In progress` · `📋 Pending` · `🚫 Blocked` · `⏸ On hold`
-- Owner default: main.
-- Verifikasi: `bun --bun run build`, `bunx --bun tsc --noEmit`, `bun run lint`.
+1. Setup lokal, env, dan perintah: [`../README.md`](../README.md)
+2. Aturan wajib agen: [`../AGENTS.md`](../AGENTS.md) + [`../.agents/rules/`](../.agents/rules/)
+3. Niat produk: [`PRD.md`](PRD.md) · kontrak agen/LLM: [`PRD-AI.md`](PRD-AI.md)
+4. Kontrak API web + Expo: [`API.md`](API.md)
+5. Deploy produksi: [`DEPLOY.md`](DEPLOY.md)
+6. Checklist uji manual: [`TEST-MANUAL.md`](TEST-MANUAL.md)
+7. Performa dan anggaran bundle: [`PERFORMA.md`](PERFORMA.md)
 
----
+## Peta dokumen
 
-## ✅ DONE
+| Dokumen                                          | Isi                                                                    |
+| ------------------------------------------------ | ---------------------------------------------------------------------- |
+| [`PRD.md`](PRD.md)                               | Niat produk, persona, ruang lingkup, NFR, dan rencana untuk manusia    |
+| [`PRD-AI.md`](PRD-AI.md)                         | Kontrak kerja agen/LLM, invariant teknis, gate, dan peta kode          |
+| [`PERFORMA.md`](PERFORMA.md)                     | Target Core Web Vitals, baseline bundle, query, dan prosedur ukur      |
+| [`DAFTAR-TUGAS.md`](DAFTAR-TUGAS.md)             | Sumber kebenaran status tugas, temuan audit, dan backlog               |
+| [`DEPLOY.md`](DEPLOY.md)                         | Setup Vercel, environment GitHub, urutan migrasi, smoke test, rollback |
+| [`OPERASIONAL.md`](OPERASIONAL.md)               | Backup/PITR, uptime, monitoring, dan prosedur operasi                  |
+| [`API.md`](API.md)                               | Kontrak REST `/api/v1/*` untuk web dan klien native                    |
+| [`EXPO.md`](EXPO.md)                             | Integrasi aplikasi Expo/mobile                                         |
+| [`TEST-MANUAL.md`](TEST-MANUAL.md)               | Checklist uji manual web + backend                                     |
+| [`GITHUB-SETUP.md`](GITHUB-SETUP.md)             | Issue, label, Project, dan tata kelola GitHub                          |
+| [`setup-google-oauth.md`](setup-google-oauth.md) | Konfigurasi Google OAuth                                               |
+| [`execution-plan.md`](execution-plan.md)         | Rencana eksekusi dan keputusan teknis                                  |
+| [`BUKTI-KODE.md`](BUKTI-KODE.md)                 | Bukti kode dan diagram alur                                            |
+| [`../MYDIAGRAM.md`](../MYDIAGRAM.md)             | Diagram alur aplikasi lengkap                                          |
 
-### POS-1 Fundament
+## Sinkronisasi dokumen
 
-- Scaffold TanStack Start (React, file-router, bun) + ESLint/Tailwind4/Shadcn/T3Env
-- Fix `bun install` EBUSY; build passes.
-- Intent restored via `@tanstack/intent` dev dep.
+Urutan yang mengikat:
 
-### POS-2 Database — master & transaksi
+```text
+AGENTS.md → DAFTAR-TUGAS.md → .agents/rules/** → PRD.md → PRD-AI.md → docs/**
+```
 
-- Schema `prisma/schema.prisma`: User/Session/Account/Verification, Kategori, Bahan, Produk, ProdukBahan (BOM), Member, Delivery, Transaksi, TransaksiItem.
-- `db:push`, `db:generate`, `db:seed` sukses; DB lokal `pos`.
-- Harga pakai Decimal(14,2); ID pakai cuid.
+- Status tugas hanya diubah di `DAFTAR-TUGAS.md`.
+- Snapshot di kedua PRD dihasilkan oleh `bun run docs:sync`; jangan edit blok
+  `AUTO:*` secara manual.
+- `bun run docs:check` dijalankan di CI dan gagal bila snapshot basi.
+- Detail aturan: [`../.agents/rules/16-prd-dan-dokumen.md`](../.agents/rules/16-prd-dan-dokumen.md).
 
-### POS-3 Buku besar
+## Status deploy
 
-- `Akun`, `Jurnal`, `JurnalDetail`, enum `TipeAkun`.
-- Seed 7 CoA: Kas, Persediaan Bahan, Pajak Keluaran, Modal, Pendapatan Penjualan, Pendapatan Jasa Antar, HPP.
+Repo memakai **GitHub Free** (private). Required reviewer environment tidak
+tersedia pada plan ini; gate produksi adalah `workflow_dispatch` manual dari
+`main` + branch policy `main`. Auto-deploy `main` dimatikan di `vercel.json`.
+Detail: [`DEPLOY.md`](DEPLOY.md).
 
-### POS-4 Posting transaksi atomik
+## Riwayat
 
-- `src/server/transaksi.ts` `postingTransaksi` — validasi stok, decrement, jurnal berimbang, poin 1/10.000.
-- `postingTransaksiFn` guarded kasir.
-- Uji nyata: total 44.000, arus berimbang 44.075, stok kopi 5000→4942, poin 4.
-
-### POS-5 Auth Google-only
-
-- `better-auth` configured with `prismaAdapter`; email/password off; Google social only.
-- `.env.local`: generated `BETTER_AUTH_SECRET`, placeholder `GOOGLE_CLIENT_ID/SECRET`, `OWNER_EMAILS`.
-
-### POS-6 Role enum OWNER/KASIR/MEMBER
-
-- `enum Role` added, `User.role Role @default(MEMBER)`.
-- `requirePeran/requireKasir/requireOwner` guards.
-- Owner enrollment via `OWNER_EMAILS` env on `user.create.before` hook.
-- `/kasir` for OWNER/KASIR; `/buku-besar` only for OWNER.
-
-### POS-7 i18n
-
-- Paraglide locales `en, id, zh, ko` (de dropped). `messages/*.json` + regenerated `src/paraglide`.
-- Locale switcher shows 4 locales.
-
-### POS-8 Akses laporan
-
-- `Buku-besar`: trial balance + journal entries dengan saldo running (overflow-x-auto mobile).
-
-### POS-9 Mobile reflow Kasir
-
-- Product grid `sm:grid-cols-2`, tap targets 44×44.
-- Form + cart panels; overflow containted to scrolling.
-
-### POS-10 Verifikasi build
-
-- `tsc --noEmit ✅`, lint ✅, `vite build ✅`.
-
-### POS-11 Setup Google OAuth (Owner) — panduan di `docs/setup-google-oauth.md`
-
-- Wiring terbukti: `GET /api/auth/get-session` → 200 null; `POST sign-in/social` → 500 CLIENT_ID (provider terdaftar, tinggal isi kredensial).
-- Endpoint sesi yang benar: `/get-session` (bukan `/session`).
-
-### POS-12 Katalog produk (OWNER) — DONE
-
-- `src/server/produk.ts` + `produkFn.ts`: CRUD produk (incl. resep/BOM), toggle aktif, hapus (riwayat item aman via SetNull), CRUD kategori (hapus dijaga bila dipakai).
-- `/produk`: TanStack Table v9 (`useTable` + `FlexRender`), cari client-side, form TanStack Form + Switch, resep dinamis, hapus 2-langkah, i18n 4 bahasa (±26 key).
-- Guard anti-loop: MEMBER → `/`, KASIR tanpa akses → `/kasir`; link home disesuaikan peran.
-- Uji DB nyata: create/update/toggle/SKU ganda/ kategori-berisi — semua sesuai ekspektasi, DB bersih kembali.
-
----
-
-## 🛠 IN PROGRESS
-
-(none right now, all done)
-
----
-
-## 📋 NEXT (priority order)
-
-### POS-11 Setup Google OAuth (Owner) — 🚫 Blocked on Google Console
-
-- Steps:
-  1. Google Cloud Console → APIs & Services → Credentials → OAuth client ID → Web.
-  2. Add redirect URIs: `http://localhost:3000/api/auth/callback/google`, plus production.
-  3. Copy Client ID & Secret into `.env.local`.
-  4. Set `OWNER_EMAILS="your-owner@email.com"` (email Google yang dipakai owner).
-- Verification: login → `/login` (UI Google button) → `/kasir` shows session avatar + sign out.
-
-### POS-12 Rename rute klien / UX (Owner) — Preview
-
-- Carian: redirect `/` → `/kasir` for logged-in users? (currently lands on Home menu). Keep manual.
-
-### POS-13 Empty product data — Profile add-on (Owner) — Preview
-
-- Add product CRUD page: `/produk` managed by OWNER only.
-- POST endpoint `/api/produk` guarded.
-- Use `@tanstack/react-table` v9 + shadcn Table; form via `@tanstack/react-form`.
-
-### POS-14 Member CRUD (Owner) — Preview
-
-- `/member` route; phone search; point redemption.
-
-### POS-15 Stock alert (bahan kurang minimum) (Owner) — Preview
-
-- `stok <= stokMinimum` badge; list on `/bahan`.
-
-### POS-16 Kasir offline / QR printing (Owner) — Preview
-
-- Slip printer / PDF download; print with `window.print()`.
-
-### POS-17 Cross-platform (iOS/Android sign-in) — Preview
-
-- Optional Google Client ID array per platform.
-
-### POS-18 ESLint config TS — migrate from `.js` to `.ts` after upgrade to ESLint 10 — Preview
-
-- Re-evaluate.
-
-### POS-19 CI / tests — Preview
-
-- Add Vitest e2e tests: posting transaksi, jurnal balance.
-
-### POS-20 Docs update on API — Preview
-
-- Every server fn and table documented under `docs/api.md`.
-
----
-
-## 📌 Quick Reference
-
-- DB: `postgresql://postgres:postgres@localhost:5432/pos`
-- Dev: `bun --bun run dev` (port 3000)
-- Build: `bun --bun run build`
-- Generations: `bun run generate-routes`
-- Drift fix: `bunx --bun tsc --noEmit && bun run lint`
-- Seed reset: `bun run db:seed` (runs with fresh data).
-
----
-
-## Changelog
-
-- 2026-10-16 Initial scaffold + POS suite.
-- 2026-10-16 Auth Google-only + Role + Mobile.
+`docs/README.md` sebelumnya adalah task log `POS-1`–`POS-20` yang sudah basi.
+Isinya sudah dikonsolidasikan ke [`DAFTAR-TUGAS.md`](DAFTAR-TUGAS.md); riwayat
+lengkap tetap tersedia di git history.

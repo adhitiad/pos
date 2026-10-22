@@ -13,6 +13,7 @@ import {
   hapusPrinter,
   printerDefault,
   selesaiPrintJob,
+  setDefaultPrinterPerangkat,
   updatePrinter,
 } from './percetakan.js'
 import {
@@ -35,8 +36,8 @@ export const daftarPrinterFn = createServerFn({ method: 'GET' }).handler(
 
 export const printerDefaultFn = createServerFn({ method: 'GET' }).handler(
   async () => {
-    await requireOwner()
-    return printerDefault()
+    const pengguna = await requireOwner()
+    return printerDefault(pengguna.id)
   },
 )
 
@@ -47,32 +48,41 @@ export const daftarPrinterPerangkatFn = createServerFn({
   return daftarPrinterPerangkat(pengguna.id)
 })
 
+export const setDefaultPrinterPerangkatFn = createServerFn({
+  method: 'POST',
+})
+  .validator((input: unknown) => PrinterIdSchema.parse(input))
+  .handler(async ({ data }) => {
+    const pengguna = await requireKasir()
+    return setDefaultPrinterPerangkat(data, pengguna.id, pengguna.id)
+  })
+
 export const daftarkanPrinterPerangkatFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => PrinterDeviceInputSchema.parse(input))
   .handler(async ({ data }) => {
     const pengguna = await requireKasir()
-    return daftarkanPrinterPerangkat(data, pengguna.id)
+    return daftarkanPrinterPerangkat(data, pengguna.id, pengguna.id)
   })
 
 export const createPrinterFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => PrinterInputSchema.parse(input))
   .handler(async ({ data }) => {
     const pengguna = await requireOwner()
-    return createPrinter(data, pengguna.id)
+    return createPrinter(data, pengguna.id, pengguna.id)
   })
 
 export const updatePrinterFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => UpdatePrinterSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireOwner()
-    return updatePrinter(data)
+    const pengguna = await requireOwner()
+    return updatePrinter(data, pengguna.id)
   })
 
 export const hapusPrinterFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => PrinterIdSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireOwner()
-    return hapusPrinter(data)
+    const pengguna = await requireOwner()
+    return hapusPrinter(data, pengguna.id)
   })
 
 export const daftarPrintJobFn = createServerFn({ method: 'GET' })
@@ -85,8 +95,8 @@ export const daftarPrintJobFn = createServerFn({ method: 'GET' })
 export const buatPrintJobFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => BuatPrintJobSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireOwner()
-    return buatPrintJob(data)
+    const pengguna = await requireOwner()
+    return buatPrintJob(data, pengguna.id)
   })
 
 export const ambilPrintJobFn = createServerFn({ method: 'POST' })

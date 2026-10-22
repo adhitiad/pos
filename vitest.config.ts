@@ -8,7 +8,7 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
+    include: ['tests/vitest/**/*.test.ts', 'tests/vitest/**/*.test.tsx'],
     // Tes integrasi memakai satu database bersama dan beberapa suite
     // menghapus tabel global (deleteMany) — jalankan berurutan agar tidak
     // saling menimpa (race → flaky).

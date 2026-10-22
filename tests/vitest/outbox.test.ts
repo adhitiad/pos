@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { antreanBaru, penyimpananMemory } from '../src/lib/outbox.js'
+import { antreanBaru, penyimpananMemory } from '../../src/lib/outbox.js'
 
 const payload = {
   items: [{ produkId: 'p1', qty: 2 }],

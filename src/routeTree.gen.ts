@@ -85,7 +85,9 @@ import { Route as ApiV1UnggahUnduhRouteImport } from './routes/api/v1/unggah/und
 import { Route as ApiV1PercetakanIdAmbilRouteImport } from './routes/api/v1/percetakan/$id/ambil'
 import { Route as ApiV1PercetakanIdGagalRouteImport } from './routes/api/v1/percetakan/$id/gagal'
 import { Route as ApiV1PercetakanIdSelesaiRouteImport } from './routes/api/v1/percetakan/$id/selesai'
+import { Route as ApiV1PrinterPerangkatIdRouteImport } from './routes/api/v1/printer/perangkat/$id'
 import { Route as ApiV1TransaksiCetakIdRouteImport } from './routes/api/v1/transaksi/cetak/$id'
+import { Route as ApiV1PrinterPerangkatIdDefaultRouteImport } from './routes/api/v1/printer/perangkat/$id/default'
 import { Route as ApiV1TransaksiStrukIdPdfRouteImport } from './routes/api/v1/transaksi/struk/$id/pdf'
 
 const IndexRoute = IndexRouteImport.update({
@@ -469,11 +471,22 @@ const ApiV1PercetakanIdSelesaiRoute =
     path: '/api/v1/percetakan/$id/selesai',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiV1PrinterPerangkatIdRoute = ApiV1PrinterPerangkatIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiV1PrinterPerangkatRoute,
+} as any)
 const ApiV1TransaksiCetakIdRoute = ApiV1TransaksiCetakIdRouteImport.update({
   id: '/cetak/$id',
   path: '/cetak/$id',
   getParentRoute: () => ApiV1TransaksiRoute,
 } as any)
+const ApiV1PrinterPerangkatIdDefaultRoute =
+  ApiV1PrinterPerangkatIdDefaultRouteImport.update({
+    id: '/default',
+    path: '/default',
+    getParentRoute: () => ApiV1PrinterPerangkatIdRoute,
+  } as any)
 const ApiV1TransaksiStrukIdPdfRoute =
   ApiV1TransaksiStrukIdPdfRouteImport.update({
     id: '/struk/$id/pdf',
@@ -544,7 +557,7 @@ export interface FileRoutesByFullPath {
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
   '/api/v1/printer/default': typeof ApiV1PrinterDefaultRoute
-  '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRoute
+  '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRouteWithChildren
   '/api/v1/retur/produk-aktif': typeof ApiV1ReturProdukAktifRoute
   '/api/v1/retur/transaksi': typeof ApiV1ReturTransaksiRoute
   '/api/v1/unggah/unduh': typeof ApiV1UnggahUnduhRoute
@@ -558,7 +571,9 @@ export interface FileRoutesByFullPath {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
+  '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
   '/api/v1/transaksi/struk/$id/pdf': typeof ApiV1TransaksiStrukIdPdfRoute
 }
 export interface FileRoutesByTo {
@@ -624,7 +639,7 @@ export interface FileRoutesByTo {
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
   '/api/v1/printer/default': typeof ApiV1PrinterDefaultRoute
-  '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRoute
+  '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRouteWithChildren
   '/api/v1/retur/produk-aktif': typeof ApiV1ReturProdukAktifRoute
   '/api/v1/retur/transaksi': typeof ApiV1ReturTransaksiRoute
   '/api/v1/unggah/unduh': typeof ApiV1UnggahUnduhRoute
@@ -638,7 +653,9 @@ export interface FileRoutesByTo {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
+  '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
   '/api/v1/transaksi/struk/$id/pdf': typeof ApiV1TransaksiStrukIdPdfRoute
 }
 export interface FileRoutesById {
@@ -705,7 +722,7 @@ export interface FileRoutesById {
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
   '/api/v1/printer/default': typeof ApiV1PrinterDefaultRoute
-  '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRoute
+  '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRouteWithChildren
   '/api/v1/retur/produk-aktif': typeof ApiV1ReturProdukAktifRoute
   '/api/v1/retur/transaksi': typeof ApiV1ReturTransaksiRoute
   '/api/v1/unggah/unduh': typeof ApiV1UnggahUnduhRoute
@@ -719,7 +736,9 @@ export interface FileRoutesById {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
+  '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
   '/api/v1/transaksi/struk/$id/pdf': typeof ApiV1TransaksiStrukIdPdfRoute
 }
 export interface FileRouteTypes {
@@ -801,7 +820,9 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
+    | '/api/v1/printer/perangkat/$id/default'
     | '/api/v1/transaksi/struk/$id/pdf'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -881,7 +902,9 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
+    | '/api/v1/printer/perangkat/$id/default'
     | '/api/v1/transaksi/struk/$id/pdf'
   id:
     | '__root__'
@@ -961,7 +984,9 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
+    | '/api/v1/printer/perangkat/$id/default'
     | '/api/v1/transaksi/struk/$id/pdf'
   fileRoutesById: FileRoutesById
 }
@@ -1027,7 +1052,7 @@ export interface RootRouteChildren {
   ApiV1MemberRiwayatRoute: typeof ApiV1MemberRiwayatRoute
   ApiV1OpnameMasterRoute: typeof ApiV1OpnameMasterRoute
   ApiV1PrinterDefaultRoute: typeof ApiV1PrinterDefaultRoute
-  ApiV1PrinterPerangkatRoute: typeof ApiV1PrinterPerangkatRoute
+  ApiV1PrinterPerangkatRoute: typeof ApiV1PrinterPerangkatRouteWithChildren
   ApiV1ReturProdukAktifRoute: typeof ApiV1ReturProdukAktifRoute
   ApiV1ReturTransaksiRoute: typeof ApiV1ReturTransaksiRoute
   ApiV1UnggahUnduhRoute: typeof ApiV1UnggahUnduhRoute
@@ -1577,12 +1602,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1PercetakanIdSelesaiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/printer/perangkat/$id': {
+      id: '/api/v1/printer/perangkat/$id'
+      path: '/$id'
+      fullPath: '/api/v1/printer/perangkat/$id'
+      preLoaderRoute: typeof ApiV1PrinterPerangkatIdRouteImport
+      parentRoute: typeof ApiV1PrinterPerangkatRoute
+    }
     '/api/v1/transaksi/cetak/$id': {
       id: '/api/v1/transaksi/cetak/$id'
       path: '/cetak/$id'
       fullPath: '/api/v1/transaksi/cetak/$id'
       preLoaderRoute: typeof ApiV1TransaksiCetakIdRouteImport
       parentRoute: typeof ApiV1TransaksiRoute
+    }
+    '/api/v1/printer/perangkat/$id/default': {
+      id: '/api/v1/printer/perangkat/$id/default'
+      path: '/default'
+      fullPath: '/api/v1/printer/perangkat/$id/default'
+      preLoaderRoute: typeof ApiV1PrinterPerangkatIdDefaultRouteImport
+      parentRoute: typeof ApiV1PrinterPerangkatIdRoute
     }
     '/api/v1/transaksi/struk/$id/pdf': {
       id: '/api/v1/transaksi/struk/$id/pdf'
@@ -1618,6 +1657,33 @@ const ApiV1TransaksiRouteChildren: ApiV1TransaksiRouteChildren = {
 const ApiV1TransaksiRouteWithChildren = ApiV1TransaksiRoute._addFileChildren(
   ApiV1TransaksiRouteChildren,
 )
+
+interface ApiV1PrinterPerangkatIdRouteChildren {
+  ApiV1PrinterPerangkatIdDefaultRoute: typeof ApiV1PrinterPerangkatIdDefaultRoute
+}
+
+const ApiV1PrinterPerangkatIdRouteChildren: ApiV1PrinterPerangkatIdRouteChildren =
+  {
+    ApiV1PrinterPerangkatIdDefaultRoute: ApiV1PrinterPerangkatIdDefaultRoute,
+  }
+
+const ApiV1PrinterPerangkatIdRouteWithChildren =
+  ApiV1PrinterPerangkatIdRoute._addFileChildren(
+    ApiV1PrinterPerangkatIdRouteChildren,
+  )
+
+interface ApiV1PrinterPerangkatRouteChildren {
+  ApiV1PrinterPerangkatIdRoute: typeof ApiV1PrinterPerangkatIdRouteWithChildren
+}
+
+const ApiV1PrinterPerangkatRouteChildren: ApiV1PrinterPerangkatRouteChildren = {
+  ApiV1PrinterPerangkatIdRoute: ApiV1PrinterPerangkatIdRouteWithChildren,
+}
+
+const ApiV1PrinterPerangkatRouteWithChildren =
+  ApiV1PrinterPerangkatRoute._addFileChildren(
+    ApiV1PrinterPerangkatRouteChildren,
+  )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -1681,7 +1747,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1MemberRiwayatRoute: ApiV1MemberRiwayatRoute,
   ApiV1OpnameMasterRoute: ApiV1OpnameMasterRoute,
   ApiV1PrinterDefaultRoute: ApiV1PrinterDefaultRoute,
-  ApiV1PrinterPerangkatRoute: ApiV1PrinterPerangkatRoute,
+  ApiV1PrinterPerangkatRoute: ApiV1PrinterPerangkatRouteWithChildren,
   ApiV1ReturProdukAktifRoute: ApiV1ReturProdukAktifRoute,
   ApiV1ReturTransaksiRoute: ApiV1ReturTransaksiRoute,
   ApiV1UnggahUnduhRoute: ApiV1UnggahUnduhRoute,

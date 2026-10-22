@@ -6,7 +6,7 @@ import {
   keCsv,
   kunciPeriode,
   ringkasBaris,
-} from '../src/server/laporanPenjualan.js'
+} from '../../src/server/laporanPenjualan.js'
 import type { BarisTransaksi } from '#/types/laporan-penjualan'
 
 const baris = (over: Partial<BarisTransaksi> = {}): BarisTransaksi => ({

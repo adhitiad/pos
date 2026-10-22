@@ -13,12 +13,16 @@
 - Envelope gagal: `{ "ok": false, "error": { "code": "...", "message": "..." } }`
 - Kode error: `UNAUTHORIZED` (401, belum login) · `FORBIDDEN` (403, peran tidak
   boleh) · `BAD_REQUEST` (400) · `DOMAIN` (422, validasi/bisnis — pesan aman
-  Indonesia) · `TOO_MANY_REQUESTS` (429, kena rate limit) · `INTERNAL` (500, pesan
-  umum + ref log, isi DB tidak bocor).
+  Indonesia) · `LIMIT_PERANGKAT` / `PERANGKAT_BERJOB` (409, batas perangkat) ·
+  `TOO_MANY_REQUESTS` (429, kena rate limit) · `INTERNAL` (500, pesan umum + ref
+  log, isi DB tidak bocor).
 - Rate limit per IP+endpoint (store bersama Postgres): endpoint tulis sensitif
   (mis. `auth-social` 5/menit, `pesan` 10/menit) mengembalikan 429 +
   `Retry-After`. Server function analytics (`device-visit`, `kunjungan`) dibatasi
   di sisi server function.
+- Endpoint printer/percetakan dibatasi **per user** (bukan IP): GET 60/10 detik,
+  mutasi 20/10 detik. Respons 429 memuat `Retry-After`, `X-RateLimit-Limit`, dan
+  `X-RateLimit-Remaining`.
 - **Header keamanan** (`src/lib/csp.ts`): respons `/api/*` memakai
   `Cache-Control: no-store`; semua respons memakai `Cross-Origin-Opener-Policy` &
   `Cross-Origin-Resource-Policy: same-origin`.
@@ -142,12 +146,14 @@ kecuali email di `OWNER_EMAILS` → `OWNER`. Naik pangkat via Prisma Studio.
 | `POST /api/v1/percetakan/$id/ambil`                                                      | OWNER, KASIR         | —                                                                                                                                                                                                                                   | `printJob` (status `MENUNGGU` → `DIPROSES`; 422 bila sudah diambil)                                                                                                                                                   |
 | `POST /api/v1/percetakan/$id/selesai`                                                    | OWNER, KASIR         | —                                                                                                                                                                                                                                   | `printJob` (status `DICETAK`)                                                                                                                                                                                         |
 | `POST /api/v1/percetakan/$id/gagal`                                                      | OWNER, KASIR         | `{ pesan? }`                                                                                                                                                                                                                        | `printJob` (status `GAGAL` + `pesanGalat`)                                                                                                                                                                            |
-| `GET /api/v1/printer`                                                                    | OWNER                | —                                                                                                                                                                                                                                   | `printer[]{id,userId,nama,tipe,lokasi,perangkat,koneksi,vendorId,vendorName,serialNumber,productName,dipindaiPada,default,aktif}`                                                                                     |
+| `GET /api/v1/printer`                                                                    | OWNER                | —                                                                                                                                                                                                                                   | `printer[]{id,userId,nama,tipe,lokasi,perangkat,koneksi,vendorId,vendorName,serialNumber,productName,dipindaiPada,terakhirDipakai,default,defaultPengguna,aktif}`                                                     |
 | `POST /api/v1/printer`                                                                   | OWNER                | `{ nama, tipe?, lokasi?, perangkat?, koneksi?, vendorId?, vendorName?, serialNumber?, productName?, default?, aktif? }`                                                                                                             | `{ id }` (201)                                                                                                                                                                                                        |
 | `PUT /api/v1/printer`                                                                    | OWNER                | `{ id, nama, tipe?, lokasi?, perangkat?, koneksi?, vendorId?, vendorName?, serialNumber?, productName?, default?, aktif? }`                                                                                                         | `{ id }` — `default: true` memindahkan status default ke printer ini                                                                                                                                                  |
 | `DELETE /api/v1/printer?id=`                                                             | OWNER                | —                                                                                                                                                                                                                                   | `{ id }` (422 bila punya riwayat cetak)                                                                                                                                                                               |
 | `GET /api/v1/printer/perangkat`                                                          | OWNER, KASIR         | —                                                                                                                                                                                                                                   | `printer[]` milik pengguna yang login (aktif, terbaru dipindai lebih dulu)                                                                                                                                            |
-| `POST /api/v1/printer/perangkat`                                                         | OWNER, KASIR         | `{ nama, tipe?, lokasi?, perangkat, koneksi, vendorId?, vendorName?, serialNumber?, productName? }`                                                                                                                                 | printer tersimpan (201) — upsert per `(userId, perangkat)`, `userId` dari sesi                                                                                                                                        |
+| `POST /api/v1/printer/perangkat`                                                         | OWNER, KASIR         | `{ nama, tipe?, lokasi?, perangkat, koneksi, vendorId?, vendorName?, serialNumber?, productName? }`                                                                                                                                 | printer tersimpan (201) — upsert per `(userId, perangkat)`, `userId` dari sesi; maksimal 20 perangkat/user (`409 LIMIT_PERANGKAT`)                                                                                    |
+| `DELETE /api/v1/printer/perangkat/$id`                                                   | OWNER, KASIR         | `?permanen=1` opsional                                                                                                                                                                                                              | `{ id, dihapus }` — default nonaktif (`dihapus:false`); permanen hanya tanpa riwayat cetak (`409 PERANGKAT_BERJOB`); perangkat user lain → 422                                                                        |
+| `PATCH /api/v1/printer/perangkat/$id/default`                                            | OWNER, KASIR         | —                                                                                                                                                                                                                                   | `printer` — jadikan default milik pengguna; default pengguna lain tidak berubah; perangkat nonaktif/milik user lain → 422                                                                                             |
 | `GET /api/v1/printer/default`                                                            | OWNER, KASIR         | —                                                                                                                                                                                                                                   | printer default aktif (atau printer aktif pertama) — `null` bila belum ada                                                                                                                                            |
 | `GET /api/v1/saya`                                                                       | OWNER, KASIR, MEMBER | —                                                                                                                                                                                                                                   | `{ member: {id,nama,telepon,poin,totalBelanja,diskonPersen,tier} \| null, riwayatAktif: boolean, transaksi[] }` — profil & riwayat milik pengguna yang login (dicocokkan via email)                                   |
 | `GET /api/v1/identitas`                                                                  | publik               | —                                                                                                                                                                                                                                   | `{ judul, ikonUrl, logoUrl, deskripsi }` — identitas publik untuk web & Expo (ikon fallback ke logo, lalu inisial judul)                                                                                              |
@@ -265,9 +271,15 @@ PrinterInput = {
   koneksi?: 'USB' | 'BLUETOOTH' | 'WIFI' | 'SERIAL' = 'USB',
   vendorId?: string(≤120), vendorName?: string(≤120),
   serialNumber?: string(≤160), productName?: string(≤160),
-  default?: boolean = false,  // printer default (dipakai bila klien tak menyebut printer)
+  default?: boolean = false,  // printer default global (dipakai bila klien tak menyebut printer)
   aktif?: boolean = true,
+  // Metadata vendor/serial hanya informatif; bukan identitas atau dasar akses.
 }
+
+// Respons printer menyertakan `defaultPengguna` (default per akun hasil scan).
+// `GET /api/v1/printer/default` memilih defaultPengguna user dulu, lalu default
+// global, lalu printer aktif pertama. `terakhirDipakai` diperbarui saat job
+// cetak dibuat dengan printer tersebut; `dipindaiPada` tetap waktu scan.
 
 // POST /api/v1/printer/perangkat — pendaftaran hasil pindai mobile/desktop
 PrinterDeviceInput = {
@@ -277,6 +289,9 @@ PrinterDeviceInput = {
   vendorId?: string(≤120), vendorName?: string(≤120),
   serialNumber?: string(≤160), productName?: string(≤160),
   // userId TIDAK diterima dari body; server memakai sesi OWNER/KASIR.
+  // vendorId/vendorName/serialNumber/productName = metadata informatif dari
+  // klien, BUKAN bukti identitas/otorisasi. Jangan dipakai untuk keputusan akses
+  // atau query mentah. Karakter kontrol ditolak.
 }
 
 // POST /api/v1/percetakan
@@ -564,6 +579,8 @@ ini sengaja **bukan envelope** agar langsung dibaca alat monitoring:
 
 ## Peta docs (saling terhubung)
 
-`README.md` (mulai) → `AGENTS.md` (aturan agen) → `.agents/rules/` (detail) →
-`docs/API.md` (kontrak, file ini) → `docs/DAFTAR-TUGAS.md` (status) →
-`docs/execution-plan.md` (urutan) → `docs/setup-google-oauth.md` (kredensial).
+`README.md` (mulai) → `AGENTS.md` (aturan agen) → `docs/DAFTAR-TUGAS.md`
+(status) → `.agents/rules/` (detail) → `docs/PRD.md` (niat produk) →
+`docs/PRD-AI.md` (kontrak agen) → `docs/API.md` (kontrak, file ini) →
+`docs/PERFORMA.md` (anggaran) → `docs/execution-plan.md` (urutan) →
+`docs/setup-google-oauth.md` (kredensial).

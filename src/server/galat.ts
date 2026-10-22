@@ -20,6 +20,17 @@ export class GalatRateLimit extends Error {
   }
 }
 
+// Konflik domain dengan kode mesin, dipetakan ke HTTP 409.
+export class GalatKonflik extends Error {
+  readonly kode: string
+
+  constructor(kode: string, message: string) {
+    super(message)
+    this.name = 'GalatKonflik'
+    this.kode = kode
+  }
+}
+
 let urutanRef = 0
 
 function buatRef(): string {
@@ -33,6 +44,9 @@ function buatRef(): string {
 export function terjemahGalat(e: unknown, konteks?: string): GalatAman {
   if (e instanceof GalatRateLimit) {
     return { status: 429, code: 'TOO_MANY_REQUESTS', message: e.message }
+  }
+  if (e instanceof GalatKonflik) {
+    return { status: 409, code: e.kode, message: e.message }
   }
   if (e instanceof GalatDomain) {
     return { status: 422, code: 'DOMAIN', message: e.message }

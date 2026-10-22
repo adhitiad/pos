@@ -1,12 +1,12 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
-import { prisma } from '../src/db.js'
-import { tierDariTotal } from '../src/server/member.js'
+import { prisma } from '../../src/db.js'
+import { tierDariTotal } from '../../src/server/member.js'
 import {
   hitungDiskonMember,
   postingTransaksi,
   ringkasHasil,
-} from '../src/server/transaksi.js'
+} from '../../src/server/transaksi.js'
 
 async function buatBahan(nama: string, stok: number, hargaSatuan: number) {
   return prisma.bahan.create({

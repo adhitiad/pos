@@ -57,14 +57,7 @@ export function ipSaatIni(): string {
 }
 
 // Pembungkus untuk route REST: kembalikan Response 429 bila melebihi batas.
-export async function rateLimit(
-  request: Request,
-  max = 30,
-  windowMs = JENDELA_MS,
-): Promise<Response | null> {
-  const kunci = `${new URL(request.url).pathname}:${ipSaatIni()}`
-  const hasil = await batasi(kunci, max, windowMs)
-  if (hasil.boleh) return null
+function responsRateLimit(hasil: HasilBatasi, max: number): Response {
   return new Response(
     JSON.stringify({
       ok: false,
@@ -83,6 +76,28 @@ export async function rateLimit(
       },
     },
   )
+}
+
+export async function rateLimit(
+  request: Request,
+  max = 30,
+  windowMs = JENDELA_MS,
+): Promise<Response | null> {
+  const kunci = `${new URL(request.url).pathname}:${ipSaatIni()}`
+  const hasil = await batasi(kunci, max, windowMs)
+  if (hasil.boleh) return null
+  return responsRateLimit(hasil, max)
+}
+
+export async function rateLimitPrinter(
+  userId: string,
+  aksi: string,
+  max = 30,
+  windowMs = JENDELA_MS,
+): Promise<Response | null> {
+  const hasil = await batasi(`printer:${aksi}:${userId}`, max, windowMs)
+  if (hasil.boleh) return null
+  return responsRateLimit(hasil, max)
 }
 
 // Pembungkus untuk server function: lempar GalatRateLimit (dipetakan ke 429).

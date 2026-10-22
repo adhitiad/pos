@@ -8,6 +8,7 @@ const BASE = `http://localhost:${PORT_E2E}`
 
 export default defineConfig({
   testDir: './tests/e2e',
+  workers: 1,
   timeout: 30_000,
   expect: { timeout: 10_000 },
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',

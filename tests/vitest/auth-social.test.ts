@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
 
-import { signInSocial } from '../src/server/auth-social.js'
+import { signInSocial } from '../../src/server/auth-social.js'
 import { dispatchAuthEndpoint } from 'better-auth/api'
 import { auth } from '#/lib/auth'
 

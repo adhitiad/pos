@@ -20,8 +20,8 @@ coverage/
 .playwright/
 
 # Env — HANYA template yang di-commit. Jangan pernah commit rahasia.
-.env
-.env.*
+# `.env*` mencakup .env, .env.local, .env.production, dan .env.*.local.
+.env*
 *.local
 !.env.example
 
