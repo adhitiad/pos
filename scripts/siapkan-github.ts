@@ -86,7 +86,13 @@ if (!dryRun) {
     '.nameWithOwner',
   ])
   const path = resolve('.github/ISSUE_TEMPLATE/config.yml')
-  writeFileSync(path, readFileSync(path, 'utf8').replaceAll('OWNER/REPO', repo))
+  writeFileSync(
+    path,
+    readFileSync(path, 'utf8').replaceAll(
+      'https://github.com/OWNER/REPO/security/advisories/new',
+      `https://github.com/${repo}/security/advisories/new`,
+    ),
+  )
   console.log(`config issue diarahkan ke ${repo}`)
   if (configOnly) process.exit(0)
 }
