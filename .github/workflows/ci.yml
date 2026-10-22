@@ -158,8 +158,21 @@ jobs:
         run: bun run db:migrate:deploy
       - name: Seed data
         run: bun run db:seed
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
       - name: Install Playwright browser
-        run: bunx playwright install --with-deps chromium
+        run: |
+          for attempt in 1 2 3; do
+            bunx playwright install --with-deps chromium && exit 0
+            echo "Playwright install failed (attempt ${attempt}), retrying..."
+            sleep 10
+          done
+          exit 1
       - name: Run Playwright tests
         run: bunx playwright test
       - name: Upload Playwright artifacts
