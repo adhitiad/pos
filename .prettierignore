@@ -4,6 +4,9 @@ yarn.lock
 src/paraglide/
 src/generated/
 project.inlang/cache/
+project.inlang/.lix/
+project.inlang/.meta.json
+project.inlang/README.md
 .agents/
 .pipeline/
 .output/
