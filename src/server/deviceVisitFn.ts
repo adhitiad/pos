@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 
 import { requireOwner, getPengguna } from './auth.js'
 import { recordDeviceVisit, daftarDeviceVisit } from './deviceVisit.js'
-import { batasiNama } from './rateLimit.js'
+import { batasiNama, ipSaatIni } from './rateLimit.js'
 import {
   DeviceVisitSchema,
   DeviceVisitQuerySchema,
@@ -15,7 +15,11 @@ export const recordDeviceVisitFn = createServerFn({ method: 'POST' })
     await batasiNama('device-visit', 60, 60_000)
     // `userId` diturunkan dari sesi, bukan dari body klien (anti-racun data).
     const pengguna = await getPengguna()
-    return recordDeviceVisit({ ...data, userId: pengguna?.id })
+    return recordDeviceVisit({
+      ...data,
+      userId: pengguna?.id,
+      ipAddress: ipSaatIni(),
+    })
   })
 
 export const daftarDeviceVisitFn = createServerFn({ method: 'GET' })

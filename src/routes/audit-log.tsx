@@ -30,9 +30,15 @@ import {
   TableHeader,
   TableRow,
 } from '#/components/ui/table'
+import {
+  PaginasiTabel,
+  UKURAN_HALAMAN_TABEL,
+} from '#/components/ui/table-controls'
 
 const SEMUA = 'semua'
-const UKURAN_HALAMAN = 50
+const UKURAN_HALAMAN = 10
+const ukuranValid = (nilai?: number) =>
+  UKURAN_HALAMAN_TABEL.find((ukuran) => ukuran === nilai) ?? UKURAN_HALAMAN
 
 export const Route = createFileRoute('/audit-log')({
   validateSearch: (search) => AuditLogQuerySchema.parse(search),
@@ -45,7 +51,7 @@ export const Route = createFileRoute('/audit-log')({
   loaderDeps: ({ search }) => search,
   loader: async ({ deps }) =>
     auditLogDataFn({
-      data: { ...deps, take: UKURAN_HALAMAN },
+      data: { ...deps, take: ukuranValid(deps.take) },
     }),
   component: AuditLog,
 })
@@ -67,11 +73,13 @@ function AuditLog() {
 
   const [entitas, setEntitas] = useState(search.entitas ?? SEMUA)
   const [aksi, setAksi] = useState(search.aksi ?? SEMUA)
+  const [cari, setCari] = useState(search.q ?? '')
   const [dari, setDari] = useState(search.dari ?? '')
   const [sampai, setSampai] = useState(search.sampai ?? '')
 
-  const halaman = Math.floor((search.skip ?? 0) / UKURAN_HALAMAN)
-  const totalHalaman = Math.max(1, Math.ceil(data.total / UKURAN_HALAMAN))
+  const ukuranHalaman = ukuranValid(search.take)
+  const halaman = Math.floor((search.skip ?? 0) / ukuranHalaman)
+  const totalHalaman = Math.max(1, Math.ceil(data.total / ukuranHalaman))
 
   return (
     <DashboardLayout
@@ -91,6 +99,7 @@ function AuditLog() {
             search: {
               entitas: entitas === SEMUA ? undefined : entitas,
               aksi: aksi === SEMUA ? undefined : aksi,
+              q: cari.trim() || undefined,
               dari: dari || undefined,
               sampai: sampai || undefined,
               skip: 0,
@@ -144,6 +153,15 @@ function AuditLog() {
             type="date"
             value={sampai}
             onChange={(e) => setSampai(e.target.value)}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>{m.tabel_cari()}</Label>
+          <Input
+            type="search"
+            value={cari}
+            onChange={(e) => setCari(e.target.value)}
+            placeholder={m.tabel_cari()}
           />
         </div>
         <Button type="submit">{m.audit_tampilkan()}</Button>
@@ -202,36 +220,20 @@ function AuditLog() {
         </Table>
       </div>
 
-      <div className="flex items-center justify-between gap-2">
-        <Button
-          variant="outline"
-          disabled={halaman === 0}
-          onClick={() => {
-            void navigate({
-              search: {
-                ...search,
-                skip: Math.max(0, halaman * UKURAN_HALAMAN - UKURAN_HALAMAN),
-              },
-            })
-          }}
-        >
-          {m.audit_halaman_sebelumnya()}
-        </Button>
-        <span className="text-sm text-muted-foreground">
-          {halaman + 1} / {totalHalaman}
-        </span>
-        <Button
-          variant="outline"
-          disabled={halaman + 1 >= totalHalaman}
-          onClick={() => {
-            void navigate({
-              search: { ...search, skip: (halaman + 1) * UKURAN_HALAMAN },
-            })
-          }}
-        >
-          {m.audit_halaman_berikutnya()}
-        </Button>
-      </div>
+      <PaginasiTabel
+        halamanAktif={halaman}
+        jumlahHalaman={totalHalaman}
+        jumlahBaris={data.total}
+        ukuranHalaman={ukuranHalaman}
+        onHalaman={(halamanBaru) => {
+          void navigate({
+            search: { ...search, skip: halamanBaru * ukuranHalaman },
+          })
+        }}
+        onUkuranHalaman={(ukuranBaru) => {
+          void navigate({ search: { ...search, take: ukuranBaru, skip: 0 } })
+        }}
+      />
     </DashboardLayout>
   )
 }

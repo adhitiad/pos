@@ -2,6 +2,7 @@ import { createFileRoute, redirect, Link } from '@tanstack/react-router'
 import {
   Bell,
   CheckCheck,
+  ClipboardCheck,
   ClipboardList,
   ExternalLink,
   PackageCheck,
@@ -16,6 +17,7 @@ import { getSessionFn } from '#/server/authFn'
 import { notifikasiFn } from '#/server/notifikasiFn'
 import type {
   Notifikasi,
+  NotifikasiPengajuan,
   PeriodePendapatan,
   StatusPesananNotif,
 } from '#/types/notifikasi'
@@ -82,10 +84,24 @@ const waktu = (iso: string) =>
     minute: '2-digit',
   })
 
+const judulPengajuan = (notif: NotifikasiPengajuan) => {
+  if (notif.kategori === 'SETUJUI') return m.notif_pengajuan_disetujui()
+  if (notif.kategori === 'TOLAK') return m.notif_pengajuan_ditolak()
+  if (notif.kategori === 'PENGAJUAN') return m.notif_pengajuan_baru()
+  return m.notif_pengajuan_info()
+}
+
+const warnaPengajuan = (notif: NotifikasiPengajuan) => {
+  if (notif.kategori === 'SETUJUI') return 'text-emerald-600'
+  if (notif.kategori === 'TOLAK') return 'text-destructive'
+  return 'text-amber-600'
+}
+
 const judulNotifikasi = (notif: Notifikasi) => {
   if (notif.tipe === 'stok') return m.notif_stok_habis()
   if (notif.tipe === 'pendapatan') return judulPendapatan(notif.periode)
   if (notif.tipe === 'transaksi') return m.notif_transaksi_berhasil()
+  if (notif.tipe === 'pengajuan') return judulPengajuan(notif)
   return notif.untuk === 'kasir'
     ? m.notif_pesanan_baru()
     : m.notif_pesanan_status()
@@ -174,6 +190,11 @@ function Notifikasi() {
                         )}
                       </>
                     )}
+                    {notif.tipe === 'pengajuan' && (
+                      <ClipboardCheck
+                        className={`mt-0.5 size-5 shrink-0 ${warnaPengajuan(notif)}`}
+                      />
+                    )}
                     <div className="min-w-0">
                       <CardTitle className="text-base">
                         {judulNotifikasi(notif)}
@@ -201,6 +222,7 @@ function Notifikasi() {
                             status: labelStatus(notif.status),
                             total: rupiah(notif.total),
                           })}
+                        {notif.tipe === 'pengajuan' && notif.pesan}
                       </CardDescription>
                     </div>
                   </div>
@@ -315,6 +337,12 @@ function Notifikasi() {
                     </div>
                   )}
 
+                  {notif.tipe === 'pengajuan' && (
+                    <p className="text-xs text-muted-foreground">
+                      {m.notif_diperbarui({ waktu: waktu(notif.tanggal) })}
+                    </p>
+                  )}
+
                   <div className="flex flex-wrap gap-2">
                     <Button asChild variant="outline" size="sm">
                       <Link
@@ -325,15 +353,19 @@ function Notifikasi() {
                               ? '/laporan'
                               : notif.tipe === 'transaksi'
                                 ? '/pesanan'
-                                : notif.untuk === 'kasir'
-                                  ? '/dapur'
-                                  : '/pesanan'
+                                : notif.tipe === 'pengajuan'
+                                  ? '/pengajuan'
+                                  : notif.untuk === 'kasir'
+                                    ? '/dapur'
+                                    : '/pesanan'
                         }
                       >
                         <ExternalLink className="mr-1 size-3.5" />
                         {notif.tipe === 'stok' && m.notif_lihat_bahan()}
                         {notif.tipe === 'pendapatan' && m.notif_lihat_laporan()}
                         {notif.tipe === 'transaksi' && m.notif_belanja_lagi()}
+                        {notif.tipe === 'pengajuan' &&
+                          m.notif_lihat_pengajuan()}
                         {notif.tipe === 'pesanan' &&
                           (notif.untuk === 'kasir'
                             ? m.notif_lihat_dapur()

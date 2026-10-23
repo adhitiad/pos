@@ -1,12 +1,41 @@
+import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 
+import { authClient } from '#/lib/auth-client'
 import { useIdentitasApp } from '#/lib/identitas'
 import { useLogoUrl } from '#/lib/logo'
 import { m } from '#/paraglide/messages'
+import { getPenggunaFn } from '#/server/authFn'
 
 export default function Footer() {
+  const { data: session, isPending } = authClient.useSession()
   const logoUrl = useLogoUrl()
   const identitas = useIdentitasApp()
+  const [peran, setPeran] = useState<string | undefined>()
+
+  useEffect(() => {
+    if (isPending) return
+    if (!session?.user) {
+      setPeran(undefined)
+      return
+    }
+
+    let aktif = true
+    void getPenggunaFn()
+      .then((pengguna) => {
+        if (aktif) setPeran(pengguna?.role)
+      })
+      .catch((error: unknown) => {
+        if (!aktif) return
+        console.error('[Footer] gagal memuat peran pengguna', error)
+        setPeran(undefined)
+      })
+    return () => {
+      aktif = false
+    }
+  }, [isPending, session?.user.id])
+
+  const tampilkanPesanan = !isPending && (!session?.user || peran === 'MEMBER')
   return (
     <footer className="chrome-surface mt-auto border-t">
       <div className="mx-auto flex max-w-7xl flex-col items-start gap-4 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
@@ -24,12 +53,14 @@ export default function Footer() {
           >
             {m.nav_pos()}
           </Link>
-          <Link
-            to="/pesanan"
-            className="chrome-link inline-flex min-h-11 items-center"
-          >
-            {m.pesan_judul()}
-          </Link>
+          {tampilkanPesanan && (
+            <Link
+              to="/pesanan"
+              className="chrome-link inline-flex min-h-11 items-center"
+            >
+              {m.pesan_judul()}
+            </Link>
+          )}
           <Link
             to="/buku-besar"
             className="chrome-link inline-flex min-h-11 items-center"

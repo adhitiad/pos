@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { unggahGambar } from '#/lib/cloudinary'
 import { setIdentitasCache } from '#/lib/identitas'
 import { setLogoUrlCache } from '#/lib/logo'
+import { UKURAN_KERTAS_TERMAL, labelUkuranKertas } from '#/lib/ukuran-kertas'
 import { m } from '#/paraglide/messages'
 import { getSessionFn } from '#/server/authFn'
 import { punyaAkses } from '#/server/peran'
@@ -31,6 +32,7 @@ import {
   SelectValue,
 } from '#/components/ui/select'
 import { Switch } from '#/components/ui/switch'
+import type { IdUkuranKertasTermal } from '#/lib/ukuran-kertas'
 import type { StrukOtomatis } from '#/validations/pengaturan'
 
 export const Route = createFileRoute('/pengaturan')({
@@ -69,6 +71,9 @@ function Pengaturan() {
   const [riwayatBelanja, setRiwayatBelanja] = useState(awal.riwayatBelanja)
   const printerEscposAwal = awal.semua.printer_escpos === 'true'
   const [printerEscpos, setPrinterEscpos] = useState(printerEscposAwal)
+  const [ukuranKertas, setUkuranKertas] = useState<IdUkuranKertasTermal>(
+    awal.ukuranKertasTermal as IdUkuranKertasTermal,
+  )
   const [strukOtomatis, setStrukOtomatis] = useState<StrukOtomatis>(
     awal.strukOtomatis,
   )
@@ -154,6 +159,13 @@ function Pengaturan() {
           data: {
             kunci: 'printer_escpos',
             nilai: printerEscpos ? 'true' : 'false',
+          },
+        })
+      if (ukuranKertas !== awal.ukuranKertasTermal)
+        await setPengaturanFn({
+          data: {
+            kunci: 'ukuran_kertas_termal',
+            nilai: ukuranKertas,
           },
         })
       if (strukOtomatis !== awal.strukOtomatis)
@@ -433,6 +445,34 @@ function Pengaturan() {
               {printerEscpos ? m.pengaturan_aktif() : m.pengaturan_nonaktif()}
             </Label>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{m.pengaturan_ukuran_kertas()}</CardTitle>
+          <CardDescription>{m.pengaturan_ukuran_kertas_desc()}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Label htmlFor="ukuran-kertas">{m.pengaturan_ukuran_kertas()}</Label>
+          <Select
+            value={ukuranKertas}
+            onValueChange={(v) => setUkuranKertas(v as IdUkuranKertasTermal)}
+          >
+            <SelectTrigger id="ukuran-kertas" className="max-w-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {UKURAN_KERTAS_TERMAL.map((ukuran) => (
+                <SelectItem key={ukuran.id} value={ukuran.id}>
+                  {labelUkuranKertas(ukuran)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            {m.pengaturan_ukuran_kertas_hint()}
+          </p>
         </CardContent>
       </Card>
 

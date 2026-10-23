@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Printer, SkipForward } from 'lucide-react'
 import { toast } from 'sonner'
@@ -8,6 +8,14 @@ import { useIdentitasApp } from '#/lib/identitas'
 import { cetakEscpos, dukunganSerial } from '#/lib/printer'
 import { printerTerpilih } from '#/lib/printer-scan'
 import { barisStrukUji, strukUji } from '#/lib/struk-uji'
+import {
+  UKURAN_KERTAS_DEFAULT,
+  labelUkuranKertas,
+  lebarKolomEscPos,
+  ukuranKertasDari,
+} from '#/lib/ukuran-kertas'
+import { pengaturanDataFn } from '#/server/pengaturanFn'
+import type { IdUkuranKertasTermal } from '#/lib/ukuran-kertas'
 
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
@@ -29,7 +37,12 @@ const escapeHtml = (teks: string): string =>
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;')
 
-function cetakManual(baris: string[], namaToko: string): void {
+function cetakManual(
+  baris: string[],
+  namaToko: string,
+  lebarMm: number,
+  tinggiMm: number,
+): void {
   const jendela = window.open('', '_blank', 'width=420,height=680')
   if (!jendela) throw new Error(m.printer_test_popup())
   const judul = escapeHtml(`Test print — ${namaToko || 'POS'}`)
@@ -39,7 +52,7 @@ function cetakManual(baris: string[], namaToko: string): void {
   <meta charset="utf-8" />
   <title>${judul}</title>
   <style>
-    @page { size: 58mm auto; margin: 4mm; }
+    @page { size: ${lebarMm}mm ${tinggiMm}mm; margin: 4mm; }
     body { margin: 0; padding: 8px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; line-height: 1.35; }
     pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
   </style>
@@ -64,13 +77,32 @@ export function TestPrintStruk({
 }) {
   const identitas = useIdentitasApp()
   const payload = useMemo(() => strukUji(), [])
+  const [ukuranKertas, setUkuranKertas] = useState<IdUkuranKertasTermal>(
+    UKURAN_KERTAS_DEFAULT,
+  )
+  const ukuran = ukuranKertasDari(ukuranKertas)
+  const kolom = lebarKolomEscPos(ukuran)
   const baris = useMemo(
-    () => barisStrukUji(payload, identitas.judul),
-    [payload, identitas.judul],
+    () => barisStrukUji(payload, identitas.judul, kolom),
+    [payload, identitas.judul, kolom],
   )
   const [sibuk, setSibuk] = useState(false)
   const [adaSerial] = useState(() => dukunganSerial())
   const [printer] = useState(() => printerTerpilih())
+
+  useEffect(() => {
+    let aktif = true
+    pengaturanDataFn()
+      .then((p) => {
+        if (aktif) setUkuranKertas(p.ukuranKertasTermal as IdUkuranKertasTermal)
+      })
+      .catch(() => {
+        // Pengaturan printer opsional; test print tetap memakai default.
+      })
+    return () => {
+      aktif = false
+    }
+  }, [])
 
   const selesai = () => {
     if (onSelesai) onSelesai()
@@ -84,7 +116,7 @@ export function TestPrintStruk({
     }
     setSibuk(true)
     try {
-      await cetakEscpos(baris)
+      await cetakEscpos(baris, undefined, kolom)
       toast.success(m.printer_test_berhasil())
       selesai()
     } catch (e) {
@@ -96,7 +128,7 @@ export function TestPrintStruk({
 
   const cetakLewatBrowser = () => {
     try {
-      cetakManual(baris, identitas.judul)
+      cetakManual(baris, identitas.judul, ukuran.lebarMm, ukuran.tinggiMm)
       toast.success(m.printer_test_manual_berhasil())
       selesai()
     } catch (e) {
@@ -108,6 +140,7 @@ export function TestPrintStruk({
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2 text-sm">
         <Badge variant="secondary">{m.printer_test_dummy()}</Badge>
+        <Badge variant="outline">{labelUkuranKertas(ukuran)}</Badge>
         {printer ? (
           <span className="text-muted-foreground">
             {m.printer_test_printer_aktif({ nama: printer.nama })}

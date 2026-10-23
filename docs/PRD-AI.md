@@ -52,11 +52,23 @@ Perintah wajib `bun`/`bunx`; jangan memakai npm/npx/pnpm.
   seimbang. Jangan menulis jurnal dari klien.
 - **Stok:** kurangi lewat operasi teragregasi/atomik; jangan loop tulis per item.
   Cegah oversell dengan validasi snapshot + update bersyarat.
+- **Pesanan online:** pembuatan pesanan tidak boleh memotong stok, memberi poin,
+  atau menulis jurnal/pembayaran. Efek itu dijalankan tepat sekali saat
+  `dibayarPada` diisi (manual atau webhook HMAC). `statusPesanan` tetap alur
+  dapur; jangan memakai `LUNAS` sebagai penanda pembayaran online.
+- **Batas input publik:** item pesanan maks 100 baris, 20 modifier/baris, qty
+  ≤ 9.999; body JSON publik punya batas eksplisit. Jangan menambah loop tak
+  terbatas dari input klien.
 - **Peran:** gunakan `src/server/peran.ts` dan guard `requireOwner`/
   `requireKasir`; REST memakai guard yang sama. Jangan membuat matriks peran
   baru di route.
+- **Cetak ulang struk:** buat job STRUK melalui transaksi atomik; OWNER tidak
+  dibatasi, KASIR maksimal tiga cetak per transaksi. Penegakan batas harus di
+  server, bukan hanya dengan menyembunyikan tombol UI.
 - **Privasi analytics:** `userId`/IP/path diturunkan di server, bukan dipercaya
-  dari body/header klien.
+  dari body/header klien. `ipv4`/`ipv6`/`dns` dari body diabaikan.
+- **Ekspor CSV:** sanitasi formula (`= + - @`, termasuk spasi/kontrol di depan)
+  dilakukan **sebelum** quoting; jangan hanya mengandalkan tanda kutip.
 - **Error:** error DB mentah tidak boleh ke klien. Gunakan `GalatDomain` +
   `terjemahGalat`/`apiError`, kirim pesan aman + `ref` log.
 - **API:** fitur data baru wajib lewat endpoint di `docs/API.md`; route REST
@@ -93,10 +105,31 @@ Aturan implementasi:
   gate merah.
 - Jangan mengejar optimasi tanpa pengukuran; catat baseline sebelum/sesudah.
 
+## 4.1. Standar tabel antarmuka
+
+- Tabel daftar menggunakan page size awal 10 dan pilihan 25/50/100 melalui
+  komponen shadcn/ui; data daftar tetap dibatasi sesuai kontrak dan query server.
+- Sediakan pencarian, sorting, dan filter yang relevan pada tiap daftar. Filter
+  UI hanya membantu eksplorasi dan tidak menggantikan guard otorisasi server.
+- Tabel input/detail yang perlu menjaga konteks bisnis (mis. form opname) boleh
+  mempertahankan nilai semua baris saat paginasi; jangan menghilangkan data
+  tersembunyi dari payload simpan.
+
 ## 5. Keamanan dan operasional
 
 - Rate limit endpoint publik/analytics; jangan hanya mengandalkan pembatas di
   route bila server function juga bisa dipanggil langsung.
+- Rate limit memakai bucket bersama yang atomik di PostgreSQL: default 100
+  permintaan/menit per kunci, pembersihan kunci idle 30 menit; kunci umumnya
+  per IP+endpoint, sedangkan endpoint printer/terautentikasi per pengguna.
+  Saat `TRUST_PROXY=true`, `X-Forwarded-For` dibaca dari kanan sebanyak
+  `TRUST_PROXY_HOPS` (Vercel = 1); jangan memakai entri paling kiri yang bisa
+  dipalsukan klien. Jangan mengklaim kapasitas 1.000 pengguna tanpa hasil uji
+  beban yang tercatat.
+- Perubahan peran mencabut seluruh sesi user dalam transaksi yang sama;
+  sinkronisasi peran saat login mencabut sesi lama tetapi mempertahankan sesi
+  baru. Owner dapat mencabut semua sesi dari `/user`. Token yang dicabut harus
+  langsung 401 pada request berikutnya.
 - Rahasia hanya di `.env.local` (lokal) atau GitHub Environment/Vercel
   (produksi). Jangan pernah commit `.env*` selain `.env.example`.
 - CSP/headers mengikuti `src/lib/csp.ts` dan konfigurasi Nitro.
@@ -183,11 +216,11 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 
 > **Snapshot otomatis.** Dihasilkan oleh `bun run docs:sync`; jangan edit manual.
 
-- **Item selesai:** 237/243 (98%)
-- **Item terbuka:** 6
-- **Terblokir / sebagian:** 3 / 2
-- **Cakupan:** 28 rute · 50 file route REST · 37 model · 12 migrasi
-- **Test:** 43 file unit · 5 file e2e
+- **Item selesai:** 260/273 (95%)
+- **Item terbuka:** 13
+- **Terblokir / sebagian:** 4 / 2
+- **Cakupan:** 29 rute · 52 file route REST · 39 model · 17 migrasi
+- **Test:** 48 file unit · 6 file e2e
 - **Dokumen / aturan:** 16 / 16
 
 ### Rute halaman terdeteksi
@@ -208,6 +241,7 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 - `/member/$id`
 - `/notifikasi`
 - `/opname`
+- `/pengajuan`
 - `/pengaturan`
 - `/percetakan`
 - `/pesanan`
@@ -223,6 +257,13 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 
 ### Tugas terbuka
 
+- `SEC-22 (High, A01/A06)`
+- `SEC-24 (Medium, A09)`
+- `SEC-21 (Low, A04)`
+- `SEC-23 (Low, A04)`
+- `SEC-25 (Low, A07)`
+- `SEC-26 (Low / future, A01)`
+- `PRINT-02` · terblokir
 - `CICD-02` · terblokir
 - `CICD-11` · sebagian
 - `CICD-15` · terblokir

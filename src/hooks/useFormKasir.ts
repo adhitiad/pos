@@ -140,7 +140,7 @@ export function useFormKasir({
           pembayaran: hasil.pembayaran,
           itemCount: hasil.itemCount,
           items: hasil.items,
-          jurnalNomor: hasil.jurnalNomor,
+          jurnalNomor: hasil.jurnalNomor ?? '',
           memberNama: hasil.memberNama,
           memberTier: hasil.memberTier,
           cetakOwner: hasil.cetakOwner,

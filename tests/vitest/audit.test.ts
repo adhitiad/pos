@@ -145,4 +145,9 @@ describe('audit — penulisan AuditLog', () => {
     expect(hasil.rows.length).toBeGreaterThan(0)
     expect(hasil.rows.every((r) => r.entitas === 'Produk')).toBe(true)
   })
+
+  it('auditLogData mencari berdasarkan nama aktor', async () => {
+    const hasil = await auditLogData({ q: 'Aktor Uji', take: 5 })
+    expect(hasil.rows.some((r) => r.aktorNama === 'Aktor Uji')).toBe(true)
+  })
 })

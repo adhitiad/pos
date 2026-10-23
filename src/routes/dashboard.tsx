@@ -19,6 +19,11 @@ import {
   TableRow,
 } from '#/components/ui/table'
 import {
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
+import {
   ChevronDown,
   ChevronUp,
   Clock,
@@ -62,6 +67,12 @@ function Dashboard() {
     })
     return items
   }, [data.transaksiHariIni, urutan])
+  const kontrolTransaksi = useKontrolTabel(
+    transaksi,
+    (t) =>
+      `${t.nomor} ${t.member?.nama ?? ''} ${t.items.map((item) => item.produkNama).join(' ')}`,
+    {},
+  )
 
   const transaksiPerJam = useMemo(() => {
     const hitung = Array(24).fill(0)
@@ -274,6 +285,11 @@ function Dashboard() {
             })}
           </div>
         </div>
+        <PencarianTabel
+          value={kontrolTransaksi.cari}
+          onChange={kontrolTransaksi.setCari}
+          className="mb-3"
+        />
 
         <Card>
           <CardContent>
@@ -294,7 +310,7 @@ function Dashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transaksi.length === 0 ? (
+                  {kontrolTransaksi.jumlahBaris === 0 ? (
                     <TableRow>
                       <TableCell
                         colSpan={4}
@@ -304,7 +320,7 @@ function Dashboard() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    transaksi.map((t) => (
+                    kontrolTransaksi.baris.map((t) => (
                       <TableRow key={t.id}>
                         <TableCell className="text-right font-medium">
                           Rp{rupiah(t.total)}
@@ -327,6 +343,14 @@ function Dashboard() {
                 </TableBody>
               </Table>
             </div>
+            <PaginasiTabel
+              halamanAktif={kontrolTransaksi.halamanAktif}
+              jumlahHalaman={kontrolTransaksi.jumlahHalaman}
+              jumlahBaris={kontrolTransaksi.jumlahBaris}
+              ukuranHalaman={kontrolTransaksi.ukuranHalaman}
+              onHalaman={kontrolTransaksi.setHalaman}
+              onUkuranHalaman={kontrolTransaksi.setUkuranHalaman}
+            />
           </CardContent>
         </Card>
       </section>

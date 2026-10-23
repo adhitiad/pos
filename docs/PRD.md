@@ -64,31 +64,46 @@ teknis ada di [`PERFORMA.md`](PERFORMA.md).
 Status rinci tiap kapabilitas ada di `DAFTAR-TUGAS.md`; tabel ini menjelaskan
 ruang lingkup, bukan mencentang pekerjaan.
 
-| Area          | Kemampuan yang termasuk                                                                                    |
-| ------------- | ---------------------------------------------------------------------------------------------------------- |
-| Autentikasi   | Login Google, sesi Better Auth, peran OWNER/KASIR/MEMBER, enrollment owner, audit perubahan peran          |
-| Kasir         | Katalog, kategori, modifier, keranjang, diskon, pajak, poin member, pembayaran, struk, mode offline/outbox |
-| Produk & stok | Produk, kategori, bahan/resep, supplier, pembelian bahan, peringatan stok menipis                          |
-| Member        | CRUD member, poin, redeem poin, riwayat transaksi                                                          |
-| Buku besar    | Chart of accounts, jurnal otomatis dari transaksi, neraca, rincian akun, audit log                         |
-| Laporan       | Penjualan, belanja, pajak, produk terpopuler, kunjungan/analitik operasional                               |
-| Cetak         | Pemindaian printer Web Serial, printer default, antrean cetak, struk thermal, PDF                          |
-| Pesanan       | Pesanan online publik, meja, kitchen display (KDS), status pesanan                                         |
-| Operasional   | Shift kasir, retur, stock opname, pengaturan mode F&B, notifikasi                                          |
-| Platform      | REST `/api/v1/*` untuk web + Expo, unggah Cloudinary lewat backend, i18n en/id/zh/ko                       |
+| Area          | Kemampuan yang termasuk                                                                                                                                                                               |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Autentikasi   | Login Google, sesi Better Auth, peran OWNER/KASIR/MEMBER, enrollment owner, audit perubahan peran                                                                                                     |
+| Kasir         | Katalog, kategori, modifier, keranjang, diskon, pajak, poin member, pembayaran, struk, mode offline/outbox                                                                                            |
+| Produk & stok | Produk, kategori, bahan/resep, supplier, pembelian bahan, peringatan stok menipis                                                                                                                     |
+| Member        | CRUD member, poin, redeem poin, riwayat transaksi                                                                                                                                                     |
+| Buku besar    | Chart of accounts, jurnal otomatis dari transaksi, neraca, rincian akun, audit log                                                                                                                    |
+| Laporan       | Penjualan, belanja, pajak, produk terpopuler, kunjungan/analitik operasional                                                                                                                          |
+| Cetak         | Pemindaian printer Web Serial, printer default, antrean dan cetak ulang struk (OWNER tanpa batas, KASIR maksimal 3 kali per transaksi), pilihan ukuran kertas thermal 57/58/80 mm, struk thermal, PDF |
+| Pesanan       | Pesanan online publik, meja, kitchen display (KDS), status pesanan                                                                                                                                    |
+| Operasional   | Shift kasir, retur, stock opname, pengaturan mode F&B, notifikasi                                                                                                                                     |
+| Platform      | REST `/api/v1/*` untuk web + Expo, unggah Cloudinary lewat backend, i18n en/id/zh/ko                                                                                                                  |
 
 ### Alur utama
 
 1. **Buka toko:** OWNER/KASIR login, membuka shift, memilih printer default.
 2. **Transaksi:** kasir memilih produk/modifier, mengatur qty, diskon, poin,
    metode bayar, lalu memposting transaksi.
-3. **Posting atomik:** stok produk/bahan berkurang, jurnal dibuat seimbang,
-   nomor struk harian dialokasikan, dan audit dicatat.
+3. **Posting atomik:** untuk transaksi POS, stok produk/bahan berkurang, jurnal
+   dibuat seimbang, nomor struk harian dialokasikan, dan audit dicatat. Pesanan
+   online hanya mencatat pesanan; stok, poin, jurnal, dan baris pembayaran
+   menunggu konfirmasi pembayaran.
 4. **Cetak:** struk masuk antrean; printer mengambil, menandai selesai/gagal;
-   kasir dapat mencetak ulang.
+   OWNER dapat mencetak ulang tanpa batas, sedangkan KASIR maksimal tiga kali
+   per transaksi. OWNER dapat memilih ukuran thermal 57 × 30 sampai 80 × 80 mm
+   di pengaturan; 57 × 30 mm ditujukan untuk EDC/mini printer.
 5. **Tutup shift:** rekap penjualan dan pembayaran diperiksa.
 6. **Pemilik:** membuka laporan, buku besar, audit log, dan pengaturan.
 7. **Pelanggan:** memesan online atau melihat riwayat/poin sebagai MEMBER.
+
+Tautan pesanan online ditampilkan kepada pengunjung dan MEMBER, tetapi
+disembunyikan dari navigasi OWNER/KASIR. Route `/pesanan` tetap mengikuti guard
+dan aturan publik yang berlaku; menyembunyikan tautan bukan kontrol akses.
+
+Pesanan online **belum** mengurangi stok, memberi poin, atau menulis jurnal saat
+dibuat. Staf mengonfirmasi pembayaran lewat tombol **Tandai lunas** di KDS;
+gateway pembayaran mendatang memakai webhook bertanda tangan HMAC. Efek stok,
+poin, jurnal, dan pembayaran dijalankan tepat sekali saat pembayaran
+dikonfirmasi. Laporan dan riwayat hanya menghitung transaksi yang sudah dibayar
+dan tidak dibatalkan.
 
 ## 6. Kebutuhan non-fungsional
 
@@ -99,6 +114,9 @@ Anggaran dan baseline ada di [`PERFORMA.md`](PERFORMA.md). Target yang mengikat:
 - LCP p75 ≤ 2,5 detik dan INP p75 ≤ 200 ms pada perangkat menengah.
 - API baca p95 ≤ 500 ms; API tulis p95 ≤ 1 detik; `/api/health` ≤ 200 ms.
 - Tidak ada N+1 pada jalur transaksi; query daftar selalu dibatasi.
+- Tabel daftar memakai 10 baris secara default dengan pilihan 25, 50, atau
+  100 baris, paginasi shadcn/ui, pencarian, pengurutan kolom, dan filter sesuai
+  konteks data.
 - Total aset klien (JS+CSS, gzip) ≤ 600 KB; aset terbesar ≤ 160 KB gzip.
 - Build gagal bila anggaran klien terlampaui (`bun run perf:budget`).
 
@@ -107,7 +125,11 @@ Anggaran dan baseline ada di [`PERFORMA.md`](PERFORMA.md). Target yang mengikat:
 - Guard per peran di server function dan REST; klien tidak boleh dipercaya.
 - Rahasia hanya di env/GitHub Environment; tidak pernah masuk log atau repo.
 - Error database mentah tidak boleh sampai ke klien; gunakan pesan aman + `ref`.
-- Rate limit untuk endpoint publik dan analytics.
+- Rate limit untuk endpoint publik dan analytics; IP klien diambil dari
+  `X-Forwarded-For` sisi kanan sesuai jumlah proxy tepercaya, bukan entri kiri
+  yang bisa dipalsukan.
+- Perubahan peran dan aksi “cabut semua sesi” oleh owner langsung membatalkan
+  token lama; pengguna harus login ulang.
 - Laporan kerentanan mengikuti [`../SECURITY.md`](../SECURITY.md).
 
 ### 6.3 Keandalan dan operasional
@@ -187,15 +209,16 @@ Aturan sinkronisasi:
 
 > **Snapshot otomatis.** Dihasilkan oleh `bun run docs:sync`; jangan edit manual.
 
-- **Item selesai:** 237/243 (98%)
-- **Item terbuka:** 6
-- **Terblokir / sebagian:** 3 / 2
-- **Cakupan:** 28 rute · 50 file route REST · 37 model · 12 migrasi
-- **Test:** 43 file unit · 5 file e2e
+- **Item selesai:** 260/273 (95%)
+- **Item terbuka:** 13
+- **Terblokir / sebagian:** 4 / 2
+- **Cakupan:** 29 rute · 52 file route REST · 39 model · 17 migrasi
+- **Test:** 48 file unit · 6 file e2e
 - **Dokumen / aturan:** 16 / 16
 
 **Item yang perlu perhatian:**
 
+- `PRINT-02` · terblokir
 - `CICD-02` · terblokir
 - `CICD-15` · terblokir
 - `CICD-25` · terblokir

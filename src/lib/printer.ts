@@ -15,6 +15,7 @@ const ESC = '\x1b'
 export async function cetakEscpos(
   baris: string[],
   portPilihan?: PortSerial,
+  lebarKolom = 32,
 ): Promise<void> {
   if (!dukunganSerial()) {
     throw new Error('Web Serial tidak didukung browser ini')
@@ -40,7 +41,7 @@ export async function cetakEscpos(
     const muatan: Uint8Array[] = []
     muatan.push(enc.encode(`${ESC}@`)) // inisialisasi printer
     for (const b of baris) {
-      muatan.push(enc.encode(b.padEnd(32) + '\n'))
+      muatan.push(enc.encode(b.padEnd(lebarKolom) + '\n'))
     }
     muatan.push(enc.encode('\n\n\n')) // advance kertas
     muatan.push(enc.encode(`${ESC}i`)) // potong kertas (full cut)

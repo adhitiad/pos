@@ -1,14 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 import { m } from '#/paraglide/messages'
 import { getSessionFn } from '#/server/authFn'
 import { punyaAkses } from '#/server/peran'
-import { updateUserRoleFn, userDataFn } from '#/server/userFn'
+import {
+  revokeUserSessionsFn,
+  updateUserRoleFn,
+  userDataFn,
+} from '#/server/userFn'
 
 import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
 import DashboardLayout from '#/components/DashboardLayout'
 import {
   Select,
@@ -25,6 +28,12 @@ import {
   TableHeader,
   TableRow,
 } from '#/components/ui/table'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
 
 export const Route = createFileRoute('/user')({
   beforeLoad: async () => {
@@ -37,14 +46,19 @@ export const Route = createFileRoute('/user')({
   component: User,
 })
 
-const PER_PAGE = 10
-
 function User() {
   const data = Route.useLoaderData()
   const router = useRouter()
-  const [cari, setCari] = useState('')
-  const [page, setPage] = useState(1)
   const [saving, setSaving] = useState<Set<string>>(new Set())
+  const kontrol = useKontrolTabel(
+    data,
+    (user) => `${user.name} ${user.email} ${user.role}`,
+    {
+      nama: (user) => user.name,
+      email: (user) => user.email,
+      role: (user) => user.role,
+    },
+  )
 
   const muatUlang = async () => {
     await router.invalidate()
@@ -53,8 +67,10 @@ function User() {
   const ubahRole = async (id: string, role: string) => {
     setSaving((prev) => new Set([...prev, id]))
     try {
-      await updateUserRoleFn({ data: { id, role } })
-      toast.success(m.user_role_ubah())
+      const hasil = await updateUserRoleFn({ data: { id, role } })
+      toast.success(
+        hasil.berubah ? m.user_role_ubah_sesi() : m.user_role_ubah(),
+      )
       await muatUlang()
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Gagal mengubah role')
@@ -67,52 +83,73 @@ function User() {
     }
   }
 
-  const q = cari.trim().toLowerCase()
-  const filtered = useMemo(() => {
-    if (!q) return data
-    return data.filter(
-      (u) =>
-        u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q),
-    )
-  }, [data, q])
-
-  const totalPage = Math.max(1, Math.ceil(filtered.length / PER_PAGE))
-  if (page > totalPage) setPage(totalPage)
-  const start = (page - 1) * PER_PAGE
-  const halaman = filtered.slice(start, start + PER_PAGE)
+  const cabutSesi = async (id: string) => {
+    if (!window.confirm(m.user_cabut_sesi_konfirmasi())) return
+    setSaving((prev) => new Set([...prev, id]))
+    try {
+      const hasil = await revokeUserSessionsFn({ data: { id } })
+      toast.success(m.user_cabut_sesi_berhasil({ jumlah: hasil.dicabut }))
+      await muatUlang()
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Gagal mencabut sesi')
+    } finally {
+      setSaving((prev) => {
+        const next = new Set(prev)
+        next.delete(id)
+        return next
+      })
+    }
+  }
 
   return (
     <DashboardLayout peran="OWNER" judul={m.user_title()}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Input
+        <PencarianTabel
           placeholder={m.user_cari_hint()}
-          value={cari}
-          onChange={(e) => {
-            setCari(e.target.value)
-            setPage(1)
-          }}
-          className="max-w-sm"
+          value={kontrol.cari}
+          onChange={kontrol.setCari}
         />
       </div>
 
-      {filtered.length === 0 && (
+      {kontrol.jumlahBaris === 0 && (
         <p className="py-4 text-sm text-neutral-500">{m.user_kosong()}</p>
       )}
 
-      {filtered.length > 0 && (
+      {kontrol.jumlahBaris > 0 && (
         <>
           <div className="-mx-2 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{m.user_nama()}</TableHead>
-                  <TableHead>{m.user_email()}</TableHead>
-                  <TableHead>{m.user_role()}</TableHead>
+                  <HeaderUrutTabel
+                    kunci="nama"
+                    aktif={kontrol.kunciUrut === 'nama'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                  >
+                    {m.user_nama()}
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="email"
+                    aktif={kontrol.kunciUrut === 'email'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                  >
+                    {m.user_email()}
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="role"
+                    aktif={kontrol.kunciUrut === 'role'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                  >
+                    {m.user_role()}
+                  </HeaderUrutTabel>
                   <TableHead className="text-right">{m.user_aksi()}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {halaman.map((u) => (
+                {kontrol.baris.map((u) => (
                   <TableRow key={u.id}>
                     <TableCell>
                       <p className="font-medium">{u.name}</p>
@@ -159,6 +196,17 @@ function User() {
                       >
                         {m.user_simpan()}
                       </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="ml-2"
+                        onClick={() => {
+                          void cabutSesi(u.id)
+                        }}
+                        disabled={saving.has(u.id)}
+                      >
+                        {m.user_cabut_sesi()}
+                      </Button>
                       {saving.has(u.id) && (
                         <span className="ml-2 animate-pulse text-xs text-muted-foreground">
                           …
@@ -171,29 +219,14 @@ function User() {
             </Table>
           </div>
 
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-sm text-muted-foreground">
-              {m.user_halaman({ page, total: totalPage })}
-            </p>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={page <= 1}
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-              >
-                <span>{m.user_sebelumnya()}</span>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={page >= totalPage}
-                onClick={() => setPage((p) => Math.min(totalPage, p + 1))}
-              >
-                <span>{m.user_berikutnya()}</span>
-              </Button>
-            </div>
-          </div>
+          <PaginasiTabel
+            halamanAktif={kontrol.halamanAktif}
+            jumlahHalaman={kontrol.jumlahHalaman}
+            jumlahBaris={kontrol.jumlahBaris}
+            ukuranHalaman={kontrol.ukuranHalaman}
+            onHalaman={kontrol.setHalaman}
+            onUkuranHalaman={kontrol.setUkuranHalaman}
+          />
         </>
       )}
     </DashboardLayout>

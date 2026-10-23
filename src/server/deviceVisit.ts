@@ -23,7 +23,7 @@ async function resolveUserType(
 }
 
 export async function recordDeviceVisit(
-  input: DeviceVisitInput,
+  input: DeviceVisitInput & { ipAddress?: string },
 ): Promise<DeviceVisitRow | null> {
   const data = DeviceVisitSchema.parse(input)
 
@@ -31,14 +31,19 @@ export async function recordDeviceVisit(
   const userType = await resolveUserType(data.userId)
   if (userType === null) return null
 
+  // IP hanya dari koneksi server, tidak pernah dari body klien.
+  const ip = input.ipAddress?.trim() ?? ''
+  const ipv4 = /^\d{1,3}(?:\.\d{1,3}){3}$/.test(ip) ? ip : null
+  const ipv6 = ip.includes(':') && ip.length <= 45 ? ip : null
+
   const visit = await prisma.deviceVisit.create({
     data: {
       deviceId: data.deviceId,
       deviceName: data.deviceName ?? null,
       os: data.os,
-      ipv4: data.ipv4 ?? null,
-      ipv6: data.ipv6 ?? null,
-      dns: data.dns ?? null,
+      ipv4,
+      ipv6,
+      dns: null,
       lokasi: data.lokasi ?? null,
       klasifikasi: data.klasifikasi,
       userId: data.userId ?? null,

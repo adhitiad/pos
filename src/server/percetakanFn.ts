@@ -88,34 +88,38 @@ export const hapusPrinterFn = createServerFn({ method: 'POST' })
 export const daftarPrintJobFn = createServerFn({ method: 'GET' })
   .validator((input: unknown) => DaftarPrintJobSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireOwner()
+    await requireKasir()
     return daftarPrintJob(data)
   })
 
 export const buatPrintJobFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => BuatPrintJobSchema.parse(input))
   .handler(async ({ data }) => {
-    const pengguna = await requireOwner()
-    return buatPrintJob(data, pengguna.id)
+    const pengguna = await requireKasir()
+    return buatPrintJob(
+      data,
+      pengguna.id,
+      pengguna.role === 'OWNER' ? 'OWNER' : 'KASIR',
+    )
   })
 
 export const ambilPrintJobFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => PrintJobIdSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireOwner()
+    await requireKasir()
     return ambilPrintJob(data.id)
   })
 
 export const selesaiPrintJobFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => PrintJobIdSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireOwner()
+    await requireKasir()
     return selesaiPrintJob(data.id)
   })
 
 export const gagalPrintJobFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => GagalPrintJobSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireOwner()
+    await requireKasir()
     return gagalPrintJob(data.id, data.pesan)
   })

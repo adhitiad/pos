@@ -51,6 +51,14 @@ flowchart TD
 | `OWNER_EMAILS` / `KASIR_EMAILS`             | daftar email peran                |
 | `TRUSTED_ORIGINS`                           | origin produksi                   |
 | `TRUST_PROXY`                               | `true`                            |
+| `TRUST_PROXY_HOPS`                          | `1` (Vercel satu lapis proxy)     |
+
+`TRUST_PROXY_HOPS` menghitung jumlah proxy tepercaya yang menambahkan
+`X-Forwarded-For`. Verifikasi SEC-20: produksi aktif memakai Vercel
+(`vercel.json`, preset Nitro Vercel), yaitu **satu lapis proxy**, jadi nilainya
+`1` dan entri paling kanan XFF dipakai sebagai IP klien. Jika menambahkan
+CDN/reverse proxy lain di depan Vercel, naikkan sesuai jumlah lapisan yang
+benar-benar menambahkan header; jangan menebak.
 
 `DATABASE_URL_UNPOOLED` tidak dibutuhkan runtime Vercel; nilainya disimpan sebagai
 secret GitHub untuk migrasi.

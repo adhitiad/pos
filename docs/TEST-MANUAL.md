@@ -15,11 +15,11 @@
 | 0.5 | Login KASIR   | Google dengan email di `KASIR_EMAILS` (`uewfau@gmail.com`, `kirara1nr@gmail.com`)                         | Role KASIR; shift demo sudah terbuka                                       |
 | 0.6 | Gate otomatis | `bunx tsc --noEmit && bun run lint && bun run check && bun run test && bun run test:e2e && bun run build` | Semua harus hijau                                                          |
 
-**Data seed yang tersedia:** 47 produk + resep · 24 bahan · 3 member (BRONZE/
+**Data seed yang tersedia:** minimal 25 produk (saat ini 47 produk + 184 resep) · 24 bahan · 3 member (BRONZE/
 SILVER/GOLD) · 8 transaksi (termasuk split payment, dapur, online, retur) ·
 3 pembelian + 1 hutang · 2 opname · 3 print job · 8 audit log · 6 page visit ·
 3 device visit · 5 shift (3 terbuka) · 2 kategori · 3 meja · 3 grup modifier ·
-2 printer (1 default) · 2 supplier · 2 kurir · 7 akun buku besar · 11 pengaturan.
+2 printer (1 default) · 2 supplier · 2 kurir · 7 akun buku besar · 12 pengaturan.
 Akun login seed: OWNER dari `OWNER_EMAILS`, KASIR `uewfau@gmail.com` dan
 `kirara1nr@gmail.com` (login Google, tanpa password).
 
@@ -29,15 +29,16 @@ Akun login seed: OWNER dari `OWNER_EMAILS`, KASIR `uewfau@gmail.com` dan
 
 ### 1.1 Login & guard peran (45 menit)
 
-| #     | Langkah                                                                                                           | Expected                            |
-| ----- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| 1.1.1 | Buka `/kasir` tanpa login                                                                                         | Redirect `/login`                   |
-| 1.1.2 | Login OWNER → buka `/produk`, `/bahan`, `/supplier`, `/printer`, `/percetakan`, `/audit-log`, `/user`, `/laporan` | Semua terbuka                       |
-| 1.1.3 | Login KASIR → buka `/produk`, `/supplier`, `/printer`, `/audit-log`                                               | Redirect `/kasir` (OWNER-only)      |
-| 1.1.4 | Login KASIR → `/percetakan`, `/kasir`, `/dashboard`, `/shift`, `/retur`, `/opname`                                | Terbuka (operasional)               |
-| 1.1.5 | Ganti peran OWNER→KASIR di `/user`                                                                                | Role berubah, nav ikut menyesuaikan |
-| 1.1.6 | Ubah peran akun OWNER terakhir                                                                                    | Ditolak ("minimal satu OWNER")      |
-| 1.1.7 | Ubah peran akun sendiri                                                                                           | Ditolak ("akun sendiri")            |
+| #     | Langkah                                                                                                           | Expected                                                           |
+| ----- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 1.1.1 | Buka `/kasir` tanpa login                                                                                         | Redirect `/login`                                                  |
+| 1.1.2 | Login OWNER → buka `/produk`, `/bahan`, `/supplier`, `/printer`, `/percetakan`, `/audit-log`, `/user`, `/laporan` | Semua terbuka                                                      |
+| 1.1.3 | Login KASIR → buka `/produk`, `/supplier`, `/printer`, `/audit-log`                                               | Redirect `/kasir` (OWNER-only)                                     |
+| 1.1.4 | Login KASIR → `/percetakan`, `/kasir`, `/dashboard`, `/shift`, `/retur`, `/opname`                                | Terbuka (operasional)                                              |
+| 1.1.5 | Ganti peran OWNER→KASIR di `/user`                                                                                | Role berubah; semua sesi user target dicabut dan harus login ulang |
+| 1.1.6 | Ubah peran akun OWNER terakhir                                                                                    | Ditolak ("minimal satu OWNER")                                     |
+| 1.1.7 | Ubah peran akun sendiri                                                                                           | Ditolak ("akun sendiri")                                           |
+| 1.1.8 | Klik “Cabut semua sesi” pada user lain di `/user`                                                                 | Sesi user target 401; sesi owner tetap aktif                       |
 
 ### 1.2 Master produk & bahan (1 jam)
 
@@ -116,13 +117,15 @@ Akun login seed: OWNER dari `OWNER_EMAILS`, KASIR `uewfau@gmail.com` dan
 
 ### 3.3 Mode F&B (1 jam)
 
-| #     | Langkah                                                | Expected                                                 |
-| ----- | ------------------------------------------------------ | -------------------------------------------------------- |
-| 3.3.1 | `/pengaturan` → aktifkan Mode F&B                      | Nav `/meja` & `/dapur` muncul                            |
-| 3.3.2 | `/meja` → CRUD meja                                    | Meja aktif/nonaktif                                      |
-| 3.3.3 | `/kasir` → pilih meja + modifier (Tingkat Manis wajib) | Modifier wajib divalidasi, tak bisa checkout tanpa pilih |
-| 3.3.4 | Pesanan dine-in → `/dapur`                             | KDS menampilkan pesanan aktif, ubah status               |
-| 3.3.5 | `/pengaturan` → matikan Mode F&B                       | Nav F&B hilang, data tetap ada                           |
+| #     | Langkah                                                | Expected                                                                |
+| ----- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
+| 3.3.1 | `/pengaturan` → aktifkan Mode F&B                      | Nav `/meja` & `/dapur` muncul                                           |
+| 3.3.2 | `/meja` → CRUD meja                                    | Meja aktif/nonaktif                                                     |
+| 3.3.3 | `/kasir` → pilih meja + modifier (Tingkat Manis wajib) | Modifier wajib divalidasi, tak bisa checkout tanpa pilih                |
+| 3.3.4 | Pesanan dine-in → `/dapur`                             | KDS menampilkan pesanan aktif, ubah status                              |
+| 3.3.5 | `/pesanan` → buat pesanan online                       | Stok belum berkurang, poin belum bertambah, muncul "Belum bayar" di KDS |
+| 3.3.6 | KDS → "Tandai Lunas" pada pesanan online               | Stok/poin/jurnal/pembayaran dibuat sekali; badge berubah "Lunas"        |
+| 3.3.7 | `/pengaturan` → matikan Mode F&B                       | Nav F&B hilang, data tetap ada                                          |
 
 ---
 

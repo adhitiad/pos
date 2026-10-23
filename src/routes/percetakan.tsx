@@ -7,6 +7,7 @@ import { getSessionFn } from '#/server/authFn'
 import { punyaAkses } from '#/server/peran'
 import {
   ambilPrintJobFn,
+  buatPrintJobFn,
   daftarPrintJobFn,
   gagalPrintJobFn,
   selesaiPrintJobFn,
@@ -44,12 +45,19 @@ export const Route = createFileRoute('/percetakan')({
     if (!user) throw redirect({ to: '/login' })
     if (!punyaAkses(user.role, 'operasional')) throw redirect({ to: '/' })
   },
-  loader: async () => daftarPrintJobFn({ data: { take: 50 } }),
+  loader: async () => {
+    const pengguna = await getSessionFn()
+    if (!pengguna) throw redirect({ to: '/login' })
+    return {
+      jobs: await daftarPrintJobFn({ data: { take: 50 } }),
+      peran: pengguna.role,
+    }
+  },
   component: Percetakan,
 })
 
 function Percetakan() {
-  const data = Route.useLoaderData()
+  const { jobs, peran } = Route.useLoaderData()
   const router = useRouter()
   const [status, setStatus] = useState(SEMUA)
   const [lihat, setLihat] = useState<PrintJobRow | null>(null)
@@ -64,11 +72,11 @@ function Percetakan() {
     toast.error(e instanceof Error ? e.message : 'Operasi gagal')
   }
 
-  const daftar = data.filter((job) => status === SEMUA || job.status === status)
+  const daftar = jobs.filter((job) => status === SEMUA || job.status === status)
 
   return (
     <DashboardLayout
-      peran="OWNER"
+      peran={peran}
       judul={m.percetakan_title()}
       aksi={
         <div className="w-48">
@@ -159,8 +167,23 @@ function Percetakan() {
 
       <TabelPrintJob
         daftar={daftar}
+        peran={peran}
         onLihat={(job) => {
           setLihat(job)
+        }}
+        onCetakUlang={(job) => {
+          if (!job.transaksiId) return
+          buatPrintJobFn({
+            data: {
+              transaksiId: job.transaksiId,
+              printerId: job.printerId ?? undefined,
+            },
+          })
+            .then(() => {
+              toast.success(m.percetakan_cetak_ulang_berhasil())
+              return muatUlang()
+            })
+            .catch(gagal)
         }}
         onAmbil={(job) => {
           ambilPrintJobFn({ data: { id: job.id } })

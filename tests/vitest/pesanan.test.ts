@@ -3,6 +3,10 @@ import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 import { prisma } from '../../src/db.js'
 import { notifikasiData } from '../../src/server/notifikasi.js'
 import { pesanTransaksi } from '../../src/server/pesanan.js'
+import {
+  batalkanPesananOnline,
+  tandaiPesananLunas,
+} from '../../src/server/pembayaranPesanan.js'
 
 async function buatProduk(
   nama: string,
@@ -68,11 +72,25 @@ describe('pesanTransaksi (pesanan online)', () => {
     expect(hasil.mejaId).toBe(meja.id)
     expect(hasil.total).toBe(40000)
     expect(hasil.memberNama).toBeNull()
+    expect(hasil.jurnalId).toBeNull()
 
     const trx = await prisma.transaksi.findUnique({
       where: { id: hasil.transaksiId },
+      include: { pembayaran: true, items: true, jurnal: true },
     })
     expect(trx!.kasirId).toBeNull()
+    expect(trx!.sumber).toBe('ONLINE')
+    expect(trx!.dibayarPada).toBeNull()
+    expect(trx!.stokTerpotong).toBe(false)
+    expect(trx!.pembayaran).toHaveLength(0)
+    expect(trx!.jurnal).toBeNull()
+    expect(trx!.items[0].qty).toBe(2)
+
+    // Stok belum dipotong sampai pembayaran dikonfirmasi.
+    const produkSetelah = await prisma.produk.findUniqueOrThrow({
+      where: { id: produk.id },
+    })
+    expect(produkSetelah.stok).toBe(10)
   })
 
   it('membuat pesanan take-away (tanpa meja) dengan pembayaran TRANSFER', async () => {
@@ -118,23 +136,25 @@ describe('pesanTransaksi (pesanan online)', () => {
 
     expect(hasil.memberNama).toBe(member.nama)
     expect(hasil.total).toBe(18000)
+    expect(hasil.jurnalId).toBeNull()
 
     const trx = await prisma.transaksi.findUnique({
       where: { id: hasil.transaksiId },
     })
     expect(trx!.memberId).toBe(member.id)
+    expect(trx!.dibayarPada).toBeNull()
 
-    const setelah = await prisma.member.findUniqueOrThrow({
+    const sebelumBayar = await prisma.member.findUniqueOrThrow({
       where: { id: member.id },
     })
-    expect(setelah.poin).toBe(1)
-    expect(setelah.totalBelanja.toNumber()).toBe(18000)
+    expect(sebelumBayar.poin).toBe(0)
+    expect(sebelumBayar.totalBelanja.toNumber()).toBe(0)
 
     const memberNotif = await notifikasiData({
       role: 'MEMBER',
       email: member.email!,
     })
-    expect(memberNotif.some((n) => n.tipe === 'transaksi')).toBe(true)
+    expect(memberNotif.some((n) => n.tipe === 'transaksi')).toBe(false)
     expect(
       memberNotif.some((n) => n.tipe === 'pesanan' && n.untuk === 'member'),
     ).toBe(true)
@@ -149,6 +169,65 @@ describe('pesanTransaksi (pesanan online)', () => {
       ),
     ).toBe(true)
 
+    const lunas = await tandaiPesananLunas({
+      id: hasil.transaksiId,
+      via: 'MANUAL',
+    })
+    expect(lunas.jurnal).not.toBeNull()
+    expect(lunas.transaksi.statusPesanan).toBe('MENUNGGU')
+
+    const setelah = await prisma.member.findUniqueOrThrow({
+      where: { id: member.id },
+    })
+    expect(setelah.poin).toBe(1)
+    expect(setelah.totalBelanja.toNumber()).toBe(18000)
+
+    const produkSetelah = await prisma.produk.findUniqueOrThrow({
+      where: { id: produk.id },
+    })
+    expect(produkSetelah.stok).toBe(9)
+
+    const trxLunas = await prisma.transaksi.findUniqueOrThrow({
+      where: { id: hasil.transaksiId },
+      include: { pembayaran: true, jurnal: true },
+    })
+    expect(trxLunas.dibayarPada).not.toBeNull()
+    expect(trxLunas.dibayarVia).toBe('MANUAL')
+    expect(trxLunas.stokTerpotong).toBe(true)
+    expect(trxLunas.pembayaran).toHaveLength(1)
+    expect(trxLunas.pembayaran[0].jumlah.toNumber()).toBe(18000)
+    expect(trxLunas.jurnal).not.toBeNull()
+
+    // Idempoten: konfirmasi ulang tidak menambah poin/stok.
+    await tandaiPesananLunas({ id: hasil.transaksiId, via: 'MANUAL' })
+    const setelahUlang = await prisma.member.findUniqueOrThrow({
+      where: { id: member.id },
+    })
+    expect(setelahUlang.poin).toBe(1)
+    expect(setelahUlang.totalBelanja.toNumber()).toBe(18000)
+    const produkUlang = await prisma.produk.findUniqueOrThrow({
+      where: { id: produk.id },
+    })
+    expect(produkUlang.stok).toBe(9)
+
     await prisma.member.delete({ where: { id: member.id } })
+  })
+
+  it('membatalkan pesanan online yang belum dibayar tanpa mengubah stok', async () => {
+    const produk = await buatProduk('Batal', 'P-ONLINE-4', 10000, 5)
+    const hasil = await pesanTransaksi({
+      items: [{ produkId: produk.id, qty: 2 }],
+      metodeBayar: 'QRIS',
+    })
+
+    await batalkanPesananOnline(hasil.transaksiId)
+    const trx = await prisma.transaksi.findUniqueOrThrow({
+      where: { id: hasil.transaksiId },
+    })
+    expect(trx.statusPesanan).toBe('DIBATALKAN')
+    const produkSetelah = await prisma.produk.findUniqueOrThrow({
+      where: { id: produk.id },
+    })
+    expect(produkSetelah.stok).toBe(5)
   })
 })

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { apiError, apiPengguna, ok } from '#/server/api'
+import { apiError, apiPengguna, bacaJsonTerbatas, ok } from '#/server/api'
 import { AKSES } from '#/server/peran'
 import { postingTransaksi, ringkasHasil } from '#/server/transaksi'
 import { PostingTransaksiSchema } from '#/validations/transaksi'
@@ -13,7 +13,9 @@ export const Route = createFileRoute('/api/v1/transaksi')({
           const pengguna = await apiPengguna(request, AKSES.operasional)
           if (pengguna instanceof Response) return pengguna
           const hasil = await postingTransaksi(
-            PostingTransaksiSchema.parse(await request.json()),
+            PostingTransaksiSchema.parse(
+              await bacaJsonTerbatas(request, 256 * 1024),
+            ),
             pengguna.id,
           )
           return ok(ringkasHasil(hasil), 201)

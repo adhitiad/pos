@@ -40,6 +40,8 @@ export interface PrintJobRow {
   dicetakPada: string | null
   diambilPada: string | null
   createdAt: string
+  cetakOwner: number
+  cetakKasir: number
   /** Isi struk siap render (client pencetak yang mengubahnya jadi ESC/POS). */
   payload: StrukPayload | null
 }

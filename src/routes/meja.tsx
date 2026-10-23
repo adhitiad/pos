@@ -29,6 +29,19 @@ import {
   TableRow,
 } from '#/components/ui/table'
 import { Switch } from '#/components/ui/switch'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#/components/ui/select'
 
 export const Route = createFileRoute('/meja')({
   beforeLoad: async () => {
@@ -47,8 +60,25 @@ function Meja() {
   const [panel, setPanel] = useState<null | { id: string | null }>(null)
   const [hapusId, setHapusId] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
+  const [filterStatus, setFilterStatus] = useState('SEMUA')
 
   const baris = data
+  const barisTerfilter = baris.filter(
+    (meja) =>
+      filterStatus === 'SEMUA' ||
+      (filterStatus === 'AKTIF' ? meja.aktif : !meja.aktif),
+  )
+  const kontrol = useKontrolTabel(
+    barisTerfilter,
+    (meja) =>
+      `${meja.nomor} ${meja.nama ?? ''} ${meja.aktif ? 'aktif' : 'nonaktif'}`,
+    {
+      nomor: (meja) => meja.nomor,
+      nama: (meja) => meja.nama ?? '',
+      status: (meja) => (meja.aktif ? 1 : 0),
+      transaksi: (meja) => meja.jumlahTransaksi,
+    },
+  )
 
   const muatUlang = async () => {
     await router.invalidate()
@@ -175,18 +205,61 @@ function Meja() {
       />
 
       <div className="-mx-2 overflow-x-auto">
+        <div className="mb-3 flex flex-wrap items-center gap-3">
+          <PencarianTabel value={kontrol.cari} onChange={kontrol.setCari} />
+          <Select value={filterStatus} onValueChange={setFilterStatus}>
+            <SelectTrigger className="w-40" aria-label={m.meja_aktif()}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="SEMUA">{m.percetakan_semua()}</SelectItem>
+              <SelectItem value="AKTIF">{m.produk_aktif()}</SelectItem>
+              <SelectItem value="NONAKTIF">{m.produk_nonaktif()}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{m.meja_nomor()}</TableHead>
-              <TableHead>{m.meja_nama()}</TableHead>
-              <TableHead className="text-center">{m.meja_aktif()}</TableHead>
-              <TableHead className="text-right">{m.meja_transaksi()}</TableHead>
+              <HeaderUrutTabel
+                kunci="nomor"
+                aktif={kontrol.kunciUrut === 'nomor'}
+                arah={kontrol.arahUrut}
+                onUrut={kontrol.toggleUrut}
+              >
+                {m.meja_nomor()}
+              </HeaderUrutTabel>
+              <HeaderUrutTabel
+                kunci="nama"
+                aktif={kontrol.kunciUrut === 'nama'}
+                arah={kontrol.arahUrut}
+                onUrut={kontrol.toggleUrut}
+              >
+                {m.meja_nama()}
+              </HeaderUrutTabel>
+              <HeaderUrutTabel
+                kunci="status"
+                aktif={kontrol.kunciUrut === 'status'}
+                arah={kontrol.arahUrut}
+                onUrut={kontrol.toggleUrut}
+                className="text-center"
+              >
+                {m.meja_aktif()}
+              </HeaderUrutTabel>
+              <HeaderUrutTabel
+                kunci="transaksi"
+                aktif={kontrol.kunciUrut === 'transaksi'}
+                arah={kontrol.arahUrut}
+                onUrut={kontrol.toggleUrut}
+                className="text-right"
+              >
+                {m.meja_transaksi()}
+              </HeaderUrutTabel>
               <TableHead>{m.meja_aksi()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {baris.map((mm) => (
+            {kontrol.baris.map((mm) => (
               <TableRow key={mm.id}>
                 <TableCell className="font-medium">{mm.nomor}</TableCell>
                 <TableCell>{mm.nama ?? '—'}</TableCell>
@@ -230,6 +303,14 @@ function Meja() {
             ))}
           </TableBody>
         </Table>
+        <PaginasiTabel
+          halamanAktif={kontrol.halamanAktif}
+          jumlahHalaman={kontrol.jumlahHalaman}
+          jumlahBaris={kontrol.jumlahBaris}
+          ukuranHalaman={kontrol.ukuranHalaman}
+          onHalaman={kontrol.setHalaman}
+          onUkuranHalaman={kontrol.setUkuranHalaman}
+        />
         {baris.length === 0 && (
           <>
             <p className="py-4 text-sm text-neutral-500">{m.meja_kosong()}</p>

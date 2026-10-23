@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { apiError, apiPengguna, ok } from '#/server/api'
+import { apiError, apiPengguna, bacaJsonTerbatas, ok } from '#/server/api'
 import { AKSES } from '#/server/peran'
 import { rateLimit } from '#/server/rateLimit'
 import {
@@ -17,9 +17,8 @@ export const Route = createFileRoute('/api/v1/device-visit')({
           // Endpoint publik (analytics) → batasi agar tak di-spam tanpa henti.
           const rl = await rateLimit(request, 30)
           if (rl) return rl
-          const body = (await request.json()) as Record<string, unknown>
-          // `userId` klien diabaikan; di-resolve dari sesi di recordDeviceVisitFn.
-          delete body.userId
+          const body = await bacaJsonTerbatas(request, 16 * 1024)
+          // `userId` dari body ditimpa dengan hasil sesi di recordDeviceVisitFn.
           const hasil = await recordDeviceVisitFn({ data: body })
           return ok(hasil)
         } catch (e) {

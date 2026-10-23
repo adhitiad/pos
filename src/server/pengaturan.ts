@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { UKURAN_KERTAS_DEFAULT, ukuranKertasDari } from '#/lib/ukuran-kertas'
 
 import { catatAudit } from './audit.js'
 import { hapusAset } from './cloudinary.js'
@@ -26,6 +27,9 @@ export async function pengaturanData() {
     logoUrl: peta.logo_url ?? '',
     ikonUrl: peta.ikon_url ?? '',
     strukOtomatis: strukOtomatisDari(peta.struk_otomatis),
+    ukuranKertasTermal: ukuranKertasDari(
+      peta.ukuran_kertas_termal ?? UKURAN_KERTAS_DEFAULT,
+    ).id,
     deskripsiApp: peta.deskripsi_app ?? '',
     // Tarif pajak (%) per mode; dipakai server saat posting & ditampilkan di UI.
     // PB1 untuk mode F&B (restoran/cafe), PPN untuk retail.

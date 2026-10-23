@@ -1,5 +1,6 @@
 import { prisma } from '#/db'
 import { pengaturanData } from './pengaturan.js'
+import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 
 // Profil & riwayat milik pengguna yang sedang login — dipakai aplikasi member
 // (Expo) yang tak boleh akses endpoint master milik owner.
@@ -29,7 +30,7 @@ export async function profilSaya(input: { email: string }) {
 
   const transaksi = riwayatAktif
     ? await prisma.transaksi.findMany({
-        where: { memberId: member.id },
+        where: { memberId: member.id, ...FILTER_TRANSAKSI_TERJUAL },
         orderBy: { tanggal: 'desc' },
         take: 50,
         select: {

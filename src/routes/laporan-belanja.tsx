@@ -25,10 +25,15 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from '#/components/ui/table'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
 
 const rupiah = (n: number) =>
   new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(n)
@@ -84,6 +89,25 @@ function LaporanBelanja() {
   const [sumberBelanja, setSumberBelanja] = useState<
     SumberBelanja | typeof SEMUA_SUMBER
   >(search.sumberBelanja ?? SEMUA_SUMBER)
+  const kontrolSumber = useKontrolTabel(laporan.perSumber, (s) => s.nama, {
+    nama: (s) => s.nama,
+    jumlah: (s) => s.jumlah,
+    total: (s) => s.total,
+    hutang: (s) => s.hutang,
+  })
+  const kontrolDetail = useKontrolTabel(
+    laporan.detail,
+    (d) =>
+      `${d.tanggal} ${d.supplierNama ?? ''} ${d.tempatBelanja ?? ''} ${d.bahanNama}`,
+    {
+      tanggal: (d) => d.tanggal,
+      sumber: (d) => d.supplierNama ?? d.sumberBelanja,
+      bahan: (d) => d.bahanNama,
+      jumlah: (d) => d.jumlah,
+      harga: (d) => d.hargaSatuan,
+      total: (d) => d.totalHarga,
+    },
+  )
 
   const qs = new URLSearchParams({
     dari: laporan.dari,
@@ -225,24 +249,53 @@ function LaporanBelanja() {
         <h2 className="text-lg font-semibold">
           {m.laporan_belanja_per_sumber()}
         </h2>
+        <PencarianTabel
+          value={kontrolSumber.cari}
+          onChange={kontrolSumber.setCari}
+        />
         <div className="-mx-2 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{m.laporan_belanja_sumber()}</TableHead>
-                <TableHead className="text-right">
+                <HeaderUrutTabel
+                  kunci="nama"
+                  aktif={kontrolSumber.kunciUrut === 'nama'}
+                  arah={kontrolSumber.arahUrut}
+                  onUrut={kontrolSumber.toggleUrut}
+                >
+                  {m.laporan_belanja_sumber()}
+                </HeaderUrutTabel>
+                <HeaderUrutTabel
+                  kunci="jumlah"
+                  aktif={kontrolSumber.kunciUrut === 'jumlah'}
+                  arah={kontrolSumber.arahUrut}
+                  onUrut={kontrolSumber.toggleUrut}
+                  className="text-right"
+                >
                   {m.laporan_belanja_jumlah_pembelian()}
-                </TableHead>
-                <TableHead className="text-right">
+                </HeaderUrutTabel>
+                <HeaderUrutTabel
+                  kunci="total"
+                  aktif={kontrolSumber.kunciUrut === 'total'}
+                  arah={kontrolSumber.arahUrut}
+                  onUrut={kontrolSumber.toggleUrut}
+                  className="text-right"
+                >
                   {m.laporan_belanja_total()}
-                </TableHead>
-                <TableHead className="text-right">
+                </HeaderUrutTabel>
+                <HeaderUrutTabel
+                  kunci="hutang"
+                  aktif={kontrolSumber.kunciUrut === 'hutang'}
+                  arah={kontrolSumber.arahUrut}
+                  onUrut={kontrolSumber.toggleUrut}
+                  className="text-right"
+                >
                   {m.laporan_belanja_sisa_hutang()}
-                </TableHead>
+                </HeaderUrutTabel>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {laporan.perSumber.length === 0 ? (
+              {kontrolSumber.jumlahBaris === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={4}
@@ -252,7 +305,7 @@ function LaporanBelanja() {
                   </TableCell>
                 </TableRow>
               ) : (
-                laporan.perSumber.map((s) => (
+                kontrolSumber.baris.map((s) => (
                   <TableRow key={s.supplierId ?? `pasar:${s.sumberBelanja}`}>
                     <TableCell>{s.nama}</TableCell>
                     <TableCell className="text-right">{s.jumlah}</TableCell>
@@ -268,30 +321,53 @@ function LaporanBelanja() {
             </TableBody>
           </Table>
         </div>
+        <PaginasiTabel
+          halamanAktif={kontrolSumber.halamanAktif}
+          jumlahHalaman={kontrolSumber.jumlahHalaman}
+          jumlahBaris={kontrolSumber.jumlahBaris}
+          ukuranHalaman={kontrolSumber.ukuranHalaman}
+          onHalaman={kontrolSumber.setHalaman}
+          onUkuranHalaman={kontrolSumber.setUkuranHalaman}
+        />
       </section>
 
       <section className="space-y-2">
         <h2 className="text-lg font-semibold">{m.laporan_belanja_detail()}</h2>
+        <PencarianTabel
+          value={kontrolDetail.cari}
+          onChange={kontrolDetail.setCari}
+        />
         <div className="-mx-2 overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{m.laporan_belanja_tanggal()}</TableHead>
-                <TableHead>{m.laporan_belanja_sumber()}</TableHead>
-                <TableHead>{m.laporan_belanja_bahan()}</TableHead>
-                <TableHead className="text-right">
-                  {m.laporan_belanja_jumlah()}
-                </TableHead>
-                <TableHead className="text-right">
-                  {m.laporan_belanja_harga_satuan()}
-                </TableHead>
-                <TableHead className="text-right">
-                  {m.laporan_belanja_total()}
-                </TableHead>
+                {[
+                  ['tanggal', m.laporan_belanja_tanggal()],
+                  ['sumber', m.laporan_belanja_sumber()],
+                  ['bahan', m.laporan_belanja_bahan()],
+                  ['jumlah', m.laporan_belanja_jumlah()],
+                  ['harga', m.laporan_belanja_harga_satuan()],
+                  ['total', m.laporan_belanja_total()],
+                ].map(([key, label]) => (
+                  <HeaderUrutTabel
+                    key={key}
+                    kunci={key}
+                    aktif={kontrolDetail.kunciUrut === key}
+                    arah={kontrolDetail.arahUrut}
+                    onUrut={kontrolDetail.toggleUrut}
+                    className={
+                      key === 'jumlah' || key === 'harga' || key === 'total'
+                        ? 'text-right'
+                        : undefined
+                    }
+                  >
+                    {label}
+                  </HeaderUrutTabel>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {laporan.detail.length === 0 ? (
+              {kontrolDetail.jumlahBaris === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={6}
@@ -301,7 +377,7 @@ function LaporanBelanja() {
                   </TableCell>
                 </TableRow>
               ) : (
-                laporan.detail.map((d) => (
+                kontrolDetail.baris.map((d) => (
                   <TableRow key={d.id}>
                     <TableCell>{d.tanggal.slice(0, 10)}</TableCell>
                     <TableCell>
@@ -329,6 +405,14 @@ function LaporanBelanja() {
             </TableBody>
           </Table>
         </div>
+        <PaginasiTabel
+          halamanAktif={kontrolDetail.halamanAktif}
+          jumlahHalaman={kontrolDetail.jumlahHalaman}
+          jumlahBaris={kontrolDetail.jumlahBaris}
+          ukuranHalaman={kontrolDetail.ukuranHalaman}
+          onHalaman={kontrolDetail.setHalaman}
+          onUkuranHalaman={kontrolDetail.setUkuranHalaman}
+        />
       </section>
     </DashboardLayout>
   )

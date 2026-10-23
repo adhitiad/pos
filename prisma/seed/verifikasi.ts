@@ -4,14 +4,14 @@ const WAJIB: Record<string, number> = {
   kategori: 2,
   bahan: 24,
   produk: 25,
-  produkBahan: 1,
+  produkBahan: 25,
   member: 1,
   delivery: 2,
   meja: 3,
   modifierGrup: 3,
   modifier: 7,
   akun: 7,
-  pengaturan: 11,
+  pengaturan: 12,
   supplier: 2,
   printer: 2,
   user: 2,
@@ -106,7 +106,72 @@ export async function verifikasiSeed() {
     }
   }
 
-  const produkAktif = await prisma.produk.count({ where: { aktif: true } })
+  const [produkAktif, produkTanpaKategori, resepTidakValid] = await Promise.all(
+    [
+      prisma.produk.count({ where: { aktif: true } }),
+      prisma.produk.count({ where: { kategoriId: null } }),
+      prisma.produkBahan.count({ where: { jumlah: { lte: 0 } } }),
+    ],
+  )
+  if (produkAktif < 25) {
+    throw new Error(`Seed hanya membuat ${produkAktif}/25 produk aktif`)
+  }
+  if (produkTanpaKategori > 0) {
+    throw new Error(
+      `Seed menghasilkan ${produkTanpaKategori} produk tanpa kategori`,
+    )
+  }
+  if (resepTidakValid > 0) {
+    throw new Error(
+      `Seed menghasilkan ${resepTidakValid} baris resep tidak valid`,
+    )
+  }
+
+  const penggunaPeran = await prisma.user.groupBy({
+    by: ['role'],
+    _count: { _all: true },
+  })
+  if (!penggunaPeran.some((baris) => baris.role === 'OWNER')) {
+    throw new Error('Seed tidak menghasilkan pengguna OWNER untuk tes')
+  }
+  if (!penggunaPeran.some((baris) => baris.role === 'MEMBER')) {
+    throw new Error('Seed tidak menghasilkan pengguna MEMBER untuk tes')
+  }
+  if (!penggunaPeran.some((baris) => baris.role === 'KASIR')) {
+    throw new Error('Seed tidak menghasilkan pengguna KASIR untuk tes')
+  }
+  const ukuranKertas = await prisma.pengaturan.findUnique({
+    where: { kunci: 'ukuran_kertas_termal' },
+    select: { nilai: true },
+  })
+  if (ukuranKertas?.nilai !== '58x40') {
+    throw new Error('Seed belum mengisi default ukuran kertas thermal')
+  }
+
+  const jobsCetak = await prisma.printJob.findMany({
+    select: { payload: true },
+  })
+  const jobTidakLengkap = jobsCetak.filter((job) => {
+    if (
+      !job.payload ||
+      typeof job.payload !== 'object' ||
+      Array.isArray(job.payload)
+    ) {
+      return true
+    }
+    const payload = job.payload
+    return (
+      typeof payload.nomor !== 'string' ||
+      !Array.isArray(payload.items) ||
+      payload.items.length === 0
+    )
+  })
+  if (jobTidakLengkap.length > 0) {
+    throw new Error(
+      `Seed menghasilkan ${jobTidakLengkap.length} payload cetak tidak lengkap`,
+    )
+  }
+
   console.log('📦 Ringkasan seed:')
   console.table({
     produk: jumlah.produk,

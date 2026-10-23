@@ -33,4 +33,14 @@ describe('struk uji printer', () => {
     ).toBe(true)
     expect(baris.every((b) => b.length <= 32)).toBe(true)
   })
+
+  it('mengikuti lebar kolom 80 mm (48 karakter)', () => {
+    const payload = strukUji(new Date('2026-10-22T10:30:00.000Z'))
+    const baris = barisStrukUji(payload, 'Toko Uji', 48)
+    const garis = baris.filter((b) => /^-+$/.test(b))
+
+    expect(garis.length).toBeGreaterThan(0)
+    expect(garis.every((b) => b.length === 48)).toBe(true)
+    expect(baris.every((b) => b.length <= 48)).toBe(true)
+  })
 })

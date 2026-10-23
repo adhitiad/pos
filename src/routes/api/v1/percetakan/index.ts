@@ -44,7 +44,14 @@ export const Route = createFileRoute('/api/v1/percetakan/')({
           )
           if (batas) return batas
           const data = BuatPrintJobSchema.parse(await request.json())
-          return ok(await buatPrintJob(data, pengguna.id), 201)
+          return ok(
+            await buatPrintJob(
+              data,
+              pengguna.id,
+              pengguna.role === 'OWNER' ? 'OWNER' : 'KASIR',
+            ),
+            201,
+          )
         } catch (e) {
           return apiError(e)
         }

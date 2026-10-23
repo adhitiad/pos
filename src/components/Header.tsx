@@ -33,13 +33,30 @@ export default function Header() {
   const [peran, setPeran] = useState<string | undefined>()
 
   useEffect(() => {
+    if (isPending) return
+    if (!session?.user) {
+      setPeran(undefined)
+      return
+    }
+
+    let aktif = true
     void getPenggunaFn()
-      .then((p) => setPeran(p?.role))
-      .catch(() => setPeran(undefined))
-  }, [])
+      .then((pengguna) => {
+        if (aktif) setPeran(pengguna?.role)
+      })
+      .catch((error: unknown) => {
+        if (!aktif) return
+        console.error('[Header] gagal memuat peran pengguna', error)
+        setPeran(undefined)
+      })
+    return () => {
+      aktif = false
+    }
+  }, [isPending, session?.user.id])
 
   const isOwner = peran === 'OWNER'
   const isKasir = peran === 'OWNER' || peran === 'KASIR'
+  const tampilkanPesanan = !isPending && (!session?.user || peran === 'MEMBER')
 
   return (
     <header className="chrome-surface sticky top-0 z-40 border-b">
@@ -51,9 +68,11 @@ export default function Header() {
           </span>
         </div>
         <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
-          <Link to="/pesanan" className="chrome-link">
-            {m.pesan_judul()}
-          </Link>
+          {tampilkanPesanan && (
+            <Link to="/pesanan" className="chrome-link">
+              {m.pesan_judul()}
+            </Link>
+          )}
           {isKasir && (
             <Link to="/kasir" className="chrome-link">
               {m.nav_pos()}
@@ -106,9 +125,6 @@ export default function Header() {
                     <Link to="/buku-besar">{m.menu_ledger()}</Link>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem asChild>
-                  <Link to="/pesanan">{m.pesan_judul()}</Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/notifikasi">{m.menu_notifikasi()}</Link>
                 </DropdownMenuItem>

@@ -3,6 +3,7 @@ import {
   BarChart3,
   Bell,
   Boxes,
+  ClipboardCheck,
   Home,
   Layout,
   Monitor,
@@ -11,7 +12,6 @@ import {
   Receipt,
   ScrollText,
   Settings,
-  ShoppingBag,
   ShoppingCart,
   Table,
   Truck,
@@ -44,16 +44,16 @@ const TAUTAN_DASAR = [
     peran: AKSES.semua,
   },
   {
-    ke: '/pesanan',
-    ikon: ShoppingBag,
-    label: m.pesan_judul(),
-    peran: AKSES.semua,
-  },
-  {
     ke: '/notifikasi',
     ikon: Bell,
     label: m.notif_title(),
     peran: AKSES.semua,
+  },
+  {
+    ke: '/pengajuan',
+    ikon: ClipboardCheck,
+    label: m.nav_pengajuan(),
+    peran: AKSES.operasional,
   },
   {
     ke: '/kasir',

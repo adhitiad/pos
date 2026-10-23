@@ -4,7 +4,7 @@ import { AuditLogQuerySchema } from '#/validations/audit'
 import type { AuditLogQueryInput } from '#/validations/audit'
 import type { AuditLogHasil, AuditLogRow, JsonNilai } from '#/types/audit'
 
-// Query audit log dengan filter (entitas, aksi, aktor, rentang tanggal) +
+// Query audit log dengan filter (teks, entitas, aksi, aktor, rentang tanggal) +
 // paginasi. Dipakai halaman /audit-log dan REST GET /api/v1/audit-log.
 export async function auditLogData(
   input: AuditLogQueryInput = {},
@@ -15,6 +15,20 @@ export async function auditLogData(
     ...(data.entitas && { entity: data.entitas }),
     ...(data.aksi && { action: data.aksi }),
     ...(data.aktorId && { userId: data.aktorId }),
+    ...(data.q && {
+      OR: [
+        { action: { contains: data.q, mode: 'insensitive' as const } },
+        { entity: { contains: data.q, mode: 'insensitive' as const } },
+        { entityId: { contains: data.q, mode: 'insensitive' as const } },
+        {
+          user: {
+            is: {
+              name: { contains: data.q, mode: 'insensitive' as const },
+            },
+          },
+        },
+      ],
+    }),
     ...(data.dari && { timestamp: { gte: new Date(`${data.dari}T00:00:00`) } }),
     ...(data.sampai && {
       timestamp: { lte: new Date(`${data.sampai}T23:59:59.999`) },

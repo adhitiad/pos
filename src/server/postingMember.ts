@@ -14,6 +14,7 @@ interface MemberSiap {
   poin: number
   diskonPersen: Prisma.Decimal | null
   totalBelanja: Prisma.Decimal
+  tier: string
 }
 
 export interface HasilMember {
@@ -45,6 +46,7 @@ export async function siapkanMember(
         poin: true,
         diskonPersen: true,
         totalBelanja: true,
+        tier: true,
       },
     })
     if (!found) throw new GalatDomain('Member tidak ditemukan')

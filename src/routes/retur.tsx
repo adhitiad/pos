@@ -11,6 +11,19 @@ import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '#/components/ui/table'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/retur')({
@@ -48,6 +61,15 @@ function Retur() {
   const [alasan, setAlasan] = useState('')
   const [itemQtyMap, setItemQtyMap] = useState<Record<string, number>>({})
   const [pending, setPending] = useState(false)
+  const kontrol = useKontrolTabel(
+    detail?.items ?? [],
+    (item) => item.namaProduk,
+    {
+      produk: (item) => item.namaProduk,
+      qty: (item) => item.qty,
+      harga: (item) => item.hargaSatuan,
+    },
+  )
 
   const muatDetail = async () => {
     if (!transaksiId) return
@@ -128,49 +150,80 @@ function Retur() {
                       value={alasan}
                       onChange={(e) => setAlasan(e.target.value)}
                     />
-                    <table className="w-full text-sm border">
-                      <thead>
-                        <tr>
-                          <th className="text-left pb-2">
-                            {m.retur_item_produk()}
-                          </th>
-                          <th className="text-right pb-2">
-                            {m.retur_item_qty()}
-                          </th>
-                          <th className="text-right pb-2">
-                            {m.retur_item_harga()}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {detail.items.map((i) => (
-                          <tr key={i.id} className="border-t">
-                            <td className="py-2">{i.namaProduk}</td>
-                            <td className="py-2 text-right">
-                              <Input
-                                type="number"
-                                min={0}
-                                max={i.qty}
-                                value={String(itemQtyMap[i.id] ?? '')}
-                                onChange={(e) => {
-                                  const v = Number(e.target.value)
-                                  setItemQtyMap({
-                                    ...itemQtyMap,
-                                    [i.id]: v > 0 ? v : 0,
-                                  })
-                                }}
-                              />
-                              <span className="text-xs text-neutral-400">
-                                maks {i.qty}
-                              </span>
-                            </td>
-                            <td className="py-2 text-right">
-                              Rp{rupiah(i.hargaSatuan)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    <PencarianTabel
+                      value={kontrol.cari}
+                      onChange={kontrol.setCari}
+                    />
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <HeaderUrutTabel
+                              kunci="produk"
+                              aktif={kontrol.kunciUrut === 'produk'}
+                              arah={kontrol.arahUrut}
+                              onUrut={kontrol.toggleUrut}
+                            >
+                              {m.retur_item_produk()}
+                            </HeaderUrutTabel>
+                            <HeaderUrutTabel
+                              kunci="qty"
+                              aktif={kontrol.kunciUrut === 'qty'}
+                              arah={kontrol.arahUrut}
+                              onUrut={kontrol.toggleUrut}
+                              className="text-right"
+                            >
+                              {m.retur_item_qty()}
+                            </HeaderUrutTabel>
+                            <HeaderUrutTabel
+                              kunci="harga"
+                              aktif={kontrol.kunciUrut === 'harga'}
+                              arah={kontrol.arahUrut}
+                              onUrut={kontrol.toggleUrut}
+                              className="text-right"
+                            >
+                              {m.retur_item_harga()}
+                            </HeaderUrutTabel>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {kontrol.baris.map((i) => (
+                            <TableRow key={i.id}>
+                              <TableCell>{i.namaProduk}</TableCell>
+                              <TableCell className="text-right">
+                                <Input
+                                  type="number"
+                                  min={0}
+                                  max={i.qty}
+                                  value={String(itemQtyMap[i.id] ?? '')}
+                                  onChange={(e) => {
+                                    const v = Number(e.target.value)
+                                    setItemQtyMap({
+                                      ...itemQtyMap,
+                                      [i.id]: v > 0 ? v : 0,
+                                    })
+                                  }}
+                                />
+                                <span className="text-xs text-neutral-400">
+                                  maks {i.qty}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                Rp{rupiah(i.hargaSatuan)}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                    <PaginasiTabel
+                      halamanAktif={kontrol.halamanAktif}
+                      jumlahHalaman={kontrol.jumlahHalaman}
+                      jumlahBaris={kontrol.jumlahBaris}
+                      ukuranHalaman={kontrol.ukuranHalaman}
+                      onHalaman={kontrol.setHalaman}
+                      onUkuranHalaman={kontrol.setUkuranHalaman}
+                    />
                     <div className="mt-2 text-right font-medium">
                       {m.retur_total()}: Rp{rupiah(hitungTotalRetur())}
                     </div>

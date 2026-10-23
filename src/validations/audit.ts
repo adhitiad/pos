@@ -6,6 +6,7 @@ export const AuditLogQuerySchema = z.object({
   entitas: z.string().max(50).optional(),
   aksi: z.string().max(80).optional(),
   aktorId: z.string().max(64).optional(),
+  q: z.string().trim().max(100).optional(),
   dari: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)

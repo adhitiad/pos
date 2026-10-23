@@ -433,7 +433,9 @@ export const ModelName = {
   StokOpnameItem: 'StokOpnameItem',
   Printer: 'Printer',
   PrintJob: 'PrintJob',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  PengajuanPengeluaran: 'PengajuanPengeluaran',
+  Notifikasi: 'Notifikasi'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -449,7 +451,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "rateLimit" | "nomorHarian" | "kategori" | "bahan" | "pembelianBahan" | "supplier" | "pembayaranHutang" | "produk" | "produkBahan" | "member" | "delivery" | "transaksi" | "transaksiItem" | "pembayaran" | "shift" | "akun" | "jurnal" | "jurnalDetail" | "pengaturan" | "meja" | "modifierGrup" | "modifier" | "produkModifierGrup" | "transaksiItemModifier" | "pageVisit" | "deviceVisit" | "retur" | "returItem" | "stokOpname" | "stokOpnameItem" | "printer" | "printJob" | "auditLog"
+    modelProps: "user" | "session" | "account" | "verification" | "rateLimit" | "nomorHarian" | "kategori" | "bahan" | "pembelianBahan" | "supplier" | "pembayaranHutang" | "produk" | "produkBahan" | "member" | "delivery" | "transaksi" | "transaksiItem" | "pembayaran" | "shift" | "akun" | "jurnal" | "jurnalDetail" | "pengaturan" | "meja" | "modifierGrup" | "modifier" | "produkModifierGrup" | "transaksiItemModifier" | "pageVisit" | "deviceVisit" | "retur" | "returItem" | "stokOpname" | "stokOpnameItem" | "printer" | "printJob" | "auditLog" | "pengajuanPengeluaran" | "notifikasi"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3191,6 +3193,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PengajuanPengeluaran: {
+      payload: Prisma.$PengajuanPengeluaranPayload<ExtArgs>
+      fields: Prisma.PengajuanPengeluaranFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PengajuanPengeluaranFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PengajuanPengeluaranFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>
+        }
+        findFirst: {
+          args: Prisma.PengajuanPengeluaranFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PengajuanPengeluaranFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>
+        }
+        findMany: {
+          args: Prisma.PengajuanPengeluaranFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>[]
+        }
+        create: {
+          args: Prisma.PengajuanPengeluaranCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>
+        }
+        createMany: {
+          args: Prisma.PengajuanPengeluaranCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PengajuanPengeluaranCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>[]
+        }
+        delete: {
+          args: Prisma.PengajuanPengeluaranDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>
+        }
+        update: {
+          args: Prisma.PengajuanPengeluaranUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>
+        }
+        deleteMany: {
+          args: Prisma.PengajuanPengeluaranDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PengajuanPengeluaranUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PengajuanPengeluaranUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>[]
+        }
+        upsert: {
+          args: Prisma.PengajuanPengeluaranUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PengajuanPengeluaranPayload>
+        }
+        aggregate: {
+          args: Prisma.PengajuanPengeluaranAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePengajuanPengeluaran>
+        }
+        groupBy: {
+          args: Prisma.PengajuanPengeluaranGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PengajuanPengeluaranGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PengajuanPengeluaranCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PengajuanPengeluaranCountAggregateOutputType> | number
+        }
+      }
+    }
+    Notifikasi: {
+      payload: Prisma.$NotifikasiPayload<ExtArgs>
+      fields: Prisma.NotifikasiFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NotifikasiFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NotifikasiFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>
+        }
+        findFirst: {
+          args: Prisma.NotifikasiFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NotifikasiFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>
+        }
+        findMany: {
+          args: Prisma.NotifikasiFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>[]
+        }
+        create: {
+          args: Prisma.NotifikasiCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>
+        }
+        createMany: {
+          args: Prisma.NotifikasiCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NotifikasiCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>[]
+        }
+        delete: {
+          args: Prisma.NotifikasiDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>
+        }
+        update: {
+          args: Prisma.NotifikasiUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>
+        }
+        deleteMany: {
+          args: Prisma.NotifikasiDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NotifikasiUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NotifikasiUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>[]
+        }
+        upsert: {
+          args: Prisma.NotifikasiUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotifikasiPayload>
+        }
+        aggregate: {
+          args: Prisma.NotifikasiAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotifikasi>
+        }
+        groupBy: {
+          args: Prisma.NotifikasiGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotifikasiGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NotifikasiCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotifikasiCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3455,6 +3605,11 @@ export const TransaksiScalarFieldEnum = {
   catatan: 'catatan',
   mejaId: 'mejaId',
   statusPesanan: 'statusPesanan',
+  sumber: 'sumber',
+  dibayarPada: 'dibayarPada',
+  dibayarVia: 'dibayarVia',
+  paymentRef: 'paymentRef',
+  stokTerpotong: 'stokTerpotong',
   uangDiterima: 'uangDiterima',
   kembalian: 'kembalian',
   cetakOwner: 'cetakOwner',
@@ -3761,6 +3916,40 @@ export const AuditLogScalarFieldEnum = {
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+export const PengajuanPengeluaranScalarFieldEnum = {
+  id: 'id',
+  kasirId: 'kasirId',
+  ownerId: 'ownerId',
+  nominal: 'nominal',
+  nominalDisetujui: 'nominalDisetujui',
+  jenis: 'jenis',
+  keterangan: 'keterangan',
+  status: 'status',
+  alasanPenolakan: 'alasanPenolakan',
+  jurnalId: 'jurnalId',
+  disetujuiPada: 'disetujuiPada',
+  ditolakPada: 'ditolakPada',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PengajuanPengeluaranScalarFieldEnum = (typeof PengajuanPengeluaranScalarFieldEnum)[keyof typeof PengajuanPengeluaranScalarFieldEnum]
+
+
+export const NotifikasiScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  judul: 'judul',
+  pesan: 'pesan',
+  dibaca: 'dibaca',
+  tipe: 'tipe',
+  entitasId: 'entitasId',
+  createdAt: 'createdAt'
+} as const
+
+export type NotifikasiScalarFieldEnum = (typeof NotifikasiScalarFieldEnum)[keyof typeof NotifikasiScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3928,6 +4117,34 @@ export type ListEnumStatusPesananFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'SumberTransaksi'
+ */
+export type EnumSumberTransaksiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SumberTransaksi'>
+    
+
+
+/**
+ * Reference to a field of type 'SumberTransaksi[]'
+ */
+export type ListEnumSumberTransaksiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SumberTransaksi[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ViaPembayaran'
+ */
+export type EnumViaPembayaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ViaPembayaran'>
+    
+
+
+/**
+ * Reference to a field of type 'ViaPembayaran[]'
+ */
+export type ListEnumViaPembayaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ViaPembayaran[]'>
+    
+
+
+/**
  * Reference to a field of type 'TipeAkun'
  */
 export type EnumTipeAkunFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipeAkun'>
@@ -3952,6 +4169,34 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'JenisPengeluaran'
+ */
+export type EnumJenisPengeluaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPengeluaran'>
+    
+
+
+/**
+ * Reference to a field of type 'JenisPengeluaran[]'
+ */
+export type ListEnumJenisPengeluaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JenisPengeluaran[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StatusPengajuan'
+ */
+export type EnumStatusPengajuanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusPengajuan'>
+    
+
+
+/**
+ * Reference to a field of type 'StatusPengajuan[]'
+ */
+export type ListEnumStatusPengajuanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatusPengajuan[]'>
     
 
 
@@ -4156,6 +4401,8 @@ export type GlobalOmitConfig = {
   printer?: Prisma.PrinterOmit
   printJob?: Prisma.PrintJobOmit
   auditLog?: Prisma.AuditLogOmit
+  pengajuanPengeluaran?: Prisma.PengajuanPengeluaranOmit
+  notifikasi?: Prisma.NotifikasiOmit
 }
 
 /* Types for Logging */

@@ -125,4 +125,12 @@ describe('keCsv', () => {
   it('menggabungkan baris dengan CRLF', () => {
     expect(keCsv([['a'], ['b']])).toBe('a\r\nb')
   })
+
+  it('menyanitasi formula sebelum quoting', () => {
+    expect(keCsv([['=1+1,evil']])).toBe('"\'=1+1,evil"')
+    expect(keCsv([['+62 812']])).toBe("'+62 812")
+    expect(keCsv([['-5']])).toBe("'-5")
+    expect(keCsv([['@SUM(A1:A2)']])).toBe("'@SUM(A1:A2)")
+    expect(keCsv([['  =1+1']])).toBe("'  =1+1")
+  })
 })

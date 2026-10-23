@@ -46,8 +46,21 @@ export type NotifikasiPesanan = {
   tanggal: string
 }
 
+// Notifikasi antar pengguna (pengajuan pengeluaran kasir ↔ owner) yang
+// disimpan di DB. `kategori` menentukan judul, `pesan` isi detail (nominal).
+export type NotifikasiPengajuan = {
+  id: string
+  tipe: 'pengajuan'
+  kategori: 'PENGAJUAN' | 'SETUJUI' | 'TOLAK' | 'INFO'
+  judul: string
+  pesan: string
+  entitasId: string | null
+  tanggal: string
+}
+
 export type Notifikasi =
   | NotifikasiStok
   | NotifikasiPendapatan
   | NotifikasiTransaksi
   | NotifikasiPesanan
+  | NotifikasiPengajuan

@@ -9,10 +9,12 @@ Tidak ada dukungan untuk versi lama atau deployment yang sudah digantikan.
 
 **Jangan membuka issue publik untuk kerentanan keamanan.**
 
-Gunakan fitur **Report a vulnerability** di tab **Security** repo GitHub ini
-(GitHub Private Vulnerability Reporting). Laporan tetap privat sampai perbaikan
-dirilis. Bila tombol tersebut belum tersedia, hubungi maintainer secara privat
-dan jangan menyertakan detail eksploitasi di kanal publik.
+Private Vulnerability Reporting GitHub saat ini belum tersedia/terkonfirmasi
+untuk repo ini (endpoint pengaturan mengembalikan `404` pada 2026-10-22).
+Sebelum mengirim laporan, pastikan tombol **Report a vulnerability** memang
+tersedia di tab **Security**. Jika tidak, hubungi maintainer melalui kanal
+pribadi yang sudah diketahui dan minta kanal pelaporan aman; jangan mengirim
+detail eksploitasi melalui issue, diskusi, atau kanal publik.
 
 Sertakan:
 

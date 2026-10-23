@@ -27,6 +27,11 @@ import {
   TableHeader,
   TableRow,
 } from '#/components/ui/table'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
 
 const TIER_LABEL: Record<string, string> = {
   BRONZE: 'Bronze',
@@ -76,6 +81,17 @@ function MemberDetail() {
     if (sampai && hari > sampai) return false
     return true
   })
+  const kontrol = useKontrolTabel(
+    terfilter,
+    (t) =>
+      `${t.nomor} ${t.metodeBayar} ${t.items.map((item) => item.nama).join(' ')}`,
+    {
+      nomor: (t) => t.nomor,
+      tanggal: (t) => t.tanggal,
+      total: (t) => t.total,
+      metode: (t) => t.metodeBayar,
+    },
+  )
   const totalTerfilter = terfilter.reduce((s, t) => s + t.total, 0)
 
   const form = useForm({
@@ -272,16 +288,43 @@ function MemberDetail() {
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-8" />
-                      <TableHead>{m.member_nomor_struk()}</TableHead>
-                      <TableHead>{m.member_tanggal()}</TableHead>
-                      <TableHead className="text-right">
+                      <HeaderUrutTabel
+                        kunci="nomor"
+                        aktif={kontrol.kunciUrut === 'nomor'}
+                        arah={kontrol.arahUrut}
+                        onUrut={kontrol.toggleUrut}
+                      >
+                        {m.member_nomor_struk()}
+                      </HeaderUrutTabel>
+                      <HeaderUrutTabel
+                        kunci="tanggal"
+                        aktif={kontrol.kunciUrut === 'tanggal'}
+                        arah={kontrol.arahUrut}
+                        onUrut={kontrol.toggleUrut}
+                      >
+                        {m.member_tanggal()}
+                      </HeaderUrutTabel>
+                      <HeaderUrutTabel
+                        kunci="total"
+                        aktif={kontrol.kunciUrut === 'total'}
+                        arah={kontrol.arahUrut}
+                        onUrut={kontrol.toggleUrut}
+                        className="text-right"
+                      >
                         {m.member_total()}
-                      </TableHead>
-                      <TableHead>{m.member_metode()}</TableHead>
+                      </HeaderUrutTabel>
+                      <HeaderUrutTabel
+                        kunci="metode"
+                        aktif={kontrol.kunciUrut === 'metode'}
+                        arah={kontrol.arahUrut}
+                        onUrut={kontrol.toggleUrut}
+                      >
+                        {m.member_metode()}
+                      </HeaderUrutTabel>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {terfilter.length === 0 ? (
+                    {kontrol.jumlahBaris === 0 ? (
                       <TableRow>
                         <TableCell
                           colSpan={5}
@@ -291,7 +334,7 @@ function MemberDetail() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      terfilter.flatMap((t) => {
+                      kontrol.baris.flatMap((t) => {
                         const baris = [
                           <TableRow key={t.id}>
                             <TableCell>
@@ -372,6 +415,14 @@ function MemberDetail() {
                   </TableBody>
                 </Table>
               </div>
+              <PaginasiTabel
+                halamanAktif={kontrol.halamanAktif}
+                jumlahHalaman={kontrol.jumlahHalaman}
+                jumlahBaris={kontrol.jumlahBaris}
+                ukuranHalaman={kontrol.ukuranHalaman}
+                onHalaman={kontrol.setHalaman}
+                onUkuranHalaman={kontrol.setUkuranHalaman}
+              />
             </>
           )}
         </CardContent>

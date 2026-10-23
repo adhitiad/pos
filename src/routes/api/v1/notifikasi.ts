@@ -15,6 +15,7 @@ export const Route = createFileRoute('/api/v1/notifikasi')({
             await notifikasiData({
               role: pengguna.role,
               email: pengguna.email,
+              userId: pengguna.id,
             }),
           )
         } catch (e) {

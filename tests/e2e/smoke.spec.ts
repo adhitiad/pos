@@ -116,6 +116,20 @@ test('halaman privasi memakai header dan footer landing', async ({ page }) => {
   ).toBeVisible()
 })
 
+test('halaman tidak dikenal memakai 404 global', async ({ page }) => {
+  await page.goto('/halaman-yang-tidak-ada')
+  await expect(
+    page.getByRole('heading', {
+      name: /Halaman tidak ditemukan|Page not found/,
+    }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('link', {
+      name: /Kembali ke beranda|Back to home/,
+    }),
+  ).toBeVisible()
+})
+
 test('login menampilkan tombol Google', async ({ page }) => {
   await page.goto('/login')
   await expect(page.getByRole('button', { name: /Google/ })).toBeVisible()
@@ -144,6 +158,7 @@ for (const rute of [
   '/laporan',
   '/pengaturan',
   '/notifikasi',
+  '/pengajuan',
 ]) {
   test(`${rute} tanpa sesi → /login`, async ({ page }) => {
     await page.goto(rute)

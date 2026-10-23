@@ -8,13 +8,23 @@ import {
   UpdateStatusPesananSchema,
 } from '#/validations/transaksi'
 import { GalatDomain } from './galat.js'
+import { batalkanPesananOnline } from './pembayaranPesanan.js'
 
 // ─── KDS (dapur) ───
 
 export async function dapurData() {
   const transaksi = await prisma.transaksi.findMany({
     where: {
-      statusPesanan: { in: ['MENUNGGU', 'DIPROSES'] },
+      OR: [
+        { statusPesanan: { in: ['MENUNGGU', 'DIPROSES'] } },
+        // Pesanan online yang sudah selesai di dapur tetap tampil sampai
+        // pembayarannya dikonfirmasi.
+        {
+          sumber: 'ONLINE',
+          dibayarPada: null,
+          statusPesanan: { notIn: ['DIBATALKAN', 'LUNAS'] },
+        },
+      ],
     },
     orderBy: [{ meja: { nomor: 'asc' } }, { tanggal: 'asc' }],
     include: {
@@ -35,6 +45,9 @@ export async function dapurData() {
     nomor: t.nomor,
     tanggal: t.tanggal.toISOString(),
     statusPesanan: t.statusPesanan,
+    sumber: t.sumber,
+    dibayarPada: t.dibayarPada?.toISOString() ?? null,
+    metodeBayar: t.metodeBayar,
     total: t.total.toNumber(),
     cetakOwner: t.cetakOwner,
     cetakKasir: t.cetakKasir,
@@ -67,6 +80,18 @@ export async function updateStatusPesanan(input: UpdateStatusPesananInput) {
   const data = UpdateStatusPesananSchema.parse(input)
   const lama = await prisma.transaksi.findUnique({ where: { id: data.id } })
   if (!lama) throw new GalatDomain('Transaksi tidak ditemukan')
+
+  if (lama.sumber === 'ONLINE') {
+    if (data.statusPesanan === 'DIBATALKAN') {
+      return await batalkanPesananOnline(data.id)
+    }
+    if (data.statusPesanan === 'LUNAS') {
+      throw new GalatDomain(
+        'Gunakan tombol Tandai lunas untuk menyelesaikan pembayaran online',
+      )
+    }
+  }
+
   await prisma.transaksi.update({
     where: { id: data.id },
     data: { statusPesanan: data.statusPesanan },

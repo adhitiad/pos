@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 
 // ─── Kueri master produk ───
 
@@ -136,7 +137,10 @@ const MIN_PRODUK_BARIS = 4
 export async function produkTerpopuler(limit = 4): Promise<ProdukKartu[]> {
   const agregat = await prisma.transaksiItem.groupBy({
     by: ['produkId'],
-    where: { produk: { aktif: true } },
+    where: {
+      produk: { aktif: true },
+      transaksi: FILTER_TRANSAKSI_TERJUAL,
+    },
     _sum: { qty: true },
     orderBy: { _sum: { qty: 'desc' } },
     take: limit,

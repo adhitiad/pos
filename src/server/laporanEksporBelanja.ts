@@ -9,6 +9,8 @@ import {
 } from '@react-pdf/renderer'
 import * as XLSX from 'xlsx'
 
+import { keCsv } from './csv.js'
+
 import type { EksporHasil } from '#/types/laporan-ekspor'
 
 import { labelSumberBelanja } from './laporanBelanja.js'
@@ -80,10 +82,7 @@ export function eksporCsvBelanja(l: LaporanBelanjaOutput): EksporHasil {
   return {
     nama: namaFile(l.dari, l.sampai, 'csv'),
     tipe: 'text/csv; charset=utf-8',
-    isi: Buffer.from(
-      '\uFEFF' + rows.map((row) => row.map(String).join(',')).join('\r\n'),
-      'utf8',
-    ),
+    isi: Buffer.from('\uFEFF' + keCsv(rows), 'utf8'),
   }
 }
 

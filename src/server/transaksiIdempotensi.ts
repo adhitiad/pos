@@ -18,9 +18,10 @@ export async function cariIdTransaksiByKey(
 }
 
 // Muat ulang hasil transaksi yang sudah ada dalam bentuk yang sama dengan
-// hasil posting, supaya klien offline menerima respons identik saat retry.
-export async function muatHasilReplay(
+// hasil posting. Dipakai replay offline dan respons konfirmasi pembayaran.
+export async function muatHasilTransaksi(
   transaksiId: string,
+  replay = false,
 ): Promise<HasilTransaksiRingkas | null> {
   const transaksi = await prisma.transaksi.findUnique({
     where: { id: transaksiId },
@@ -31,7 +32,7 @@ export async function muatHasilReplay(
       jurnal: { select: { id: true, nomor: true } },
     },
   })
-  if (!transaksi || !transaksi.jurnal) return null
+  if (!transaksi) return null
 
   return {
     transaksi,
@@ -39,8 +40,7 @@ export async function muatHasilReplay(
     // HPP & diskon member disimpan saat posting agar replay sama persis.
     hpp: transaksi.hpp.toNumber(),
     diskonMember: transaksi.diskonMember.toNumber(),
-    // Tandai sebagai replay supaya klien tahu tak ada transaksi baru.
-    replay: true,
+    replay,
     memberInfo: transaksi.member
       ? {
           nama: transaksi.member.nama,
@@ -49,6 +49,13 @@ export async function muatHasilReplay(
         }
       : null,
   }
+}
+
+export async function muatHasilReplay(
+  transaksiId: string,
+): Promise<HasilTransaksiRingkas | null> {
+  const hasil = await muatHasilTransaksi(transaksiId, true)
+  return hasil?.jurnal ? hasil : null
 }
 
 // Ambil hasil replay berdasarkan kunci idempotensi (null bila belum pernah

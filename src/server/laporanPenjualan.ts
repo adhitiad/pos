@@ -13,24 +13,11 @@ import type {
   RekapRow,
   Ringkasan,
 } from '#/types/laporan-penjualan'
+import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 
 // ─── Fungsi murni (diuji di tests/laporan.test.ts) ───
 
-// CSV escaping: bungkus sel yang mengandung pemisah/quote/newline.
-function amanCsv(sel: string | number): string {
-  const s = String(sel)
-  if (/[",\n;]/.test(s)) return `"${s.replace(/"/g, '""')}"`
-  return s.startsWith('=') ||
-    s.startsWith('+') ||
-    s.startsWith('-') ||
-    s.startsWith('@')
-    ? `'${s}`
-    : s
-}
-
-export function keCsv(rows: (string | number)[][]): string {
-  return rows.map((row) => row.map(amanCsv).join(',')).join('\r\n')
-}
+export { keCsv } from './csv.js'
 
 // Nomor minggu ISO-8601 (Senin = awal minggu).
 export function isoWeek(tgl: Date): { tahun: number; minggu: number } {
@@ -123,10 +110,11 @@ export async function laporanPenjualan(
   if (akhir < awal) throw new GalatDomain('Rentang tanggal tidak valid')
 
   const rentang = { tanggal: { gte: awal, lte: akhir } }
+  const filterTerjual = { ...rentang, ...FILTER_TRANSAKSI_TERJUAL }
   const [transaksi, produk, hppGroup, produkGroup, kasirGroup] =
     await Promise.all([
       prisma.transaksi.findMany({
-        where: rentang,
+        where: filterTerjual,
         orderBy: { tanggal: 'asc' },
         select: {
           id: true,
@@ -150,17 +138,17 @@ export async function laporanPenjualan(
       // Item diagregasi di SQL, bukan di JS.
       prisma.transaksiItem.groupBy({
         by: ['transaksiId', 'produkId'],
-        where: { transaksi: rentang },
+        where: { transaksi: filterTerjual },
         _sum: { qty: true },
       }),
       prisma.transaksiItem.groupBy({
         by: ['produkId', 'namaProduk'],
-        where: { transaksi: rentang },
+        where: { transaksi: filterTerjual },
         _sum: { qty: true, subtotal: true },
       }),
       prisma.transaksi.groupBy({
         by: ['kasirId'],
-        where: rentang,
+        where: filterTerjual,
         _sum: { total: true },
         _count: { _all: true },
       }),

@@ -202,3 +202,13 @@ export type PrintJob = Prisma.PrintJobModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model PengajuanPengeluaran
+ * 
+ */
+export type PengajuanPengeluaran = Prisma.PengajuanPengeluaranModel
+/**
+ * Model Notifikasi
+ * 
+ */
+export type Notifikasi = Prisma.NotifikasiModel

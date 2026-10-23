@@ -1,6 +1,8 @@
 # Operasional Produksi — Checklist
 
-> Ditulis 2026-10-19 (OBS-01). Item Sentry menyusul sebagai OBS-02 di `docs/DAFTAR-TUGAS.md`.
+> Ditulis 2026-10-19 (OBS-01). PITR/restore, uptime monitor/alert, dan
+> observability masih menunggu konfigurasi serta bukti verifikasi; pelacakannya
+> ada di `docs/DAFTAR-TUGAS.md` (CICD-17 / OBS-02).
 
 ## 1. Neon (database)
 
@@ -15,8 +17,11 @@
       Free belum mendukung. Panduan lengkap: [`docs/DEPLOY.md`](DEPLOY.md).
 - [ ] Environment Vercel Production: `DATABASE_URL` (pooled, runtime),
       `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`,
-      `OWNER_EMAILS`, `TRUSTED_ORIGINS`, `TRUST_PROXY=true`. Secret migrasi
+      `OWNER_EMAILS`, `TRUSTED_ORIGINS`, `TRUST_PROXY=true`,
+      `TRUST_PROXY_HOPS=1`. Secret migrasi
       `DATABASE_URL_UNPOOLED` disimpan di GitHub environment `production`.
+      `PAYMENT_WEBHOOK_SECRET` (min. 16 karakter) wajib diisi hanya bila webhook
+      payment gateway diaktifkan; bila kosong endpoint webhook membalas 503.
 - Skema produksi **hanya** lewat migration (`bun run db:migrate:deploy`), bukan `db:push`.
 - Auto-deploy `main` Vercel dimatikan (`vercel.json` →
   `git.deploymentEnabled.main = false`). Workflow menjalankan migrasi lebih dulu,
@@ -28,6 +33,23 @@
 - Preview PR memakai Vercel Preview environment dan database terpisah; jangan pakai
   database produksi.
 - Tidak ada cron karena notifikasi dihitung per request.
+
+### Recovery saat migrasi gagal di tengah jalan
+
+Kalau `bun run db:migrate:deploy` berhenti setelah sebagian DDL terpasang (mis.
+tabel sudah dibuat tapi enum belum), migrasi itu tertahan: `migrate deploy`
+berikutnya selalu gagal di langkah yang sama. Recovery (jangan `DROP SCHEMA` —
+database produksi berisi data):
+
+1. `bun run db:migrate:status` — lihat migrasi mana yang menggantung.
+2. Buang objek yang dibuat migrasi tersebut (tabel/enum/constraint) via SQL.
+3. Tandai migrasi itu belum berhasil:
+   `bunx prisma migrate resolve --rolled-back <nama_folder_migrasi>`
+4. Jalankan ulang `bun run db:migrate:deploy` dari kondisi bersih.
+
+Kasus di repo ini: `20261022161956_add_pengajuan_dan_notifikasi` (tabel
+`PengajuanPengeluaran` + `Notifikasi` + enum `StatusPengajuan`) dan
+`20261022094437_add_nominal_disetujui` (kolom `nominalDisetujui`).
 
 ## 2. Uptime monitor
 
@@ -47,12 +69,15 @@
 - [ ] Pantau cold start Vercel dan query lambat di log; catat perubahan baseline
       bila memang disengaja.
 
-## 3. Sentry (menyusul — OBS-02)
+## 3. Error monitoring (OBS-02)
 
-- Belum dipasang (butuh akun + DSN). Rencana: `@sentry/tanstackstart-react`, init
-  env-gated `SENTRY_DSN`.
+- Belum dipasang atau diverifikasi (butuh penyedia yang dipilih, akun, dan DSN).
+  Kandidat: Sentry atau GlitchTip; integrasi aplikasi belum tersedia.
 - Sementara ini: galat server sudah ter-log pino dengan `ref` unik yang bisa dicari
   di log Vercel (`{"level":50,...,"ref":"..."}`).
+- Sebelum checklist ditandai selesai, kirim event uji dari deployment yang
+  dituju, pastikan event muncul di proyek yang benar, dan buktikan `ref` log
+  dapat dikorelasikan tanpa mengirim secret atau data pelanggan.
 
 ## 4. Rutin
 

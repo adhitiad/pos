@@ -11,6 +11,7 @@ import {
 } from '#/validations/shift'
 import { GalatDomain } from './galat.js'
 import { punyaAkses } from './peran.js'
+import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 import type { Pengguna } from '#/types/auth'
 
 // ─── Shift kas ───
@@ -41,12 +42,18 @@ async function ringkasanPerShift(ids: string[]) {
   const [trx, bayar] = await Promise.all([
     prisma.transaksi.groupBy({
       by: ['shiftId'],
-      where: { shiftId: { in: ids } },
+      where: { shiftId: { in: ids }, ...FILTER_TRANSAKSI_TERJUAL },
       _count: { id: true },
       _sum: { total: true },
     }),
     prisma.pembayaran.findMany({
-      where: { metode: 'TUNAI', transaksi: { shiftId: { in: ids } } },
+      where: {
+        metode: 'TUNAI',
+        transaksi: {
+          shiftId: { in: ids },
+          ...FILTER_TRANSAKSI_TERJUAL,
+        },
+      },
       select: { jumlah: true, transaksi: { select: { shiftId: true } } },
     }),
   ])

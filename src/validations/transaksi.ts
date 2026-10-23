@@ -16,39 +16,47 @@ export const STATUS_PESANAN = [
   'LUNAS',
 ] as const
 
+const MAKS_ITEM_PESANAN = 100
+const MAKS_MODIFIER_PER_ITEM = 20
+const MAKS_QTY = 9_999
+
 const PostingItemSchema = z.object({
-  produkId: z.string().min(1),
-  qty: z.number().int().positive(),
+  produkId: z.string().min(1).max(64),
+  qty: z.number().int().positive().max(MAKS_QTY),
   modifiers: z
     .array(
       z.object({
-        modifierId: z.string().min(1),
-        qty: z.number().int().positive().default(1),
+        modifierId: z.string().min(1).max(64),
+        qty: z.number().int().positive().max(MAKS_QTY).default(1),
         catatan: z.string().max(200).optional(),
       }),
     )
+    .max(MAKS_MODIFIER_PER_ITEM)
     .optional(),
 })
 
 const PembayaranInputSchema = z.object({
   metode: z.enum(METODE_BAYAR),
-  jumlah: z.number().int().positive(),
-  uangDiterima: z.number().int().nonnegative().optional(),
+  jumlah: z.number().int().positive().max(1_000_000_000),
+  uangDiterima: z.number().int().nonnegative().max(1_000_000_000).optional(),
 })
 
 export const PostingTransaksiSchema = z.object({
-  items: z.array(PostingItemSchema).min(1, 'Minimal 1 item'),
-  memberId: z.string().min(1).optional(),
-  deliveryId: z.string().min(1).optional(),
-  diskon: z.number().int().nonnegative().default(0),
+  items: z
+    .array(PostingItemSchema)
+    .min(1, 'Minimal 1 item')
+    .max(MAKS_ITEM_PESANAN, `Maksimal ${MAKS_ITEM_PESANAN} item`),
+  memberId: z.string().min(1).max(64).optional(),
+  deliveryId: z.string().min(1).max(64).optional(),
+  diskon: z.number().int().nonnegative().max(1_000_000_000).default(0),
   // Diabaikan: pajak dihitung server dari pengaturan `pajak_persen` (OW-10).
   // Field tetap diterima agar klien lama tidak error.
-  pajak: z.number().int().nonnegative().default(0),
-  tukarPoin: z.number().int().nonnegative().default(0),
+  pajak: z.number().int().nonnegative().max(1_000_000_000).default(0),
+  tukarPoin: z.number().int().nonnegative().max(1_000_000).default(0),
   metodeBayar: z.enum(METODE_BAYAR).default('TUNAI'),
-  uangDiterima: z.number().int().nonnegative().optional(),
-  pembayaran: z.array(PembayaranInputSchema).min(1).optional(),
-  mejaId: z.string().min(1).optional(),
+  uangDiterima: z.number().int().nonnegative().max(1_000_000_000).optional(),
+  pembayaran: z.array(PembayaranInputSchema).max(20).min(1).optional(),
+  mejaId: z.string().min(1).max(64).optional(),
   statusPesanan: z.enum(STATUS_PESANAN).optional().default('MENUNGGU'),
   catatan: z.string().max(500).optional(),
   // Idempotensi (antrean offline): kunci stabil buatan klien. Retry dengan
@@ -75,23 +83,32 @@ export const METODE_BAYAR_ONLINE = ['QRIS', 'TRANSFER', 'EWALLET'] as const
 // deliveryId, diskon, pajak, tukarPoin, atau statusPesanan: semua dipaksa
 // aman di sisi server (SEC-02). Field tak dikenal di-strip Zod.
 export const PesananOnlineSchema = z.object({
-  items: z.array(PostingItemSchema).min(1, 'Minimal 1 item'),
-  mejaId: z.string().min(1).optional(),
+  items: z
+    .array(PostingItemSchema)
+    .min(1, 'Minimal 1 item')
+    .max(MAKS_ITEM_PESANAN, `Maksimal ${MAKS_ITEM_PESANAN} item`),
+  mejaId: z.string().min(1).max(64).optional(),
   metodeBayar: z.enum(METODE_BAYAR_ONLINE).default('QRIS'),
   catatan: z.string().max(500).optional(),
 })
 
 // Dapur/KDS: ubah status pesanan F&B.
 export const UpdateStatusPesananSchema = z.object({
-  id: z.string().min(1),
+  id: z.string().min(1).max(64),
   statusPesanan: z.enum(STATUS_PESANAN),
 })
 
 export type UpdateStatusPesananInput = z.infer<typeof UpdateStatusPesananSchema>
 
+export const TandaiLunasSchema = z.object({
+  id: z.string().min(1).max(64),
+})
+
+export type TandaiLunasInput = z.infer<typeof TandaiLunasSchema>
+
 // Cetak struk: hitung berapa kali struk dicetak per peran.
 export const CetakStrukSchema = z.object({
-  id: z.string().min(1),
+  id: z.string().min(1).max(64),
   peran: z.enum(['OWNER', 'KASIR']),
 })
 

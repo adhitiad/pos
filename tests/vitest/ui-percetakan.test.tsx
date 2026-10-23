@@ -39,6 +39,8 @@ const job: PrintJobRow = {
   dicetakPada: null,
   diambilPada: null,
   createdAt: '2026-10-20T08:00:00.000Z',
+  cetakOwner: 0,
+  cetakKasir: 0,
   payload: {
     nomor: 'POS-20261020-0001',
     tanggal: '2026-10-20T08:00:00.000Z',
@@ -87,14 +89,48 @@ describe('UI printer & antrean cetak', () => {
     const html = renderToStaticMarkup(
       <TabelPrintJob
         daftar={[job]}
+        peran="OWNER"
         onAmbil={() => {}}
         onSelesai={() => {}}
         onGagal={() => {}}
         onLihat={() => {}}
+        onCetakUlang={() => {}}
       />,
     )
     expect(html).toContain('Printer Kasir 1')
     expect(html).toContain(m.percetakan_menunggu())
+  })
+
+  it('OWNER dapat mencetak ulang struk dari antrean', () => {
+    const dicetak: PrintJobRow = { ...job, status: 'DICETAK' }
+    const html = renderToStaticMarkup(
+      <TabelPrintJob
+        daftar={[dicetak]}
+        peran="OWNER"
+        onAmbil={() => {}}
+        onSelesai={() => {}}
+        onGagal={() => {}}
+        onLihat={() => {}}
+        onCetakUlang={() => {}}
+      />,
+    )
+    expect(html).toContain(m.percetakan_cetak_ulang())
+  })
+
+  it('KASIR melihat batas cetak ulang setelah tiga kali', () => {
+    const dicetak: PrintJobRow = { ...job, status: 'DICETAK', cetakKasir: 3 }
+    const html = renderToStaticMarkup(
+      <TabelPrintJob
+        daftar={[dicetak]}
+        peran="KASIR"
+        onAmbil={() => {}}
+        onSelesai={() => {}}
+        onGagal={() => {}}
+        onLihat={() => {}}
+        onCetakUlang={() => {}}
+      />,
+    )
+    expect(html).toContain(m.percetakan_batas_kasir())
   })
 
   it('TabelPrintJob menampilkan alasan kegagalan', () => {
@@ -106,10 +142,12 @@ describe('UI printer & antrean cetak', () => {
     const html = renderToStaticMarkup(
       <TabelPrintJob
         daftar={[gagal]}
+        peran="OWNER"
         onAmbil={() => {}}
         onSelesai={() => {}}
         onGagal={() => {}}
         onLihat={() => {}}
+        onCetakUlang={() => {}}
       />,
     )
     expect(html).toContain('Paper habis')

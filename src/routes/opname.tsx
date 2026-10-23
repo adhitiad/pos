@@ -12,6 +12,19 @@ import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
 import { toast } from 'sonner'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '#/components/ui/table'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
 
 export const Route = createFileRoute('/opname')({
   beforeLoad: async () => {
@@ -50,6 +63,11 @@ function Opname() {
   const [items, setItems] = useState<OpnameItemForm[]>([])
   const [catatan, setCatatan] = useState('')
   const [pending, setPending] = useState(false)
+  const kontrol = useKontrolTabel(items, (item) => item.nama, {
+    nama: (item) => item.nama,
+    tercatat: (item) => item.stokTercatat,
+    fisik: (item) => Number(item.stokFisik) || 0,
+  })
 
   const muatMaster = async () => {
     const d = await masterAktifFn({ data: { jenis } })
@@ -127,41 +145,75 @@ function Opname() {
                   onChange={(e) => setCatatan(e.target.value)}
                 />
               </div>
-              <table className="w-full text-sm border">
-                <thead>
-                  <tr>
-                    <th className="text-left pb-2">{m.opname_item()}</th>
-                    <th className="text-right pb-2">
-                      {m.opname_stok_tercatat()}
-                    </th>
-                    <th className="text-right pb-2">{m.opname_stok_fisik()}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((i) => (
-                    <tr key={i.id} className="border-t">
-                      <td className="py-2">{i.nama}</td>
-                      <td className="py-2 text-right">{i.stokTercatat}</td>
-                      <td className="py-2 text-right">
-                        <Input
-                          type="number"
-                          min={0}
-                          value={i.stokFisik}
-                          onChange={(e) => {
-                            setItems(
-                              items.map((x) =>
-                                x.id === i.id
-                                  ? { ...x, stokFisik: e.target.value }
-                                  : x,
-                              ),
-                            )
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <PencarianTabel value={kontrol.cari} onChange={kontrol.setCari} />
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <HeaderUrutTabel
+                        kunci="nama"
+                        aktif={kontrol.kunciUrut === 'nama'}
+                        arah={kontrol.arahUrut}
+                        onUrut={kontrol.toggleUrut}
+                      >
+                        {m.opname_item()}
+                      </HeaderUrutTabel>
+                      <HeaderUrutTabel
+                        kunci="tercatat"
+                        aktif={kontrol.kunciUrut === 'tercatat'}
+                        arah={kontrol.arahUrut}
+                        onUrut={kontrol.toggleUrut}
+                        className="text-right"
+                      >
+                        {m.opname_stok_tercatat()}
+                      </HeaderUrutTabel>
+                      <HeaderUrutTabel
+                        kunci="fisik"
+                        aktif={kontrol.kunciUrut === 'fisik'}
+                        arah={kontrol.arahUrut}
+                        onUrut={kontrol.toggleUrut}
+                        className="text-right"
+                      >
+                        {m.opname_stok_fisik()}
+                      </HeaderUrutTabel>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {kontrol.baris.map((i) => (
+                      <TableRow key={i.id}>
+                        <TableCell>{i.nama}</TableCell>
+                        <TableCell className="text-right">
+                          {i.stokTercatat}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Input
+                            type="number"
+                            min={0}
+                            value={i.stokFisik}
+                            onChange={(e) => {
+                              setItems(
+                                items.map((x) =>
+                                  x.id === i.id
+                                    ? { ...x, stokFisik: e.target.value }
+                                    : x,
+                                ),
+                              )
+                            }}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              <PaginasiTabel
+                halamanAktif={kontrol.halamanAktif}
+                jumlahHalaman={kontrol.jumlahHalaman}
+                jumlahBaris={kontrol.jumlahBaris}
+                ukuranHalaman={kontrol.ukuranHalaman}
+                onHalaman={kontrol.setHalaman}
+                onUkuranHalaman={kontrol.setUkuranHalaman}
+              />
               <Button disabled={pending} onClick={() => void simpan()}>
                 {m.opname_simpan()}
               </Button>

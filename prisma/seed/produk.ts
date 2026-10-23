@@ -88,7 +88,8 @@ export async function seedModifierProduk(
     where: { nama: namaGrup },
     select: { id: true },
   })
-  if (!produk || !grup) return
+  if (!produk) throw new Error(`Produk seed tidak ditemukan: ${namaProduk}`)
+  if (!grup) throw new Error(`Grup modifier seed tidak ditemukan: ${namaGrup}`)
   await prisma.produkModifierGrup.create({
     data: { produkId: produk.id, grupId: grup.id },
   })

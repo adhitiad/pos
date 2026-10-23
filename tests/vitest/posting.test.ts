@@ -128,13 +128,13 @@ describe('postingTransaksi', () => {
       expect(hasil.pajak).toBe(0)
       expect(hasil.ongkir).toBe(0)
       expect(hasil.total).toBe(30000)
-      expect(hasil.jurnalId).toBeDefined()
+      expect(hasil.jurnalId).not.toBeNull()
       expect(hasil.itemCount).toBe(2)
       expect(hasil.items).toHaveLength(1)
       expect(hasil.items[0].nama).toBe('Kopi Susu Test')
       expect(hasil.items[0].qty).toBe(2)
       const entri = await prisma.jurnalDetail.findMany({
-        where: { jurnalId: hasil.jurnalId },
+        where: { jurnalId: hasil.jurnalId! },
       })
       const totalDebit = entri.reduce((sum, e) => sum + e.debit.toNumber(), 0)
       const totalKredit = entri.reduce((sum, e) => sum + e.kredit.toNumber(), 0)

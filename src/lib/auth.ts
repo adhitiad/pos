@@ -29,6 +29,7 @@ export async function sinkronPeranUser(
     owner: env.OWNER_EMAILS,
     kasir: env.KASIR_EMAILS,
   },
+  kecualiSesiId?: string,
 ): Promise<void> {
   try {
     const user = await prisma.user.findUnique({
@@ -40,12 +41,24 @@ export async function sinkronPeranUser(
     const target = peranDariEnv(user.email, daftar)
     if (!target || target === user.role) return
     if (user.role === 'OWNER') return
-    await prisma.user.update({ where: { id: userId }, data: { role: target } })
+    // Sesi lama tidak boleh mewarisi peran baru. Sesi yang baru dibuat
+    // dikecualikan agar login yang sedang berjalan tidak ikut terhapus.
+    const sesiDicabut = await prisma.$transaction(async (tx) => {
+      await tx.user.update({ where: { id: userId }, data: { role: target } })
+      const hasil = await tx.session.deleteMany({
+        where: {
+          userId,
+          ...(kecualiSesiId ? { id: { not: kecualiSesiId } } : {}),
+        },
+      })
+      return hasil.count
+    })
     logger.info({
       kind: 'audit',
       event: 'user.role.synced',
       role: target,
       oldRole: user.role,
+      sesiDicabut,
     })
   } catch {
     // Sinkronisasi peran tak boleh menggagalkan login.
@@ -124,7 +137,14 @@ export const auth = betterAuth({
           // Peran mengikuti OWNER_EMAILS/KASIR_EMAILS tiap kali sign-in:
           // akun lama yang dibuat sebelum env diisi bisa naik ke OWNER/KASIR
           // (OWNER tidak pernah diturunkan otomatis).
-          await sinkronPeranUser(session.userId)
+          await sinkronPeranUser(
+            session.userId,
+            {
+              owner: env.OWNER_EMAILS,
+              kasir: env.KASIR_EMAILS,
+            },
+            session.id,
+          )
           // Tanpa id sesi/user: cegah PII/pseudonim bocor ke log (OW-17).
           if (process.env.NODE_ENV !== 'development') {
             logger.info({ kind: 'audit', event: 'session.created' })

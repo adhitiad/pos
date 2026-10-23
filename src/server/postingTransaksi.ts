@@ -21,6 +21,12 @@ import {
   hitungPembayaran,
   petaHargaModifier,
 } from './postingHitung.js'
+import { kebutuhanDariBaris, kurangiStok } from './postingStok.js'
+
+export type OpsiPosting = {
+  /** POS (default) atau pesanan online yang dibayar belakangan. */
+  sumber?: 'POS' | 'ONLINE'
+}
 
 // ─── Fungsi utama ───
 // Membuat transaksi + kurangi stok produk & bahan + tulis jurnal,
@@ -28,8 +34,11 @@ import {
 export async function postingTransaksi(
   input: PostingTransaksiInput,
   kasirId?: string,
+  opsi: OpsiPosting = {},
 ) {
   const data = PostingTransaksiSchema.parse(input)
+  const sumber = opsi.sumber ?? 'POS'
+  const online = sumber === 'ONLINE'
 
   // Retry dari antrean offline: kalau kunci idempotensi sama sudah pernah
   // terposting, kembalikan transaksi yang sama (tanpa potong stok lagi).
@@ -149,16 +158,17 @@ export async function postingTransaksi(
           where: { kunci: 'stok_dikurangi_saat' },
         })
         const stokDikurangiSaat = stokPengaturan?.nilai ?? 'order'
+        // Pesanan online selalu memotong stok saat pembayaran dikonfirmasi.
         const harusMengurangiStok =
-          stokDikurangiSaat === 'order' ||
-          (stokDikurangiSaat === 'payment' && data.statusPesanan === 'LUNAS')
+          !online &&
+          (stokDikurangiSaat === 'order' ||
+            (stokDikurangiSaat === 'payment' && data.statusPesanan === 'LUNAS'))
         const total = subtotal - diskonTotal + pajak + ongkir
         if (total < 0) {
           throw new GalatDomain('Total transaksi tidak boleh negatif')
         }
-        const poinDapat = member.member
-          ? Math.floor(total / RUPIAH_PER_POIN)
-          : 0
+        const poinDapat =
+          !online && member.member ? Math.floor(total / RUPIAH_PER_POIN) : 0
 
         // 3b. Pembayaran: split (data.pembayaran) atau tunggal (data.metodeBayar).
         const bayar = hitungPembayaran({
@@ -184,6 +194,9 @@ export async function postingTransaksi(
             memberId: data.memberId,
             kasirId: kasirId ?? null,
             shiftId: shiftTerbuka?.id ?? null,
+            sumber,
+            dibayarPada: online ? null : new Date(),
+            stokTerpotong: harusMengurangiStok,
             deliveryId: data.deliveryId,
             ongkir,
             subtotal,
@@ -196,8 +209,11 @@ export async function postingTransaksi(
             metodeBayar: bayar.metodeUtama,
             mejaId: data.mejaId,
             statusPesanan: data.statusPesanan,
-            uangDiterima: bayar.uangDiterimaTotal,
-            kembalian: bayar.uangDiterimaTotal != null ? bayar.kembalian : null,
+            uangDiterima: online ? null : bayar.uangDiterimaTotal,
+            kembalian:
+              online || bayar.uangDiterimaTotal == null
+                ? null
+                : bayar.kembalian,
             catatan: data.catatan,
             // Jejak offline & idempotensi: kunci retry, penanda luring, dan
             // waktu saat klien membuat transaksi.
@@ -227,13 +243,17 @@ export async function postingTransaksi(
                 },
               })),
             },
-            pembayaran: {
-              create: bayar.barisBayar.map((b) => ({
-                metode: b.metode,
-                jumlah: b.jumlah,
-                uangDiterima: b.uangDiterima,
-              })),
-            },
+            ...(online
+              ? {}
+              : {
+                  pembayaran: {
+                    create: bayar.barisBayar.map((b) => ({
+                      metode: b.metode,
+                      jumlah: b.jumlah,
+                      uangDiterima: b.uangDiterima,
+                    })),
+                  },
+                }),
           },
           include: {
             items: { include: { modifiers: { include: { modifier: true } } } },
@@ -242,72 +262,48 @@ export async function postingTransaksi(
         })
 
         if (harusMengurangiStok) {
-          // 5. Kurangi stok produk & bahan secara atomik (satu query per tabel):
-          //    UPDATE bersyarat `stok >= qty` sehingga dua penjualan bersamaan
-          //    tidak bisa membuat stok negatif (OW-18). Bila baris terpengaruh
-          //    kurang dari yang diminta, batalkan seluruh transaksi.
-          if (qtyProduk.size > 0) {
-            const nilai = Prisma.join(
-              [...qtyProduk].map(
-                ([id, qty]) =>
-                  Prisma.sql`(${id}::text, ${qty.toString()}::int)`,
-              ),
-            )
-            const terpengaruh = await tx.$executeRaw`
-                      UPDATE "Produk" AS p
-                      SET "stok" = p."stok" - v.qty
-                      FROM (VALUES ${nilai}) AS v(id, qty)
-                      WHERE p."id" = v.id AND p."stok" >= v.qty
-                    `
-            if (terpengaruh !== qtyProduk.size) {
-              throw new GalatDomain('Stok produk tidak mencukupi')
-            }
-          }
-          if (qtyBahan.size > 0) {
-            const nilai = Prisma.join(
-              [...qtyBahan].map(
-                ([id, qty]) =>
-                  Prisma.sql`(${id}::text, ${qty.toString()}::numeric)`,
-              ),
-            )
-            const terpengaruh = await tx.$executeRaw`
-                      UPDATE "Bahan" AS b
-                      SET "stok" = b."stok" - v.qty
-                      FROM (VALUES ${nilai}) AS v(id, qty)
-                      WHERE b."id" = v.id AND b."stok" >= v.qty
-                    `
-            if (terpengaruh !== qtyBahan.size) {
-              throw new GalatDomain('Stok bahan baku tidak mencukupi')
-            }
-          }
+          // 5. Kurangi stok produk & bahan secara atomik.
+          await kurangiStok(tx, kebutuhanDariBaris(baris))
         }
         // 6. Poin member: tukar (kurang) + dapat (tambah) + tier — satu
-        //    operasi atomik (lihat postingMember.ts).
-        const memberInfo = await terapkanPoinMember(tx, member, total)
+        //    operasi atomik (lihat postingMember.ts). Pesanan online baru
+        //    mendapat poin setelah pembayaran dikonfirmasi.
+        const memberInfo = online
+          ? member.member
+            ? {
+                nama: member.member.nama,
+                totalBelanja: member.member.totalBelanja.toNumber(),
+                tier: member.member.tier,
+              }
+            : null
+          : await terapkanPoinMember(tx, member, total)
 
-        // 7. Jurnal berimbang
-        const daftarAkun = await tx.akun.findMany({
-          where: { kode: { in: Object.values(AKUN) } },
-        })
-        const idAkun = new Map(daftarAkun.map((a) => [a.kode, a.id]))
-        const entri = bangunEntriJurnal({
-          idAkun,
-          subtotal,
-          diskonTotal,
-          ongkir,
-          pajak,
-          hppTotal,
-          total,
-        })
-        const jurnal = await tx.jurnal.create({
-          data: {
-            nomor: await nomorBerikut(tx, 'jurnal', kodeHarian('JU')),
-            keterangan: `Penjualan ${nomor}`,
-            transaksiId: transaksi.id,
-            entri: { create: entri },
-          },
-          include: { entri: { include: { akun: true } } },
-        })
+        // 7. Jurnal berimbang (online: dibuat saat pembayaran lunas)
+        let jurnal: { id: string; nomor: string } | null = null
+        if (!online) {
+          const daftarAkun = await tx.akun.findMany({
+            where: { kode: { in: Object.values(AKUN) } },
+          })
+          const idAkun = new Map(daftarAkun.map((a) => [a.kode, a.id]))
+          const entri = bangunEntriJurnal({
+            idAkun,
+            subtotal,
+            diskonTotal,
+            ongkir,
+            pajak,
+            hppTotal,
+            total,
+          })
+          jurnal = await tx.jurnal.create({
+            data: {
+              nomor: await nomorBerikut(tx, 'jurnal', kodeHarian('JU')),
+              keterangan: `Penjualan ${nomor}`,
+              transaksiId: transaksi.id,
+              entri: { create: entri },
+            },
+            include: { entri: { include: { akun: true } } },
+          })
+        }
 
         return {
           transaksi,

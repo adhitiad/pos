@@ -11,7 +11,7 @@ import * as XLSX from 'xlsx'
 
 import type { EksporHasil } from '#/types/laporan-ekspor'
 import type { LaporanPenjualan } from '#/types/laporan-penjualan'
-import { keCsv } from './laporanPenjualan.js'
+import { keCsv } from './csv.js'
 
 const rupiah = (n: number) =>
   new Intl.NumberFormat('id-ID', {

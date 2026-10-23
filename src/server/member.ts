@@ -8,6 +8,7 @@ import {
 import type { MemberInput, UpdateMemberInput } from '#/validations/member'
 import { pengaturanData } from './pengaturan.js'
 import { GalatDomain } from './galat.js'
+import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 
 const kosongKeNull = (v: string | undefined) =>
   v === undefined || v.trim() === '' ? null : v.trim()
@@ -27,6 +28,7 @@ function getAllMemberRaw() {
     include: {
       _count: { select: { transaksi: true } },
       transaksi: {
+        where: FILTER_TRANSAKSI_TERJUAL,
         orderBy: { tanggal: 'desc' },
         take: 1,
         select: { tanggal: true, total: true },
@@ -105,7 +107,7 @@ export async function memberRiwayat(id: string) {
   })
   if (!member) throw new GalatDomain('Member tidak ditemukan')
   const transaksi = await prisma.transaksi.findMany({
-    where: { memberId: id },
+    where: { memberId: id, ...FILTER_TRANSAKSI_TERJUAL },
     orderBy: { tanggal: 'desc' },
     select: {
       id: true,

@@ -1,22 +1,20 @@
 import type { StrukPayload } from '#/types/percetakan'
 
-const LEBAR = 32
-
 const rupiah = (n: number) =>
   new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(n)
 
-const tengah = (teks: string): string => {
-  const isi = teks.slice(0, LEBAR)
-  const kiri = Math.floor((LEBAR - isi.length) / 2)
+const tengah = (teks: string, lebar: number): string => {
+  const isi = teks.slice(0, lebar)
+  const kiri = Math.floor((lebar - isi.length) / 2)
   return `${' '.repeat(Math.max(0, kiri))}${isi}`
 }
 
-const kiriKanan = (kiri: string, kanan: string): string => {
-  const kananAman = kanan.slice(0, LEBAR)
-  if (kananAman.length >= LEBAR) return kananAman
-  const kiriAman = kiri.slice(0, Math.max(0, LEBAR - kananAman.length - 1))
+const kiriKanan = (kiri: string, kanan: string, lebar: number): string => {
+  const kananAman = kanan.slice(0, lebar)
+  if (kananAman.length >= lebar) return kananAman
+  const kiriAman = kiri.slice(0, Math.max(0, lebar - kananAman.length - 1))
   const spasi = ' '.repeat(
-    Math.max(0, LEBAR - kiriAman.length - kananAman.length),
+    Math.max(0, lebar - kiriAman.length - kananAman.length),
   )
   return `${kiriAman}${spasi}${kananAman}`
 }
@@ -78,20 +76,26 @@ export function strukUji(sekarang = new Date()): StrukPayload {
 export function barisStrukUji(
   payload: StrukPayload,
   namaToko: string,
+  lebar = 32,
 ): string[] {
   const baris: string[] = [
-    tengah(namaToko || 'POS'),
-    tengah('STRUK UJI / TEST PRINT'),
-    tengah(payload.nomor),
-    tengah(waktu(payload.tanggal)),
+    tengah(namaToko || 'POS', lebar),
+    tengah('STRUK UJI / TEST PRINT', lebar),
+    tengah(payload.nomor, lebar),
+    tengah(waktu(payload.tanggal), lebar),
   ]
 
-  if (payload.memberNama) baris.push(tengah(`Member: ${payload.memberNama}`))
-  baris.push('-'.repeat(LEBAR))
+  if (payload.memberNama)
+    baris.push(tengah(`Member: ${payload.memberNama}`, lebar))
+  baris.push('-'.repeat(lebar))
 
   for (const item of payload.items) {
     baris.push(
-      kiriKanan(`${item.nama} x${item.qty}`, `Rp${rupiah(item.subtotal)}`),
+      kiriKanan(
+        `${item.nama} x${item.qty}`,
+        `Rp${rupiah(item.subtotal)}`,
+        lebar,
+      ),
     )
     for (const modifier of item.modifier) {
       const tambahan =
@@ -102,44 +106,51 @@ export function barisStrukUji(
     }
   }
 
-  baris.push('-'.repeat(LEBAR))
-  baris.push(kiriKanan('Subtotal', `Rp${rupiah(payload.subtotal)}`))
+  baris.push('-'.repeat(lebar))
+  baris.push(kiriKanan('Subtotal', `Rp${rupiah(payload.subtotal)}`, lebar))
   if (payload.diskon > 0) {
-    baris.push(kiriKanan('Diskon', `-Rp${rupiah(payload.diskon)}`))
+    baris.push(kiriKanan('Diskon', `-Rp${rupiah(payload.diskon)}`, lebar))
   }
   if (payload.pajak > 0) {
     baris.push(
       kiriKanan(
         `Pajak${payload.pajakJenis ? ` ${payload.pajakJenis}` : ''}`,
         `Rp${rupiah(payload.pajak)}`,
+        lebar,
       ),
     )
   }
   if (payload.ongkir > 0) {
-    baris.push(kiriKanan('Ongkir', `Rp${rupiah(payload.ongkir)}`))
+    baris.push(kiriKanan('Ongkir', `Rp${rupiah(payload.ongkir)}`, lebar))
   }
-  baris.push(kiriKanan('Total', `Rp${rupiah(payload.total)}`))
+  baris.push(kiriKanan('Total', `Rp${rupiah(payload.total)}`, lebar))
 
-  baris.push('-'.repeat(LEBAR))
+  baris.push('-'.repeat(lebar))
   if (payload.pembayaran.length > 0) {
     for (const bayar of payload.pembayaran) {
       baris.push(
-        kiriKanan(`Bayar (${bayar.metode})`, `Rp${rupiah(bayar.jumlah)}`),
+        kiriKanan(
+          `Bayar (${bayar.metode})`,
+          `Rp${rupiah(bayar.jumlah)}`,
+          lebar,
+        ),
       )
     }
   } else {
-    baris.push(kiriKanan('Metode', payload.metodeBayar))
+    baris.push(kiriKanan('Metode', payload.metodeBayar, lebar))
   }
   if (payload.uangDiterima != null) {
-    baris.push(kiriKanan('Tunai diterima', `Rp${rupiah(payload.uangDiterima)}`))
+    baris.push(
+      kiriKanan('Tunai diterima', `Rp${rupiah(payload.uangDiterima)}`, lebar),
+    )
   }
   if (payload.kembalian != null && payload.kembalian > 0) {
-    baris.push(kiriKanan('Kembalian', `Rp${rupiah(payload.kembalian)}`))
+    baris.push(kiriKanan('Kembalian', `Rp${rupiah(payload.kembalian)}`, lebar))
   }
   if (payload.catatan) baris.push(payload.catatan)
 
   baris.push('')
-  baris.push(tengah('*** DATA UJI / DUMMY ***'))
-  baris.push(tengah('Terima kasih telah berbelanja'))
+  baris.push(tengah('*** DATA UJI / DUMMY ***', lebar))
+  baris.push(tengah('Terima kasih telah berbelanja', lebar))
   return baris
 }

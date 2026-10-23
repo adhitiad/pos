@@ -11,7 +11,12 @@ beforeAll(async () => {
 })
 
 const pulihkan = async (
-  kunci: 'judul_app' | 'mode_fnb' | 'nama_toko' | 'struk_otomatis',
+  kunci:
+    | 'judul_app'
+    | 'mode_fnb'
+    | 'nama_toko'
+    | 'struk_otomatis'
+    | 'ukuran_kertas_termal',
   nilai: string | undefined,
 ) => {
   if (nilai === undefined) {
@@ -26,6 +31,7 @@ afterAll(async () => {
   await pulihkan('mode_fnb', asli.semua.mode_fnb)
   await pulihkan('nama_toko', asli.semua.nama_toko)
   await pulihkan('struk_otomatis', asli.semua.struk_otomatis)
+  await pulihkan('ukuran_kertas_termal', asli.semua.ukuran_kertas_termal)
 })
 
 describe('pengaturan', () => {
@@ -57,6 +63,26 @@ describe('pengaturan', () => {
 
     expect(() =>
       SetPengaturanSchema.parse({ kunci: 'struk_otomatis', nilai: 'salah' }),
+    ).toThrow()
+  })
+
+  it('ukuran kertas thermal divalidasi dan dibaca kembali', async () => {
+    await prisma.pengaturan.deleteMany({
+      where: { kunci: 'ukuran_kertas_termal' },
+    })
+    expect((await pengaturanData()).ukuranKertasTermal).toBe('58x40')
+
+    await setPengaturan({
+      kunci: 'ukuran_kertas_termal',
+      nilai: '80x80',
+    })
+    expect((await pengaturanData()).ukuranKertasTermal).toBe('80x80')
+
+    expect(() =>
+      SetPengaturanSchema.parse({
+        kunci: 'ukuran_kertas_termal',
+        nilai: '99x99',
+      }),
     ).toThrow()
   })
 })

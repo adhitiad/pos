@@ -832,6 +832,52 @@ describe('percetakan — antrean job', () => {
     expect(gagal.pesanGalat).toBe('Paper habis')
   })
 
+  it('kasir dapat mencetak maksimal tiga struk lewat antrean', async () => {
+    const transaksiId = await buatTransaksi()
+    const hasil = await Promise.allSettled(
+      Array.from({ length: 5 }, () =>
+        buatPrintJob({ transaksiId }, undefined, 'KASIR'),
+      ),
+    )
+    const jumlahBerhasil = hasil.reduce((jumlah, cetak) => {
+      if (cetak.status === 'fulfilled') {
+        jobIds.push(cetak.value.id)
+        return jumlah + 1
+      }
+      return jumlah
+    }, 0)
+
+    expect(jumlahBerhasil).toBe(3)
+    expect(hasil.filter((cetak) => cetak.status === 'rejected')).toHaveLength(2)
+
+    const transaksi = await prisma.transaksi.findUniqueOrThrow({
+      where: { id: transaksiId },
+      select: { cetakKasir: true },
+    })
+    const jumlahJob = await prisma.printJob.count({
+      where: { transaksiId },
+    })
+    expect(transaksi.cetakKasir).toBe(3)
+    expect(jumlahJob).toBe(3)
+  })
+
+  it('owner dapat mencetak ulang struk tanpa batas antrean kasir', async () => {
+    const transaksiId = await buatTransaksi()
+    const jobs = await Promise.all(
+      Array.from({ length: 4 }, () =>
+        buatPrintJob({ transaksiId }, undefined, 'OWNER'),
+      ),
+    )
+    jobIds.push(...jobs.map((job) => job.id))
+
+    const transaksi = await prisma.transaksi.findUniqueOrThrow({
+      where: { id: transaksiId },
+      select: { cetakOwner: true, cetakKasir: true },
+    })
+    expect(transaksi.cetakOwner).toBe(4)
+    expect(transaksi.cetakKasir).toBe(0)
+  })
+
   it('daftar job bisa difilter status', async () => {
     const transaksiId = await buatTransaksi()
     const job = await buatPrintJob({ transaksiId })

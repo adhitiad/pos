@@ -47,8 +47,8 @@ Langkah singkat:
 1. Hubungkan repo ke Vercel sekali; biarkan root directory di root repo.
 2. Isi Vercel Production env: `DATABASE_URL` (pooled), `BETTER_AUTH_URL`,
    `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`, `OWNER_EMAILS`,
-   `KASIR_EMAILS` (opsional), `TRUSTED_ORIGINS`, `TRUST_PROXY=true`, plus
-   Cloudinary bila dipakai.
+   `KASIR_EMAILS` (opsional), `TRUSTED_ORIGINS`, `TRUST_PROXY=true`,
+   `TRUST_PROXY_HOPS=1`, plus Cloudinary bila dipakai.
 3. Isi secret environment `production`: `DATABASE_URL_UNPOOLED`, `VERCEL_TOKEN`,
    `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`. Di GitHub Free, lewati required
    reviewer dan andalkan dispatch manual; aktifkan reviewer hanya bila plan
@@ -76,6 +76,7 @@ mengarahkannya ke database produksi. Detail operasional:
 | `TRUSTED_ORIGINS`                              | origin produksi, koma-separated                                        |
 | `SHADOW_DATABASE_URL`                          | DB kosong untuk cek drift (`db:migrate:drift`), opsional di lokal      |
 | `TRUST_PROXY`                                  | `true` bila di belakang proxy tepercaya (pakai XFF)                    |
+| `TRUST_PROXY_HOPS`                             | jumlah proxy yang menambahkan XFF; Vercel = `1`                        |
 | `ENABLE_CSP`                                   | paksa CSP on/off; kosong = on saat produksi                            |
 | `LOG_LEVEL`                                    | level pino; kosong = debug (dev) / info (prod)                         |
 | `CLOUDINARY_CLOUD_NAME`                        | cloud name Cloudinary (server)                                         |

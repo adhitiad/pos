@@ -1,13 +1,10 @@
 import { z } from 'zod'
 
 export const DeviceVisitSchema = z.object({
-  deviceId: z.string().min(1, 'Device ID wajib diisi'),
-  deviceName: z.string().optional(),
+  deviceId: z.string().min(1, 'Device ID wajib diisi').max(128),
+  deviceName: z.string().max(100).optional(),
   os: z.enum(['mac', 'windows', 'android', 'ios', 'linux']),
-  ipv4: z.string().optional(),
-  ipv6: z.string().optional(),
-  dns: z.string().optional(),
-  lokasi: z.string().optional(),
+  lokasi: z.string().max(100).optional(),
   klasifikasi: z.enum(['hp', 'tablet', 'laptop', 'pc', 'mobil']),
   userId: z.string().optional(),
 })

@@ -1,5 +1,10 @@
 import { useState } from 'react'
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 
 import { m } from '#/paraglide/messages'
 import { getSessionFn } from '#/server/authFn'
@@ -8,6 +13,7 @@ import { laporanFn } from '#/server/kasirFn'
 import { BukuBesarSearchSchema } from '#/validations/kasir'
 
 import DashboardLayout from '#/components/DashboardLayout'
+import DialogPengeluaran from '#/components/pengeluaran/DialogPengeluaran'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -22,7 +28,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from '#/components/ui/table'
@@ -33,6 +38,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '#/components/ui/accordion'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
 
 const isoHari = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -67,6 +78,92 @@ const rupiah = (n: number) =>
 const saldoAkun = (tipe: string, debit: number, kredit: number) =>
   tipe === 'ASET' || tipe === 'BEBAN' ? debit - kredit : kredit - debit
 
+type EntriAkun = {
+  id: string
+  tanggal: string
+  jurnalNomor: string
+  keterangan: string | null
+  debit: number
+  kredit: number
+  saldo: number
+}
+
+function TabelEntriAkun({ entri }: { entri: EntriAkun[] }) {
+  const kontrol = useKontrolTabel(
+    entri,
+    (e) => `${e.tanggal} ${e.jurnalNomor} ${e.keterangan ?? ''}`,
+    {
+      tanggal: (e) => e.tanggal,
+      keterangan: (e) => e.keterangan ?? e.jurnalNomor,
+      debit: (e) => e.debit,
+      kredit: (e) => e.kredit,
+      saldo: (e) => e.saldo,
+    },
+  )
+  return (
+    <>
+      <PencarianTabel
+        value={kontrol.cari}
+        onChange={kontrol.setCari}
+        className="mb-3"
+      />
+      <div className="-mx-2 overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {[
+                ['tanggal', m.ledger_date()],
+                ['keterangan', m.ledger_desc()],
+                ['debit', m.ledger_debit()],
+                ['kredit', m.ledger_credit()],
+                ['saldo', m.ledger_balance()],
+              ].map(([key, label]) => (
+                <HeaderUrutTabel
+                  key={key}
+                  kunci={key}
+                  aktif={kontrol.kunciUrut === key}
+                  arah={kontrol.arahUrut}
+                  onUrut={kontrol.toggleUrut}
+                  className={
+                    key === 'debit' || key === 'kredit' || key === 'saldo'
+                      ? 'text-right'
+                      : undefined
+                  }
+                >
+                  {label}
+                </HeaderUrutTabel>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {kontrol.baris.map((e) => (
+              <TableRow key={e.id}>
+                <TableCell>{e.tanggal.slice(0, 10)}</TableCell>
+                <TableCell>{e.keterangan ?? e.jurnalNomor}</TableCell>
+                <TableCell className="text-right">
+                  {e.debit ? rupiah(e.debit) : '—'}
+                </TableCell>
+                <TableCell className="text-right">
+                  {e.kredit ? rupiah(e.kredit) : '—'}
+                </TableCell>
+                <TableCell className="text-right">{rupiah(e.saldo)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <PaginasiTabel
+        halamanAktif={kontrol.halamanAktif}
+        jumlahHalaman={kontrol.jumlahHalaman}
+        jumlahBaris={kontrol.jumlahBaris}
+        ukuranHalaman={kontrol.ukuranHalaman}
+        onHalaman={kontrol.setHalaman}
+        onUkuranHalaman={kontrol.setUkuranHalaman}
+      />
+    </>
+  )
+}
+
 function BukuBesar() {
   const data = Route.useLoaderData()
   const search = Route.useSearch()
@@ -75,6 +172,10 @@ function BukuBesar() {
   const [dari, setDari] = useState(search.dari ?? defaultDari())
   const [sampai, setSampai] = useState(search.sampai ?? defaultSampai())
   const [akunId, setAkunId] = useState(search.akunId ?? '')
+  const router = useRouter()
+
+  // Input pengeluaran owner lewat dialog (bukan form-inline).
+  const [dialogPengeluaran, setDialogPengeluaran] = useState(false)
 
   const pembuka = new Map(data.pembuka.map((p) => [p.akunId, p]))
   // Saldo berjalan per akun mengikuti urutan entri
@@ -87,6 +188,30 @@ function BukuBesar() {
     berjalan.set(e.akunId, jalan)
     return { ...e, saldo: jalan }
   })
+  const kontrolTrial = useKontrolTabel(
+    data.trial,
+    (t) => `${t.kode} ${t.nama}`,
+    {
+      kode: (t) => t.kode,
+      nama: (t) => t.nama,
+      debit: (t) => t.debit,
+      kredit: (t) => t.kredit,
+    },
+  )
+  const kontrolEntri = useKontrolTabel(
+    baris,
+    (e) =>
+      `${e.tanggal} ${e.jurnalNomor} ${e.keterangan ?? ''} ${e.kode} ${e.nama}`,
+    {
+      tanggal: (e) => e.tanggal,
+      nomor: (e) => e.jurnalNomor,
+      keterangan: (e) => e.keterangan ?? '',
+      akun: (e) => `${e.kode} ${e.nama}`,
+      debit: (e) => e.debit,
+      kredit: (e) => e.kredit,
+      saldo: (e) => e.saldo,
+    },
+  )
 
   const totalDebitTrial = data.trial.reduce((s, t) => s + t.debit, 0)
   const totalKreditTrial = data.trial.reduce((s, t) => s + t.kredit, 0)
@@ -152,7 +277,17 @@ function BukuBesar() {
             </SelectContent>
           </Select>
         </div>
-        <Button type="submit">{m.ledger_show()}</Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button type="submit">{m.ledger_show()}</Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11"
+            onClick={() => setDialogPengeluaran(true)}
+          >
+            {m.pengeluaran_tombol_debit()}
+          </Button>
+        </div>
       </form>
 
       {/* Neraca saldo */}
@@ -161,22 +296,53 @@ function BukuBesar() {
           <CardTitle>{m.ledger_trial()}</CardTitle>
         </CardHeader>
         <CardContent>
+          <PencarianTabel
+            value={kontrolTrial.cari}
+            onChange={kontrolTrial.setCari}
+            className="mb-3"
+          />
           <div className="-mx-2 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{m.ledger_code()}</TableHead>
-                  <TableHead>{m.ledger_name()}</TableHead>
-                  <TableHead className="text-right">
+                  <HeaderUrutTabel
+                    kunci="kode"
+                    aktif={kontrolTrial.kunciUrut === 'kode'}
+                    arah={kontrolTrial.arahUrut}
+                    onUrut={kontrolTrial.toggleUrut}
+                  >
+                    {m.ledger_code()}
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="nama"
+                    aktif={kontrolTrial.kunciUrut === 'nama'}
+                    arah={kontrolTrial.arahUrut}
+                    onUrut={kontrolTrial.toggleUrut}
+                  >
+                    {m.ledger_name()}
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="debit"
+                    aktif={kontrolTrial.kunciUrut === 'debit'}
+                    arah={kontrolTrial.arahUrut}
+                    onUrut={kontrolTrial.toggleUrut}
+                    className="text-right"
+                  >
                     {m.ledger_debit()}
-                  </TableHead>
-                  <TableHead className="text-right">
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="kredit"
+                    aktif={kontrolTrial.kunciUrut === 'kredit'}
+                    arah={kontrolTrial.arahUrut}
+                    onUrut={kontrolTrial.toggleUrut}
+                    className="text-right"
+                  >
                     {m.ledger_credit()}
-                  </TableHead>
+                  </HeaderUrutTabel>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.trial.map((t) => (
+                {kontrolTrial.baris.map((t) => (
                   <TableRow key={t.akunId}>
                     <TableCell>{t.kode}</TableCell>
                     <TableCell>{t.nama}</TableCell>
@@ -200,13 +366,21 @@ function BukuBesar() {
               </TableBody>
             </Table>
           </div>
+          <PaginasiTabel
+            halamanAktif={kontrolTrial.halamanAktif}
+            jumlahHalaman={kontrolTrial.jumlahHalaman}
+            jumlahBaris={kontrolTrial.jumlahBaris}
+            ukuranHalaman={kontrolTrial.ukuranHalaman}
+            onHalaman={kontrolTrial.setHalaman}
+            onUkuranHalaman={kontrolTrial.setUkuranHalaman}
+          />
         </CardContent>
       </Card>
 
       {/* Rincian jurnal */}
       <section className="space-y-2">
         <h2 className="font-semibold">{m.ledger_title()}</h2>
-        {baris.length === 0 ? (
+        {kontrolEntri.jumlahBaris === 0 ? (
           <>
             <p className="text-sm text-neutral-500">{m.ledger_empty()}</p>
             <p className="py-1 text-sm text-neutral-400">
@@ -214,48 +388,73 @@ function BukuBesar() {
             </p>
           </>
         ) : (
-          <div className="-mx-2 overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{m.ledger_date()}</TableHead>
-                  <TableHead>{m.ledger_no()}</TableHead>
-                  <TableHead>{m.ledger_desc()}</TableHead>
-                  <TableHead>{m.ledger_account()}</TableHead>
-                  <TableHead className="text-right">
-                    {m.ledger_debit()}
-                  </TableHead>
-                  <TableHead className="text-right">
-                    {m.ledger_credit()}
-                  </TableHead>
-                  <TableHead className="text-right">
-                    {m.ledger_balance()}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {baris.map((e) => (
-                  <TableRow key={e.id}>
-                    <TableCell>{e.tanggal.slice(0, 10)}</TableCell>
-                    <TableCell>{e.jurnalNomor}</TableCell>
-                    <TableCell>{e.keterangan ?? '—'}</TableCell>
-                    <TableCell>
-                      {e.kode} — {e.nama}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {e.debit ? rupiah(e.debit) : '—'}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {e.kredit ? rupiah(e.kredit) : '—'}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {rupiah(e.saldo)}
-                    </TableCell>
+          <>
+            <PencarianTabel
+              value={kontrolEntri.cari}
+              onChange={kontrolEntri.setCari}
+            />
+            <div className="-mx-2 overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    {[
+                      ['tanggal', m.ledger_date()],
+                      ['nomor', m.ledger_no()],
+                      ['keterangan', m.ledger_desc()],
+                      ['akun', m.ledger_account()],
+                      ['debit', m.ledger_debit()],
+                      ['kredit', m.ledger_credit()],
+                      ['saldo', m.ledger_balance()],
+                    ].map(([key, label]) => (
+                      <HeaderUrutTabel
+                        key={key}
+                        kunci={key}
+                        aktif={kontrolEntri.kunciUrut === key}
+                        arah={kontrolEntri.arahUrut}
+                        onUrut={kontrolEntri.toggleUrut}
+                        className={
+                          key === 'debit' || key === 'kredit' || key === 'saldo'
+                            ? 'text-right'
+                            : undefined
+                        }
+                      >
+                        {label}
+                      </HeaderUrutTabel>
+                    ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {kontrolEntri.baris.map((e) => (
+                    <TableRow key={e.id}>
+                      <TableCell>{e.tanggal.slice(0, 10)}</TableCell>
+                      <TableCell>{e.jurnalNomor}</TableCell>
+                      <TableCell>{e.keterangan ?? '—'}</TableCell>
+                      <TableCell>
+                        {e.kode} — {e.nama}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {e.debit ? rupiah(e.debit) : '—'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {e.kredit ? rupiah(e.kredit) : '—'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {rupiah(e.saldo)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            <PaginasiTabel
+              halamanAktif={kontrolEntri.halamanAktif}
+              jumlahHalaman={kontrolEntri.jumlahHalaman}
+              jumlahBaris={kontrolEntri.jumlahBaris}
+              ukuranHalaman={kontrolEntri.ukuranHalaman}
+              onHalaman={kontrolEntri.setHalaman}
+              onUkuranHalaman={kontrolEntri.setUkuranHalaman}
+            />
+          </>
         )}
       </section>
 
@@ -277,50 +476,20 @@ function BukuBesar() {
                   </span>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="-mx-2 overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>{m.ledger_date()}</TableHead>
-                          <TableHead>{m.ledger_desc()}</TableHead>
-                          <TableHead className="text-right">
-                            {m.ledger_debit()}
-                          </TableHead>
-                          <TableHead className="text-right">
-                            {m.ledger_credit()}
-                          </TableHead>
-                          <TableHead className="text-right">
-                            {m.ledger_balance()}
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {g.entri.map((e) => (
-                          <TableRow key={e.id}>
-                            <TableCell>{e.tanggal.slice(0, 10)}</TableCell>
-                            <TableCell>
-                              {e.keterangan ?? e.jurnalNomor}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {e.debit ? rupiah(e.debit) : '—'}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {e.kredit ? rupiah(e.kredit) : '—'}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {rupiah(e.saldo)}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
+                  <TabelEntriAkun entri={g.entri} />
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         </section>
       )}
+
+      <DialogPengeluaran
+        terbuka={dialogPengeluaran}
+        onTutup={() => setDialogPengeluaran(false)}
+        peran="OWNER"
+        onSelesai={() => void router.invalidate()}
+      />
     </DashboardLayout>
   )
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, Link } from '@tanstack/react-router'
 import {
   Bell,
+  ClipboardCheck,
   ClipboardList,
   PackageCheck,
   PackageX,
@@ -14,6 +15,7 @@ import { useNotifikasiDibaca, useSegarkanNotifikasi } from '#/lib/notifikasi'
 import { notifikasiFn } from '#/server/notifikasiFn'
 import type {
   Notifikasi,
+  NotifikasiPengajuan,
   PeriodePendapatan,
   StatusPesananNotif,
 } from '#/types/notifikasi'
@@ -44,6 +46,21 @@ const labelStatus = (status: StatusPesananNotif) => {
 
 const rupiah = (n: number) =>
   new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(n)
+
+// Notifikasi pengajuan: judul ikut kategori (diajukan/disetujui/ditolak),
+// isi detail nominal disimpan di pesan (teks bahasa Indonesia).
+const judulPengajuan = (notif: NotifikasiPengajuan) => {
+  if (notif.kategori === 'SETUJUI') return m.notif_pengajuan_disetujui()
+  if (notif.kategori === 'TOLAK') return m.notif_pengajuan_ditolak()
+  if (notif.kategori === 'PENGAJUAN') return m.notif_pengajuan_baru()
+  return m.notif_pengajuan_info()
+}
+
+const warnaPengajuan = (notif: NotifikasiPengajuan) => {
+  if (notif.kategori === 'SETUJUI') return 'text-emerald-600'
+  if (notif.kategori === 'TOLAK') return 'text-destructive'
+  return 'text-amber-600'
+}
 
 export default function NotificationBell() {
   const navigate = useNavigate()
@@ -77,7 +94,9 @@ export default function NotificationBell() {
 
   const buka = (notif: Notifikasi) => {
     tandai([notif.id])
-    void navigate({ to: '/notifikasi' })
+    void navigate({
+      to: notif.tipe === 'pengajuan' ? '/pengajuan' : '/notifikasi',
+    })
   }
 
   return (
@@ -151,6 +170,11 @@ export default function NotificationBell() {
                   )}
                 </>
               )}
+              {notif.tipe === 'pengajuan' && (
+                <ClipboardCheck
+                  className={`mt-0.5 size-4 shrink-0 ${warnaPengajuan(notif)}`}
+                />
+              )}
               <div className="min-w-0">
                 <p className="text-sm font-medium">
                   {notif.tipe === 'stok' && m.notif_stok_habis()}
@@ -161,6 +185,7 @@ export default function NotificationBell() {
                     (notif.untuk === 'kasir'
                       ? m.notif_pesanan_baru()
                       : m.notif_pesanan_status())}
+                  {notif.tipe === 'pengajuan' && judulPengajuan(notif)}
                 </p>
                 <p className="line-clamp-2 text-xs text-muted-foreground">
                   {notif.tipe === 'stok' &&
@@ -185,6 +210,7 @@ export default function NotificationBell() {
                       status: labelStatus(notif.status),
                       total: rupiah(notif.total),
                     })}
+                  {notif.tipe === 'pengajuan' && notif.pesan}
                 </p>
               </div>
             </DropdownMenuItem>

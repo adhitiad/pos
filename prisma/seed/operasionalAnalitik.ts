@@ -8,50 +8,110 @@ export async function seedCetak(transaksiIds: string[]) {
     where: { default: true },
     select: { id: true },
   })
-  if (!printer) return
+  if (!printer)
+    throw new Error('Printer default untuk seed cetak tidak ditemukan')
   const transaksi = await prisma.transaksi.findMany({
     where: { id: { in: transaksiIds } },
-    select: { id: true, nomor: true, total: true },
+    select: {
+      id: true,
+      nomor: true,
+      tanggal: true,
+      subtotal: true,
+      diskon: true,
+      pajak: true,
+      pajakJenis: true,
+      ongkir: true,
+      total: true,
+      metodeBayar: true,
+      uangDiterima: true,
+      kembalian: true,
+      catatan: true,
+      member: { select: { nama: true } },
+      items: {
+        select: {
+          namaProduk: true,
+          qty: true,
+          harga: true,
+          subtotal: true,
+          modifiers: {
+            select: {
+              qty: true,
+              hargaTambahan: true,
+              catatan: true,
+              modifier: { select: { nama: true } },
+            },
+          },
+        },
+      },
+      pembayaran: { select: { metode: true, jumlah: true } },
+    },
     orderBy: { tanggal: 'asc' },
   })
-  if (transaksi.length === 0) return
+  if (transaksi.length !== 3) {
+    throw new Error(
+      `Seed cetak memerlukan 3 transaksi, ditemukan ${transaksi.length}`,
+    )
+  }
+  const [transaksiSelesai, transaksiMenunggu, transaksiGagal] = transaksi
+  const struk = (t: (typeof transaksi)[number]) => ({
+    nomor: t.nomor,
+    tanggal: t.tanggal.toISOString(),
+    items: t.items.map((item) => ({
+      nama: item.namaProduk,
+      qty: item.qty,
+      harga: item.harga.toNumber(),
+      subtotal: item.subtotal.toNumber(),
+      modifier: item.modifiers.map((mod) => ({
+        nama: mod.modifier.nama,
+        qty: mod.qty,
+        tambahan: mod.hargaTambahan.toNumber(),
+        catatan: mod.catatan,
+      })),
+    })),
+    subtotal: t.subtotal.toNumber(),
+    diskon: t.diskon.toNumber(),
+    pajak: t.pajak.toNumber(),
+    pajakJenis: t.pajakJenis,
+    ongkir: t.ongkir.toNumber(),
+    total: t.total.toNumber(),
+    metodeBayar: t.metodeBayar,
+    pembayaran: t.pembayaran.map((bayar) => ({
+      metode: bayar.metode,
+      jumlah: bayar.jumlah.toNumber(),
+    })),
+    uangDiterima: t.uangDiterima?.toNumber() ?? null,
+    kembalian: t.kembalian?.toNumber() ?? null,
+    memberNama: t.member?.nama ?? null,
+    catatan: t.catatan,
+  })
   await prisma.printJob.createMany({
     data: [
       {
         printerId: printer.id,
-        transaksiId: transaksi[0].id,
+        transaksiId: transaksiSelesai.id,
         tipe: 'STRUK',
         status: 'DICETAK',
         idempotencyKey: 'seed-print-1',
-        payload: {
-          nomor: transaksi[0].nomor,
-          total: transaksi[0].total.toNumber(),
-        },
+        payload: struk(transaksiSelesai),
         percobaan: 1,
         diambilPada: hariLalu(1, 10, 16),
         dicetakPada: hariLalu(1, 10, 16),
       },
       {
         printerId: printer.id,
-        transaksiId: transaksi[1].id,
+        transaksiId: transaksiMenunggu.id,
         tipe: 'STRUK',
         status: 'MENUNGGU',
         idempotencyKey: 'seed-print-2',
-        payload: {
-          nomor: transaksi[1].nomor,
-          total: transaksi[1].total.toNumber(),
-        },
+        payload: struk(transaksiMenunggu),
       },
       {
         printerId: printer.id,
-        transaksiId: transaksi[2].id,
+        transaksiId: transaksiGagal.id,
         tipe: 'STRUK',
         status: 'GAGAL',
         idempotencyKey: 'seed-print-3',
-        payload: {
-          nomor: transaksi[2].nomor,
-          total: transaksi[2].total.toNumber(),
-        },
+        payload: struk(transaksiGagal),
         percobaan: 2,
         pesanGalat: 'Kertas habis',
       },

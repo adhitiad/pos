@@ -1,6 +1,7 @@
 import { prisma } from '#/db'
 import { GalatDomain } from './galat.js'
 import { KUNCI_PAJAK_SEMUA, tarifPajak } from './pajak.js'
+import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 import { LaporanSchema } from '#/validations/kasir'
 import type { LaporanInput } from '#/validations/kasir'
 
@@ -81,12 +82,12 @@ export async function kasirData(kasirId?: string) {
       select: { id: true, nama: true, tarif: true, estimasi: true },
     }),
     prisma.transaksi.aggregate({
-      where: { tanggal: { gte: awalHari } },
+      where: { tanggal: { gte: awalHari }, ...FILTER_TRANSAKSI_TERJUAL },
       _sum: { total: true },
       _count: { id: true },
     }),
     prisma.transaksi.findMany({
-      where: { tanggal: { gte: awalHari } },
+      where: { tanggal: { gte: awalHari }, ...FILTER_TRANSAKSI_TERJUAL },
       orderBy: { tanggal: 'desc' },
       take: 50,
       select: {

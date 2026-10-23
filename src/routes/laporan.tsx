@@ -13,10 +13,15 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from '#/components/ui/table'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
 
 import DashboardLayout from '#/components/DashboardLayout'
 import FilterLaporan from '#/components/laporan/FilterLaporan'
@@ -96,6 +101,21 @@ function Laporan() {
   const [sampai, setSampai] = useState(search.sampai ?? defaultSampai())
   const [grup, setGrup] = useState(search.grup ?? 'harian')
   const [userType, setUserType] = useState<string | undefined>(search.userType)
+  const kontrolShift = useKontrolTabel(
+    shiftLaporan.riwayat,
+    (shift) =>
+      `${shift.kasirNama} ${shift.waktuBuka} ${shift.waktuTutup ?? ''}`,
+    {
+      dibuka: (shift) => shift.waktuBuka,
+      kasir: (shift) => shift.kasirNama,
+      ditutup: (shift) => shift.waktuTutup ?? '',
+      awal: (shift) => shift.kasAwal,
+      tunai: (shift) => shift.totalTunai,
+      akhir: (shift) => shift.kasAkhir ?? -1,
+      selisih: (shift) => shift.selisih ?? 0,
+      transaksi: (shift) => shift.jumlahTransaksi,
+    },
+  )
 
   const qs = new URLSearchParams({
     dari: laporan.dari,
@@ -146,32 +166,88 @@ function Laporan() {
             <CardTitle>{m.shift_riwayat()}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
+            <PencarianTabel
+              value={kontrolShift.cari}
+              onChange={kontrolShift.setCari}
+              className="m-3"
+            />
             <div className="-mx-2 overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{m.shift_dibuka()}</TableHead>
-                    <TableHead>{m.shift_kasir()}</TableHead>
-                    <TableHead>{m.shift_ditutup()}</TableHead>
-                    <TableHead className="text-right">
+                    <HeaderUrutTabel
+                      kunci="dibuka"
+                      aktif={kontrolShift.kunciUrut === 'dibuka'}
+                      arah={kontrolShift.arahUrut}
+                      onUrut={kontrolShift.toggleUrut}
+                    >
+                      {m.shift_dibuka()}
+                    </HeaderUrutTabel>
+                    <HeaderUrutTabel
+                      kunci="kasir"
+                      aktif={kontrolShift.kunciUrut === 'kasir'}
+                      arah={kontrolShift.arahUrut}
+                      onUrut={kontrolShift.toggleUrut}
+                    >
+                      {m.shift_kasir()}
+                    </HeaderUrutTabel>
+                    <HeaderUrutTabel
+                      kunci="ditutup"
+                      aktif={kontrolShift.kunciUrut === 'ditutup'}
+                      arah={kontrolShift.arahUrut}
+                      onUrut={kontrolShift.toggleUrut}
+                    >
+                      {m.shift_ditutup()}
+                    </HeaderUrutTabel>
+                    <HeaderUrutTabel
+                      kunci="awal"
+                      aktif={kontrolShift.kunciUrut === 'awal'}
+                      arah={kontrolShift.arahUrut}
+                      onUrut={kontrolShift.toggleUrut}
+                      className="text-right"
+                    >
                       {m.shift_kas_awal()}
-                    </TableHead>
-                    <TableHead className="text-right">
+                    </HeaderUrutTabel>
+                    <HeaderUrutTabel
+                      kunci="tunai"
+                      aktif={kontrolShift.kunciUrut === 'tunai'}
+                      arah={kontrolShift.arahUrut}
+                      onUrut={kontrolShift.toggleUrut}
+                      className="text-right"
+                    >
                       {m.shift_total_tunai()}
-                    </TableHead>
-                    <TableHead className="text-right">
+                    </HeaderUrutTabel>
+                    <HeaderUrutTabel
+                      kunci="akhir"
+                      aktif={kontrolShift.kunciUrut === 'akhir'}
+                      arah={kontrolShift.arahUrut}
+                      onUrut={kontrolShift.toggleUrut}
+                      className="text-right"
+                    >
                       {m.shift_kas_akhir()}
-                    </TableHead>
-                    <TableHead className="text-right">
+                    </HeaderUrutTabel>
+                    <HeaderUrutTabel
+                      kunci="selisih"
+                      aktif={kontrolShift.kunciUrut === 'selisih'}
+                      arah={kontrolShift.arahUrut}
+                      onUrut={kontrolShift.toggleUrut}
+                      className="text-right"
+                    >
                       {m.shift_selisih()}
-                    </TableHead>
-                    <TableHead className="text-right">
+                    </HeaderUrutTabel>
+                    <HeaderUrutTabel
+                      kunci="transaksi"
+                      aktif={kontrolShift.kunciUrut === 'transaksi'}
+                      arah={kontrolShift.arahUrut}
+                      onUrut={kontrolShift.toggleUrut}
+                      className="text-right"
+                    >
                       {m.shift_jumlah_transaksi()}
-                    </TableHead>
+                    </HeaderUrutTabel>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {shiftLaporan.riwayat.length === 0 ? (
+                  {kontrolShift.jumlahBaris === 0 ? (
                     <TableRow>
                       <TableCell
                         colSpan={8}
@@ -181,7 +257,7 @@ function Laporan() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    shiftLaporan.riwayat.map((s) => (
+                    kontrolShift.baris.map((s) => (
                       <TableRow key={s.id}>
                         <TableCell>{waktu(s.waktuBuka)}</TableCell>
                         <TableCell>{s.kasirNama}</TableCell>
@@ -227,6 +303,14 @@ function Laporan() {
                 </TableBody>
               </Table>
             </div>
+            <PaginasiTabel
+              halamanAktif={kontrolShift.halamanAktif}
+              jumlahHalaman={kontrolShift.jumlahHalaman}
+              jumlahBaris={kontrolShift.jumlahBaris}
+              ukuranHalaman={kontrolShift.ukuranHalaman}
+              onHalaman={kontrolShift.setHalaman}
+              onUkuranHalaman={kontrolShift.setUkuranHalaman}
+            />
             {shiftLaporan.shiftAktif && (
               <div className="border-t border-border p-3 text-xs text-neutral-500">
                 {m.shift_aktif_label()}: {shiftLaporan.shiftAktif.kasirNama} ·

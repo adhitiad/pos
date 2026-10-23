@@ -19,6 +19,13 @@ import DashboardLayout from '#/components/DashboardLayout'
 import { Input } from '#/components/ui/input'
 import { Button } from '#/components/ui/button'
 import { Badge } from '#/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#/components/ui/select'
 
 import { ProdukTabel, helper } from '#/components/produk/ProdukTabel'
 import type { ProdukRow } from '#/types/produk'
@@ -46,6 +53,10 @@ function Produk() {
   const data = Route.useLoaderData()
   const router = useRouter()
   const [cari, setCari] = useState('')
+  const [filterStatus, setFilterStatus] = useState<
+    'semua' | 'aktif' | 'nonaktif'
+  >('semua')
+  const [filterKategori, setFilterKategori] = useState('semua')
   const [panel, setPanel] = useState<null | { id: string | null }>(null)
   const [resep, setResep] = useState<{ bahanId: string; jumlah: number }[]>([])
   const [hapusId, setHapusId] = useState<string | null>(null)
@@ -55,15 +66,20 @@ function Produk() {
 
   const baris = useMemo(() => {
     const q = cari.trim().toLowerCase()
-    if (!q) return data.produk
-    return data.produk.filter(
-      (p) =>
+    return data.produk.filter((p) => {
+      if (filterStatus === 'aktif' && !p.aktif) return false
+      if (filterStatus === 'nonaktif' && p.aktif) return false
+      if (filterKategori !== 'semua' && p.kategoriId !== filterKategori)
+        return false
+      if (!q) return true
+      return (
         p.nama.toLowerCase().includes(q) ||
         (p.sku ?? '').toLowerCase().includes(q) ||
         (p.barcode ?? '').toLowerCase().includes(q) ||
-        (p.kategoriNama ?? '').toLowerCase().includes(q),
-    )
-  }, [data.produk, cari])
+        (p.kategoriNama ?? '').toLowerCase().includes(q)
+      )
+    })
+  }, [data.produk, cari, filterStatus, filterKategori])
 
   const muatUlang = async () => {
     await router.invalidate()
@@ -124,16 +140,19 @@ function Produk() {
   }
 
   const bukaUbah = (p: ProdukRow) => {
-    form.reset({
-      nama: p.nama,
-      sku: p.sku ?? '',
-      barcode: p.barcode ?? '',
-      gambar: p.gambar ?? '',
-      harga: p.harga,
-      stok: p.stok,
-      kategoriId: p.kategoriId ?? '',
-      aktif: p.aktif,
-    })
+    form.reset(
+      {
+        nama: p.nama,
+        sku: p.sku ?? '',
+        barcode: p.barcode ?? '',
+        gambar: p.gambar ?? '',
+        harga: p.harga,
+        stok: p.stok,
+        kategoriId: p.kategoriId ?? '',
+        aktif: p.aktif,
+      },
+      { keepDefaultValues: true },
+    )
     setFileFoto(null)
     setResep(
       p.resep.map((r: { bahanId: string; jumlah: number }) => ({
@@ -149,6 +168,7 @@ function Produk() {
       helper.columns([
         helper.accessor('gambar', {
           header: () => m.produk_gambar(),
+          enableSorting: false,
           cell: ({ row }) => {
             const g = row.original.gambar
             if (!g) return '—'
@@ -207,6 +227,7 @@ function Produk() {
         helper.display({
           id: 'aksi',
           header: () => m.produk_aksi(),
+          enableSorting: false,
           cell: ({ row }) => {
             const p = row.original
             return (
@@ -250,12 +271,55 @@ function Produk() {
         </Button>
       }
     >
-      <Input
-        placeholder={m.produk_cari()}
-        value={cari}
-        onChange={(e) => setCari(e.target.value)}
-        className="max-w-sm"
-      />
+      <div className="flex flex-wrap items-center gap-2">
+        <Input
+          placeholder={m.produk_cari()}
+          aria-label={m.produk_cari()}
+          value={cari}
+          onChange={(e) => setCari(e.target.value)}
+          className="max-w-sm"
+        />
+        <Select
+          value={filterStatus}
+          onValueChange={(nilai) =>
+            setFilterStatus(nilai as 'semua' | 'aktif' | 'nonaktif')
+          }
+        >
+          <SelectTrigger
+            className="w-[160px]"
+            aria-label={m.produk_filter_status()}
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="semua">{m.produk_semua_status()}</SelectItem>
+            <SelectItem value="aktif">{m.produk_aktif()}</SelectItem>
+            <SelectItem value="nonaktif">{m.produk_nonaktif()}</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={filterKategori} onValueChange={setFilterKategori}>
+          <SelectTrigger
+            className="w-[180px]"
+            aria-label={m.produk_filter_kategori()}
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="semua">{m.produk_semua_kategori()}</SelectItem>
+            {data.kategori.map((kategori) => (
+              <SelectItem key={kategori.id} value={kategori.id}>
+                {kategori.nama}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <span className="text-sm text-muted-foreground">
+          {m.produk_menampilkan({
+            tampil: baris.length,
+            total: data.produk.length,
+          })}
+        </span>
+      </div>
 
       {panel && (
         <ProdukForm

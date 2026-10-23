@@ -17,10 +17,22 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from '#/components/ui/table'
+import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  PencarianTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#/components/ui/select'
 
 const rupiah = (n: number) =>
   new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(n)
@@ -50,6 +62,30 @@ function Shift() {
   const [kasAkhir, setKasAkhir] = useState('')
   const [catatan, setCatatan] = useState('')
   const [pending, setPending] = useState(false)
+  const [filterStatus, setFilterStatus] = useState('SEMUA')
+  const riwayat = data.riwayat.filter(
+    (s) =>
+      filterStatus === 'SEMUA' ||
+      (filterStatus === 'BERJALAN'
+        ? s.waktuTutup === null
+        : s.waktuTutup !== null),
+  )
+  const kontrol = useKontrolTabel(
+    riwayat,
+    (s) =>
+      `${s.kasirNama} ${s.waktuBuka} ${s.waktuTutup ?? ''} ${s.catatan ?? ''}`,
+    {
+      kasir: (s) => s.kasirNama,
+      dibuka: (s) => s.waktuBuka,
+      ditutup: (s) => s.waktuTutup ?? '',
+      awal: (s) => s.kasAwal,
+      tunai: (s) => s.totalTunai,
+      seharusnya: (s) => s.seharusnya,
+      akhir: (s) => s.kasAkhir ?? -1,
+      selisih: (s) => s.selisih ?? 0,
+      transaksi: (s) => s.jumlahTransaksi,
+    },
+  )
 
   const gagal = (e: unknown, fallback: string) => {
     toast.error(e instanceof Error ? e.message : fallback)
@@ -196,35 +232,107 @@ function Shift() {
           <CardTitle>{m.shift_riwayat()}</CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <PencarianTabel value={kontrol.cari} onChange={kontrol.setCari} />
+            <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <SelectTrigger className="w-44" aria-label={m.shift_riwayat()}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="SEMUA">{m.percetakan_semua()}</SelectItem>
+                <SelectItem value="BERJALAN">{m.shift_berjalan()}</SelectItem>
+                <SelectItem value="SELESAI">{m.shift_tutup()}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="-mx-2 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  {data.semuaKasir && <TableHead>{m.shift_kasir()}</TableHead>}
-                  <TableHead>{m.shift_dibuka()}</TableHead>
-                  <TableHead>{m.shift_ditutup()}</TableHead>
-                  <TableHead className="text-right">
+                  {data.semuaKasir && (
+                    <HeaderUrutTabel
+                      kunci="kasir"
+                      aktif={kontrol.kunciUrut === 'kasir'}
+                      arah={kontrol.arahUrut}
+                      onUrut={kontrol.toggleUrut}
+                    >
+                      {m.shift_kasir()}
+                    </HeaderUrutTabel>
+                  )}
+                  <HeaderUrutTabel
+                    kunci="dibuka"
+                    aktif={kontrol.kunciUrut === 'dibuka'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                  >
+                    {m.shift_dibuka()}
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="ditutup"
+                    aktif={kontrol.kunciUrut === 'ditutup'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                  >
+                    {m.shift_ditutup()}
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="awal"
+                    aktif={kontrol.kunciUrut === 'awal'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                    className="text-right"
+                  >
                     {m.shift_kas_awal()}
-                  </TableHead>
-                  <TableHead className="text-right">
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="tunai"
+                    aktif={kontrol.kunciUrut === 'tunai'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                    className="text-right"
+                  >
                     {m.shift_total_tunai()}
-                  </TableHead>
-                  <TableHead className="text-right">
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="seharusnya"
+                    aktif={kontrol.kunciUrut === 'seharusnya'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                    className="text-right"
+                  >
                     {m.shift_seharusnya()}
-                  </TableHead>
-                  <TableHead className="text-right">
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="akhir"
+                    aktif={kontrol.kunciUrut === 'akhir'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                    className="text-right"
+                  >
                     {m.shift_kas_akhir()}
-                  </TableHead>
-                  <TableHead className="text-right">
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="selisih"
+                    aktif={kontrol.kunciUrut === 'selisih'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                    className="text-right"
+                  >
                     {m.shift_selisih()}
-                  </TableHead>
-                  <TableHead className="text-right">
+                  </HeaderUrutTabel>
+                  <HeaderUrutTabel
+                    kunci="transaksi"
+                    aktif={kontrol.kunciUrut === 'transaksi'}
+                    arah={kontrol.arahUrut}
+                    onUrut={kontrol.toggleUrut}
+                    className="text-right"
+                  >
                     {m.shift_jumlah_transaksi()}
-                  </TableHead>
+                  </HeaderUrutTabel>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.riwayat.length === 0 ? (
+                {kontrol.jumlahBaris === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={data.semuaKasir ? 9 : 8}
@@ -234,7 +342,7 @@ function Shift() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  data.riwayat.map((s) => (
+                  kontrol.baris.map((s) => (
                     <TableRow key={s.id}>
                       {data.semuaKasir && (
                         <TableCell className="font-medium">
@@ -287,6 +395,14 @@ function Shift() {
               </TableBody>
             </Table>
           </div>
+          <PaginasiTabel
+            halamanAktif={kontrol.halamanAktif}
+            jumlahHalaman={kontrol.jumlahHalaman}
+            jumlahBaris={kontrol.jumlahBaris}
+            ukuranHalaman={kontrol.ukuranHalaman}
+            onHalaman={kontrol.setHalaman}
+            onUkuranHalaman={kontrol.setUkuranHalaman}
+          />
         </CardContent>
       </Card>
     </DashboardLayout>

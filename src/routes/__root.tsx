@@ -11,10 +11,13 @@ import { ThemeProvider } from 'next-themes'
 
 import IdentitasSinkron from '#/components/IdentitasSinkron'
 import PemindaiPrinterOtomatis from '#/components/PemindaiPrinterOtomatis'
+import {
+  HalamanError,
+  HalamanLoading,
+  HalamanNotFound,
+} from '#/components/status/HalamanStatus'
 import { Toaster } from '#/components/ui/sonner'
-import { Button } from '#/components/ui/button'
 
-import { m } from '#/paraglide/messages'
 import { getLocale } from '#/paraglide/runtime'
 
 import appCss from '../styles.css?url'
@@ -70,33 +73,12 @@ export const Route = createRootRoute({
   }),
   // Error generik: jangan pernah tampilkan error.message (bisa bocorkan detail
   // internal) di produksi (OW-03).
-  errorComponent: RootError,
+  errorComponent: HalamanError,
   // 404: jawab apa yang terjadi + jalan keluar, jangan layar kosong "Not Found".
-  notFoundComponent: RootNotFound,
+  notFoundComponent: HalamanNotFound,
+  pendingComponent: HalamanLoading,
   shellComponent: RootDocument,
 })
-
-function RootNotFound() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-6 text-center">
-      <h1 className="text-xl font-semibold">{m.not_found_title()}</h1>
-      <p className="max-w-sm text-sm text-neutral-500">{m.not_found_desc()}</p>
-      <Button asChild>
-        <a href="/">{m.not_found_home()}</a>
-      </Button>
-    </div>
-  )
-}
-
-function RootError({ reset }: { reset: () => void }) {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-6 text-center">
-      <h1 className="text-xl font-semibold">{m.error_title()}</h1>
-      <p className="max-w-sm text-sm text-neutral-500">{m.error_desc()}</p>
-      <Button onClick={reset}>{m.error_retry()}</Button>
-    </div>
-  )
-}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const location = useLocation()

@@ -23,27 +23,30 @@ enum Role {
 }
 
 model User {
-  id             String        @id
-  name           String
-  email          String
-  emailVerified  Boolean
-  image          String?
-  role           Role          @default(MEMBER)
+  id                    String                 @id
+  name                  String
+  email                 String
+  emailVerified         Boolean
+  image                 String?
+  role                  Role                   @default(MEMBER)
   // Peran diubah manual dari halaman /user → otomatisasi env (OWNER_EMAILS /
   // KASIR_EMAILS) tidak boleh menimpanya lagi.
-  roleManual     Boolean       @default(false)
-  createdAt      DateTime
-  updatedAt      DateTime
-  sessions       Session[]
-  accounts       Account[]
-  transaksiKasir Transaksi[]
-  shifts         Shift[]
-  returs         Retur[]
-  stokOprenames  StokOpname[]
-  pageVisits     PageVisit[]
-  deviceVisits   DeviceVisit[]
-  printers       Printer[]
-  auditLogs      AuditLog[]    @relation("AuditLogUser")
+  roleManual            Boolean                @default(false)
+  createdAt             DateTime
+  updatedAt             DateTime
+  sessions              Session[]
+  accounts              Account[]
+  transaksiKasir        Transaksi[]
+  shifts                Shift[]
+  returs                Retur[]
+  stokOprenames         StokOpname[]
+  pageVisits            PageVisit[]
+  deviceVisits          DeviceVisit[]
+  printers              Printer[]
+  auditLogs             AuditLog[]             @relation("AuditLogUser")
+  pengajuanKasir PengajuanPengeluaran[]
+  pengajuanOwner PengajuanPengeluaran[] @relation("PengajuanOwner")
+  notifikasi     Notifikasi[]
 
   @@unique([email])
   @@map("user")
@@ -96,8 +99,9 @@ model Verification {
   @@map("verification")
 }
 
-// Penghitung rate limit bersama (lintas instance server).
-// Baris dibuat/di-update atomik via opsional upsert di src/server/rateLimit.ts.
+// State token bucket rate limit bersama (lintas instance server).
+// `hit` = token x 1.000; `resetAt` = waktu pembaruan/isi ulang terakhir.
+// Baris dikunci FOR UPDATE di src/server/rateLimit.ts.
 model RateLimit {
   key     String   @id
   hit     Int      @default(0)
@@ -314,13 +318,23 @@ enum MetodeBayar {
   EWALLET
 }
 
+enum SumberTransaksi {
+  POS
+  ONLINE
+}
+
+enum ViaPembayaran {
+  MANUAL
+  WEBHOOK
+}
+
 // Status pesanan dalam mode F&B / restoran.
 enum StatusPesanan {
   MENUNGGU // baru dibuat, belum diproses dapur
   DIPROSES // sedang dibuat dapur
   SELESAI // siap disajikan / telah disajikan
   DIBATALKAN // pesanan dibatalkan
-  LUNAS // pembayaran lunas, stok sudah dikurangi
+  LUNAS // legacy: pembayaran lunas; status bayar baru memakai dibayarPada
 }
 
 model Transaksi {
@@ -364,6 +378,16 @@ model Transaksi {
 
   statusPesanan StatusPesanan @default(MENUNGGU)
 
+  // Kanal transaksi: POS dibayar saat checkout; ONLINE menunggu konfirmasi.
+  sumber SumberTransaksi @default(POS)
+  // Sumber kebenaran status bayar. Null = belum dibayar.
+  dibayarPada DateTime?
+  dibayarVia  ViaPembayaran?
+  // Referensi pembayaran gateway, unik untuk idempotensi webhook.
+  paymentRef     String? @unique
+  // Mencegah pengembalian stok ganda saat pesanan dibatalkan.
+  stokTerpotong Boolean @default(false)
+
   // Pembayaran split: rincian per metode. Kosong = pakai metodeBayar tunggal.
   // Untuk baris TUNAI, uangDiterima menyimpan uang fisik yang diserahkan.
   uangDiterima Decimal? @db.Decimal(14, 2)
@@ -406,6 +430,7 @@ model Transaksi {
   @@index([metodeBayar])
   @@index([statusPesanan])
   @@index([tanggal, kasirId])
+  @@index([sumber, dibayarPada])
 }
 
 model TransaksiItem {
@@ -509,8 +534,9 @@ model Jurnal {
 
   entri JurnalDetail[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  pengajuanPengeluarans PengajuanPengeluaran[]
 
   @@index([tanggal])
 }
@@ -832,4 +858,71 @@ model AuditLog {
   @@index([timestamp])
   @@index([entity])
   @@map("audit_log")
+}
+
+// Status ajuan pengeluaran owner.
+enum StatusPengajuan {
+  PENDING
+  DISETUJUI
+  DITOLAK
+}
+
+// Jenis akun pengeluaran yang dipilih kasir via dropdown di dialog.
+enum JenisPengeluaran {
+  BELANJA
+  OPERASIONAL_KASIR
+  AMBIL_OWNER
+  PEMBAYARAN_UTANG
+  OPERASIONAL_TOKO
+  LAINNYA
+}
+
+// Ajuan pengeluaran kasir yang perlu disetujui owner sebelum dicatat ke jurnal.
+model PengajuanPengeluaran {
+  id      String  @id @default(cuid())
+  kasirId String
+  kasir   User    @relation(fields: [kasirId], references: [id], onDelete: Cascade)
+  ownerId String?
+  owner   User?   @relation("PengajuanOwner", fields: [ownerId], references: [id])
+
+  nominal         Decimal          @db.Decimal(14, 2)
+  // Nominal yang benar-benar disetujui owner (boleh lebih kecil dari ajuan).
+  nominalDisetujui Decimal?        @db.Decimal(14, 2)
+  jenis           JenisPengeluaran
+  keterangan      String?
+  status          StatusPengajuan  @default(PENDING)
+  alasanPenolakan String?
+
+  // Terbuat otomatis saat owner menyetujui (jurnal buku besar).
+  jurnalId String?
+  jurnal   Jurnal? @relation(fields: [jurnalId], references: [id], onDelete: SetNull)
+
+  disetujuiPada DateTime?
+  ditolakPada   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kasirId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("pengajuan_pengeluaran")
+}
+
+// Notifikasi sistem antar pengguna (kasir ↔ owner).
+model Notifikasi {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  judul     String
+  pesan     String
+  dibaca    Boolean  @default(false)
+  tipe      String // PENGAJUAN, SETUJUI, TOLAK, INFO
+  entitasId String? // ID entitas terkait (mis. pengajuanId)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([dibaca])
+  @@index([createdAt])
+  @@map("notifikasi")
 }

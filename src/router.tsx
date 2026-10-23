@@ -1,5 +1,10 @@
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import { getGlobalStartContext } from '@tanstack/react-start'
+import {
+  HalamanError,
+  HalamanLoading,
+  HalamanNotFound,
+} from '#/components/status/HalamanStatus'
 import { routeTree } from './routeTree.gen'
 
 function nonceDariKonteks(): string | undefined {
@@ -17,6 +22,11 @@ export function getRouter() {
     scrollRestoration: true,
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
+    defaultPendingComponent: HalamanLoading,
+    defaultPendingMs: 150,
+    defaultPendingMinMs: 300,
+    defaultErrorComponent: HalamanError,
+    defaultNotFoundComponent: HalamanNotFound,
     ssr: { nonce: nonceDariKonteks() },
   })
 

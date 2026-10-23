@@ -4,6 +4,11 @@ import type { BahanRow } from '#/types/bahan'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
 import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
+import {
   Table,
   TableBody,
   TableCell,
@@ -23,20 +28,61 @@ export default function TabelBahan({
   onEdit: (row: BahanRow) => void
   onHapus: (id: string) => void
 }) {
+  const kontrol = useKontrolTabel(
+    baris,
+    (b) => `${b.nama} ${b.satuan} ${b.jenis ?? ''}`,
+    {
+      nama: (b) => b.nama,
+      satuan: (b) => b.satuan,
+      stok: (b) => b.stok,
+      minimum: (b) => b.stokMinimum,
+    },
+  )
+
   return (
     <div className="-mx-2 overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{m.bahan_nama()}</TableHead>
-            <TableHead>{m.bahan_satuan()}</TableHead>
-            <TableHead className="text-right">{m.bahan_stok()}</TableHead>
-            <TableHead className="text-right">{m.bahan_minimum()}</TableHead>
+            <HeaderUrutTabel
+              kunci="nama"
+              aktif={kontrol.kunciUrut === 'nama'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.bahan_nama()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="satuan"
+              aktif={kontrol.kunciUrut === 'satuan'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.bahan_satuan()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="stok"
+              aktif={kontrol.kunciUrut === 'stok'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+              className="text-right"
+            >
+              {m.bahan_stok()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="minimum"
+              aktif={kontrol.kunciUrut === 'minimum'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+              className="text-right"
+            >
+              {m.bahan_minimum()}
+            </HeaderUrutTabel>
             <TableHead>{m.bahan_aksi()}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {baris.map((b) => (
+          {kontrol.baris.map((b) => (
             <TableRow
               key={b.id}
               className={b.menipis ? 'bg-destructive/10' : ''}
@@ -88,7 +134,7 @@ export default function TabelBahan({
           ))}
         </TableBody>
       </Table>
-      {baris.length === 0 && (
+      {kontrol.jumlahBaris === 0 && (
         <>
           <p className="py-4 text-sm text-neutral-500">{m.bahan_kosong()}</p>
           <p className="py-1 text-sm text-neutral-400">
@@ -96,6 +142,14 @@ export default function TabelBahan({
           </p>
         </>
       )}
+      <PaginasiTabel
+        halamanAktif={kontrol.halamanAktif}
+        jumlahHalaman={kontrol.jumlahHalaman}
+        jumlahBaris={kontrol.jumlahBaris}
+        ukuranHalaman={kontrol.ukuranHalaman}
+        onHalaman={kontrol.setHalaman}
+        onUkuranHalaman={kontrol.setUkuranHalaman}
+      />
     </div>
   )
 }

@@ -52,6 +52,7 @@ async function buatTransaksi(
       nomor: `POS-${Date.now()}`,
       memberId,
       kasirId: null,
+      dibayarPada: new Date(),
       deliveryId: null,
       ongkir: 0,
       subtotal: harga * qty,

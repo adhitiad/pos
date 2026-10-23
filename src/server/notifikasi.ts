@@ -1,11 +1,14 @@
 import { prisma } from '#/db'
+import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 import type { Role } from '#/generated/prisma/enums.js'
 import type {
   Notifikasi,
   NotifikasiPendapatan,
+  NotifikasiPengajuan,
   NotifikasiPesanan,
   PeriodePendapatan,
 } from '#/types/notifikasi'
+import { notifikasiTersimpan } from './notifikasiPesan.js'
 
 const duaDigit = (n: number) => String(n).padStart(2, '0')
 
@@ -75,7 +78,10 @@ export function periodeNotifikasi(sekarang = new Date()) {
 
 async function ringkasPendapatan(periode: PeriodeNotifikasi) {
   const hasil = await prisma.transaksi.aggregate({
-    where: { tanggal: { gte: periode.awal, lt: periode.akhir } },
+    where: {
+      tanggal: { gte: periode.awal, lt: periode.akhir },
+      ...FILTER_TRANSAKSI_TERJUAL,
+    },
     _sum: { total: true },
     _count: { id: true },
   })
@@ -164,7 +170,7 @@ async function notifikasiKasir(sekarang: Date): Promise<Notifikasi[]> {
   const [stok, pesanan] = await Promise.all([
     notifikasiStok(sekarang),
     prisma.transaksi.findMany({
-      where: { kasirId: null, statusPesanan: 'MENUNGGU' },
+      where: { sumber: 'ONLINE', statusPesanan: 'MENUNGGU' },
       orderBy: { tanggal: 'desc' },
       take: 20,
       select: {
@@ -207,7 +213,7 @@ async function notifikasiMember(email: string): Promise<Notifikasi[]> {
     prisma.transaksi.findMany({
       where: {
         memberId: member.id,
-        statusPesanan: { not: 'DIBATALKAN' },
+        ...FILTER_TRANSAKSI_TERJUAL,
       },
       orderBy: { tanggal: 'desc' },
       take: 5,
@@ -220,7 +226,7 @@ async function notifikasiMember(email: string): Promise<Notifikasi[]> {
       },
     }),
     prisma.transaksi.findMany({
-      where: { memberId: member.id, kasirId: null },
+      where: { memberId: member.id, sumber: 'ONLINE' },
       orderBy: { tanggal: 'desc' },
       take: 5,
       select: {
@@ -264,6 +270,40 @@ async function notifikasiMember(email: string): Promise<Notifikasi[]> {
 export interface OpsiNotifikasi {
   role: Role
   email: string
+  // Wajib untuk notifikasi antar pengguna (pengajuan); bila kosong, notifikasi
+  // DB dilewati (mis. pemanggilan tanpa sesi pengguna).
+  userId?: string
+}
+
+// Kategori notifikasi antar pengguna; nilai di luar daftar ini di Fallback ke
+// INFO supaya UI tidak pernah menampilkan kategori asing.
+function kategoriNotifikasi(nilai: string): NotifikasiPengajuan['kategori'] {
+  if (
+    nilai === 'PENGAJUAN' ||
+    nilai === 'SETUJUI' ||
+    nilai === 'TOLAK' ||
+    nilai === 'INFO'
+  )
+    return nilai
+  return 'INFO'
+}
+
+// Notifikasi antar pengguna yang disimpan di DB (pengajuan pengeluaran kasir
+// ↔ owner). Ditampilkan paling atas karena paling baru dan paling perlu acted.
+async function notifikasiPesanDb(
+  userId?: string,
+): Promise<NotifikasiPengajuan[]> {
+  if (!userId) return []
+  const baris = await notifikasiTersimpan(userId)
+  return baris.map((b) => ({
+    id: b.id,
+    tipe: 'pengajuan',
+    kategori: kategoriNotifikasi(b.tipe),
+    judul: b.judul,
+    pesan: b.pesan,
+    entitasId: b.entitasId,
+    tanggal: b.createdAt.toISOString(),
+  }))
 }
 
 export async function notifikasiData(
@@ -271,6 +311,12 @@ export async function notifikasiData(
   sekarang = new Date(),
 ): Promise<Notifikasi[]> {
   if (opsi.role === 'MEMBER') return notifikasiMember(opsi.email)
-  if (opsi.role === 'KASIR') return notifikasiKasir(sekarang)
-  return notifikasiOwner(sekarang)
+
+  const tersimpan = await notifikasiPesanDb(opsi.userId)
+  const hitung =
+    opsi.role === 'KASIR'
+      ? await notifikasiKasir(sekarang)
+      : await notifikasiOwner(sekarang)
+
+  return [...tersimpan, ...hitung]
 }

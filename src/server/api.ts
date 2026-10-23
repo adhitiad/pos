@@ -1,6 +1,6 @@
 import { auth } from '#/lib/auth'
 import { prisma } from '#/db'
-import { terjemahGalat } from './galat.js'
+import { GalatPayload, terjemahGalat } from './galat.js'
 import type { Role } from '#/generated/prisma/enums.js'
 import type { Pengguna } from '#/types/auth'
 
@@ -51,4 +51,46 @@ export async function apiPengguna(
 export function apiError(e: unknown): Response {
   const aman = terjemahGalat(e)
   return gagal(aman.code, aman.message, aman.status)
+}
+
+// Baca body teks dengan batas ukuran, sebelum JSON.parse. Content-Length
+// diperiksa lebih dulu agar body raksasa tidak sempat dibaca penuh.
+export async function bacaTeksTerbatas(
+  request: Request,
+  maksByte: number,
+): Promise<string> {
+  const panjang = Number(request.headers.get('content-length') ?? 0)
+  if (Number.isFinite(panjang) && panjang > maksByte) {
+    throw new GalatPayload()
+  }
+  // Baca bertahap dan hentikan segera saat melewati batas; `request.text()`
+  // akan menelan seluruh body lebih dulu sehingga klien tanpa content-length
+  // masih bisa memaksa memori server.
+  const reader = request.body?.getReader()
+  if (!reader) return ''
+  const decoder = new TextDecoder()
+  let total = 0
+  let teks = ''
+  try {
+    let selesai = false
+    while (!selesai) {
+      const hasil = await reader.read()
+      selesai = hasil.done
+      if (hasil.done) continue
+      total += hasil.value.byteLength
+      if (total > maksByte) throw new GalatPayload()
+      teks += decoder.decode(hasil.value, { stream: true })
+    }
+    return teks + decoder.decode()
+  } catch (e) {
+    await reader.cancel().catch(() => {})
+    throw e
+  }
+}
+
+export async function bacaJsonTerbatas(
+  request: Request,
+  maksByte: number,
+): Promise<unknown> {
+  return JSON.parse(await bacaTeksTerbatas(request, maksByte))
 }

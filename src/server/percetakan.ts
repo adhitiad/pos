@@ -2,6 +2,7 @@ import { prisma } from '#/db'
 import { Prisma } from '#/generated/prisma/client.js'
 import type { Printer } from '#/generated/prisma/client.js'
 import { catatAudit, selisihField } from './audit.js'
+import { normalisasiStrukPayload } from '#/lib/struk'
 import { GalatDomain, GalatKonflik } from './galat.js'
 import {
   BuatPrintJobSchema,
@@ -584,6 +585,7 @@ export async function muatPayloadStruk(
 export async function buatPrintJob(
   input: BuatPrintJobInput,
   userId?: string,
+  peran: 'OWNER' | 'KASIR' = 'OWNER',
 ): Promise<PrintJobRow> {
   const data = BuatPrintJobSchema.parse(input)
 
@@ -608,6 +610,27 @@ export async function buatPrintJob(
   }
 
   const job = await prisma.$transaction(async (tx) => {
+    if (data.tipe === 'STRUK') {
+      const cetak = await tx.transaksi.updateMany({
+        where: {
+          id: data.transaksiId,
+          ...(peran === 'KASIR' && { cetakKasir: { lt: 3 } }),
+        },
+        data:
+          peran === 'OWNER'
+            ? { cetakOwner: { increment: 1 } }
+            : { cetakKasir: { increment: 1 } },
+      })
+      if (cetak.count !== 1) {
+        if (peran === 'KASIR') {
+          throw new GalatDomain(
+            'Kasir hanya dapat mencetak ulang struk maksimal 3 kali.',
+          )
+        }
+        throw new GalatDomain('Transaksi tidak ditemukan')
+      }
+    }
+
     const dibuat = await tx.printJob.create({
       data: {
         printerId,
@@ -633,7 +656,10 @@ export async function buatPrintJob(
 export async function muatJob(id: string): Promise<PrintJobRow> {
   const job = await prisma.printJob.findUnique({
     where: { id },
-    include: { printer: { select: { nama: true } } },
+    include: {
+      printer: { select: { nama: true } },
+      transaksi: { select: { cetakOwner: true, cetakKasir: true } },
+    },
   })
   if (!job) throw new GalatDomain('Job cetak tidak ditemukan')
   return {
@@ -648,7 +674,9 @@ export async function muatJob(id: string): Promise<PrintJobRow> {
     dicetakPada: job.dicetakPada?.toISOString() ?? null,
     diambilPada: job.diambilPada?.toISOString() ?? null,
     createdAt: job.createdAt.toISOString(),
-    payload: (job.payload as StrukPayload | null) ?? null,
+    cetakOwner: job.transaksi?.cetakOwner ?? 0,
+    cetakKasir: job.transaksi?.cetakKasir ?? 0,
+    payload: normalisasiStrukPayload(job.payload),
   }
 }
 
@@ -664,7 +692,10 @@ export async function daftarPrintJob(
     },
     orderBy: { createdAt: 'asc' },
     take: data.take ?? 20,
-    include: { printer: { select: { nama: true } } },
+    include: {
+      printer: { select: { nama: true } },
+      transaksi: { select: { cetakOwner: true, cetakKasir: true } },
+    },
   })
   return rows.map((job) => ({
     id: job.id,
@@ -678,7 +709,9 @@ export async function daftarPrintJob(
     dicetakPada: job.dicetakPada?.toISOString() ?? null,
     diambilPada: job.diambilPada?.toISOString() ?? null,
     createdAt: job.createdAt.toISOString(),
-    payload: (job.payload as StrukPayload | null) ?? null,
+    cetakOwner: job.transaksi?.cetakOwner ?? 0,
+    cetakKasir: job.transaksi?.cetakKasir ?? 0,
+    payload: normalisasiStrukPayload(job.payload),
   }))
 }
 

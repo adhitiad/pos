@@ -1,5 +1,5 @@
-import { UserRoleSchema } from '#/validations/user'
-import type { UserRoleInput } from '#/validations/user'
+import { UserIdSchema, UserRoleSchema } from '#/validations/user'
+import type { UserIdInput, UserRoleInput } from '#/validations/user'
 
 import { prisma } from '#/db'
 import { logger } from '#/lib/logger'
@@ -48,9 +48,18 @@ export async function updateUserRole(input: UserRoleInput, aktorId?: string) {
   // Peran manual = pilihan owner di /user; otomatis env tak boleh menimpanya
   // lagi. Ditandai walau perannya sama (owner tetap memilih peran itu).
   const berubah = target.role !== data.role
-  await prisma.user.update({
-    where: { id: data.id },
-    data: { role: data.role, roleManual: true },
+  // Perubahan peran + pencabutan sesi harus atomik: token lama tidak boleh
+  // tetap hidup dengan hak akses baru.
+  const sesiDicabut = await prisma.$transaction(async (tx) => {
+    await tx.user.update({
+      where: { id: data.id },
+      data: { role: data.role, roleManual: true },
+    })
+    if (!berubah) return 0
+    const hasil = await tx.session.deleteMany({
+      where: { userId: data.id },
+    })
+    return hasil.count
   })
   if (berubah) {
     // Jejak permanen di tabel AuditLog (bukan hanya log server): siapa mengubah
@@ -61,7 +70,7 @@ export async function updateUserRole(input: UserRoleInput, aktorId?: string) {
       entitas: 'User',
       entitasId: target.id,
       sebelum: { role: target.role },
-      sesudah: { role: data.role },
+      sesudah: { role: data.role, sesiDicabut },
     })
     if (process.env.NODE_ENV !== 'development') {
       logger.info({
@@ -71,8 +80,49 @@ export async function updateUserRole(input: UserRoleInput, aktorId?: string) {
         target: sensor(target.id),
         dari: target.role,
         ke: data.role,
+        sesiDicabut,
       })
     }
   }
-  return { id: target.id, email: target.email, role: data.role }
+  return {
+    id: target.id,
+    email: target.email,
+    role: data.role,
+    berubah,
+    sesiDicabut,
+  }
+}
+
+// Cabut seluruh sesi user (semua perangkat). Dipakai owner di /user dan bisa
+// dipakai untuk akun sendiri; sesi yang sedang dipakai ikut terhapus sehingga
+// permintaan berikutnya 401 dan pengguna harus login ulang.
+export async function revokeUserSessions(input: UserIdInput, aktorId?: string) {
+  const data = UserIdSchema.parse(input)
+  const target = await prisma.user.findUnique({
+    where: { id: data.id },
+    select: { id: true },
+  })
+  if (!target) throw new GalatDomain('User tidak ditemukan')
+
+  const hasil = await prisma.session.deleteMany({
+    where: { userId: target.id },
+  })
+  await catatAudit({
+    aktorId,
+    aksi: 'user.sesi.cabut',
+    entitas: 'User',
+    entitasId: target.id,
+    sebelum: { sesi: hasil.count },
+    sesudah: { sesi: 0 },
+  })
+  if (process.env.NODE_ENV !== 'development') {
+    logger.info({
+      kind: 'audit',
+      event: 'user.sessions.revoked',
+      aktor: aktorId ? sensor(aktorId) : '-',
+      target: sensor(target.id),
+      jumlah: hasil.count,
+    })
+  }
+  return { id: target.id, dicabut: hasil.count }
 }

@@ -20,6 +20,14 @@ export class GalatRateLimit extends Error {
   }
 }
 
+// Body request melebihi batas: dipetakan ke HTTP 413.
+export class GalatPayload extends Error {
+  constructor(message = 'Body request terlalu besar') {
+    super(message)
+    this.name = 'GalatPayload'
+  }
+}
+
 // Konflik domain dengan kode mesin, dipetakan ke HTTP 409.
 export class GalatKonflik extends Error {
   readonly kode: string
@@ -44,6 +52,9 @@ function buatRef(): string {
 export function terjemahGalat(e: unknown, konteks?: string): GalatAman {
   if (e instanceof GalatRateLimit) {
     return { status: 429, code: 'TOO_MANY_REQUESTS', message: e.message }
+  }
+  if (e instanceof GalatPayload) {
+    return { status: 413, code: 'PAYLOAD_TOO_LARGE', message: e.message }
   }
   if (e instanceof GalatKonflik) {
     return { status: 409, code: e.kode, message: e.message }

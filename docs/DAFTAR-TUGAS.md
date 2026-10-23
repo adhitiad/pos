@@ -15,6 +15,7 @@
 - [x] Fix `bun install` EBUSY + verifikasi build
 - [x] Skema DB: auth, Kategori, Bahan, Produk, ProdukBahan, Member, Delivery, Transaksi
 - [x] Buku besar: Akun, Jurnal, JurnalDetail + seed 7 CoA
+- [x] Input pengeluaran owner di buku besar: dropdown jenis akun (belanja, operasional kasir, ambil owner, pembayaran utang, operasional toko, lainnya) + jurnal berimbang via `catatPengeluaranFn` (owner-only); 5 akun CoA baru (2200, 5200, 5300, 5400, 5900) + migrasi dan seed.
 - [x] `postingTransaksi` atomik + uji nyata ke DB
 - [x] Auth Google-only + prismaAdapter
 - [x] Role enum OWNER/KASIR/MEMBER + guard + owner enrollment
@@ -41,6 +42,10 @@
 - [x] Redesain kasir ala referensi: rel ikon + bottom-nav mobile, pil kategori + cari, grid foto (fallback inisial, badge qty), panel draft sticky, kartu metode bayar + ikon, chip penjualan hari ini (real), pecah <397 baris (RelNav/ProdukGrid/PanelBayar/Struk/AntreanPanel/MetodeBayar/RingkasanBayar)
 - [x] Tech-debt: pecah `src/routes/produk.tsx` (593 baris) → 5 file, masing-masing <397 baris (produk.tsx 315, ProdukForm 256, ProdukTabel 68, ProdukKategori 63, ProdukHapusDialog 28)
 - [x] UX polish: stepper qty di ProdukGrid + PanelBayar (tambah/kurangi/hapus), tombol kosongkan keranjang, toast feedback real-time (add/remove/clear/success/error) mengganti inline alert berwarna tetap, skeleton loading di login, struk cetak dengan tombol salin nomor + ikon check tema-hijau
+- [x] Status global TanStack Router: halaman loading, 404 dengan tautan beranda, dan error dengan aksi coba lagi/beranda; pesan tersedia dalam 4 bahasa dan dicakup tes unit.
+- [x] Standar tabel daftar: default 10 baris, pilihan 25/50/100, paginasi shadcn/ui, pencarian, sorting, dan filter konteks pada tabel produk, bahan, dapur, member, retur, buku besar, laporan, user, shift, meja, opname, printer, supplier, pembelian, audit, dan transaksi dasbor.
+- [x] Tautan pesanan online hanya ditampilkan untuk pengunjung/MEMBER; disembunyikan dari OWNER/KASIR pada header dan footer, dengan E2E kedua peran.
+- [x] Pilihan ukuran kertas thermal di `/pengaturan`: 57×30, 57×37, 58×37, 58×40, 57×47, 58×50, 80×40, 80×47, 80×50, 80×60, 80×70, dan 80×80 mm; digunakan pada struk ESC/POS, cetak browser, dan PDF.
 - [x] Dark/light theme toggle (next-themes ThemeProvider + ThemeToggle di Header & kasir nav), locale switcher → dropdown dengan bendera negara
 - [x] Landing & identitas dinamis: hero/alur/segmen/CTA redesign (palet brand teal+brass, mobile-first, tanpa metrik palsu); owner unggah ikon (file-only → Cloudinary) dan judul app dipakai di header/footer/struk/tab; `/api/v1/app-icon` membuat SVG favicon/manifest otomatis, `/api/v1/identitas` untuk web+Expo
 - [x] Printer perangkat: pindai otomatis Web Serial setelah login OWNER/KASIR, objek koneksi cache memori+`sessionStorage`, metadata perangkat (jalur, vendor, serial, produk) disimpan ke DB untuk akun OWNER/KASIR via `POST /api/v1/printer/perangkat`; dialog pindai cepat di header + `/printer`; kontrak siklus sesi Expo di `docs/EXPO.md`; unit test `tests/vitest/ikon.test.ts`
@@ -58,6 +63,7 @@
 ### API & Laporan
 
 - [x] API-first: envelope + guard `src/server/api.ts`, REST `/api/v1/*` (kasir-data, transaksi, produk, kategori, member, laporan), `docs/API.md` + taut silang AGENTS/README/rules/docs
+- [x] Rate limit bersama berbasis token bucket PostgreSQL: kapasitas default 100 permintaan dengan isi ulang 100/menit per kunci, bucket idle dibersihkan setelah 30 menit, atomik lintas instance; unit test untuk refill, batas paralel, dan bucket per pengguna printer.
 - [x] Fase 0 — Fondasi lintas-fitur: Model `Pengaturan` (key-value), halaman `/pengaturan` dengan toggle `mode_fnb`, `Transaksi.kasirId`, `Produk.barcode`, i18n ×4 + `docs/API.md`
 - [x] Fase 1 — Laporan Penjualan + Ekspor: `laporanPenjualan` murni, REST `GET /api/v1/laporan-penjualan`, ekspor CSV/XLSX/PDF, halaman `/laporan`, unit test 10 kasus, i18n ×4 + `docs/API.md`
 - [x] Fase 2 — Integrasi Pembayaran (lokal, split): Enum `MetodeBayar` + `EWALLET`, `Transaksi.uangDiterima` + `kembalian`, model `Pembayaran`, validasi Σ=total, jurnal Kas (1100), UI pembayaran + struk, unit test, i18n ×4 + `docs/API.md`
@@ -67,6 +73,14 @@
 - [x] Struk otomatis setelah bayar — pilihan `nonaktif|cetak|pdf` di `/pengaturan`, `window.print()` atau unduhan `GET /api/v1/transaksi/struk/{id}/pdf`, tombol manual Unduh PDF, i18n ×4, unit test, `docs/API.md`
 - [x] Notifikasi owner — stok bahan habis, pendapatan harian, mingguan (Senin), dan bulanan (tanggal 1); lonceng di samping toggle tema, status dibaca lokal, halaman `/notifikasi`, tautan di dropdown profil, REST `GET /api/v1/notifikasi`, i18n ×4, unit test
 - [x] Notifikasi semua peran — OWNER (stok + pendapatan), KASIR (stok + pesanan online `MENUNGGU`), MEMBER (transaksi terakhir + status pesanan online miliknya); lonceng di semua header, segarkan saat fokus/kembali ke tab, i18n ×4, unit test role-aware
+
+### Pengajuan Pengeluaran Kasir (2026-10-22)
+
+- [x] Input pengeluaran jadi dialog (modal), bukan form inline: owner mencatat langsung ke buku besar lewat tombol **Debit** di samping **Tampilkan**, kasir mengirim ajuan lewat tombol **Ajukan Pengeluaran** di `/kasir`; satu komponen `DialogPengeluaran` untuk dua mode, target sentuh ≥44px, tanpa scroll horizontal di 390px.
+- [x] Alur persetujuan: `buatPengajuanFn` (kasir saja, status `PENDING`, jurnal belum dibuat) → `setujuiPengajuanFn`/`tolakPengajuanFn` (owner) → jurnal berimbang + status + `nominalDisetujui` dalam satu transaksi → notifikasi kasir berisi nominal yang disetujui; halaman `/pengajuan` untuk daftar ajuan & dialog keputusan.
+- [x] Skema DB: model `PengajuanPengeluaran` (relasi `kasirId`/`ownerId`, `nominalDisetujui`, `jurnalId`), enum `StatusPengajuan`, notifikasi bertipe pengajuan; migrasi `20261022161956_add_pengajuan_dan_notifikasi` + `20261022094437_add_nominal_disetujui`.
+- [x] i18n ×4 (id/en/zh/ko), unit test `tests/vitest/pengajuan.test.ts`, e2e `tests/e2e/pengajuan.spec.ts` (ajuan → setujui → notifikasi, plus dialog 390px), kontrak ditulis di `docs/API.md`.
+- [x] Panduan recovery migrasi yang gagal di tengah jalan (buang objek sisa → `prisma migrate resolve --rolled-back` → deploy ulang) di `docs/OPERASIONAL.md`.
 
 ### Deployment via GitHub
 
@@ -107,6 +121,14 @@
 - [x] **TXT-06** Seed produk menu ke `prisma/seed.ts` — ditambahkan semua produk dari HTML: Corndog (10 varian), Tteokbokki (2), Mini Corndog (4), Mozzarella Dan Sosis (4), Sweet Corndog (2), Hottang (4), Soft Crepes (10), Minuman (10); dengan resep bahan dan SKU unik
 - [x] **TXT-07** Cetak struk counter per role — kolom `cetakOwner` & `cetakKasir` di `Transaksi`; API `POST /api/v1/transaksi/cetak/$id` untuk increment; tampilkan di struk (ESC/POS + print browser), KDS (`/dapur`), dan riwayat member (`/member/$id`)
 - [x] **TXT-13** Perbarui `DAFTAR-TUGAS.md` ini dengan bahasa Indonesia yang jelas dan mudah dimengerti (versi saat ini)
+
+### Perbaikan produk.txt
+
+- [x] **PRD-BUG-01** Dialog struk tahan payload lama/tidak lengkap — `src/lib/struk.ts` menormalisasi `items`, `pembayaran`, dan `modifier` menjadi array; `muatJob`/daftar print job memakai normalizer; payload seed kini lengkap; regresi `tests/vitest/struk.test.tsx`
+- [x] **SEED-02** Seed demo untuk persiapan uji manual/pentest: validasi minimal 25 produk aktif dan minimal 25 resep, akun OWNER/KASIR/MEMBER harus tersedia, pengaturan ukuran kertas diisi default, helper seed gagal secara eksplisit jika data operasional wajib tidak ditemukan, dan payload job cetak diverifikasi.
+- [x] **PRD-BUG-02** Form ubah produk terisi nilai sebenarnya — `form.reset(values, { keepDefaultValues: true })` agar `useForm` tidak mengembalikan nilai ke form kosong; dijaga e2e
+- [x] **PRD-BUG-03** Tabel produk: pencarian, filter status/kategori, indikator jumlah, sort header, pagination 10/25/50/100; reset halaman saat data berubah
+- [x] **PRD-BUG-04** Pesanan online tidak lagi ditautkan untuk sesi OWNER/KASIR di header dan rel navigasi; `/pesanan` tetap publik untuk pelanggan
 
 ---
 
@@ -314,6 +336,36 @@
       publik `/api/v1/pesan` mengurangi stok) & **M-03/M-04** didokumentasikan sebagai
       risiko diterima/ditunda. (Strix tak dijalankan: router LLM 429.)
 
+### Hardening keamanan pesanan online & input publik (2026-10-23)
+
+- [x] **SEC-15 (High)** Penyalahgunaan pesanan online: stok, poin, jurnal, dan
+      baris pembayaran tidak lagi dibuat saat pesanan publik dibuat. Migrasi
+      `20261023090000_add_pembayaran_pesanan_online` menambah `Transaksi.sumber`
+      (`POS|ONLINE`), `dibayarPada`, `dibayarVia`, `paymentRef` (unik), dan
+      `stokTerpotong`. Efek samping dijalankan tepat sekali di
+      `tandaiPesananLunas` lewat klaim `updateMany` bersyarat; manual memakai
+      `POST /api/v1/pesanan/{id}/bayar` + tombol **Tandai lunas** di KDS,
+      gateway mendatang memakai `POST /api/v1/pembayaran/webhook` dengan HMAC
+      `PAYMENT_WEBHOOK_SECRET`. Laporan, riwayat member, shift, dan notifikasi
+      hanya menghitung transaksi lunas non-batal (`transaksiTerjual.ts`).
+      Pembatalan online setelah lunas ditolak (refund belum didukung). Uji:
+      `tests/vitest/pesanan.test.ts`, `tests/vitest/pembayaran-webhook.test.ts`.
+- [x] **SEC-16 (High)** CSV formula injection: helper `src/server/csv.ts`
+      menyanitasi sel berawalan `= + - @` (termasuk spasi/kontrol di depan)
+      **sebelum** quoting, lalu dipakai semua ekspor penjualan/belanja/pajak.
+      Uji: `tests/vitest/laporan.test.ts`.
+- [x] **SEC-17 (Medium)** Input analytics publik dibatasi: skema `device-visit`
+      memakai panjang maksimum, body ≤ 16 KB, dan `ipv4`/`ipv6`/`dns` dari klien
+      diabaikan — IP hanya dari koneksi server (`ipSaatIni`). Uji:
+      `tests/vitest/deviceVisit.test.ts`.
+- [x] **SEC-18 (Medium)** Pesanan/transaksi publik dibatasi 100 baris, 20
+      modifier per baris, qty ≤ 9.999, dan body ≤ 256 KB sebelum `JSON.parse`;
+      body berlebih → 413 `PAYLOAD_TOO_LARGE`. Uji:
+      `tests/vitest/pembayaran-webhook.test.ts` (skema pesanan).
+- [x] **SEC-19 (Low)** `GET /api/v1/app-icon` diberi rate limit 60/menit per IP
+      dan cache ikon 10 menit (gagal 1 menit) agar fetch Cloudinary tidak
+      dipanggil tiap request.
+
 ### Perbaikan bundle klien & e2e
 
 - [x] **FIX-KLIEN-01** `src/start.ts` juga di-import di klien, sehingga
@@ -377,6 +429,145 @@
       re-export tipe pajak di `src/server/pajak.ts` dihapus. Knip kini hanya
       menyisakan `src/generated/prisma/*`, export registry `ui/*`, dan
       false-positive `pino-pretty`/`dotenv run`.
+
+---
+
+## BACKLOG KEAMANAN — Tindak Lanjut Audit 2026-10-23
+
+> Sumber: verifikasi ulang 10 temuan pada kode aktual (TanStack Start + Better Auth +
+> Prisma). **Tidak ada temuan Critical**: tidak ada RCE, bypass autentikasi tanpa
+> kredensial, atau kebocoran data lintas pengguna. Status: **SEC-20 dan SEC-27
+> selesai 2026-10-23**; item `[ ]` lainnya belum dikerjakan. Urutan kerja:
+> **High → Medium → Low**.
+> Gate tiap item: `tsc --noEmit`, `lint`, `check`, `docs:check`, `test:vitest`,
+> `test:e2e` bila route/guard berubah, `build`, dan `perf:budget` setelah build.
+
+### Ringkasan prioritas
+
+| Prioritas        | ID     | Temuan                                        | Status | Alasan singkat                                                               |
+| ---------------- | ------ | --------------------------------------------- | ------ | ---------------------------------------------------------------------------- |
+| **Critical**     | —      | Tidak ada                                     | —      | Tidak ada RCE, bypass auth tanpa kredensial, atau kebocoran lintas pengguna. |
+| **High**         | SEC-20 | Rate limit percaya `X-Forwarded-For` mentah   | `[x]`  | Selesai: XFF dibaca dari kanan (+hops); endpoint auth per user.              |
+| **High**         | SEC-22 | Diskon kasir tanpa batas/approval             | `[ ]`  | Kasir bisa membuat transaksi diskon 100%; risiko fraud internal.             |
+| **High**         | SEC-27 | Sesi tidak bisa dicabut massal                | `[x]`  | Selesai: role berubah/revoke-all menghapus sesi; tombol di `/user`.          |
+| **Medium**       | SEC-24 | Tulisan `device-visit` publik dapat dicemari  | `[ ]`  | `deviceId`/`lokasi`/`klasifikasi` dari klien; analytics/storage pollution.   |
+| **Low**          | SEC-21 | `waktuKlien`/`dibuatOffline` tanpa validasi   | `[ ]`  | Belum dipakai laporan; hardening agar tidak disalahgunakan nanti.            |
+| **Low**          | SEC-23 | Validasi angka pengaturan pajak/mode          | `[ ]`  | Nilai sudah di-clamp saat baca; ini data-quality/UX.                         |
+| **Low**          | SEC-25 | `x-client: expo` sebagai pemilih bearer token | `[ ]`  | Bukan jalur XSS yang diklaim; defense-in-depth.                              |
+| **Low / future** | SEC-26 | Isolasi multi-toko (`tokoId`)                 | `[ ]`  | PRD single-tenant; tunda sampai multi-tenant jadi kebutuhan.                 |
+
+**Urutan eksekusi yang disarankan:** SEC-20 dan SEC-27 sudah selesai. Berikutnya
+SEC-22 (butuh keputusan kebijakan diskon) → SEC-24 → item Low. SEC-22 jangan
+dipatch sebelum ambang diskon/approval disepakati.
+
+### P1 — High (dahulukan)
+
+- [x] **SEC-20 (High, A05/A07)** Rate limit tidak lagi mempercayai entri kiri
+      `X-Forwarded-For`. **Selesai 2026-10-23:** `src/server/rateLimit.ts` menambah
+      `pilihIpKlien()` yang membaca XFF dari **kanan** sebanyak
+      `TRUST_PROXY_HOPS` (default `1`, sesuai satu lapis proxy Vercel), mengabaikan
+      entri kiri yang bisa dipalsukan, dan fallback ke IP soket/`unknown`. Env baru
+      divalidasi 1–10 di `src/env.ts` dan didokumentasikan di `.env.example`,
+      `docs/DEPLOY.md`, `docs/OPERASIONAL.md`, `README.md`, dan `docs/API.md`.
+      `POST /api/v1/pesanan/{id}/bayar` memakai `rateLimitPengguna()` (kunci per
+      user, bukan IP bersama). Unit test `tests/vitest/api.test.ts` mencakup XFF
+      palsu di kiri, dua hop, header kosong/kotor, fallback soket, dan kuota user A
+      vs B.
+      Kriteria terpenuhi: XFF palsu tidak membuat bucket baru; IP korban tidak bisa
+      dihabiskan lewat entri kiri; endpoint publik tetap punya batas per IP.
+
+- [ ] **SEC-22 (High, A01/A06)** Batasi diskon kasir dan tambahkan approval owner.
+      `postingTransaksi.ts` hanya memakai `Math.min(data.diskon, subtotal)`; tidak ada
+      batas per role. KASIR (`AKSES.operasional`) bisa membuat transaksi diskon 100%
+      sehingga barang keluar tanpa pendapatan. Ini bukan eskalasi hak akses, tetapi
+      kontrol fraud internal.
+      Perbaikan: tentukan kebijakan diskon (nominal/persen per role); tolak diskon di
+      atas ambang kasir; buat alur approval owner untuk diskon besar (owner menyetujui
+      sebelum posting atau menandai transaksi); audit setiap diskon di atas ambang.
+      Kriteria: KASIR tidak bisa melewati ambang; OWNER bisa memberi diskon sesuai
+      kebijakan; percobaan melewati ambang ditolak 422/403 dan tercatat.
+
+- [x] **SEC-27 (High, A07)** Sesi dicabut saat role berubah dan tersedia
+      revoke-all. **Selesai 2026-10-23:** `updateUserRole` menghapus semua `Session`
+      target dalam transaksi yang sama dan mengembalikan `sesiDicabut`;
+      `sinkronPeranUser` mencabut sesi lama tetapi mempertahankan sesi login yang
+      baru; `revokeUserSessions` + `revokeUserSessionsFn` (owner-only) memberi aksi
+      “Cabut semua sesi” di `/user`. Audit `user.role.ubah`/`user.sesi.cabut` dan log
+      `user.sessions.revoked` ditambahkan. Unit test `tests/vitest/user.test.ts`
+      mencakup role berubah mencabut 2 sesi, role sama tidak mencabut, revoke-all
+      hanya target, user tidak ada, dan sync env mempertahankan sesi baru. Manual
+      test `docs/TEST-MANUAL.md` 1.1.5/1.1.8.
+      Kriteria terpenuhi: sesi lama langsung 401; sesi user lain tidak terpengaruh;
+      test role change dan revoke-all tersedia.
+
+### P2 — Medium
+
+- [ ] **SEC-24 (Medium, A09)** Perketat tulisan `device-visit`.
+      Endpoint publik disengaja, tetapi `deviceId`, `lokasi`, dan `klasifikasi` masih
+      dari klien; `ipv4`/`dns` sudah diabaikan dan `userId` dari sesi. Klien bisa
+      mengirim baris palsu untuk mencemari analytics/mengisi storage; rate limit
+      sudah diperketat oleh SEC-20, tetapi data tetap berasal dari klien.
+      Perbaikan: terbitkan `deviceId`/token analytics bertanda tangan dari server,
+      turunkan `klasifikasi`/OS dari User-Agent, dedupe/upsert per device, dan/atau
+      wajibkan login untuk write. Turunkan batas per IP dan tambahkan batas global.
+      Kriteria: data palsu tidak menambah baris baru; device sah tetap tercatat;
+      endpoint tetap tidak membocorkan data ke publik.
+
+### P3 — Low
+
+- [ ] **SEC-21 (Low, A04)** Validasi `waktuKlien` dan `dibuatOffline`.
+      Keduanya diterima dari klien (`validations/transaksi.ts`) dan disimpan
+      (`postingTransaksi.ts`), tetapi laporan memakai `Transaksi.tanggal` server.
+      Belum ada dampak laporan; hardening agar metadata offline tidak menjadi sumber
+      kebenaran di masa depan.
+      Perbaikan: batasi selisih `waktuKlien` terhadap waktu server (mis. ±24 jam),
+      simpan `waktuServer`/`diterimaPada`, dan jangan pernah memakai `waktuKlien`
+      untuk filter/urutan laporan resmi. `dibuatOffline` hanya boleh menjadi metadata.
+      Kriteria: waktu di luar batas ditolak/dinormalisasi; laporan tetap memakai
+      `tanggal` server; test untuk waktu masa depan/masa lalu ekstrem.
+
+- [ ] **SEC-23 (Low, A04)** Validasi numerik pengaturan pajak/mode.
+      `normalisasiPersen` dan `hitungPajak` sudah clamp 0–100, jadi angka absurd tidak
+      merusak total. Namun `SetPengaturanSchema` masih menerima string apa pun; nilai
+      invalid/kosong menjadi 0 dan `mode_fnb` invalid menjadi `false`.
+      Perbaikan: validasi `pajak_*` sebagai angka 0–100 (termasuk penanganan string
+      kosong/fallback legacy), `mode_fnb`/`stok_dikurangi_saat` sebagai enum, dan
+      tampilkan konfirmasi untuk nilai 0. Audit before/after sudah ada.
+      Kriteria: nilai invalid ditolak 400; nilai kosong tidak mengubah tarif secara
+      diam-diam; test validasi dan fallback.
+
+- [ ] **SEC-25 (Low, A07)** Pisahkan jalur token native dari header `x-client`.
+      `POST /api/v1/auth-social` mewajibkan Google `idToken` dan membuat sesi baru;
+      header `x-client: expo` hanya memilih respons JSON. Jalur XSS “cookie → bearer”
+      yang diklaim tidak ada, tetapi header tetap bukan security boundary.
+      Perbaikan: endpoint native terpisah dengan attestation/PKCE atau client ID
+      terdaftar; pertahankan cookie httpOnly untuk web; jangan pernah menganggap
+      `x-client` sebagai bukti klien. Pastikan mobile memakai `expo-secure-store`.
+      Kriteria: web tidak bisa memperoleh bearer token; mobile sah tetap bisa;
+      test regresi untuk header palsu.
+
+- [ ] **SEC-26 (Low / future, A01)** Isolasi multi-toko.
+      PRD menyatakan single-tenant per deployment; schema tidak punya `tokoId`.
+      Saat ini semua OWNER adalah co-owner toko yang sama, jadi belum ada IDOR
+      antar-tenant. Jangan tambah `tokoId` setengah-setengah.
+      Perbaikan (hanya bila multi-tenant menjadi kebutuhan): tambah `tokoId` pada
+      master/transaksi, scope semua query, guard per toko, dan migrasi data.
+      Kriteria: user toko A tidak bisa membaca/menulis data toko B; test isolasi
+      lintas toko; keputusan produk didokumentasikan.
+
+### Ditunda / bukan temuan keamanan
+
+- **QR dine-in & delivery (fitur):** `Meja`/`mejaId` ada, tetapi belum ada alur
+  generate/scan QR; `Delivery` ada untuk POS, sedangkan `PesananOnlineSchema` belum
+  menerima `deliveryId`. Catat sebagai roadmap fitur, bukan bug keamanan.
+- **Offline-first (fitur):** web sudah punya outbox IndexedDB + idempotency; sisi
+  Expo (SQLite/WatermelonDB) belum ada di repo ini. Bukan temuan keamanan.
+- **Laporan & analitik komprehensif (fitur):** endpoint laporan penjualan/pajak/
+  belanja + ekspor sudah ada; perlu daftar laporan yang diminta sebelum dijadikan
+  tugas.
+- **Local Storage Expo:** tidak dapat diverifikasi dari repo ini; jika mobile
+  menyimpan bearer token di AsyncStorage/localStorage, itu temuan klien terpisah.
+  Backend sudah mengarahkan `expo-secure-store` di `docs/EXPO.md`.
 
 ---
 
@@ -582,6 +773,14 @@
       (klaim satu kali, laporan hasil); `idempotencyKey` pada job agar retry tak
       menghasilkan job ganda; server fn `src/server/percetakanFn.ts`; unit test
       `tests/vitest/percetakan.test.ts`; didokumentasikan di `docs/API.md` + `docs/EXPO.md`.
+- [ ] **PRINT-02** Cetak ulang dari antrean struk — OWNER tanpa batas; KASIR
+      maksimal tiga kali per transaksi. Server menaikkan penghitung dan membuat
+      PrintJob secara atomik; antrean web OWNER/KASIR dan REST menampilkan
+      penghitung serta menegakkan batas; tes domain, UI, dan akses kasir.
+      **Terblokir untuk dicentang:** gate repo masih gagal pada perubahan lain di
+      workspace (`src/routes/buku-besar.tsx`, `src/server/pengeluaranFn.ts`,
+      `tests/vitest/pengeluaran.test.ts`) dan satu E2E produk tidak menemukan
+      data fixture; E2E antrean kasir sendiri lulus.
 - [x] **API-01** REST retur/opname untuk Expo: `GET/POST /api/v1/retur` (+
       `retur/produk-aktif`, `retur/transaksi?id=`), `GET/POST /api/v1/opname` (+
       `opname/master?jenis=`), guard OWNER+KASIR, envelope standar; didokumentasikan di
@@ -604,8 +803,8 @@
 - [x] **CI-01** Threshold coverage di CI + job e2e Playwright di CI (sekarang CI
       hanya typecheck/lint/format/build/unit/audit; e2e jalan lokal).
 - [x] **BIZ-01** Keputusan bisnis M-01: `POST /api/v1/pesan` publik mengurangi stok —
-      putuskan apakah stok dipotong saat order atau saat pembayaran (didokumentasikan
-      sebagai risiko diterima di `audit-keamanan-manual-2026-10-19.md`).
+      diputuskan stok dipotong **saat pembayaran dikonfirmasi**, bukan saat order.
+      Implementasi dan pengujian ada di **SEC-15** (2026-10-23).
 
 ---
 
@@ -888,27 +1087,36 @@
       item P0/P1, PRN, dan CI/CD di dokumen ini. `DAFTAR-TUGAS.md` tetap sumber
       kebenaran; issue hanya tautan kerja. **Terblokir:** token `gh` belum punya
       scope `project` (repo `adhitiad/pos` sudah ada). Persiapan selesai:
-      `docs/GITHUB-SETUP.md` + `scripts/siapkan-github.ts` (dry-run 21 kandidat
-      issue dari item yang belum selesai, idempoten terhadap judul). Jalankan
-      `gh auth refresh -s project` lalu `bun run scripts/siapkan-github.ts --project <nomor>`.
+      `docs/GITHUB-SETUP.md` + `scripts/siapkan-github.ts`. Dry-run
+      `bun scripts/siapkan-github.ts --dry-run` pada 2026-10-22 menemukan 6
+      item CICD terbuka dan tidak menemukan item PRN terbuka; jumlah ini dapat
+      berubah mengikuti checklist. Skrip melewati judul issue yang sudah ada.
+      Verifikasi saat ini: `gh auth status` hanya melaporkan scope `gist`,
+      `read:org`, `repo`, `workflow`, jadi pembuatan project dan penambahan
+      issue ke project belum dapat dijalankan. Setelah scope diberikan:
+      `gh auth refresh -h github.com -s project`, buat project/field sesuai
+      `docs/GITHUB-SETUP.md`, lalu jalankan skrip dengan nomor project.
 
-- [ ] **CICD-16** Tambah `SECURITY.md`, aktifkan private vulnerability reporting,
-      Dependabot alerts/security updates, dan `dependency-review-action` pada PR.
-      `dependabot.yml` sudah ada; lengkapi enforcement-nya. CodeQL opsional bila
-      ingin SAST berkelanjutan. **Sebagian selesai:** `SECURITY.md` dan
-      `.github/workflows/dependency-review.yml` sudah ada; Dependabot alerts dan
-      automated security fixes sudah diaktifkan lewat API. Private vulnerability
-      reporting mengembalikan 404 (fitur tidak tersedia untuk repo private ini),
-      jadi kanal privat masih mengandalkan maintainer sampai fitur tersedia.
-      Verifikasi API 2026-10-22: vulnerability alerts `204`, automated fixes
-      `200`, private reporting `404`.
+- [ ] **CICD-16** Selesaikan konfigurasi keamanan dependency dan pelaporan
+      kerentanan. `SECURITY.md`, `.github/dependabot.yml`, dan
+      `.github/workflows/dependency-review.yml` sudah ada; Dependabot alerts
+      serta automated security fixes aktif. **Sebagian selesai:** pemeriksaan
+      API GitHub pada 2026-10-22 mengonfirmasi alerts `204` dan automated fixes
+      `200`; endpoint private vulnerability reporting mengembalikan `404`,
+      sehingga fitur tersebut belum tersedia/terkonfirmasi untuk repo ini.
+      Sampai tersedia, `SECURITY.md` harus mengarahkan pelapor ke kanal privat
+      maintainer, bukan menganggap form GitHub aktif. Dependency review gagal
+      untuk severity `high` ke atas. CodeQL tetap opsional.
 
 ### Fase 4 — Operasional & konsistensi dokumen
 
 - [ ] **CICD-17** Selesaikan checklist `docs/OPERASIONAL.md`: PITR/backup Neon +
-      uji restore, uptime monitor `/api/health` + uji alert, dan Sentry (OBS-02).
-      Kriteria: backup pernah direstore; alert pernah diuji; error produksi
-      punya `ref` yang bisa dilacak.
+      uji restore, uptime monitor `/api/health` + uji alert, dan observability
+      Sentry atau GlitchTip (OBS-02). **Belum diverifikasi:** checklist backup,
+      restore, monitor, alert, dan DSN/error event produksi memerlukan akses
+      konsol layanan serta bukti uji. Jangan menandai selesai sebelum setiap
+      kriteria tersebut memiliki bukti; error produksi harus dapat ditelusuri
+      menggunakan `ref`.
 
 - [x] **CICD-18** Perbaiki dokumentasi basi: `docs/OPERASIONAL.md` masih menyebut
       e2e memakai port 3000, padahal `playwright.config.ts` memakai 3100 dan

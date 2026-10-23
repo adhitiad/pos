@@ -38,6 +38,22 @@ export const MetodeBayar = {
 export type MetodeBayar = (typeof MetodeBayar)[keyof typeof MetodeBayar]
 
 
+export const SumberTransaksi = {
+  POS: 'POS',
+  ONLINE: 'ONLINE'
+} as const
+
+export type SumberTransaksi = (typeof SumberTransaksi)[keyof typeof SumberTransaksi]
+
+
+export const ViaPembayaran = {
+  MANUAL: 'MANUAL',
+  WEBHOOK: 'WEBHOOK'
+} as const
+
+export type ViaPembayaran = (typeof ViaPembayaran)[keyof typeof ViaPembayaran]
+
+
 export const StatusPesanan = {
   MENUNGGU: 'MENUNGGU',
   DIPROSES: 'DIPROSES',
@@ -58,3 +74,24 @@ export const TipeAkun = {
 } as const
 
 export type TipeAkun = (typeof TipeAkun)[keyof typeof TipeAkun]
+
+
+export const StatusPengajuan = {
+  PENDING: 'PENDING',
+  DISETUJUI: 'DISETUJUI',
+  DITOLAK: 'DITOLAK'
+} as const
+
+export type StatusPengajuan = (typeof StatusPengajuan)[keyof typeof StatusPengajuan]
+
+
+export const JenisPengeluaran = {
+  BELANJA: 'BELANJA',
+  OPERASIONAL_KASIR: 'OPERASIONAL_KASIR',
+  AMBIL_OWNER: 'AMBIL_OWNER',
+  PEMBAYARAN_UTANG: 'PEMBAYARAN_UTANG',
+  OPERASIONAL_TOKO: 'OPERASIONAL_TOKO',
+  LAINNYA: 'LAINNYA'
+} as const
+
+export type JenisPengeluaran = (typeof JenisPengeluaran)[keyof typeof JenisPengeluaran]

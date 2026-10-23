@@ -121,7 +121,7 @@ export interface HasilTransaksiRingkas {
       uangDiterima: { toNumber: () => number } | null
     }[]
   }
-  jurnal: { id: string; nomor: string }
+  jurnal: { id: string; nomor: string } | null
   hpp: number
   diskonMember: number
   memberInfo?: { nama: string; totalBelanja: number; tier: string } | null

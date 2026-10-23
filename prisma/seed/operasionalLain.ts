@@ -6,7 +6,8 @@ export async function seedRetur(transaksiId: string, kasirId: string) {
   const item = await prisma.transaksiItem.findFirst({
     where: { transaksiId, namaProduk: 'Pisang Goreng' },
   })
-  if (!item) return
+  if (!item)
+    throw new Error('Item Pisang Goreng untuk seed retur tidak ditemukan')
   const tanggal = hariLalu(1, 11, 0)
   const retur = await prisma.retur.create({
     data: {
@@ -64,7 +65,9 @@ export async function seedHutang() {
   const bahanGula = await prisma.bahan.findFirst({
     where: { nama: 'Gula Aren' },
   })
-  if (!supplier || !bahanKopi || !bahanGula) return
+  if (!supplier || !bahanKopi || !bahanGula) {
+    throw new Error('Supplier atau bahan untuk seed hutang tidak ditemukan')
+  }
 
   await prisma.pembelianBahan.create({
     data: {
@@ -123,7 +126,9 @@ export async function seedHutang() {
 export async function seedOpname(kasirId: string) {
   const produk = await prisma.produk.findFirst({ where: { sku: 'MNM-002' } })
   const bahan = await prisma.bahan.findFirst({ where: { nama: 'Biji Kopi' } })
-  if (!produk || !bahan) return
+  if (!produk || !bahan) {
+    throw new Error('Produk atau bahan untuk seed opname tidak ditemukan')
+  }
 
   const tanggal = hariIni(13, 0)
   const stokProduk = produk.stok

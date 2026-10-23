@@ -87,7 +87,9 @@ export const ModelName = {
   StokOpnameItem: 'StokOpnameItem',
   Printer: 'Printer',
   PrintJob: 'PrintJob',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  PengajuanPengeluaran: 'PengajuanPengeluaran',
+  Notifikasi: 'Notifikasi'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -331,6 +333,11 @@ export const TransaksiScalarFieldEnum = {
   catatan: 'catatan',
   mejaId: 'mejaId',
   statusPesanan: 'statusPesanan',
+  sumber: 'sumber',
+  dibayarPada: 'dibayarPada',
+  dibayarVia: 'dibayarVia',
+  paymentRef: 'paymentRef',
+  stokTerpotong: 'stokTerpotong',
   uangDiterima: 'uangDiterima',
   kembalian: 'kembalian',
   cetakOwner: 'cetakOwner',
@@ -635,6 +642,40 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const PengajuanPengeluaranScalarFieldEnum = {
+  id: 'id',
+  kasirId: 'kasirId',
+  ownerId: 'ownerId',
+  nominal: 'nominal',
+  nominalDisetujui: 'nominalDisetujui',
+  jenis: 'jenis',
+  keterangan: 'keterangan',
+  status: 'status',
+  alasanPenolakan: 'alasanPenolakan',
+  jurnalId: 'jurnalId',
+  disetujuiPada: 'disetujuiPada',
+  ditolakPada: 'ditolakPada',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PengajuanPengeluaranScalarFieldEnum = (typeof PengajuanPengeluaranScalarFieldEnum)[keyof typeof PengajuanPengeluaranScalarFieldEnum]
+
+
+export const NotifikasiScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  judul: 'judul',
+  pesan: 'pesan',
+  dibaca: 'dibaca',
+  tipe: 'tipe',
+  entitasId: 'entitasId',
+  createdAt: 'createdAt'
+} as const
+
+export type NotifikasiScalarFieldEnum = (typeof NotifikasiScalarFieldEnum)[keyof typeof NotifikasiScalarFieldEnum]
 
 
 export const SortOrder = {

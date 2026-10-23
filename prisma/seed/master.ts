@@ -65,6 +65,11 @@ export async function seedMaster() {
       { kode: '4100', nama: 'Pendapatan Penjualan', tipe: 'PENDAPATAN' },
       { kode: '4200', nama: 'Pendapatan Jasa Antar', tipe: 'PENDAPATAN' },
       { kode: '5100', nama: 'Beban Pokok Penjualan (HPP)', tipe: 'BEBAN' },
+      { kode: '2200', nama: 'Hutang Usaha', tipe: 'KEWAJIBAN' },
+      { kode: '5200', nama: 'Beban Belanja', tipe: 'BEBAN' },
+      { kode: '5300', nama: 'Beban Operasional Kasir', tipe: 'BEBAN' },
+      { kode: '5400', nama: 'Beban Operasional Toko', tipe: 'BEBAN' },
+      { kode: '5900', nama: 'Beban Lainnya', tipe: 'BEBAN' },
     ],
   })
 
@@ -75,6 +80,7 @@ export async function seedMaster() {
       { kunci: 'riwayat_belanja_aktif', nilai: 'true' },
       { kunci: 'nama_toko', nilai: 'POS Demo' },
       { kunci: 'printer_escpos', nilai: 'false' },
+      { kunci: 'ukuran_kertas_termal', nilai: '58x40' },
       { kunci: 'judul_app', nilai: 'POS Berkah' },
       { kunci: 'logo_url', nilai: '/logo.svg' },
       {

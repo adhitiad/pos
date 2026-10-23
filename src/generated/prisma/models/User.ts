@@ -224,6 +224,9 @@ export type UserWhereInput = {
   deviceVisits?: Prisma.DeviceVisitListRelationFilter
   printers?: Prisma.PrinterListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  pengajuanKasir?: Prisma.PengajuanPengeluaranListRelationFilter
+  pengajuanOwner?: Prisma.PengajuanPengeluaranListRelationFilter
+  notifikasi?: Prisma.NotifikasiListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -246,6 +249,9 @@ export type UserOrderByWithRelationInput = {
   deviceVisits?: Prisma.DeviceVisitOrderByRelationAggregateInput
   printers?: Prisma.PrinterOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranOrderByRelationAggregateInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranOrderByRelationAggregateInput
+  notifikasi?: Prisma.NotifikasiOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -271,6 +277,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   deviceVisits?: Prisma.DeviceVisitListRelationFilter
   printers?: Prisma.PrinterListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  pengajuanKasir?: Prisma.PengajuanPengeluaranListRelationFilter
+  pengajuanOwner?: Prisma.PengajuanPengeluaranListRelationFilter
+  notifikasi?: Prisma.NotifikasiListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -323,6 +332,9 @@ export type UserCreateInput = {
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -345,6 +357,9 @@ export type UserUncheckedCreateInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -367,6 +382,9 @@ export type UserUpdateInput = {
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -389,6 +407,9 @@ export type UserUncheckedUpdateInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -643,6 +664,50 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutPengajuanKasirInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPengajuanKasirInput, Prisma.UserUncheckedCreateWithoutPengajuanKasirInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPengajuanKasirInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutPengajuanOwnerInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPengajuanOwnerInput, Prisma.UserUncheckedCreateWithoutPengajuanOwnerInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPengajuanOwnerInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPengajuanKasirNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPengajuanKasirInput, Prisma.UserUncheckedCreateWithoutPengajuanKasirInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPengajuanKasirInput
+  upsert?: Prisma.UserUpsertWithoutPengajuanKasirInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPengajuanKasirInput, Prisma.UserUpdateWithoutPengajuanKasirInput>, Prisma.UserUncheckedUpdateWithoutPengajuanKasirInput>
+}
+
+export type UserUpdateOneWithoutPengajuanOwnerNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPengajuanOwnerInput, Prisma.UserUncheckedCreateWithoutPengajuanOwnerInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPengajuanOwnerInput
+  upsert?: Prisma.UserUpsertWithoutPengajuanOwnerInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPengajuanOwnerInput, Prisma.UserUpdateWithoutPengajuanOwnerInput>, Prisma.UserUncheckedUpdateWithoutPengajuanOwnerInput>
+}
+
+export type UserCreateNestedOneWithoutNotifikasiInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotifikasiInput, Prisma.UserUncheckedCreateWithoutNotifikasiInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotifikasiInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutNotifikasiNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotifikasiInput, Prisma.UserUncheckedCreateWithoutNotifikasiInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotifikasiInput
+  upsert?: Prisma.UserUpsertWithoutNotifikasiInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotifikasiInput, Prisma.UserUpdateWithoutNotifikasiInput>, Prisma.UserUncheckedUpdateWithoutNotifikasiInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id: string
   name: string
@@ -662,6 +727,9 @@ export type UserCreateWithoutSessionsInput = {
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -683,6 +751,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -720,6 +791,9 @@ export type UserUpdateWithoutSessionsInput = {
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -741,6 +815,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -762,6 +839,9 @@ export type UserCreateWithoutAccountsInput = {
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -783,6 +863,9 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -820,6 +903,9 @@ export type UserUpdateWithoutAccountsInput = {
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -841,6 +927,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransaksiKasirInput = {
@@ -862,6 +951,9 @@ export type UserCreateWithoutTransaksiKasirInput = {
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransaksiKasirInput = {
@@ -883,6 +975,9 @@ export type UserUncheckedCreateWithoutTransaksiKasirInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransaksiKasirInput = {
@@ -920,6 +1015,9 @@ export type UserUpdateWithoutTransaksiKasirInput = {
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransaksiKasirInput = {
@@ -941,6 +1039,9 @@ export type UserUncheckedUpdateWithoutTransaksiKasirInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutShiftsInput = {
@@ -962,6 +1063,9 @@ export type UserCreateWithoutShiftsInput = {
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutShiftsInput = {
@@ -983,6 +1087,9 @@ export type UserUncheckedCreateWithoutShiftsInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutShiftsInput = {
@@ -1020,6 +1127,9 @@ export type UserUpdateWithoutShiftsInput = {
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShiftsInput = {
@@ -1041,6 +1151,9 @@ export type UserUncheckedUpdateWithoutShiftsInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPageVisitsInput = {
@@ -1062,6 +1175,9 @@ export type UserCreateWithoutPageVisitsInput = {
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPageVisitsInput = {
@@ -1083,6 +1199,9 @@ export type UserUncheckedCreateWithoutPageVisitsInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPageVisitsInput = {
@@ -1120,6 +1239,9 @@ export type UserUpdateWithoutPageVisitsInput = {
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPageVisitsInput = {
@@ -1141,6 +1263,9 @@ export type UserUncheckedUpdateWithoutPageVisitsInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDeviceVisitsInput = {
@@ -1162,6 +1287,9 @@ export type UserCreateWithoutDeviceVisitsInput = {
   pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDeviceVisitsInput = {
@@ -1183,6 +1311,9 @@ export type UserUncheckedCreateWithoutDeviceVisitsInput = {
   pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDeviceVisitsInput = {
@@ -1220,6 +1351,9 @@ export type UserUpdateWithoutDeviceVisitsInput = {
   pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeviceVisitsInput = {
@@ -1241,6 +1375,9 @@ export type UserUncheckedUpdateWithoutDeviceVisitsInput = {
   pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRetursInput = {
@@ -1262,6 +1399,9 @@ export type UserCreateWithoutRetursInput = {
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRetursInput = {
@@ -1283,6 +1423,9 @@ export type UserUncheckedCreateWithoutRetursInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRetursInput = {
@@ -1320,6 +1463,9 @@ export type UserUpdateWithoutRetursInput = {
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRetursInput = {
@@ -1341,6 +1487,9 @@ export type UserUncheckedUpdateWithoutRetursInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStokOprenamesInput = {
@@ -1362,6 +1511,9 @@ export type UserCreateWithoutStokOprenamesInput = {
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStokOprenamesInput = {
@@ -1383,6 +1535,9 @@ export type UserUncheckedCreateWithoutStokOprenamesInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStokOprenamesInput = {
@@ -1420,6 +1575,9 @@ export type UserUpdateWithoutStokOprenamesInput = {
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStokOprenamesInput = {
@@ -1441,6 +1599,9 @@ export type UserUncheckedUpdateWithoutStokOprenamesInput = {
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPrintersInput = {
@@ -1462,6 +1623,9 @@ export type UserCreateWithoutPrintersInput = {
   pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPrintersInput = {
@@ -1483,6 +1647,9 @@ export type UserUncheckedCreateWithoutPrintersInput = {
   pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPrintersInput = {
@@ -1520,6 +1687,9 @@ export type UserUpdateWithoutPrintersInput = {
   pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPrintersInput = {
@@ -1541,6 +1711,9 @@ export type UserUncheckedUpdateWithoutPrintersInput = {
   pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1562,6 +1735,9 @@ export type UserCreateWithoutAuditLogsInput = {
   pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1583,6 +1759,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1620,6 +1799,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1641,6 +1823,345 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPengajuanKasirInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.Role
+  roleManual?: boolean
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPengajuanKasirInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.Role
+  roleManual?: boolean
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPengajuanKasirInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPengajuanKasirInput, Prisma.UserUncheckedCreateWithoutPengajuanKasirInput>
+}
+
+export type UserCreateWithoutPengajuanOwnerInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.Role
+  roleManual?: boolean
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPengajuanOwnerInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.Role
+  roleManual?: boolean
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPengajuanOwnerInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPengajuanOwnerInput, Prisma.UserUncheckedCreateWithoutPengajuanOwnerInput>
+}
+
+export type UserUpsertWithoutPengajuanKasirInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPengajuanKasirInput, Prisma.UserUncheckedUpdateWithoutPengajuanKasirInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPengajuanKasirInput, Prisma.UserUncheckedCreateWithoutPengajuanKasirInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPengajuanKasirInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPengajuanKasirInput, Prisma.UserUncheckedUpdateWithoutPengajuanKasirInput>
+}
+
+export type UserUpdateWithoutPengajuanKasirInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPengajuanKasirInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutPengajuanOwnerInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPengajuanOwnerInput, Prisma.UserUncheckedUpdateWithoutPengajuanOwnerInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPengajuanOwnerInput, Prisma.UserUncheckedCreateWithoutPengajuanOwnerInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPengajuanOwnerInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPengajuanOwnerInput, Prisma.UserUncheckedUpdateWithoutPengajuanOwnerInput>
+}
+
+export type UserUpdateWithoutPengajuanOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPengajuanOwnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutNotifikasiInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.Role
+  roleManual?: boolean
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutNotifikasiInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.Role
+  roleManual?: boolean
+  createdAt: Date | string
+  updatedAt: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutNotifikasiInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotifikasiInput, Prisma.UserUncheckedCreateWithoutNotifikasiInput>
+}
+
+export type UserUpsertWithoutNotifikasiInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutNotifikasiInput, Prisma.UserUncheckedUpdateWithoutNotifikasiInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotifikasiInput, Prisma.UserUncheckedCreateWithoutNotifikasiInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutNotifikasiInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutNotifikasiInput, Prisma.UserUncheckedUpdateWithoutNotifikasiInput>
+}
+
+export type UserUpdateWithoutNotifikasiInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutNotifikasiInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 
@@ -1659,6 +2180,9 @@ export type UserCountOutputType = {
   deviceVisits: number
   printers: number
   auditLogs: number
+  pengajuanKasir: number
+  pengajuanOwner: number
+  notifikasi: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1672,6 +2196,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   deviceVisits?: boolean | UserCountOutputTypeCountDeviceVisitsArgs
   printers?: boolean | UserCountOutputTypeCountPrintersArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  pengajuanKasir?: boolean | UserCountOutputTypeCountPengajuanKasirArgs
+  pengajuanOwner?: boolean | UserCountOutputTypeCountPengajuanOwnerArgs
+  notifikasi?: boolean | UserCountOutputTypeCountNotifikasiArgs
 }
 
 /**
@@ -1754,6 +2281,27 @@ export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPengajuanKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PengajuanPengeluaranWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPengajuanOwnerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PengajuanPengeluaranWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountNotifikasiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotifikasiWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1775,6 +2323,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   deviceVisits?: boolean | Prisma.User$deviceVisitsArgs<ExtArgs>
   printers?: boolean | Prisma.User$printersArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  pengajuanKasir?: boolean | Prisma.User$pengajuanKasirArgs<ExtArgs>
+  pengajuanOwner?: boolean | Prisma.User$pengajuanOwnerArgs<ExtArgs>
+  notifikasi?: boolean | Prisma.User$notifikasiArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1826,6 +2377,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   deviceVisits?: boolean | Prisma.User$deviceVisitsArgs<ExtArgs>
   printers?: boolean | Prisma.User$printersArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  pengajuanKasir?: boolean | Prisma.User$pengajuanKasirArgs<ExtArgs>
+  pengajuanOwner?: boolean | Prisma.User$pengajuanOwnerArgs<ExtArgs>
+  notifikasi?: boolean | Prisma.User$notifikasiArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1844,6 +2398,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     deviceVisits: Prisma.$DeviceVisitPayload<ExtArgs>[]
     printers: Prisma.$PrinterPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    pengajuanKasir: Prisma.$PengajuanPengeluaranPayload<ExtArgs>[]
+    pengajuanOwner: Prisma.$PengajuanPengeluaranPayload<ExtArgs>[]
+    notifikasi: Prisma.$NotifikasiPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2259,6 +2816,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   deviceVisits<T extends Prisma.User$deviceVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   printers<T extends Prisma.User$printersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$printersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrinterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pengajuanKasir<T extends Prisma.User$pengajuanKasirArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pengajuanKasirArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PengajuanPengeluaranPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pengajuanOwner<T extends Prisma.User$pengajuanOwnerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pengajuanOwnerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PengajuanPengeluaranPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifikasi<T extends Prisma.User$notifikasiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notifikasiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotifikasiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2927,6 +3487,78 @@ export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.pengajuanKasir
+ */
+export type User$pengajuanKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PengajuanPengeluaran
+   */
+  select?: Prisma.PengajuanPengeluaranSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PengajuanPengeluaran
+   */
+  omit?: Prisma.PengajuanPengeluaranOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PengajuanPengeluaranInclude<ExtArgs> | null
+  where?: Prisma.PengajuanPengeluaranWhereInput
+  orderBy?: Prisma.PengajuanPengeluaranOrderByWithRelationInput | Prisma.PengajuanPengeluaranOrderByWithRelationInput[]
+  cursor?: Prisma.PengajuanPengeluaranWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PengajuanPengeluaranScalarFieldEnum | Prisma.PengajuanPengeluaranScalarFieldEnum[]
+}
+
+/**
+ * User.pengajuanOwner
+ */
+export type User$pengajuanOwnerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PengajuanPengeluaran
+   */
+  select?: Prisma.PengajuanPengeluaranSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PengajuanPengeluaran
+   */
+  omit?: Prisma.PengajuanPengeluaranOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PengajuanPengeluaranInclude<ExtArgs> | null
+  where?: Prisma.PengajuanPengeluaranWhereInput
+  orderBy?: Prisma.PengajuanPengeluaranOrderByWithRelationInput | Prisma.PengajuanPengeluaranOrderByWithRelationInput[]
+  cursor?: Prisma.PengajuanPengeluaranWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PengajuanPengeluaranScalarFieldEnum | Prisma.PengajuanPengeluaranScalarFieldEnum[]
+}
+
+/**
+ * User.notifikasi
+ */
+export type User$notifikasiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notifikasi
+   */
+  select?: Prisma.NotifikasiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notifikasi
+   */
+  omit?: Prisma.NotifikasiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotifikasiInclude<ExtArgs> | null
+  where?: Prisma.NotifikasiWhereInput
+  orderBy?: Prisma.NotifikasiOrderByWithRelationInput | Prisma.NotifikasiOrderByWithRelationInput[]
+  cursor?: Prisma.NotifikasiWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotifikasiScalarFieldEnum | Prisma.NotifikasiScalarFieldEnum[]
 }
 
 /**

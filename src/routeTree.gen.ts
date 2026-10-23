@@ -24,6 +24,7 @@ import { Route as MejaRouteImport } from './routes/meja'
 import { Route as MemberRouteImport } from './routes/member'
 import { Route as NotifikasiRouteImport } from './routes/notifikasi'
 import { Route as OpnameRouteImport } from './routes/opname'
+import { Route as PengajuanRouteImport } from './routes/pengajuan'
 import { Route as PengaturanRouteImport } from './routes/pengaturan'
 import { Route as PercetakanRouteImport } from './routes/percetakan'
 import { Route as PesananRouteImport } from './routes/pesanan'
@@ -73,6 +74,7 @@ import { Route as ApiV1MemberIndexRouteImport } from './routes/api/v1/member/ind
 import { Route as ApiV1MemberRiwayatRouteImport } from './routes/api/v1/member/riwayat'
 import { Route as ApiV1OpnameIndexRouteImport } from './routes/api/v1/opname/index'
 import { Route as ApiV1OpnameMasterRouteImport } from './routes/api/v1/opname/master'
+import { Route as ApiV1PembayaranWebhookRouteImport } from './routes/api/v1/pembayaran/webhook'
 import { Route as ApiV1PercetakanIndexRouteImport } from './routes/api/v1/percetakan/index'
 import { Route as ApiV1PrinterIndexRouteImport } from './routes/api/v1/printer/index'
 import { Route as ApiV1PrinterDefaultRouteImport } from './routes/api/v1/printer/default'
@@ -85,6 +87,7 @@ import { Route as ApiV1UnggahUnduhRouteImport } from './routes/api/v1/unggah/und
 import { Route as ApiV1PercetakanIdAmbilRouteImport } from './routes/api/v1/percetakan/$id/ambil'
 import { Route as ApiV1PercetakanIdGagalRouteImport } from './routes/api/v1/percetakan/$id/gagal'
 import { Route as ApiV1PercetakanIdSelesaiRouteImport } from './routes/api/v1/percetakan/$id/selesai'
+import { Route as ApiV1PesananIdBayarRouteImport } from './routes/api/v1/pesanan/$id/bayar'
 import { Route as ApiV1PrinterPerangkatIdRouteImport } from './routes/api/v1/printer/perangkat/$id'
 import { Route as ApiV1TransaksiCetakIdRouteImport } from './routes/api/v1/transaksi/cetak/$id'
 import { Route as ApiV1PrinterPerangkatIdDefaultRouteImport } from './routes/api/v1/printer/perangkat/$id/default'
@@ -163,6 +166,11 @@ const NotifikasiRoute = NotifikasiRouteImport.update({
 const OpnameRoute = OpnameRouteImport.update({
   id: '/opname',
   path: '/opname',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PengajuanRoute = PengajuanRouteImport.update({
+  id: '/pengajuan',
+  path: '/pengajuan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PengaturanRoute = PengaturanRouteImport.update({
@@ -410,6 +418,11 @@ const ApiV1OpnameMasterRoute = ApiV1OpnameMasterRouteImport.update({
   path: '/api/v1/opname/master',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1PembayaranWebhookRoute = ApiV1PembayaranWebhookRouteImport.update({
+  id: '/api/v1/pembayaran/webhook',
+  path: '/api/v1/pembayaran/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiV1PercetakanIndexRoute = ApiV1PercetakanIndexRouteImport.update({
   id: '/api/v1/percetakan/',
   path: '/api/v1/percetakan/',
@@ -471,6 +484,11 @@ const ApiV1PercetakanIdSelesaiRoute =
     path: '/api/v1/percetakan/$id/selesai',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiV1PesananIdBayarRoute = ApiV1PesananIdBayarRouteImport.update({
+  id: '/api/v1/pesanan/$id/bayar',
+  path: '/api/v1/pesanan/$id/bayar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiV1PrinterPerangkatIdRoute = ApiV1PrinterPerangkatIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -510,6 +528,7 @@ export interface FileRoutesByFullPath {
   '/member': typeof MemberRouteWithChildren
   '/notifikasi': typeof NotifikasiRoute
   '/opname': typeof OpnameRoute
+  '/pengajuan': typeof PengajuanRoute
   '/pengaturan': typeof PengaturanRoute
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
@@ -556,6 +575,7 @@ export interface FileRoutesByFullPath {
   '/api/v1/kunjungan/data': typeof ApiV1KunjunganDataRoute
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
+  '/api/v1/pembayaran/webhook': typeof ApiV1PembayaranWebhookRoute
   '/api/v1/printer/default': typeof ApiV1PrinterDefaultRoute
   '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRouteWithChildren
   '/api/v1/retur/produk-aktif': typeof ApiV1ReturProdukAktifRoute
@@ -571,6 +591,7 @@ export interface FileRoutesByFullPath {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/pesanan/$id/bayar': typeof ApiV1PesananIdBayarRoute
   '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
   '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
@@ -592,6 +613,7 @@ export interface FileRoutesByTo {
   '/member': typeof MemberRouteWithChildren
   '/notifikasi': typeof NotifikasiRoute
   '/opname': typeof OpnameRoute
+  '/pengajuan': typeof PengajuanRoute
   '/pengaturan': typeof PengaturanRoute
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
@@ -638,6 +660,7 @@ export interface FileRoutesByTo {
   '/api/v1/kunjungan/data': typeof ApiV1KunjunganDataRoute
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
+  '/api/v1/pembayaran/webhook': typeof ApiV1PembayaranWebhookRoute
   '/api/v1/printer/default': typeof ApiV1PrinterDefaultRoute
   '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRouteWithChildren
   '/api/v1/retur/produk-aktif': typeof ApiV1ReturProdukAktifRoute
@@ -653,6 +676,7 @@ export interface FileRoutesByTo {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/pesanan/$id/bayar': typeof ApiV1PesananIdBayarRoute
   '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
   '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
@@ -675,6 +699,7 @@ export interface FileRoutesById {
   '/member': typeof MemberRouteWithChildren
   '/notifikasi': typeof NotifikasiRoute
   '/opname': typeof OpnameRoute
+  '/pengajuan': typeof PengajuanRoute
   '/pengaturan': typeof PengaturanRoute
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
@@ -721,6 +746,7 @@ export interface FileRoutesById {
   '/api/v1/kunjungan/data': typeof ApiV1KunjunganDataRoute
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
+  '/api/v1/pembayaran/webhook': typeof ApiV1PembayaranWebhookRoute
   '/api/v1/printer/default': typeof ApiV1PrinterDefaultRoute
   '/api/v1/printer/perangkat': typeof ApiV1PrinterPerangkatRouteWithChildren
   '/api/v1/retur/produk-aktif': typeof ApiV1ReturProdukAktifRoute
@@ -736,6 +762,7 @@ export interface FileRoutesById {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/pesanan/$id/bayar': typeof ApiV1PesananIdBayarRoute
   '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
   '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
@@ -759,6 +786,7 @@ export interface FileRouteTypes {
     | '/member'
     | '/notifikasi'
     | '/opname'
+    | '/pengajuan'
     | '/pengaturan'
     | '/percetakan'
     | '/pesanan'
@@ -805,6 +833,7 @@ export interface FileRouteTypes {
     | '/api/v1/kunjungan/data'
     | '/api/v1/member/riwayat'
     | '/api/v1/opname/master'
+    | '/api/v1/pembayaran/webhook'
     | '/api/v1/printer/default'
     | '/api/v1/printer/perangkat'
     | '/api/v1/retur/produk-aktif'
@@ -820,6 +849,7 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/pesanan/$id/bayar'
     | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
     | '/api/v1/printer/perangkat/$id/default'
@@ -841,6 +871,7 @@ export interface FileRouteTypes {
     | '/member'
     | '/notifikasi'
     | '/opname'
+    | '/pengajuan'
     | '/pengaturan'
     | '/percetakan'
     | '/pesanan'
@@ -887,6 +918,7 @@ export interface FileRouteTypes {
     | '/api/v1/kunjungan/data'
     | '/api/v1/member/riwayat'
     | '/api/v1/opname/master'
+    | '/api/v1/pembayaran/webhook'
     | '/api/v1/printer/default'
     | '/api/v1/printer/perangkat'
     | '/api/v1/retur/produk-aktif'
@@ -902,6 +934,7 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/pesanan/$id/bayar'
     | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
     | '/api/v1/printer/perangkat/$id/default'
@@ -923,6 +956,7 @@ export interface FileRouteTypes {
     | '/member'
     | '/notifikasi'
     | '/opname'
+    | '/pengajuan'
     | '/pengaturan'
     | '/percetakan'
     | '/pesanan'
@@ -969,6 +1003,7 @@ export interface FileRouteTypes {
     | '/api/v1/kunjungan/data'
     | '/api/v1/member/riwayat'
     | '/api/v1/opname/master'
+    | '/api/v1/pembayaran/webhook'
     | '/api/v1/printer/default'
     | '/api/v1/printer/perangkat'
     | '/api/v1/retur/produk-aktif'
@@ -984,6 +1019,7 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/pesanan/$id/bayar'
     | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
     | '/api/v1/printer/perangkat/$id/default'
@@ -1006,6 +1042,7 @@ export interface RootRouteChildren {
   MemberRoute: typeof MemberRouteWithChildren
   NotifikasiRoute: typeof NotifikasiRoute
   OpnameRoute: typeof OpnameRoute
+  PengajuanRoute: typeof PengajuanRoute
   PengaturanRoute: typeof PengaturanRoute
   PercetakanRoute: typeof PercetakanRoute
   PesananRoute: typeof PesananRoute
@@ -1051,6 +1088,7 @@ export interface RootRouteChildren {
   ApiV1KunjunganDataRoute: typeof ApiV1KunjunganDataRoute
   ApiV1MemberRiwayatRoute: typeof ApiV1MemberRiwayatRoute
   ApiV1OpnameMasterRoute: typeof ApiV1OpnameMasterRoute
+  ApiV1PembayaranWebhookRoute: typeof ApiV1PembayaranWebhookRoute
   ApiV1PrinterDefaultRoute: typeof ApiV1PrinterDefaultRoute
   ApiV1PrinterPerangkatRoute: typeof ApiV1PrinterPerangkatRouteWithChildren
   ApiV1ReturProdukAktifRoute: typeof ApiV1ReturProdukAktifRoute
@@ -1066,6 +1104,7 @@ export interface RootRouteChildren {
   ApiV1PercetakanIdAmbilRoute: typeof ApiV1PercetakanIdAmbilRoute
   ApiV1PercetakanIdGagalRoute: typeof ApiV1PercetakanIdGagalRoute
   ApiV1PercetakanIdSelesaiRoute: typeof ApiV1PercetakanIdSelesaiRoute
+  ApiV1PesananIdBayarRoute: typeof ApiV1PesananIdBayarRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1173,6 +1212,13 @@ declare module '@tanstack/react-router' {
       path: '/opname'
       fullPath: '/opname'
       preLoaderRoute: typeof OpnameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pengajuan': {
+      id: '/pengajuan'
+      path: '/pengajuan'
+      fullPath: '/pengajuan'
+      preLoaderRoute: typeof PengajuanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pengaturan': {
@@ -1518,6 +1564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1OpnameMasterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/pembayaran/webhook': {
+      id: '/api/v1/pembayaran/webhook'
+      path: '/api/v1/pembayaran/webhook'
+      fullPath: '/api/v1/pembayaran/webhook'
+      preLoaderRoute: typeof ApiV1PembayaranWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/percetakan/': {
       id: '/api/v1/percetakan/'
       path: '/api/v1/percetakan'
@@ -1600,6 +1653,13 @@ declare module '@tanstack/react-router' {
       path: '/api/v1/percetakan/$id/selesai'
       fullPath: '/api/v1/percetakan/$id/selesai'
       preLoaderRoute: typeof ApiV1PercetakanIdSelesaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/pesanan/$id/bayar': {
+      id: '/api/v1/pesanan/$id/bayar'
+      path: '/api/v1/pesanan/$id/bayar'
+      fullPath: '/api/v1/pesanan/$id/bayar'
+      preLoaderRoute: typeof ApiV1PesananIdBayarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/v1/printer/perangkat/$id': {
@@ -1701,6 +1761,7 @@ const rootRouteChildren: RootRouteChildren = {
   MemberRoute: MemberRouteWithChildren,
   NotifikasiRoute: NotifikasiRoute,
   OpnameRoute: OpnameRoute,
+  PengajuanRoute: PengajuanRoute,
   PengaturanRoute: PengaturanRoute,
   PercetakanRoute: PercetakanRoute,
   PesananRoute: PesananRoute,
@@ -1746,6 +1807,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1KunjunganDataRoute: ApiV1KunjunganDataRoute,
   ApiV1MemberRiwayatRoute: ApiV1MemberRiwayatRoute,
   ApiV1OpnameMasterRoute: ApiV1OpnameMasterRoute,
+  ApiV1PembayaranWebhookRoute: ApiV1PembayaranWebhookRoute,
   ApiV1PrinterDefaultRoute: ApiV1PrinterDefaultRoute,
   ApiV1PrinterPerangkatRoute: ApiV1PrinterPerangkatRouteWithChildren,
   ApiV1ReturProdukAktifRoute: ApiV1ReturProdukAktifRoute,
@@ -1761,6 +1823,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1PercetakanIdAmbilRoute: ApiV1PercetakanIdAmbilRoute,
   ApiV1PercetakanIdGagalRoute: ApiV1PercetakanIdGagalRoute,
   ApiV1PercetakanIdSelesaiRoute: ApiV1PercetakanIdSelesaiRoute,
+  ApiV1PesananIdBayarRoute: ApiV1PesananIdBayarRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

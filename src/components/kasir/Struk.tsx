@@ -7,8 +7,14 @@ import { useIdentitasApp } from '#/lib/identitas'
 import { dukunganSerial, cetakEscpos } from '#/lib/printer'
 import { useLogoUrl } from '#/lib/logo'
 import { segarkanNotifikasi } from '#/lib/notifikasi'
+import {
+  UKURAN_KERTAS_DEFAULT,
+  lebarKolomEscPos,
+  ukuranKertasDari,
+} from '#/lib/ukuran-kertas'
 import { pengaturanDataFn } from '#/server/pengaturanFn'
 import type { Struk } from '#/types/kasir'
+import type { IdUkuranKertasTermal } from '#/lib/ukuran-kertas'
 import type { StrukOtomatis } from '#/validations/pengaturan'
 
 import { Button } from '#/components/ui/button'
@@ -28,9 +34,14 @@ export default function Struk({
   const [printerAktif, setPrinterAktif] = useState(false)
   const [cetakPending, setCetakPending] = useState(false)
   const [modeOtomatis, setModeOtomatis] = useState<StrukOtomatis>('nonaktif')
+  const [ukuranKertas, setUkuranKertas] = useState<IdUkuranKertasTermal>(
+    UKURAN_KERTAS_DEFAULT,
+  )
   const sudahOtomatis = useRef<string | null>(null)
   const logoUrl = useLogoUrl()
   const identitas = useIdentitasApp()
+  const ukuran = ukuranKertasDari(ukuranKertas)
+  const kolom = lebarKolomEscPos(ukuran)
   // Label pajak menyertakan jenisnya (PB1 restoran/cafe atau PPN retail) bila ada.
   const labelPajak = struk.pajakJenis
     ? `${m.kasir_tax()} ${struk.pajakJenis}`
@@ -47,6 +58,7 @@ export default function Struk({
         if (!montir) return
         setPrinterAktif(p.semua.printer_escpos === 'true')
         setModeOtomatis(p.strukOtomatis)
+        setUkuranKertas(p.ukuranKertasTermal as IdUkuranKertasTermal)
       })
       .catch(() => {
         // printer opsiional — gagal baca flag tidak memengaruhi struk
@@ -97,11 +109,11 @@ export default function Struk({
             `${m.kasir_member()}: ${struk.memberNama}${struk.memberTier ? ` (${struk.memberTier})` : ''}`,
           ]
         : []),
-      '----------------------------',
+      '-'.repeat(kolom),
       ...struk.items.map(
         (it) => `${it.nama} x${it.qty} Rp${rupiah(it.harga * it.qty)}`,
       ),
-      '----------------------------',
+      '-'.repeat(kolom),
       `${m.kasir_subtotal()}: Rp${rupiah(struk.subtotal)}`,
       ...(struk.diskon > 0
         ? [`${m.kasir_discount()}: -Rp${rupiah(struk.diskon)}`]
@@ -121,7 +133,7 @@ export default function Struk({
     ]
     setCetakPending(true)
     try {
-      await cetakEscpos(baris)
+      await cetakEscpos(baris, undefined, kolom)
       await fetch(`/api/v1/transaksi/cetak/${struk.transaksiId}`, {
         method: 'POST',
       })
@@ -134,161 +146,167 @@ export default function Struk({
   }
 
   return (
-    <Card className="border-green-600/30 dark:border-green-400/30">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CheckCircle className="size-5 text-green-600 dark:text-green-400" />
-          <span>
-            {m.kasir_success()} — {m.kasir_receipt_no()}: {struk.nomor}
-          </span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <p className="text-sm">
-          {struk.itemCount} item · <strong>Rp{rupiah(struk.total)}</strong> ·{' '}
-          {struk.jurnalNomor}
-        </p>
-        {struk.memberNama && (
+    <>
+      <style>{`@media print {
+        @page { size: ${ukuran.lebarMm}mm ${ukuran.tinggiMm}mm; margin: 0; }
+        #struk-cetak { width: ${ukuran.lebarMm}mm; max-width: ${ukuran.lebarMm}mm; min-height: ${ukuran.tinggiMm}mm; }
+      }`}</style>
+      <Card className="border-green-600/30 dark:border-green-400/30">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CheckCircle className="size-5 text-green-600 dark:text-green-400" />
+            <span>
+              {m.kasir_success()} — {m.kasir_receipt_no()}: {struk.nomor}
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
           <p className="text-sm">
-            {m.kasir_member()}: <strong>{struk.memberNama}</strong>
-            {struk.memberTier ? ` · ${struk.memberTier}` : ''}
-            {struk.diskonMember > 0
-              ? ` · ${m.struk_diskon_member()} Rp${rupiah(struk.diskonMember)}`
-              : ''}
-          </p>
-        )}
-        {struk.kembalian != null && struk.kembalian > 0 && (
-          <p className="text-sm">
-            {m.kasir_change()}: <strong>Rp{rupiah(struk.kembalian)}</strong>
-          </p>
-        )}
-        <div className="flex flex-col gap-2 sm:flex-row sm:gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              navigator.clipboard.writeText(struk.nomor)
-              toast.success(m.kasir_receipt_no(), {
-                description: m.kasir_copy_receipt(),
-              })
-            }}
-          >
-            <Copy className="size-3 mr-1" />
-            {m.kasir_copy_receipt()}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              window.print()
-            }}
-          >
-            {m.struk_cetak()}
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => void unduhPdf()}>
-            <Download className="size-3 mr-1" />
-            {m.struk_unduh_pdf()}
-          </Button>
-          {printerAktif && dukunganSerial() && (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={cetakPending}
-              onClick={cetakEscposStruk}
-            >
-              {cetakPending
-                ? m.struk_escpos_mengirim()
-                : m.struk_cetak_escpos()}
-            </Button>
-          )}
-          <Button variant="outline" size="sm" onClick={onBaru}>
-            {m.kasir_new_sale()}
-          </Button>
-        </div>
-      </CardContent>
-      {/* Area cetak: disembunyikan di layar, hanya keluar di printer */}
-      <div id="struk-cetak" className="hidden print:block">
-        <div className="font-mono text-xs">
-          <p className="text-center">
-            <img src={logoUrl} alt="" className="size-10" />
-          </p>
-          <p className="text-center font-bold">{identitas.judul}</p>
-          <p className="text-center">
-            {m.kasir_receipt_no()}: {struk.nomor}
-          </p>
-          <p className="text-center">
-            {struk.tanggal.slice(0, 16).replace('T', ' ')}
+            {struk.itemCount} item · <strong>Rp{rupiah(struk.total)}</strong> ·{' '}
+            {struk.jurnalNomor}
           </p>
           {struk.memberNama && (
-            <p className="text-center">
-              {m.kasir_member()}: {struk.memberNama}
-              {struk.memberTier ? ` (${struk.memberTier})` : ''}
-            </p>
-          )}
-          <Separator className="my-1 print:block" />
-          {struk.items.map((it, i) => (
-            <div key={i} className="flex justify-between">
-              <p>
-                {it.nama} x{it.qty}
-              </p>
-              <p className="text-right">Rp{rupiah(it.harga * it.qty)}</p>
-            </div>
-          ))}
-          <Separator className="my-1" />
-          <p>
-            {m.kasir_subtotal()}: Rp{rupiah(struk.subtotal)}
-          </p>
-          {struk.diskon > 0 && (
-            <p>
-              {m.kasir_discount()}: -Rp{rupiah(struk.diskon)}
-            </p>
-          )}
-          {struk.diskonMember > 0 && (
-            <p className="pl-2">
-              {m.struk_diskon_member()}: Rp{rupiah(struk.diskonMember)}
-            </p>
-          )}
-          {struk.pajak > 0 && (
-            <p>
-              {labelPajak}: Rp{rupiah(struk.pajak)}
-            </p>
-          )}
-          {struk.ongkir > 0 && (
-            <p>
-              {m.kasir_shipping()}: Rp{rupiah(struk.ongkir)}
-            </p>
-          )}
-          <p className="font-bold">
-            {m.kasir_total()}: Rp{rupiah(struk.total)}
-          </p>
-          {struk.pembayaran.length > 1 ? (
-            struk.pembayaran.map((p, i) => (
-              <p key={i}>
-                {m.struk_metode()}: {p.metode} Rp{rupiah(p.jumlah)}
-              </p>
-            ))
-          ) : (
-            <p>
-              {m.struk_metode()}: {struk.metodeBayar}
-            </p>
-          )}
-          {struk.uangDiterima != null && (
-            <p>
-              {m.kasir_cash_received()}: Rp{rupiah(struk.uangDiterima)}
+            <p className="text-sm">
+              {m.kasir_member()}: <strong>{struk.memberNama}</strong>
+              {struk.memberTier ? ` · ${struk.memberTier}` : ''}
+              {struk.diskonMember > 0
+                ? ` · ${m.struk_diskon_member()} Rp${rupiah(struk.diskonMember)}`
+                : ''}
             </p>
           )}
           {struk.kembalian != null && struk.kembalian > 0 && (
-            <p>
-              {m.kasir_change()}: Rp{rupiah(struk.kembalian)}
+            <p className="text-sm">
+              {m.kasir_change()}: <strong>Rp{rupiah(struk.kembalian)}</strong>
             </p>
           )}
-          <p className="text-center">{m.struk_terimakasih()}</p>
-          <p className="text-center text-xs">
-            {m.struk_cetak_owner()}: {struk.cetakOwner} |{' '}
-            {m.struk_cetak_kasir()}: {struk.cetakKasir}
-          </p>
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                navigator.clipboard.writeText(struk.nomor)
+                toast.success(m.kasir_receipt_no(), {
+                  description: m.kasir_copy_receipt(),
+                })
+              }}
+            >
+              <Copy className="size-3 mr-1" />
+              {m.kasir_copy_receipt()}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                window.print()
+              }}
+            >
+              {m.struk_cetak()}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => void unduhPdf()}>
+              <Download className="size-3 mr-1" />
+              {m.struk_unduh_pdf()}
+            </Button>
+            {printerAktif && dukunganSerial() && (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={cetakPending}
+                onClick={cetakEscposStruk}
+              >
+                {cetakPending
+                  ? m.struk_escpos_mengirim()
+                  : m.struk_cetak_escpos()}
+              </Button>
+            )}
+            <Button variant="outline" size="sm" onClick={onBaru}>
+              {m.kasir_new_sale()}
+            </Button>
+          </div>
+        </CardContent>
+        {/* Area cetak: disembunyikan di layar, hanya keluar di printer */}
+        <div id="struk-cetak" className="hidden print:block">
+          <div className="font-mono text-xs">
+            <p className="text-center">
+              <img src={logoUrl} alt="" className="size-10" />
+            </p>
+            <p className="text-center font-bold">{identitas.judul}</p>
+            <p className="text-center">
+              {m.kasir_receipt_no()}: {struk.nomor}
+            </p>
+            <p className="text-center">
+              {struk.tanggal.slice(0, 16).replace('T', ' ')}
+            </p>
+            {struk.memberNama && (
+              <p className="text-center">
+                {m.kasir_member()}: {struk.memberNama}
+                {struk.memberTier ? ` (${struk.memberTier})` : ''}
+              </p>
+            )}
+            <Separator className="my-1 print:block" />
+            {struk.items.map((it, i) => (
+              <div key={i} className="flex justify-between">
+                <p>
+                  {it.nama} x{it.qty}
+                </p>
+                <p className="text-right">Rp{rupiah(it.harga * it.qty)}</p>
+              </div>
+            ))}
+            <Separator className="my-1" />
+            <p>
+              {m.kasir_subtotal()}: Rp{rupiah(struk.subtotal)}
+            </p>
+            {struk.diskon > 0 && (
+              <p>
+                {m.kasir_discount()}: -Rp{rupiah(struk.diskon)}
+              </p>
+            )}
+            {struk.diskonMember > 0 && (
+              <p className="pl-2">
+                {m.struk_diskon_member()}: Rp{rupiah(struk.diskonMember)}
+              </p>
+            )}
+            {struk.pajak > 0 && (
+              <p>
+                {labelPajak}: Rp{rupiah(struk.pajak)}
+              </p>
+            )}
+            {struk.ongkir > 0 && (
+              <p>
+                {m.kasir_shipping()}: Rp{rupiah(struk.ongkir)}
+              </p>
+            )}
+            <p className="font-bold">
+              {m.kasir_total()}: Rp{rupiah(struk.total)}
+            </p>
+            {struk.pembayaran.length > 1 ? (
+              struk.pembayaran.map((p, i) => (
+                <p key={i}>
+                  {m.struk_metode()}: {p.metode} Rp{rupiah(p.jumlah)}
+                </p>
+              ))
+            ) : (
+              <p>
+                {m.struk_metode()}: {struk.metodeBayar}
+              </p>
+            )}
+            {struk.uangDiterima != null && (
+              <p>
+                {m.kasir_cash_received()}: Rp{rupiah(struk.uangDiterima)}
+              </p>
+            )}
+            {struk.kembalian != null && struk.kembalian > 0 && (
+              <p>
+                {m.kasir_change()}: Rp{rupiah(struk.kembalian)}
+              </p>
+            )}
+            <p className="text-center">{m.struk_terimakasih()}</p>
+            <p className="text-center text-xs">
+              {m.struk_cetak_owner()}: {struk.cetakOwner} |{' '}
+              {m.struk_cetak_kasir()}: {struk.cetakKasir}
+            </p>
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </>
   )
 }

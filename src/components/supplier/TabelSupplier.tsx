@@ -4,6 +4,11 @@ import type { SupplierRow } from '#/types/supplier'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
 import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
+import {
   Table,
   TableBody,
   TableCell,
@@ -26,25 +31,71 @@ export default function TabelSupplier({
   onHapus: (id: string) => void
   onBayar: (row: SupplierRow) => void
 }) {
+  const kontrol = useKontrolTabel(
+    baris,
+    (s) => `${s.nama} ${s.kontak ?? ''} ${s.alamat ?? ''}`,
+    {
+      nama: (s) => s.nama,
+      kontak: (s) => s.kontak ?? '',
+      pembelian: (s) => s.jumlahPembelian,
+      total: (s) => s.totalBelanja,
+      hutang: (s) => s.hutang,
+    },
+  )
+
   return (
     <div className="-mx-2 overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{m.supplier_nama()}</TableHead>
-            <TableHead>{m.supplier_kontak()}</TableHead>
-            <TableHead className="text-right">
+            <HeaderUrutTabel
+              kunci="nama"
+              aktif={kontrol.kunciUrut === 'nama'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.supplier_nama()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="kontak"
+              aktif={kontrol.kunciUrut === 'kontak'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.supplier_kontak()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="pembelian"
+              aktif={kontrol.kunciUrut === 'pembelian'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+              className="text-right"
+            >
               {m.supplier_jumlah_pembelian()}
-            </TableHead>
-            <TableHead className="text-right">
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="total"
+              aktif={kontrol.kunciUrut === 'total'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+              className="text-right"
+            >
               {m.supplier_total_belanja()}
-            </TableHead>
-            <TableHead className="text-right">{m.supplier_hutang()}</TableHead>
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="hutang"
+              aktif={kontrol.kunciUrut === 'hutang'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+              className="text-right"
+            >
+              {m.supplier_hutang()}
+            </HeaderUrutTabel>
             <TableHead>{m.supplier_aksi()}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {baris.map((s) => (
+          {kontrol.baris.map((s) => (
             <TableRow key={s.id}>
               <TableCell>
                 <p className="font-medium">{s.nama}</p>
@@ -105,7 +156,7 @@ export default function TabelSupplier({
           ))}
         </TableBody>
       </Table>
-      {baris.length === 0 && (
+      {kontrol.jumlahBaris === 0 && (
         <>
           <p className="py-4 text-sm text-neutral-500">{m.supplier_kosong()}</p>
           <p className="py-1 text-sm text-neutral-400">
@@ -113,6 +164,14 @@ export default function TabelSupplier({
           </p>
         </>
       )}
+      <PaginasiTabel
+        halamanAktif={kontrol.halamanAktif}
+        jumlahHalaman={kontrol.jumlahHalaman}
+        jumlahBaris={kontrol.jumlahBaris}
+        ukuranHalaman={kontrol.ukuranHalaman}
+        onHalaman={kontrol.setHalaman}
+        onUkuranHalaman={kontrol.setUkuranHalaman}
+      />
     </div>
   )
 }

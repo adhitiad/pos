@@ -81,18 +81,21 @@ security/P1, sisanya chore/CI/P2). `DAFTAR-TUGAS.md` tetap sumber kebenaran.
 
 ## 6. Keamanan repo (CICD-16)
 
-Setelah repo ada, aktifkan:
+Setelah repo ada, aktifkan alerts dan automated security fixes:
 
 ```bash
 REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 gh api -X PUT "repos/$REPO/vulnerability-alerts"
 gh api -X PUT "repos/$REPO/automated-security-fixes"
-gh api -X PUT -H "Accept: application/vnd.github+json" \
-  "repos/$REPO/private-vulnerability-reporting"
 ```
 
-Bila endpoint berubah, gunakan **Settings → Code security** di UI. Workflow
-`.github/workflows/dependency-review.yml` otomatis meninjau dependency pada PR.
+Private vulnerability reporting tidak selalu tersedia untuk setiap repo/plan.
+Endpoint `repos/$REPO/private-vulnerability-reporting` mengembalikan `404` pada
+verifikasi repo `adhitiad/pos` tanggal 2026-10-22; jangan menafsirkan respons ini
+sebagai aktif. Periksa **Settings → Code security** di UI bila ingin menguji
+ketersediaan kembali. Selama belum tersedia, ikuti fallback di `SECURITY.md`.
+Workflow `.github/workflows/dependency-review.yml` otomatis meninjau dependency
+pada PR dan menggagalkan temuan severity `high` ke atas.
 
 ## 7. Proteksi branch (CICD-02)
 

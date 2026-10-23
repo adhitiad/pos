@@ -1,10 +1,13 @@
 import { z } from 'zod'
 
+import { ID_UKURAN_KERTAS_TERMAL } from '#/lib/ukuran-kertas'
+
 const KUNCI_PENGATURAN = [
   'mode_fnb',
   'riwayat_belanja_aktif',
   'nama_toko',
   'printer_escpos',
+  'ukuran_kertas_termal',
   'struk_otomatis',
   'judul_app',
   'logo_url',
@@ -29,6 +32,12 @@ export const SetPengaturanSchema = z
       v.kunci !== 'struk_otomatis' ||
       (STRUK_OTOMATIS as readonly string[]).includes(v.nilai),
     { message: 'Nilai struk otomatis tidak valid', path: ['nilai'] },
+  )
+  .refine(
+    (v) =>
+      v.kunci !== 'ukuran_kertas_termal' ||
+      (ID_UKURAN_KERTAS_TERMAL as readonly string[]).includes(v.nilai),
+    { message: 'Ukuran kertas tidak valid', path: ['nilai'] },
   )
   .refine(
     (v) =>

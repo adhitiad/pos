@@ -2,6 +2,7 @@ import { prisma } from '#/db'
 import { GalatDomain } from './galat.js'
 import { LaporanPajakSchema } from '#/validations/laporan-pajak'
 import type { Grup, LaporanPajakInput } from '#/validations/laporan-pajak'
+import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 
 export interface LaporanPajakOutput {
   dari: string
@@ -73,7 +74,10 @@ export async function laporanPajak(
   if (akhir < awal) throw new GalatDomain('Rentang tanggal tidak valid')
 
   const transaksi = await prisma.transaksi.findMany({
-    where: { tanggal: { gte: awal, lte: akhir } },
+    where: {
+      tanggal: { gte: awal, lte: akhir },
+      ...FILTER_TRANSAKSI_TERJUAL,
+    },
     orderBy: { tanggal: 'asc' },
     select: {
       tanggal: true,

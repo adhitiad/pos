@@ -35,4 +35,7 @@ async function requirePeran(daftar: ReadonlyArray<Role>): Promise<Pengguna> {
 
 export const requireKasir = () => requirePeran(AKSES.operasional)
 export const requireOwner = () => requirePeran(AKSES.manajerial)
+// Hanya kasir (bukan owner) — dipakai untuk pengajuan pengeluaran yang
+// menunggu persetujuan owner.
+export const requireHanyaKasir = () => requirePeran(AKSES.kasir)
 export const requireSemua = () => requirePeran(AKSES.semua)

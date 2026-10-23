@@ -9,6 +9,8 @@ export const AKSES = {
   operasional: ['OWNER', 'KASIR'],
   /** Manajerial: pemilik saja (master data, laporan, tulis meja/pengaturan). */
   manajerial: ['OWNER'],
+  /** Hanya kasir: pengajuan pengeluaran yang menunggu persetujuan owner. */
+  kasir: ['KASIR'],
   /** Semua peran yang sudah login (analytics kunjungan). */
   semua: ['OWNER', 'KASIR', 'MEMBER'],
 } as const satisfies Record<KunciAkses, readonly Role[]>

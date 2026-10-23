@@ -74,7 +74,9 @@ export async function seedPengguna(): Promise<PenggunaSeed> {
   const ownerEmail = pecahEmail(process.env.OWNER_EMAILS)
   const kasirEmail = pecahEmail(process.env.KASIR_EMAILS)
   const owner = ownerEmail.length > 0 ? ownerEmail : ['owner@pos.local']
-  const semuaKasir = kasirEmail.filter((email) => !owner.includes(email))
+  const semuaKasir = (
+    kasirEmail.length > 0 ? kasirEmail : ['kasir@pos.local']
+  ).filter((email) => !owner.includes(email))
   const memberEmail = 'budi@example.com'
 
   const ownerRows = []

@@ -22,6 +22,11 @@ import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '#/components/ui/card'
 import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
+import {
   Table,
   TableBody,
   TableCell,
@@ -76,6 +81,16 @@ function Member() {
         (mm.telepon ?? '').toLowerCase().includes(q),
     )
   }, [member, cari])
+  const kontrol = useKontrolTabel(
+    baris,
+    (mm) => `${mm.nama} ${mm.telepon ?? ''} ${mm.email ?? ''}`,
+    {
+      nama: (mm) => mm.nama,
+      telepon: (mm) => mm.telepon ?? '',
+      poin: (mm) => mm.poin,
+      transaksi: (mm) => mm.jumlahTransaksi,
+    },
+  )
 
   const muatUlang = async () => {
     await router.invalidate()
@@ -290,15 +305,45 @@ function Member() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{m.member_nama()}</TableHead>
-              <TableHead>{m.member_telepon()}</TableHead>
-              <TableHead className="text-right">{m.member_poin()}</TableHead>
-              <TableHead className="text-right">{m.member_trx()}</TableHead>
+              <HeaderUrutTabel
+                kunci="nama"
+                aktif={kontrol.kunciUrut === 'nama'}
+                arah={kontrol.arahUrut}
+                onUrut={kontrol.toggleUrut}
+              >
+                {m.member_nama()}
+              </HeaderUrutTabel>
+              <HeaderUrutTabel
+                kunci="telepon"
+                aktif={kontrol.kunciUrut === 'telepon'}
+                arah={kontrol.arahUrut}
+                onUrut={kontrol.toggleUrut}
+              >
+                {m.member_telepon()}
+              </HeaderUrutTabel>
+              <HeaderUrutTabel
+                kunci="poin"
+                aktif={kontrol.kunciUrut === 'poin'}
+                arah={kontrol.arahUrut}
+                onUrut={kontrol.toggleUrut}
+                className="text-right"
+              >
+                {m.member_poin()}
+              </HeaderUrutTabel>
+              <HeaderUrutTabel
+                kunci="transaksi"
+                aktif={kontrol.kunciUrut === 'transaksi'}
+                arah={kontrol.arahUrut}
+                onUrut={kontrol.toggleUrut}
+                className="text-right"
+              >
+                {m.member_trx()}
+              </HeaderUrutTabel>
               <TableHead>{m.member_aksi()}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {baris.map((mm) => (
+            {kontrol.baris.map((mm) => (
               <TableRow key={mm.id}>
                 <TableCell>
                   <p className="font-medium">{mm.nama}</p>
@@ -343,7 +388,7 @@ function Member() {
             ))}
           </TableBody>
         </Table>
-        {baris.length === 0 && (
+        {kontrol.jumlahBaris === 0 && (
           <>
             <p className="py-4 text-sm text-neutral-500">{m.member_kosong()}</p>
             <p className="py-1 text-sm text-neutral-400">
@@ -351,6 +396,14 @@ function Member() {
             </p>
           </>
         )}
+        <PaginasiTabel
+          halamanAktif={kontrol.halamanAktif}
+          jumlahHalaman={kontrol.jumlahHalaman}
+          jumlahBaris={kontrol.jumlahBaris}
+          ukuranHalaman={kontrol.ukuranHalaman}
+          onHalaman={kontrol.setHalaman}
+          onUkuranHalaman={kontrol.setUkuranHalaman}
+        />
       </div>
     </DashboardLayout>
   )

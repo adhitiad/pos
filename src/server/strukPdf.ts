@@ -10,6 +10,7 @@ import {
 
 import type { EksporHasil } from '#/types/laporan-ekspor'
 import type { StrukPayload } from '#/types/percetakan'
+import { ukuranKertasDari, ukuranKertasPoin } from '#/lib/ukuran-kertas'
 import { GalatDomain } from './galat.js'
 import { pengaturanData } from './pengaturan.js'
 import { muatPayloadStruk } from './percetakan.js'
@@ -58,13 +59,18 @@ function baris(teks: string, nilai: string, tebal = false) {
   )
 }
 
-function isiStruk(payload: StrukPayload, namaToko: string) {
+function isiStruk(
+  payload: StrukPayload,
+  namaToko: string,
+  ukuranKertas: string,
+) {
+  const ukuran = ukuranKertasPoin(ukuranKertasDari(ukuranKertas))
   return h(
     Document,
     {},
     h(
       Page,
-      { size: { width: 226, height: 700 }, style: gaya.page },
+      { size: ukuran, style: gaya.page },
       h(Text, { style: gaya.toko }, namaToko),
       h(Text, { style: gaya.tengah }, 'STRUK PEMBAYARAN'),
       h(Text, { style: gaya.tengah }, payload.nomor),
@@ -152,7 +158,9 @@ export async function eksporStrukPdf(
 ): Promise<EksporHasil> {
   const payload = await muatPayloadStruk(transaksiId)
   if (!payload) throw new GalatDomain('Transaksi tidak ditemukan')
-  const { namaToko } = await pengaturanData()
-  const isi = await renderToBuffer(isiStruk(payload, namaToko))
+  const { namaToko, ukuranKertasTermal } = await pengaturanData()
+  const isi = await renderToBuffer(
+    isiStruk(payload, namaToko, ukuranKertasTermal),
+  )
   return { nama: namaFile(payload.nomor), tipe: 'application/pdf', isi }
 }

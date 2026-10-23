@@ -22,6 +22,9 @@ export const env = createEnv({
       .string()
       .optional()
       .transform((v) => v === 'true' || v === '1'),
+    // Jumlah proxy tepercaya yang MENAMBAHKAN entri X-Forwarded-For.
+    // XFF dibaca dari kanan; Vercel = 1 hop. Naikkan bila ada proxy tambahan.
+    TRUST_PROXY_HOPS: z.coerce.number().int().min(1).max(10).default(1),
     // Flag eksplisit CSP: `true`/`1` menyalakan, `false`/`0` mematikan;
     // kosong = default (menyala saat produksi).
     ENABLE_CSP: z
@@ -42,6 +45,9 @@ export const env = createEnv({
     CLOUDINARY_API_SECRET: z.string().min(1).optional(),
     // Folder Cloudinary khusus aset POS (untuk validasi hapus/unduh yang aman).
     CLOUDINARY_FOLDER: z.string().min(1).optional(),
+    // Secret HMAC untuk webhook pembayaran (payment gateway mendatang).
+    // Kosong = endpoint webhook menolak semua permintaan.
+    PAYMENT_WEBHOOK_SECRET: z.string().min(16).optional(),
   },
 
   clientPrefix: 'VITE_',
@@ -62,12 +68,14 @@ export const env = createEnv({
     KASIR_EMAILS: process.env.KASIR_EMAILS,
     TRUSTED_ORIGINS: process.env.TRUSTED_ORIGINS,
     TRUST_PROXY: process.env.TRUST_PROXY,
+    TRUST_PROXY_HOPS: process.env.TRUST_PROXY_HOPS,
     ENABLE_CSP: process.env.ENABLE_CSP,
     LOG_LEVEL: process.env.LOG_LEVEL,
     CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
     CLOUDINARY_FOLDER: process.env.CLOUDINARY_FOLDER,
+    PAYMENT_WEBHOOK_SECRET: process.env.PAYMENT_WEBHOOK_SECRET,
   },
 
   emptyStringAsUndefined: true,

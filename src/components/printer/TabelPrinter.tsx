@@ -4,6 +4,11 @@ import type { PrinterRow } from '#/types/percetakan'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
 import {
+  HeaderUrutTabel,
+  PaginasiTabel,
+  useKontrolTabel,
+} from '#/components/ui/table-controls'
+import {
   Table,
   TableBody,
   TableCell,
@@ -31,23 +36,79 @@ export default function TabelPrinter({
   onEdit: (row: PrinterRow) => void
   onHapus: (id: string) => void
 }) {
+  const kontrol = useKontrolTabel(
+    baris,
+    (p) =>
+      `${p.nama} ${p.tipe} ${p.lokasi ?? ''} ${p.perangkat ?? ''} ${p.koneksi}`,
+    {
+      nama: (p) => p.nama,
+      tipe: (p) => p.tipe,
+      lokasi: (p) => p.lokasi ?? '',
+      koneksi: (p) => p.koneksi,
+      terakhir: (p) => p.terakhirDipakai ?? '',
+      status: (p) => (p.aktif ? 1 : 0),
+    },
+  )
+
   return (
     <div className="-mx-2 overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{m.printer_nama()}</TableHead>
-            <TableHead>{m.printer_tipe()}</TableHead>
-            <TableHead>{m.printer_lokasi()}</TableHead>
+            <HeaderUrutTabel
+              kunci="nama"
+              aktif={kontrol.kunciUrut === 'nama'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.printer_nama()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="tipe"
+              aktif={kontrol.kunciUrut === 'tipe'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.printer_tipe()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="lokasi"
+              aktif={kontrol.kunciUrut === 'lokasi'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.printer_lokasi()}
+            </HeaderUrutTabel>
             <TableHead>{m.printer_perangkat()}</TableHead>
-            <TableHead>{m.printer_koneksi()}</TableHead>
-            <TableHead>{m.printer_terakhir_dipakai()}</TableHead>
-            <TableHead>{m.printer_status()}</TableHead>
+            <HeaderUrutTabel
+              kunci="koneksi"
+              aktif={kontrol.kunciUrut === 'koneksi'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.printer_koneksi()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="terakhir"
+              aktif={kontrol.kunciUrut === 'terakhir'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.printer_terakhir_dipakai()}
+            </HeaderUrutTabel>
+            <HeaderUrutTabel
+              kunci="status"
+              aktif={kontrol.kunciUrut === 'status'}
+              arah={kontrol.arahUrut}
+              onUrut={kontrol.toggleUrut}
+            >
+              {m.printer_status()}
+            </HeaderUrutTabel>
             <TableHead>{m.printer_aksi()}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {baris.map((p) => (
+          {kontrol.baris.map((p) => (
             <TableRow key={p.id}>
               <TableCell>
                 <p className="font-medium">{p.nama}</p>
@@ -95,7 +156,7 @@ export default function TabelPrinter({
           ))}
         </TableBody>
       </Table>
-      {baris.length === 0 && (
+      {kontrol.jumlahBaris === 0 && (
         <>
           <p className="py-4 text-sm text-neutral-500">{m.printer_kosong()}</p>
           <p className="py-1 text-sm text-neutral-400">
@@ -103,6 +164,14 @@ export default function TabelPrinter({
           </p>
         </>
       )}
+      <PaginasiTabel
+        halamanAktif={kontrol.halamanAktif}
+        jumlahHalaman={kontrol.jumlahHalaman}
+        jumlahBaris={kontrol.jumlahBaris}
+        ukuranHalaman={kontrol.ukuranHalaman}
+        onHalaman={kontrol.setHalaman}
+        onUkuranHalaman={kontrol.setUkuranHalaman}
+      />
     </div>
   )
 }

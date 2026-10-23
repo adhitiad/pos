@@ -70,7 +70,7 @@ flowchart TD
         PE2 -->|"GET /api/v1/pesan"| PE3[pesananData]
         PE3 -->|"filter aktif=true"| PE4[Daftar produk + meja]
         PE3 --> PDB
-        PE2 -->|"POST /api/v1/pesan"| PE5[pesamTransaksi]
+        PE2 -->|"POST /api/v1/pesan"| PE5[pesanTransaksi]
         PE5 --> PE6[PostingTransaksiSchema.parse]
         PE6 --> PE12[kasirId=null, statusPesanan=MENUNGGU]
         PE12 --> P4
@@ -79,14 +79,27 @@ flowchart TD
         PE8 -->|"online kembali"| P4
     end
 
-    %% ===== Cetak Struk =====
-    subgraph PRINT["Cetak Struk ESC/POS"]
-        PR1[kasir / dapur / member route] --> PR2[cetakStrukFn]
-        PR2 --> PR3[Increment cetakOwner / cetakKasir]
+    %% ===== Antrean & Cetak Ulang Struk =====
+    subgraph PRINT["Antrean & Cetak Struk"]
+        PR1[OWNER / KASIR di route percetakan] --> PR2[daftarPrintJobFn + requireKasir]
+        PR2 --> PR3[Antrean PrintJob]
+        PR3 -->|"MENUNGGU → DIPROSES → DICETAK / GAGAL"| PR4[aksi job cetak]
         PR3 --> PDB
-        PR2 -->|"mode printer_escpos"| PR4[printer.ts]
-        PR4 -->|"navigator.serial"| PR5[ESC/POS Printer]
-        PR5 -->|"Web Serial API"| PR1
+        PR4 -->|"Cetak ulang STRUK"| PR5[buatPrintJobFn → buatPrintJob]
+        PR5 --> PR6[muatPayloadStruk dari transaksi]
+        PR6 --> PDB
+        PR5 --> PR7{role}
+        PR7 -->|"OWNER: tanpa batas"| PR8[cetakOwner + 1]
+        PR7 -->|"KASIR: hanya jika cetakKasir < 3"| PR9[cetakKasir + 1]
+        PR8 --> PDB
+        PR9 --> PDB
+        PR5 -->|"job baru: STRUK"| PR3
+        PR4 -->|"printer ESC/POS"| PR10[printer.ts → navigator.serial]
+        PR10 --> PR11[ESC/POS Printer]
+        PR11 -->|"Web Serial API"| PR1
+
+        PR12[Cetak langsung dari struk kasir] -->|"POST /api/v1/transaksi/cetak/$id"| PR13[cetakStruk]
+        PR13 -->|"catat cetakOwner / cetakKasir"| PDB
     end
 
     %% ===== Laporan & Export =====
@@ -123,7 +136,8 @@ flowchart TD
         X1[Transaksi] -->|"poin member"| X2[Member poin update]
         X1 -->|"diskon member"| X2
         X1 -->|"statusPesanan"| K3
-        X1 -->|"cetakOwner/Kasir"| PR2
+        X1 -->|"cetak ulang"| PR5
+        X1 -->|"catat cetak struk langsung"| PR13
         X1 -->|"export data"| L2
         X1 -->|"analytics data"| L10
     end
@@ -135,9 +149,9 @@ flowchart TD
     classDef store fill:#fef3c7,stroke:#d97706,stroke-width:2px
     classDef printer fill:#fee2e2,stroke:#dc2626,stroke-width:2px
 
-    class A1,A2,A3,A4,A5,A6,A7,PE1,PE2,PE3,PE4,P1,P2,P3,PR1,PR2,K1,K2,K3,K4,K5,L1,L2,L3,L9,L10,L11,T1,T2,T6,T7 client
-    class P4,P5,P6,P7,P8,P9,P10,PE5,PE6,PE12,K4,L4,L5,L6,L7,L8,T3,T4,T5,T8,VAL1 server
+    class A1,A2,A3,A4,A5,A6,A7,PE1,PE2,PE3,PE4,P1,P2,P3,PR1,PR3,PR4,PR11,PR12,K1,K2,K3,K4,K5,L1,L2,L3,L9,L10,L11,T1,T2,T6,T7 client
+    class P4,P5,P6,P7,P8,P9,P10,PE5,PE6,PE12,PR2,PR5,PR6,PR8,PR9,PR10,PR13,K4,L4,L5,L6,L7,L8,T3,T4,T5,T8,VAL1 server
     class PDB store
     class P12,PE7,PE8 store
-    class PR4,PR5 printer
+    class PR11 printer
 ```

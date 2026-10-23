@@ -78,4 +78,24 @@ describe('deviceVisit', () => {
     })
     expect(hasil).toBeNull()
   })
+
+  it('mengabaikan IP/DNS dari klien dan memakai IP koneksi server', async () => {
+    const deviceId = `dev-ip-${Date.now()}`
+    deviceIds.push(deviceId)
+
+    const hasil = await recordDeviceVisit({
+      deviceId,
+      os: 'android',
+      klasifikasi: 'hp',
+      // Field lama dari body klien tidak boleh masuk database.
+      ipv4: '1.2.3.4',
+      ipv6: '2001:db8::1',
+      dns: 'evil.example',
+      ipAddress: '203.0.113.9',
+    } as Parameters<typeof recordDeviceVisit>[0])
+
+    expect(hasil?.ipv4).toBe('203.0.113.9')
+    expect(hasil?.ipv6).toBeNull()
+    expect(hasil?.dns).toBeNull()
+  })
 })
