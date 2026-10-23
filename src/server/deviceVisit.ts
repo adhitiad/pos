@@ -8,6 +8,8 @@ import type {
   DeviceVisitQueryInput,
 } from '#/validations/device-visit'
 import type { DeviceVisitRow } from '#/types/device-visit'
+import { bacaTokenDevice, deteksiPerangkat } from './deviceToken.js'
+
 // Cek role user bila userId disertakan. Owner & kasir dikecualikan dari pencatatan.
 async function resolveUserType(
   userId?: string,
@@ -22,34 +24,22 @@ async function resolveUserType(
   return 'member'
 }
 
-export async function recordDeviceVisit(
-  input: DeviceVisitInput & { ipAddress?: string },
-): Promise<DeviceVisitRow | null> {
-  const data = DeviceVisitSchema.parse(input)
-
-  // Owner & kasir dikecualikan dari analytics
-  const userType = await resolveUserType(data.userId)
-  if (userType === null) return null
-
-  // IP hanya dari koneksi server, tidak pernah dari body klien.
-  const ip = input.ipAddress?.trim() ?? ''
-  const ipv4 = /^\d{1,3}(?:\.\d{1,3}){3}$/.test(ip) ? ip : null
-  const ipv6 = ip.includes(':') && ip.length <= 45 ? ip : null
-
-  const visit = await prisma.deviceVisit.create({
-    data: {
-      deviceId: data.deviceId,
-      deviceName: data.deviceName ?? null,
-      os: data.os,
-      ipv4,
-      ipv6,
-      dns: null,
-      lokasi: data.lokasi ?? null,
-      klasifikasi: data.klasifikasi,
-      userId: data.userId ?? null,
-      userType,
-    },
-  })
+function keBaris(visit: {
+  id: string
+  deviceId: string
+  deviceName: string | null
+  os: string
+  ipv4: string | null
+  ipv6: string | null
+  dns: string | null
+  lokasi: string | null
+  klasifikasi: string
+  userId: string | null
+  userType: string
+  createdAt: Date
+  terakhirDilihat: Date
+  jumlahKunjungan: number
+}): DeviceVisitRow {
   return {
     id: visit.id,
     deviceId: visit.deviceId,
@@ -63,7 +53,64 @@ export async function recordDeviceVisit(
     userId: visit.userId,
     userType: visit.userType,
     createdAt: visit.createdAt.toISOString(),
+    terakhirDilihat: visit.terakhirDilihat.toISOString(),
+    jumlahKunjungan: visit.jumlahKunjungan,
   }
+}
+
+export async function recordDeviceVisit(
+  input: DeviceVisitInput & {
+    ipAddress?: string
+    userAgent?: string
+    lokasi?: string | null
+    userId?: string
+  },
+): Promise<DeviceVisitRow | null> {
+  const data = DeviceVisitSchema.parse(input)
+  const userAgent = input.userAgent?.trim() ?? ''
+  // Token memuat deviceId turunan server; body klien tidak bisa memalsukannya.
+  const { deviceId } = bacaTokenDevice(data.token, userAgent)
+
+  // Owner & kasir dikecualikan dari analytics
+  const userType = await resolveUserType(input.userId)
+  if (userType === null) return null
+
+  // IP hanya dari koneksi server, tidak pernah dari body klien.
+  const ip = input.ipAddress?.trim() ?? ''
+  const ipv4 = /^\d{1,3}(?:\.\d{1,3}){3}$/.test(ip) ? ip : null
+  const ipv6 = ip.includes(':') && ip.length <= 45 ? ip : null
+  const perangkat = deteksiPerangkat(userAgent)
+
+  const visit = await prisma.deviceVisit.upsert({
+    where: { deviceId },
+    create: {
+      deviceId,
+      deviceName: perangkat.deviceName,
+      os: perangkat.os,
+      ipv4,
+      ipv6,
+      dns: null,
+      lokasi: input.lokasi ?? null,
+      klasifikasi: perangkat.klasifikasi,
+      userId: input.userId ?? null,
+      userType,
+      terakhirDilihat: new Date(),
+      jumlahKunjungan: 1,
+    },
+    update: {
+      deviceName: perangkat.deviceName,
+      os: perangkat.os,
+      ipv4,
+      ipv6,
+      lokasi: input.lokasi ?? null,
+      klasifikasi: perangkat.klasifikasi,
+      userId: input.userId ?? null,
+      userType,
+      terakhirDilihat: new Date(),
+      jumlahKunjungan: { increment: 1 },
+    },
+  })
+  return keBaris(visit)
 }
 
 export async function daftarDeviceVisit(
@@ -77,27 +124,14 @@ export async function daftarDeviceVisit(
       ...(data.userType && { userType: data.userType }),
       ...(data.klasifikasi && { klasifikasi: data.klasifikasi }),
       ...(data.dari && {
-        createdAt: { gte: new Date(`${data.dari}T00:00:00`) },
+        terakhirDilihat: { gte: new Date(`${data.dari}T00:00:00`) },
       }),
       ...(data.sampai && {
-        createdAt: { lte: new Date(`${data.sampai}T23:59:59.999`) },
+        terakhirDilihat: { lte: new Date(`${data.sampai}T23:59:59.999`) },
       }),
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { terakhirDilihat: 'desc' },
     take: data.limit ?? 200,
   })
-  return visits.map((v) => ({
-    id: v.id,
-    deviceId: v.deviceId,
-    deviceName: v.deviceName,
-    os: v.os,
-    ipv4: v.ipv4,
-    ipv6: v.ipv6,
-    dns: v.dns,
-    lokasi: v.lokasi,
-    klasifikasi: v.klasifikasi,
-    userId: v.userId,
-    userType: v.userType,
-    createdAt: v.createdAt.toISOString(),
-  }))
+  return visits.map(keBaris)
 }

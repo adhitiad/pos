@@ -8,5 +8,9 @@ export const postingTransaksiFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => PostingTransaksiSchema.parse(input))
   .handler(async ({ data }) => {
     const pengguna = await requireKasir()
-    return ringkasHasil(await postingTransaksi(data, pengguna.id))
+    return ringkasHasil(
+      await postingTransaksi(data, pengguna.id, {
+        aktor: { id: pengguna.id, peran: pengguna.role },
+      }),
+    )
   })

@@ -11,7 +11,7 @@ const WAJIB: Record<string, number> = {
   modifierGrup: 3,
   modifier: 7,
   akun: 7,
-  pengaturan: 12,
+  pengaturan: 13,
   supplier: 2,
   printer: 2,
   user: 2,

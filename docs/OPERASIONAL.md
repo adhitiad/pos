@@ -17,6 +17,7 @@
       Free belum mendukung. Panduan lengkap: [`docs/DEPLOY.md`](DEPLOY.md).
 - [ ] Environment Vercel Production: `DATABASE_URL` (pooled, runtime),
       `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`,
+      `GOOGLE_NATIVE_CLIENT_ID` (opsional, untuk login Expo native),
       `OWNER_EMAILS`, `TRUSTED_ORIGINS`, `TRUST_PROXY=true`,
       `TRUST_PROXY_HOPS=1`. Secret migrasi
       `DATABASE_URL_UNPOOLED` disimpan di GitHub environment `production`.

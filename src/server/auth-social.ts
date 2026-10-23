@@ -2,6 +2,7 @@ import { auth } from '#/lib/auth'
 import type { AuthContext } from '@better-auth/core'
 import { dispatchAuthEndpoint } from 'better-auth/api'
 
+import { headerAuthNative } from './auth-native.js'
 import type { SignInSocialInput } from '#/validations/auth-social'
 import type { SignInSocialResult } from '#/types/auth'
 
@@ -22,7 +23,9 @@ export async function signInSocial(
         },
         callbackURL: input.callbackURL,
       },
-      headers: new Headers(),
+      // Hanya panggilan internal ini yang boleh memakai jalur idToken Better
+      // Auth; request HTTP langsung dari browser ditolak plugin guard.
+      headers: headerAuthNative(),
       method: 'POST',
       asResponse: true,
     })

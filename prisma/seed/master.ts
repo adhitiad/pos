@@ -91,6 +91,8 @@ export async function seedMaster() {
       // PB1 restoran/cafe (mode F&B) & PPN retail — dibebankan ke pelanggan.
       { kunci: 'pajak_resto_persen', nilai: '0' },
       { kunci: 'pajak_retail_persen', nilai: '0' },
+      // Batas diskon manual KASIR (SEC-22); OWNER boleh melewati tetapi diaudit.
+      { kunci: 'diskon_kasir_maks_persen', nilai: '10' },
       { kunci: 'stok_dikurangi_saat', nilai: 'order' },
     ],
   })

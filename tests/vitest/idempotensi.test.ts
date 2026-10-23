@@ -2,6 +2,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 
 import { prisma } from '#/db'
 import { postingTransaksi, ringkasHasil } from '#/server/transaksi'
+import { PostingTransaksiSchema } from '#/validations/transaksi'
 
 const produkIds: string[] = []
 const transaksiIds: string[] = []
@@ -75,7 +76,7 @@ describe('idempotensi offline', () => {
     const produk = await buatProduk(5)
     const key = `uji-jejak-${Date.now()}`
     idempotencyKeys.push(key)
-    const waktuKlien = '2026-10-20T08:30:00.000Z'
+    const waktuKlien = new Date(Date.now() - 60_000).toISOString()
 
     const hasil = ringkasHasil(
       await postingTransaksi({
@@ -95,6 +96,37 @@ describe('idempotensi offline', () => {
     expect(baris.waktuKlien?.toISOString()).toBe(waktuKlien)
     expect(baris.hpp.toNumber()).toBe(0)
     expect(baris.diskonMember.toNumber()).toBe(0)
+    // Waktu terima server dicatat eksplisit; bukan berasal dari waktuKlien.
+    expect(baris.diterimaPada).toBeInstanceOf(Date)
+    expect(Math.abs(baris.diterimaPada.getTime() - Date.now())).toBeLessThan(
+      10_000,
+    )
+    expect(baris.tanggal.getTime()).toBeGreaterThanOrEqual(
+      baris.diterimaPada.getTime() - 2_000,
+    )
+  })
+
+  it('menolak waktuKlien ekstrem dan offline tanpa idempotencyKey', () => {
+    const dasar = { items: [{ produkId: 'produk-uji', qty: 1 }] }
+    const sekarang = Date.now()
+
+    expect(() =>
+      PostingTransaksiSchema.parse({
+        ...dasar,
+        waktuKlien: new Date(sekarang + 25 * 60 * 60 * 1_000).toISOString(),
+      }),
+    ).toThrow(/di luar batas/)
+
+    expect(() =>
+      PostingTransaksiSchema.parse({
+        ...dasar,
+        waktuKlien: new Date(sekarang - 25 * 60 * 60 * 1_000).toISOString(),
+      }),
+    ).toThrow(/di luar batas/)
+
+    expect(() =>
+      PostingTransaksiSchema.parse({ ...dasar, dibuatOffline: true }),
+    ).toThrow(/idempotencyKey/)
   })
 
   it('kunci berbeda → transaksi terpisah', async () => {

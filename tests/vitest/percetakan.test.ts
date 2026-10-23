@@ -859,6 +859,11 @@ describe('percetakan — antrean job', () => {
     })
     expect(transaksi.cetakKasir).toBe(3)
     expect(jumlahJob).toBe(3)
+
+    const baris = await daftarPrintJob({ take: 50 })
+    expect(
+      baris.find((job) => job.transaksiId === transaksiId)?.cetakKasir,
+    ).toBe(3)
   })
 
   it('owner dapat mencetak ulang struk tanpa batas antrean kasir', async () => {

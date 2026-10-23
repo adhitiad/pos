@@ -14,6 +14,9 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: z.string().min(32, 'Secret minimal 32 karakter'),
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
+    // Client ID OAuth native (iOS/Android). Harus berbeda dari client web;
+    // kosong = endpoint /api/v1/auth-native menolak login native.
+    GOOGLE_NATIVE_CLIENT_ID: z.string().optional(),
     OWNER_EMAILS: z.string().optional(),
     KASIR_EMAILS: z.string().optional(),
     TRUSTED_ORIGINS: z.string().optional(),
@@ -64,6 +67,7 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GOOGLE_NATIVE_CLIENT_ID: process.env.GOOGLE_NATIVE_CLIENT_ID,
     OWNER_EMAILS: process.env.OWNER_EMAILS,
     KASIR_EMAILS: process.env.KASIR_EMAILS,
     TRUSTED_ORIGINS: process.env.TRUSTED_ORIGINS,

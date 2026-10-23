@@ -17,6 +17,7 @@ export const Route = createFileRoute('/api/v1/transaksi')({
               await bacaJsonTerbatas(request, 256 * 1024),
             ),
             pengguna.id,
+            { aktor: { id: pengguna.id, peran: pengguna.role } },
           )
           return ok(ringkasHasil(hasil), 201)
         } catch (e) {

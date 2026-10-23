@@ -99,6 +99,8 @@ describe('UI printer & antrean cetak', () => {
     )
     expect(html).toContain('Printer Kasir 1')
     expect(html).toContain(m.percetakan_menunggu())
+    expect(html).toContain(m.percetakan_penghitung())
+    expect(html).toContain('OWNER 0 · KASIR 0')
   })
 
   it('OWNER dapat mencetak ulang struk dari antrean', () => {
@@ -131,6 +133,7 @@ describe('UI printer & antrean cetak', () => {
       />,
     )
     expect(html).toContain(m.percetakan_batas_kasir())
+    expect(html).toContain('OWNER 0 · KASIR 3')
   })
 
   it('TabelPrintJob menampilkan alasan kegagalan', () => {

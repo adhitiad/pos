@@ -20,8 +20,18 @@ export type DeviceVisitModel = runtime.Types.Result.DefaultSelection<Prisma.$Dev
 
 export type AggregateDeviceVisit = {
   _count: DeviceVisitCountAggregateOutputType | null
+  _avg: DeviceVisitAvgAggregateOutputType | null
+  _sum: DeviceVisitSumAggregateOutputType | null
   _min: DeviceVisitMinAggregateOutputType | null
   _max: DeviceVisitMaxAggregateOutputType | null
+}
+
+export type DeviceVisitAvgAggregateOutputType = {
+  jumlahKunjungan: number | null
+}
+
+export type DeviceVisitSumAggregateOutputType = {
+  jumlahKunjungan: number | null
 }
 
 export type DeviceVisitMinAggregateOutputType = {
@@ -37,6 +47,8 @@ export type DeviceVisitMinAggregateOutputType = {
   userId: string | null
   userType: string | null
   createdAt: Date | null
+  terakhirDilihat: Date | null
+  jumlahKunjungan: number | null
 }
 
 export type DeviceVisitMaxAggregateOutputType = {
@@ -52,6 +64,8 @@ export type DeviceVisitMaxAggregateOutputType = {
   userId: string | null
   userType: string | null
   createdAt: Date | null
+  terakhirDilihat: Date | null
+  jumlahKunjungan: number | null
 }
 
 export type DeviceVisitCountAggregateOutputType = {
@@ -67,9 +81,19 @@ export type DeviceVisitCountAggregateOutputType = {
   userId: number
   userType: number
   createdAt: number
+  terakhirDilihat: number
+  jumlahKunjungan: number
   _all: number
 }
 
+
+export type DeviceVisitAvgAggregateInputType = {
+  jumlahKunjungan?: true
+}
+
+export type DeviceVisitSumAggregateInputType = {
+  jumlahKunjungan?: true
+}
 
 export type DeviceVisitMinAggregateInputType = {
   id?: true
@@ -84,6 +108,8 @@ export type DeviceVisitMinAggregateInputType = {
   userId?: true
   userType?: true
   createdAt?: true
+  terakhirDilihat?: true
+  jumlahKunjungan?: true
 }
 
 export type DeviceVisitMaxAggregateInputType = {
@@ -99,6 +125,8 @@ export type DeviceVisitMaxAggregateInputType = {
   userId?: true
   userType?: true
   createdAt?: true
+  terakhirDilihat?: true
+  jumlahKunjungan?: true
 }
 
 export type DeviceVisitCountAggregateInputType = {
@@ -114,6 +142,8 @@ export type DeviceVisitCountAggregateInputType = {
   userId?: true
   userType?: true
   createdAt?: true
+  terakhirDilihat?: true
+  jumlahKunjungan?: true
   _all?: true
 }
 
@@ -155,6 +185,18 @@ export type DeviceVisitAggregateArgs<ExtArgs extends runtime.Types.Extensions.In
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: DeviceVisitAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: DeviceVisitSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: DeviceVisitMinAggregateInputType
@@ -185,6 +227,8 @@ export type DeviceVisitGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   _count?: DeviceVisitCountAggregateInputType | true
+  _avg?: DeviceVisitAvgAggregateInputType
+  _sum?: DeviceVisitSumAggregateInputType
   _min?: DeviceVisitMinAggregateInputType
   _max?: DeviceVisitMaxAggregateInputType
 }
@@ -202,7 +246,11 @@ export type DeviceVisitGroupByOutputType = {
   userId: string | null
   userType: string
   createdAt: Date
+  terakhirDilihat: Date
+  jumlahKunjungan: number
   _count: DeviceVisitCountAggregateOutputType | null
+  _avg: DeviceVisitAvgAggregateOutputType | null
+  _sum: DeviceVisitSumAggregateOutputType | null
   _min: DeviceVisitMinAggregateOutputType | null
   _max: DeviceVisitMaxAggregateOutputType | null
 }
@@ -238,6 +286,8 @@ export type DeviceVisitWhereInput = {
   userId?: Prisma.StringNullableFilter<"DeviceVisit"> | string | null
   userType?: Prisma.StringFilter<"DeviceVisit"> | string
   createdAt?: Prisma.DateTimeFilter<"DeviceVisit"> | Date | string
+  terakhirDilihat?: Prisma.DateTimeFilter<"DeviceVisit"> | Date | string
+  jumlahKunjungan?: Prisma.IntFilter<"DeviceVisit"> | number
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -254,15 +304,17 @@ export type DeviceVisitOrderByWithRelationInput = {
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   userType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  terakhirDilihat?: Prisma.SortOrder
+  jumlahKunjungan?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type DeviceVisitWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  deviceId?: string
   AND?: Prisma.DeviceVisitWhereInput | Prisma.DeviceVisitWhereInput[]
   OR?: Prisma.DeviceVisitWhereInput[]
   NOT?: Prisma.DeviceVisitWhereInput | Prisma.DeviceVisitWhereInput[]
-  deviceId?: Prisma.StringFilter<"DeviceVisit"> | string
   deviceName?: Prisma.StringNullableFilter<"DeviceVisit"> | string | null
   os?: Prisma.StringFilter<"DeviceVisit"> | string
   ipv4?: Prisma.StringNullableFilter<"DeviceVisit"> | string | null
@@ -273,8 +325,10 @@ export type DeviceVisitWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringNullableFilter<"DeviceVisit"> | string | null
   userType?: Prisma.StringFilter<"DeviceVisit"> | string
   createdAt?: Prisma.DateTimeFilter<"DeviceVisit"> | Date | string
+  terakhirDilihat?: Prisma.DateTimeFilter<"DeviceVisit"> | Date | string
+  jumlahKunjungan?: Prisma.IntFilter<"DeviceVisit"> | number
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id">
+}, "id" | "deviceId">
 
 export type DeviceVisitOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -289,9 +343,13 @@ export type DeviceVisitOrderByWithAggregationInput = {
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   userType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  terakhirDilihat?: Prisma.SortOrder
+  jumlahKunjungan?: Prisma.SortOrder
   _count?: Prisma.DeviceVisitCountOrderByAggregateInput
+  _avg?: Prisma.DeviceVisitAvgOrderByAggregateInput
   _max?: Prisma.DeviceVisitMaxOrderByAggregateInput
   _min?: Prisma.DeviceVisitMinOrderByAggregateInput
+  _sum?: Prisma.DeviceVisitSumOrderByAggregateInput
 }
 
 export type DeviceVisitScalarWhereWithAggregatesInput = {
@@ -310,6 +368,8 @@ export type DeviceVisitScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringNullableWithAggregatesFilter<"DeviceVisit"> | string | null
   userType?: Prisma.StringWithAggregatesFilter<"DeviceVisit"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DeviceVisit"> | Date | string
+  terakhirDilihat?: Prisma.DateTimeWithAggregatesFilter<"DeviceVisit"> | Date | string
+  jumlahKunjungan?: Prisma.IntWithAggregatesFilter<"DeviceVisit"> | number
 }
 
 export type DeviceVisitCreateInput = {
@@ -324,6 +384,8 @@ export type DeviceVisitCreateInput = {
   klasifikasi: string
   userType: string
   createdAt?: Date | string
+  terakhirDilihat?: Date | string
+  jumlahKunjungan?: number
   user?: Prisma.UserCreateNestedOneWithoutDeviceVisitsInput
 }
 
@@ -340,6 +402,8 @@ export type DeviceVisitUncheckedCreateInput = {
   userId?: string | null
   userType: string
   createdAt?: Date | string
+  terakhirDilihat?: Date | string
+  jumlahKunjungan?: number
 }
 
 export type DeviceVisitUpdateInput = {
@@ -354,6 +418,8 @@ export type DeviceVisitUpdateInput = {
   klasifikasi?: Prisma.StringFieldUpdateOperationsInput | string
   userType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDilihat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jumlahKunjungan?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutDeviceVisitsNestedInput
 }
 
@@ -370,6 +436,8 @@ export type DeviceVisitUncheckedUpdateInput = {
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDilihat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jumlahKunjungan?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type DeviceVisitCreateManyInput = {
@@ -385,6 +453,8 @@ export type DeviceVisitCreateManyInput = {
   userId?: string | null
   userType: string
   createdAt?: Date | string
+  terakhirDilihat?: Date | string
+  jumlahKunjungan?: number
 }
 
 export type DeviceVisitUpdateManyMutationInput = {
@@ -399,6 +469,8 @@ export type DeviceVisitUpdateManyMutationInput = {
   klasifikasi?: Prisma.StringFieldUpdateOperationsInput | string
   userType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDilihat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jumlahKunjungan?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type DeviceVisitUncheckedUpdateManyInput = {
@@ -414,6 +486,8 @@ export type DeviceVisitUncheckedUpdateManyInput = {
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDilihat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jumlahKunjungan?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type DeviceVisitListRelationFilter = {
@@ -439,6 +513,12 @@ export type DeviceVisitCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   userType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  terakhirDilihat?: Prisma.SortOrder
+  jumlahKunjungan?: Prisma.SortOrder
+}
+
+export type DeviceVisitAvgOrderByAggregateInput = {
+  jumlahKunjungan?: Prisma.SortOrder
 }
 
 export type DeviceVisitMaxOrderByAggregateInput = {
@@ -454,6 +534,8 @@ export type DeviceVisitMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   userType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  terakhirDilihat?: Prisma.SortOrder
+  jumlahKunjungan?: Prisma.SortOrder
 }
 
 export type DeviceVisitMinOrderByAggregateInput = {
@@ -469,6 +551,12 @@ export type DeviceVisitMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   userType?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  terakhirDilihat?: Prisma.SortOrder
+  jumlahKunjungan?: Prisma.SortOrder
+}
+
+export type DeviceVisitSumOrderByAggregateInput = {
+  jumlahKunjungan?: Prisma.SortOrder
 }
 
 export type DeviceVisitCreateNestedManyWithoutUserInput = {
@@ -525,6 +613,8 @@ export type DeviceVisitCreateWithoutUserInput = {
   klasifikasi: string
   userType: string
   createdAt?: Date | string
+  terakhirDilihat?: Date | string
+  jumlahKunjungan?: number
 }
 
 export type DeviceVisitUncheckedCreateWithoutUserInput = {
@@ -539,6 +629,8 @@ export type DeviceVisitUncheckedCreateWithoutUserInput = {
   klasifikasi: string
   userType: string
   createdAt?: Date | string
+  terakhirDilihat?: Date | string
+  jumlahKunjungan?: number
 }
 
 export type DeviceVisitCreateOrConnectWithoutUserInput = {
@@ -583,6 +675,8 @@ export type DeviceVisitScalarWhereInput = {
   userId?: Prisma.StringNullableFilter<"DeviceVisit"> | string | null
   userType?: Prisma.StringFilter<"DeviceVisit"> | string
   createdAt?: Prisma.DateTimeFilter<"DeviceVisit"> | Date | string
+  terakhirDilihat?: Prisma.DateTimeFilter<"DeviceVisit"> | Date | string
+  jumlahKunjungan?: Prisma.IntFilter<"DeviceVisit"> | number
 }
 
 export type DeviceVisitCreateManyUserInput = {
@@ -597,6 +691,8 @@ export type DeviceVisitCreateManyUserInput = {
   klasifikasi: string
   userType: string
   createdAt?: Date | string
+  terakhirDilihat?: Date | string
+  jumlahKunjungan?: number
 }
 
 export type DeviceVisitUpdateWithoutUserInput = {
@@ -611,6 +707,8 @@ export type DeviceVisitUpdateWithoutUserInput = {
   klasifikasi?: Prisma.StringFieldUpdateOperationsInput | string
   userType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDilihat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jumlahKunjungan?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type DeviceVisitUncheckedUpdateWithoutUserInput = {
@@ -625,6 +723,8 @@ export type DeviceVisitUncheckedUpdateWithoutUserInput = {
   klasifikasi?: Prisma.StringFieldUpdateOperationsInput | string
   userType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDilihat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jumlahKunjungan?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type DeviceVisitUncheckedUpdateManyWithoutUserInput = {
@@ -639,6 +739,8 @@ export type DeviceVisitUncheckedUpdateManyWithoutUserInput = {
   klasifikasi?: Prisma.StringFieldUpdateOperationsInput | string
   userType?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDilihat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  jumlahKunjungan?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -656,6 +758,8 @@ export type DeviceVisitSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   userId?: boolean
   userType?: boolean
   createdAt?: boolean
+  terakhirDilihat?: boolean
+  jumlahKunjungan?: boolean
   user?: boolean | Prisma.DeviceVisit$userArgs<ExtArgs>
 }, ExtArgs["result"]["deviceVisit"]>
 
@@ -672,6 +776,8 @@ export type DeviceVisitSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   userId?: boolean
   userType?: boolean
   createdAt?: boolean
+  terakhirDilihat?: boolean
+  jumlahKunjungan?: boolean
   user?: boolean | Prisma.DeviceVisit$userArgs<ExtArgs>
 }, ExtArgs["result"]["deviceVisit"]>
 
@@ -688,6 +794,8 @@ export type DeviceVisitSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   userId?: boolean
   userType?: boolean
   createdAt?: boolean
+  terakhirDilihat?: boolean
+  jumlahKunjungan?: boolean
   user?: boolean | Prisma.DeviceVisit$userArgs<ExtArgs>
 }, ExtArgs["result"]["deviceVisit"]>
 
@@ -704,9 +812,11 @@ export type DeviceVisitSelectScalar = {
   userId?: boolean
   userType?: boolean
   createdAt?: boolean
+  terakhirDilihat?: boolean
+  jumlahKunjungan?: boolean
 }
 
-export type DeviceVisitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "deviceId" | "deviceName" | "os" | "ipv4" | "ipv6" | "dns" | "lokasi" | "klasifikasi" | "userId" | "userType" | "createdAt", ExtArgs["result"]["deviceVisit"]>
+export type DeviceVisitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "deviceId" | "deviceName" | "os" | "ipv4" | "ipv6" | "dns" | "lokasi" | "klasifikasi" | "userId" | "userType" | "createdAt" | "terakhirDilihat" | "jumlahKunjungan", ExtArgs["result"]["deviceVisit"]>
 export type DeviceVisitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.DeviceVisit$userArgs<ExtArgs>
 }
@@ -735,6 +845,8 @@ export type $DeviceVisitPayload<ExtArgs extends runtime.Types.Extensions.Interna
     userId: string | null
     userType: string
     createdAt: Date
+    terakhirDilihat: Date
+    jumlahKunjungan: number
   }, ExtArgs["result"]["deviceVisit"]>
   composites: {}
 }
@@ -1171,6 +1283,8 @@ export interface DeviceVisitFieldRefs {
   readonly userId: Prisma.FieldRef<"DeviceVisit", 'String'>
   readonly userType: Prisma.FieldRef<"DeviceVisit", 'String'>
   readonly createdAt: Prisma.FieldRef<"DeviceVisit", 'DateTime'>
+  readonly terakhirDilihat: Prisma.FieldRef<"DeviceVisit", 'DateTime'>
+  readonly jumlahKunjungan: Prisma.FieldRef<"DeviceVisit", 'Int'>
 }
     
 

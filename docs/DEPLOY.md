@@ -42,16 +42,17 @@ flowchart TD
 - Build memakai `vercel.json`: `bun install`, `NITRO_PRESET=vercel`, Bun 1.x.
 - Isi **Production** environment variables:
 
-| Variabel                                    | Nilai                             |
-| ------------------------------------------- | --------------------------------- |
-| `DATABASE_URL`                              | koneksi Neon pooled untuk runtime |
-| `BETTER_AUTH_URL`                           | `https://<domain-produksi>`       |
-| `BETTER_AUTH_SECRET`                        | secret produksi                   |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | OAuth produksi                    |
-| `OWNER_EMAILS` / `KASIR_EMAILS`             | daftar email peran                |
-| `TRUSTED_ORIGINS`                           | origin produksi                   |
-| `TRUST_PROXY`                               | `true`                            |
-| `TRUST_PROXY_HOPS`                          | `1` (Vercel satu lapis proxy)     |
+| Variabel                                    | Nilai                                               |
+| ------------------------------------------- | --------------------------------------------------- |
+| `DATABASE_URL`                              | koneksi Neon pooled untuk runtime                   |
+| `BETTER_AUTH_URL`                           | `https://<domain-produksi>`                         |
+| `BETTER_AUTH_SECRET`                        | secret produksi                                     |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | OAuth produksi                                      |
+| `GOOGLE_NATIVE_CLIENT_ID`                   | OAuth native (Expo), opsional; beda dari client web |
+| `OWNER_EMAILS` / `KASIR_EMAILS`             | daftar email peran                                  |
+| `TRUSTED_ORIGINS`                           | origin produksi                                     |
+| `TRUST_PROXY`                               | `true`                                              |
+| `TRUST_PROXY_HOPS`                          | `1` (Vercel satu lapis proxy)                       |
 
 `TRUST_PROXY_HOPS` menghitung jumlah proxy tepercaya yang menambahkan
 `X-Forwarded-For`. Verifikasi SEC-20: produksi aktif memakai Vercel

@@ -66,6 +66,7 @@ Akun login seed: OWNER dari `OWNER_EMAILS`, KASIR `uewfau@gmail.com` dan
 | 2.1.5 | Batal / ubah qty / kosongkan keranjang                          | Toast jelas, tanpa error                           |
 | 2.1.6 | Cek `/buku-besar`                                               | Jurnal berimbang (debit = kredit) per transaksi    |
 | 2.1.7 | Cek `/dashboard`                                                | Omzet, laba kotor, chart per jam sesuai            |
+| 2.1.8 | Login KASIR → diskon di atas batas (default 10%)                | Ditolak; OWNER bisa posting dan muncul di audit    |
 
 ### 2.2 Struk & pencetakan (45 menit)
 
@@ -77,6 +78,8 @@ Akun login seed: OWNER dari `OWNER_EMAILS`, KASIR `uewfau@gmail.com` dan
 | 2.2.4 | Klik "Ambil" pada job                  | Status jadi `DIPROSES`, percobaan +1                       |
 | 2.2.5 | Klik "Tandai dicetak"                  | Status `DICETAK`                                           |
 | 2.2.6 | Job lain → "Tandai gagal" + alasan     | Status `GAGAL` + pesan tampil                              |
+| 2.2.7 | KASIR cetak ulang struk 3×             | Tiga job dibuat; percobaan ke-4 ditolak + pesan batas      |
+| 2.2.8 | OWNER cetak ulang struk 4×             | Semua job dibuat; kolom hitung cetak OWNER bertambah       |
 
 ### 2.3 Master printer (30 menit)
 
@@ -102,6 +105,8 @@ Akun login seed: OWNER dari `OWNER_EMAILS`, KASIR `uewfau@gmail.com` dan
 | 3.1.3 | `/laporan-pajak`                                   | Rekap PB1/PPN sesuai pengaturan                                     |
 | 3.1.4 | `/laporan-belanja`                                 | Rekap per supplier/pasar + rincian pembelian                        |
 | 3.1.5 | Ubah tarif pajak di `/pengaturan` → transaksi baru | Pajak mengikuti tarif baru; `/audit-log` mencatat `pengaturan.ubah` |
+| 3.1.6 | Ubah batas diskon kasir di `/pengaturan`           | Nilai tersimpan; KASIR mengikuti batas baru                         |
+| 3.1.7 | Kosongkan/isi pajak dengan `abc`/`101` → Simpan    | Ditolak, tarif lama tidak berubah; isi 0 → minta konfirmasi         |
 
 ### 3.2 Supplier, pasar online/offline, hutang (1 jam)
 
@@ -138,10 +143,15 @@ Akun login seed: OWNER dari `OWNER_EMAILS`, KASIR `uewfau@gmail.com` dan
 
 ```bash
 # 1) Login native → token
-curl -X POST http://localhost:3000/api/v1/auth-social \
-  -H 'content-type: application/json' -H 'x-client: expo' \
+#    Prasyarat: GOOGLE_NATIVE_CLIENT_ID diisi dan berbeda dari GOOGLE_CLIENT_ID;
+#    ID token harus diterbitkan untuk client native tersebut (aud cocok).
+curl -X POST http://localhost:3000/api/v1/auth-native \
+  -H 'content-type: application/json' \
   -d '{"provider":"google","idToken":"<ID_TOKEN>","callbackURL":"pos://auth"}'
 # → data.session.token
+
+# Regresi: token web ke endpoint native harus 401, dan header x-client palsu
+# pada /api/v1/auth-social tidak boleh menghasilkan session.token.
 
 export TOKEN=<token>
 export BASE=http://localhost:3000
@@ -166,6 +176,9 @@ export BASE=http://localhost:3000
 | 4.1.15 | `OPTIONS /api/v1/transaksi` + Origin asing               | 403 (tanpa header CORS)                 |
 | 4.1.16 | `POST /api/v1/transaksi` tanpa `Origin` (klien native)   | Tidak ditolak (OW-14)                   |
 | 4.1.17 | `GET /api/health`                                        | 200, `database=ok`, `app=healthy`       |
+| 4.1.18 | `POST /api/v1/device-visit-token` → POST `device-visit`  | 200, satu baris per perangkat           |
+| 4.1.19 | `POST /api/v1/device-visit` dengan token palsu           | 422, tidak menambah baris               |
+| 4.1.20 | `POST /api/v1/transaksi` KASIR diskon > batas            | 422 + audit `transaksi.diskon.ditolak`  |
 
 ### 4.2 Uji beban ringan (30 menit)
 
@@ -183,6 +196,7 @@ export BASE=http://localhost:3000
 | 4.3.1 | Matikan jaringan (devtools offline) → buat transaksi di `/kasir`             | Masuk antrean, banner "offline"                  |
 | 4.3.2 | Nyalakan jaringan                                                            | Antrean terkirim otomatis, toast jumlah terkirim |
 | 4.3.3 | Matikan jaringan **saat** respons server hilang (devtools: block lalu kirim) | Retry tak membuat transaksi ganda (idempotensi)  |
+| 4.3.4 | Kirim `waktuKlien` +25 jam dari jam server                                   | Ditolak validasi, tidak ada transaksi            |
 
 ---
 

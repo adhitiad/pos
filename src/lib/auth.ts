@@ -5,9 +5,14 @@ import { tanstackStartCookies } from 'better-auth/tanstack-start'
 
 import { prisma } from '#/db'
 import { env } from '#/env'
+import {
+  nativeIdTokenGuard,
+  sembunyikanTokenSesi,
+} from '#/lib/auth-native-guard'
 import { logger } from '#/lib/logger'
 import { ORIGIN_TEPERCAYA } from '#/lib/origin'
 import { peranDariEmail as peranDariEnv } from '#/lib/peran-email'
+import { klienNativeId } from '#/server/auth-native'
 
 // Peran dari daftar env: email di OWNER_EMAILS → OWNER, di KASIR_EMAILS → KASIR.
 // Satu sumber kebenaran untuk pembuatan akun & sinkronisasi saat login.
@@ -65,6 +70,10 @@ export async function sinkronPeranUser(
   }
 }
 
+const googleClientIds = [env.GOOGLE_CLIENT_ID, klienNativeId()].filter(
+  (id): id is string => Boolean(id),
+)
+
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
@@ -99,7 +108,13 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: env.GOOGLE_CLIENT_ID ?? '',
+      // Array audiens: web (utama) + native. Token native diverifikasi Better
+      // Auth terhadap daftar ini, lalu endpoint native memastikan aud-nya
+      // memang client native (bukan client web).
+      clientId:
+        googleClientIds.length > 1
+          ? googleClientIds
+          : (googleClientIds[0] ?? ''),
       clientSecret: env.GOOGLE_CLIENT_SECRET ?? '',
     },
   },
@@ -165,5 +180,10 @@ export const auth = betterAuth({
   // POST /api/v1/auth-social). Tanpa plugin ini, getSession hanya membaca
   // cookie bertanda tangan sehingga token mobile tidak dikenali.
   // `tanstackStartCookies` tetap dipakai web (cookie httpOnly).
-  plugins: [bearer(), tanstackStartCookies()],
+  plugins: [
+    bearer(),
+    nativeIdTokenGuard,
+    sembunyikanTokenSesi,
+    tanstackStartCookies(),
+  ],
 })

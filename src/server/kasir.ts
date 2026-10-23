@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { normalisasiBatasDiskon, KUNCI_DISKON_KASIR } from './diskon.js'
 import { GalatDomain } from './galat.js'
 import { KUNCI_PAJAK_SEMUA, tarifPajak } from './pajak.js'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
@@ -109,7 +110,9 @@ export async function kasirData(kasirId?: string) {
       },
     }),
     prisma.pengaturan.findMany({
-      where: { kunci: { in: [...KUNCI_PAJAK_SEMUA, 'mode_fnb'] } },
+      where: {
+        kunci: { in: [...KUNCI_PAJAK_SEMUA, 'mode_fnb', KUNCI_DISKON_KASIR] },
+      },
     }),
     kasirId
       ? prisma.shift.findFirst({
@@ -123,6 +126,9 @@ export async function kasirData(kasirId?: string) {
   const pajakAktif = tarifPajak(petaPajak, petaPajak.mode_fnb === 'true')
   const pajakPersen = pajakAktif.persen
   const pajakJenis = pajakAktif.jenis
+  const diskonKasirMaksPersen = normalisasiBatasDiskon(
+    petaPajak[KUNCI_DISKON_KASIR],
+  )
   const cogsPerProduk = new Map<string, number>()
   for (const p of produk) {
     let cogs = 0
@@ -143,6 +149,7 @@ export async function kasirData(kasirId?: string) {
   return {
     pajakPersen,
     pajakJenis,
+    diskonKasirMaksPersen,
     shiftAktif: shiftAktif
       ? {
           id: shiftAktif.id,

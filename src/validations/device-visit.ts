@@ -1,12 +1,9 @@
 import { z } from 'zod'
 
+// Endpoint analytics tidak lagi menerima deviceId/os/klasifikasi/lokasi dari
+// klien. Klien hanya mengirim token yang diterbitkan server (SEC-24).
 export const DeviceVisitSchema = z.object({
-  deviceId: z.string().min(1, 'Device ID wajib diisi').max(128),
-  deviceName: z.string().max(100).optional(),
-  os: z.enum(['mac', 'windows', 'android', 'ios', 'linux']),
-  lokasi: z.string().max(100).optional(),
-  klasifikasi: z.enum(['hp', 'tablet', 'laptop', 'pc', 'mobil']),
-  userId: z.string().optional(),
+  token: z.string().min(20, 'Token perangkat tidak valid').max(2048),
 })
 
 export type DeviceVisitInput = z.infer<typeof DeviceVisitSchema>

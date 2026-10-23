@@ -23,6 +23,18 @@ export function normalisasiPersen(nilai: unknown): number {
   return Math.min(Math.max(0, n), 100)
 }
 
+// Ambil nilai tarif dari kunci baru; string kosong dianggap belum diisi dan
+// jatuh ke `pajak_persen` (legacy). Ini mencegah data kosong diam-diam jadi 0.
+export function pilihNilaiPajak(
+  peta: Record<string, string | undefined>,
+  kunci: string,
+): string | undefined {
+  const langsung = peta[kunci]
+  if (langsung !== undefined && langsung.trim() !== '') return langsung
+  const legacy = peta[KUNCI_PAJAK_LEGACY]
+  return legacy !== undefined && legacy.trim() !== '' ? legacy : undefined
+}
+
 // Pilih tarif pajak aktif dari peta pengaturan berdasarkan mode F&B.
 // Pure function supaya bisa diuji tanpa DB.
 export function tarifPajak(
@@ -30,6 +42,8 @@ export function tarifPajak(
   modeFnb: boolean,
 ): TarifPajak {
   const kunci = modeFnb ? KUNCI_PAJAK_RESTO : KUNCI_PAJAK_RETAIL
-  const nilai = peta[kunci] ?? peta[KUNCI_PAJAK_LEGACY]
-  return { persen: normalisasiPersen(nilai), jenis: modeFnb ? 'PB1' : 'PPN' }
+  return {
+    persen: normalisasiPersen(pilihNilaiPajak(peta, kunci)),
+    jenis: modeFnb ? 'PB1' : 'PPN',
+  }
 }

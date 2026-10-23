@@ -62,6 +62,7 @@ export type TransaksiMinAggregateOutputType = {
   id: string | null
   nomor: string | null
   tanggal: Date | null
+  diterimaPada: Date | null
   memberId: string | null
   kasirId: string | null
   shiftId: string | null
@@ -100,6 +101,7 @@ export type TransaksiMaxAggregateOutputType = {
   id: string | null
   nomor: string | null
   tanggal: Date | null
+  diterimaPada: Date | null
   memberId: string | null
   kasirId: string | null
   shiftId: string | null
@@ -138,6 +140,7 @@ export type TransaksiCountAggregateOutputType = {
   id: number
   nomor: number
   tanggal: number
+  diterimaPada: number
   memberId: number
   kasirId: number
   shiftId: number
@@ -210,6 +213,7 @@ export type TransaksiMinAggregateInputType = {
   id?: true
   nomor?: true
   tanggal?: true
+  diterimaPada?: true
   memberId?: true
   kasirId?: true
   shiftId?: true
@@ -248,6 +252,7 @@ export type TransaksiMaxAggregateInputType = {
   id?: true
   nomor?: true
   tanggal?: true
+  diterimaPada?: true
   memberId?: true
   kasirId?: true
   shiftId?: true
@@ -286,6 +291,7 @@ export type TransaksiCountAggregateInputType = {
   id?: true
   nomor?: true
   tanggal?: true
+  diterimaPada?: true
   memberId?: true
   kasirId?: true
   shiftId?: true
@@ -411,6 +417,7 @@ export type TransaksiGroupByOutputType = {
   id: string
   nomor: string
   tanggal: Date
+  diterimaPada: Date
   memberId: string | null
   kasirId: string | null
   shiftId: string | null
@@ -472,6 +479,7 @@ export type TransaksiWhereInput = {
   id?: Prisma.StringFilter<"Transaksi"> | string
   nomor?: Prisma.StringFilter<"Transaksi"> | string
   tanggal?: Prisma.DateTimeFilter<"Transaksi"> | Date | string
+  diterimaPada?: Prisma.DateTimeFilter<"Transaksi"> | Date | string
   memberId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   kasirId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   shiftId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
@@ -520,6 +528,7 @@ export type TransaksiOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nomor?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
+  diterimaPada?: Prisma.SortOrder
   memberId?: Prisma.SortOrderInput | Prisma.SortOrder
   kasirId?: Prisma.SortOrderInput | Prisma.SortOrder
   shiftId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -573,6 +582,7 @@ export type TransaksiWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.TransaksiWhereInput[]
   NOT?: Prisma.TransaksiWhereInput | Prisma.TransaksiWhereInput[]
   tanggal?: Prisma.DateTimeFilter<"Transaksi"> | Date | string
+  diterimaPada?: Prisma.DateTimeFilter<"Transaksi"> | Date | string
   memberId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   kasirId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   shiftId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
@@ -619,6 +629,7 @@ export type TransaksiOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nomor?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
+  diterimaPada?: Prisma.SortOrder
   memberId?: Prisma.SortOrderInput | Prisma.SortOrder
   kasirId?: Prisma.SortOrderInput | Prisma.SortOrder
   shiftId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -665,6 +676,7 @@ export type TransaksiScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Transaksi"> | string
   nomor?: Prisma.StringWithAggregatesFilter<"Transaksi"> | string
   tanggal?: Prisma.DateTimeWithAggregatesFilter<"Transaksi"> | Date | string
+  diterimaPada?: Prisma.DateTimeWithAggregatesFilter<"Transaksi"> | Date | string
   memberId?: Prisma.StringNullableWithAggregatesFilter<"Transaksi"> | string | null
   kasirId?: Prisma.StringNullableWithAggregatesFilter<"Transaksi"> | string | null
   shiftId?: Prisma.StringNullableWithAggregatesFilter<"Transaksi"> | string | null
@@ -703,6 +715,7 @@ export type TransaksiCreateInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -746,6 +759,7 @@ export type TransaksiUncheckedCreateInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -789,6 +803,7 @@ export type TransaksiUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -832,6 +847,7 @@ export type TransaksiUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -875,6 +891,7 @@ export type TransaksiCreateManyInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -913,6 +930,7 @@ export type TransaksiUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -946,6 +964,7 @@ export type TransaksiUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -994,6 +1013,7 @@ export type TransaksiCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nomor?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
+  diterimaPada?: Prisma.SortOrder
   memberId?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
   shiftId?: Prisma.SortOrder
@@ -1048,6 +1068,7 @@ export type TransaksiMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nomor?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
+  diterimaPada?: Prisma.SortOrder
   memberId?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
   shiftId?: Prisma.SortOrder
@@ -1086,6 +1107,7 @@ export type TransaksiMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nomor?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
+  diterimaPada?: Prisma.SortOrder
   memberId?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
   shiftId?: Prisma.SortOrder
@@ -1450,6 +1472,7 @@ export type TransaksiCreateWithoutKasirInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1492,6 +1515,7 @@ export type TransaksiUncheckedCreateWithoutKasirInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   shiftId?: string | null
   deliveryId?: string | null
@@ -1563,6 +1587,7 @@ export type TransaksiScalarWhereInput = {
   id?: Prisma.StringFilter<"Transaksi"> | string
   nomor?: Prisma.StringFilter<"Transaksi"> | string
   tanggal?: Prisma.DateTimeFilter<"Transaksi"> | Date | string
+  diterimaPada?: Prisma.DateTimeFilter<"Transaksi"> | Date | string
   memberId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   kasirId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   shiftId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
@@ -1601,6 +1626,7 @@ export type TransaksiCreateWithoutMemberInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1643,6 +1669,7 @@ export type TransaksiUncheckedCreateWithoutMemberInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   kasirId?: string | null
   shiftId?: string | null
   deliveryId?: string | null
@@ -1711,6 +1738,7 @@ export type TransaksiCreateWithoutDeliveryInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1753,6 +1781,7 @@ export type TransaksiUncheckedCreateWithoutDeliveryInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -1821,6 +1850,7 @@ export type TransaksiCreateWithoutItemsInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1863,6 +1893,7 @@ export type TransaksiUncheckedCreateWithoutItemsInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -1921,6 +1952,7 @@ export type TransaksiUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1963,6 +1995,7 @@ export type TransaksiUncheckedUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2005,6 +2038,7 @@ export type TransaksiCreateWithoutPembayaranInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2047,6 +2081,7 @@ export type TransaksiUncheckedCreateWithoutPembayaranInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -2105,6 +2140,7 @@ export type TransaksiUpdateWithoutPembayaranInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2147,6 +2183,7 @@ export type TransaksiUncheckedUpdateWithoutPembayaranInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2189,6 +2226,7 @@ export type TransaksiCreateWithoutShiftInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2231,6 +2269,7 @@ export type TransaksiUncheckedCreateWithoutShiftInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   deliveryId?: string | null
@@ -2299,6 +2338,7 @@ export type TransaksiCreateWithoutJurnalInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2341,6 +2381,7 @@ export type TransaksiUncheckedCreateWithoutJurnalInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -2399,6 +2440,7 @@ export type TransaksiUpdateWithoutJurnalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2441,6 +2483,7 @@ export type TransaksiUncheckedUpdateWithoutJurnalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2483,6 +2526,7 @@ export type TransaksiCreateWithoutMejaInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2525,6 +2569,7 @@ export type TransaksiUncheckedCreateWithoutMejaInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -2593,6 +2638,7 @@ export type TransaksiCreateWithoutRetursInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2635,6 +2681,7 @@ export type TransaksiUncheckedCreateWithoutRetursInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -2693,6 +2740,7 @@ export type TransaksiUpdateWithoutRetursInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2735,6 +2783,7 @@ export type TransaksiUncheckedUpdateWithoutRetursInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2777,6 +2826,7 @@ export type TransaksiCreateWithoutPrintJobsInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2819,6 +2869,7 @@ export type TransaksiUncheckedCreateWithoutPrintJobsInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -2877,6 +2928,7 @@ export type TransaksiUpdateWithoutPrintJobsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -2919,6 +2971,7 @@ export type TransaksiUncheckedUpdateWithoutPrintJobsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2961,6 +3014,7 @@ export type TransaksiCreateManyKasirInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   shiftId?: string | null
   deliveryId?: string | null
@@ -2998,6 +3052,7 @@ export type TransaksiUpdateWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -3040,6 +3095,7 @@ export type TransaksiUncheckedUpdateWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3082,6 +3138,7 @@ export type TransaksiUncheckedUpdateManyWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3119,6 +3176,7 @@ export type TransaksiCreateManyMemberInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   kasirId?: string | null
   shiftId?: string | null
   deliveryId?: string | null
@@ -3156,6 +3214,7 @@ export type TransaksiUpdateWithoutMemberInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -3198,6 +3257,7 @@ export type TransaksiUncheckedUpdateWithoutMemberInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3240,6 +3300,7 @@ export type TransaksiUncheckedUpdateManyWithoutMemberInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3277,6 +3338,7 @@ export type TransaksiCreateManyDeliveryInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -3314,6 +3376,7 @@ export type TransaksiUpdateWithoutDeliveryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -3356,6 +3419,7 @@ export type TransaksiUncheckedUpdateWithoutDeliveryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3398,6 +3462,7 @@ export type TransaksiUncheckedUpdateManyWithoutDeliveryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3435,6 +3500,7 @@ export type TransaksiCreateManyShiftInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   deliveryId?: string | null
@@ -3472,6 +3538,7 @@ export type TransaksiUpdateWithoutShiftInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -3514,6 +3581,7 @@ export type TransaksiUncheckedUpdateWithoutShiftInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3556,6 +3624,7 @@ export type TransaksiUncheckedUpdateManyWithoutShiftInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3593,6 +3662,7 @@ export type TransaksiCreateManyMejaInput = {
   id?: string
   nomor: string
   tanggal?: Date | string
+  diterimaPada?: Date | string
   memberId?: string | null
   kasirId?: string | null
   shiftId?: string | null
@@ -3630,6 +3700,7 @@ export type TransaksiUpdateWithoutMejaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -3672,6 +3743,7 @@ export type TransaksiUncheckedUpdateWithoutMejaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3714,6 +3786,7 @@ export type TransaksiUncheckedUpdateManyWithoutMejaInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3809,6 +3882,7 @@ export type TransaksiSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   nomor?: boolean
   tanggal?: boolean
+  diterimaPada?: boolean
   memberId?: boolean
   kasirId?: boolean
   shiftId?: boolean
@@ -3858,6 +3932,7 @@ export type TransaksiSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   nomor?: boolean
   tanggal?: boolean
+  diterimaPada?: boolean
   memberId?: boolean
   kasirId?: boolean
   shiftId?: boolean
@@ -3901,6 +3976,7 @@ export type TransaksiSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   nomor?: boolean
   tanggal?: boolean
+  diterimaPada?: boolean
   memberId?: boolean
   kasirId?: boolean
   shiftId?: boolean
@@ -3944,6 +4020,7 @@ export type TransaksiSelectScalar = {
   id?: boolean
   nomor?: boolean
   tanggal?: boolean
+  diterimaPada?: boolean
   memberId?: boolean
   kasirId?: boolean
   shiftId?: boolean
@@ -3978,7 +4055,7 @@ export type TransaksiSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TransaksiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "tanggal" | "memberId" | "kasirId" | "shiftId" | "deliveryId" | "ongkir" | "subtotal" | "diskon" | "pajak" | "pajakJenis" | "total" | "poinPakai" | "poinDapat" | "metodeBayar" | "catatan" | "mejaId" | "statusPesanan" | "sumber" | "dibayarPada" | "dibayarVia" | "paymentRef" | "stokTerpotong" | "uangDiterima" | "kembalian" | "cetakOwner" | "cetakKasir" | "idempotencyKey" | "dibuatOffline" | "waktuKlien" | "hpp" | "diskonMember" | "createdAt" | "updatedAt", ExtArgs["result"]["transaksi"]>
+export type TransaksiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "tanggal" | "diterimaPada" | "memberId" | "kasirId" | "shiftId" | "deliveryId" | "ongkir" | "subtotal" | "diskon" | "pajak" | "pajakJenis" | "total" | "poinPakai" | "poinDapat" | "metodeBayar" | "catatan" | "mejaId" | "statusPesanan" | "sumber" | "dibayarPada" | "dibayarVia" | "paymentRef" | "stokTerpotong" | "uangDiterima" | "kembalian" | "cetakOwner" | "cetakKasir" | "idempotencyKey" | "dibuatOffline" | "waktuKlien" | "hpp" | "diskonMember" | "createdAt" | "updatedAt", ExtArgs["result"]["transaksi"]>
 export type TransaksiInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   member?: boolean | Prisma.Transaksi$memberArgs<ExtArgs>
   kasir?: boolean | Prisma.Transaksi$kasirArgs<ExtArgs>
@@ -4025,6 +4102,7 @@ export type $TransaksiPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: string
     nomor: string
     tanggal: Date
+    diterimaPada: Date
     memberId: string | null
     kasirId: string | null
     shiftId: string | null
@@ -4493,6 +4571,7 @@ export interface TransaksiFieldRefs {
   readonly id: Prisma.FieldRef<"Transaksi", 'String'>
   readonly nomor: Prisma.FieldRef<"Transaksi", 'String'>
   readonly tanggal: Prisma.FieldRef<"Transaksi", 'DateTime'>
+  readonly diterimaPada: Prisma.FieldRef<"Transaksi", 'DateTime'>
   readonly memberId: Prisma.FieldRef<"Transaksi", 'String'>
   readonly kasirId: Prisma.FieldRef<"Transaksi", 'String'>
   readonly shiftId: Prisma.FieldRef<"Transaksi", 'String'>

@@ -62,7 +62,11 @@ function Kasir() {
         <Card className="lg:sticky lg:top-20">
           <CardContent>
             <BarcodeScanner produk={data.produk} />
-            <PanelBayar data={data} bolehBayar={data.bolehBayar} />
+            <PanelBayar
+              data={data}
+              bolehBayar={data.bolehBayar}
+              peran={user?.role === 'OWNER' ? 'OWNER' : 'KASIR'}
+            />
           </CardContent>
         </Card>
       </div>

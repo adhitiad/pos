@@ -2,7 +2,17 @@ import { prisma } from '#/db'
 import { Prisma } from '#/generated/prisma/client.js'
 import type { PostingTransaksiInput } from '#/validations/transaksi'
 import { PostingTransaksiSchema } from '#/validations/transaksi'
-import type { ProdukHitung } from '#/types/transaksi'
+import type { HasilTransaksiRingkas, ProdukHitung } from '#/types/transaksi'
+import type { Role } from '#/generated/prisma/enums.js'
+import {
+  BATAS_DISKON_KASIR_DEFAULT,
+  catatDiskonOwner,
+  catatPenolakanDiskon,
+  GalatDiskonDitolak,
+  KUNCI_DISKON_KASIR,
+  normalisasiBatasDiskon,
+  periksaDiskonKasir,
+} from './diskon.js'
 import { GalatDomain } from './galat.js'
 import { RUPIAH_PER_POIN } from './poin.js'
 import { kodeHarian, nomorBerikut } from './penomoran.js'
@@ -26,6 +36,8 @@ import { kebutuhanDariBaris, kurangiStok } from './postingStok.js'
 export type OpsiPosting = {
   /** POS (default) atau pesanan online yang dibayar belakangan. */
   sumber?: 'POS' | 'ONLINE'
+  /** Pelaku pemosting untuk kebijakan diskon & audit (SEC-22). */
+  aktor?: { id?: string; peran?: Role }
 }
 
 // ─── Fungsi utama ───
@@ -49,9 +61,12 @@ export async function postingTransaksi(
 
   // Nomor unik harian bisa tabrakan bila 2 kasir posting bersamaan,
   // ulangi seluruh transaction bila kena unique constraint (P2002).
+  let hasilTransaksi: HasilTransaksiRingkas | null = null
+  let persenBatasDiskon = BATAS_DISKON_KASIR_DEFAULT
+  let subtotalTransaksi = 0
   for (let percobaan = 1; percobaan <= 3; percobaan++) {
     try {
-      return await prisma.$transaction(async (tx) => {
+      hasilTransaksi = await prisma.$transaction(async (tx) => {
         // 1. Muat produk + resep + bahan + modifier grup
         const ids = [...new Set(data.items.map((i) => i.produkId))]
         const daftarProduk = await tx.produk.findMany({
@@ -110,6 +125,28 @@ export async function postingTransaksi(
         // 3. Total, diskon, ongkir, member
         const subtotal = baris.reduce((s, b) => s + b.subtotal, 0)
         const hppTotal = baris.reduce((s, b) => s + b.hpp, 0)
+        subtotalTransaksi = subtotal
+        // Pajak & batas diskon dibaca server dari pengaturan; nilai dari klien
+        // tidak pernah dipakai untuk menentukan tarif/ambang (OW-10, SEC-22).
+        const barisPengaturan = await tx.pengaturan.findMany({
+          where: {
+            kunci: {
+              in: [...KUNCI_PAJAK_SEMUA, 'mode_fnb', KUNCI_DISKON_KASIR],
+            },
+          },
+        })
+        const petaPengaturan: Record<string, string | undefined> = {}
+        for (const r of barisPengaturan) petaPengaturan[r.kunci] = r.nilai
+        persenBatasDiskon = normalisasiBatasDiskon(
+          petaPengaturan[KUNCI_DISKON_KASIR],
+        )
+        periksaDiskonKasir({
+          peran: opsi.aktor?.peran,
+          aktorId: opsi.aktor?.id,
+          subtotal,
+          diskon: data.diskon,
+          persenBatas: persenBatasDiskon,
+        })
         const diskon = Math.min(data.diskon, subtotal)
         let ongkir = 0
         if (data.deliveryId) {
@@ -140,14 +177,10 @@ export async function postingTransaksi(
         if (diskonTotal > subtotal) {
           throw new GalatDomain('Diskon melebihi subtotal')
         }
-        // Pajak dihitung server dari pengaturan (PB1 restoran/cafe vs PPN retail,
-        // dipilih dari mode_fnb); nilai `pajak` dari klien diabaikan (OW-10).
-        const barisPajak = await tx.pengaturan.findMany({
-          where: { kunci: { in: [...KUNCI_PAJAK_SEMUA, 'mode_fnb'] } },
-        })
-        const petaPajak: Record<string, string | undefined> = {}
-        for (const r of barisPajak) petaPajak[r.kunci] = r.nilai
-        const tarifAktif = tarifPajak(petaPajak, petaPajak.mode_fnb === 'true')
+        const tarifAktif = tarifPajak(
+          petaPengaturan,
+          petaPengaturan.mode_fnb === 'true',
+        )
         const pajak = hitungPajak(
           subtotal - diskon - diskonPoin,
           tarifAktif.persen,
@@ -157,12 +190,10 @@ export async function postingTransaksi(
         const stokPengaturan = await tx.pengaturan.findUnique({
           where: { kunci: 'stok_dikurangi_saat' },
         })
-        const stokDikurangiSaat = stokPengaturan?.nilai ?? 'order'
+        const potongStokSaatBayar = stokPengaturan?.nilai === 'payment'
         // Pesanan online selalu memotong stok saat pembayaran dikonfirmasi.
         const harusMengurangiStok =
-          !online &&
-          (stokDikurangiSaat === 'order' ||
-            (stokDikurangiSaat === 'payment' && data.statusPesanan === 'LUNAS'))
+          !online && (!potongStokSaatBayar || data.statusPesanan === 'LUNAS')
         const total = subtotal - diskonTotal + pajak + ongkir
         if (total < 0) {
           throw new GalatDomain('Total transaksi tidak boleh negatif')
@@ -191,6 +222,9 @@ export async function postingTransaksi(
         const transaksi = await tx.transaksi.create({
           data: {
             nomor,
+            // Waktu server, bukan waktu klien. Laporan resmi memakai `tanggal`
+            // ini; `waktuKlien` hanya metadata offline (SEC-21).
+            diterimaPada: new Date(),
             memberId: data.memberId,
             kasirId: kasirId ?? null,
             shiftId: shiftTerbuka?.id ?? null,
@@ -313,7 +347,14 @@ export async function postingTransaksi(
           memberInfo,
         }
       })
+      break
     } catch (e) {
+      if (e instanceof GalatDiskonDitolak) {
+        // Transaksi sudah di-rollback oleh Prisma; catat percobaan di luar
+        // transaction agar jejak fraud internal tetap tersimpan.
+        await catatPenolakanDiskon(e)
+        throw e
+      }
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
         e.code === 'P2002'
@@ -330,5 +371,20 @@ export async function postingTransaksi(
       throw e
     }
   }
-  throw new Error('Gagal memposting transaksi setelah 3 percobaan')
+  if (!hasilTransaksi) {
+    throw new Error('Gagal memposting transaksi setelah 3 percobaan')
+  }
+
+  // OWNER boleh melewati ambang kasir, tetapi diskon besar tetap diaudit.
+  await catatDiskonOwner({
+    aktorId: opsi.aktor?.id,
+    peran: opsi.aktor?.peran,
+    transaksiId: hasilTransaksi.transaksi.id,
+    nomor: hasilTransaksi.transaksi.nomor,
+    subtotal: subtotalTransaksi,
+    diskon: data.diskon,
+    persenBatas: persenBatasDiskon,
+  })
+
+  return hasilTransaksi
 }

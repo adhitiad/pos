@@ -35,6 +35,15 @@ describe('tarif pajak: PB1 restoran/cafe vs PPN retail', () => {
       persen: 7,
       jenis: 'PPN',
     })
+    expect(
+      tarifPajak({ [KUNCI_PAJAK_RESTO]: '', [KUNCI_PAJAK_LEGACY]: '7' }, true),
+    ).toEqual({ persen: 7, jenis: 'PB1' })
+    expect(
+      tarifPajak(
+        { [KUNCI_PAJAK_RETAIL]: '   ', [KUNCI_PAJAK_LEGACY]: '7' },
+        false,
+      ),
+    ).toEqual({ persen: 7, jenis: 'PPN' })
   })
 
   it('tarif kosong / ngawur menjadi 0', () => {

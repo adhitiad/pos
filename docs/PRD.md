@@ -67,7 +67,7 @@ ruang lingkup, bukan mencentang pekerjaan.
 | Area          | Kemampuan yang termasuk                                                                                                                                                                               |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Autentikasi   | Login Google, sesi Better Auth, peran OWNER/KASIR/MEMBER, enrollment owner, audit perubahan peran                                                                                                     |
-| Kasir         | Katalog, kategori, modifier, keranjang, diskon, pajak, poin member, pembayaran, struk, mode offline/outbox                                                                                            |
+| Kasir         | Katalog, kategori, modifier, keranjang, diskon (KASIR dibatasi, OWNER override diaudit), pajak, poin member, pembayaran, struk, mode offline/outbox                                                   |
 | Produk & stok | Produk, kategori, bahan/resep, supplier, pembelian bahan, peringatan stok menipis                                                                                                                     |
 | Member        | CRUD member, poin, redeem poin, riwayat transaksi                                                                                                                                                     |
 | Buku besar    | Chart of accounts, jurnal otomatis dari transaksi, neraca, rincian akun, audit log                                                                                                                    |
@@ -81,11 +81,14 @@ ruang lingkup, bukan mencentang pekerjaan.
 
 1. **Buka toko:** OWNER/KASIR login, membuka shift, memilih printer default.
 2. **Transaksi:** kasir memilih produk/modifier, mengatur qty, diskon, poin,
-   metode bayar, lalu memposting transaksi.
+   metode bayar, lalu memposting transaksi. Diskon manual KASIR dibatasi
+   persentase yang diatur OWNER (default 10%); diskon di atas ambang hanya bisa
+   diposting OWNER dan selalu masuk audit log.
 3. **Posting atomik:** untuk transaksi POS, stok produk/bahan berkurang, jurnal
    dibuat seimbang, nomor struk harian dialokasikan, dan audit dicatat. Pesanan
    online hanya mencatat pesanan; stok, poin, jurnal, dan baris pembayaran
-   menunggu konfirmasi pembayaran.
+   menunggu konfirmasi pembayaran. Waktu resmi transaksi selalu jam server;
+   `waktuKlien` dari antrean offline hanya metadata dan dibatasi ±24 jam.
 4. **Cetak:** struk masuk antrean; printer mengambil, menandai selesai/gagal;
    OWNER dapat mencetak ulang tanpa batas, sedangkan KASIR maksimal tiga kali
    per transaksi. OWNER dapat memilih ukuran thermal 57 × 30 sampai 80 × 80 mm
@@ -127,7 +130,8 @@ Anggaran dan baseline ada di [`PERFORMA.md`](PERFORMA.md). Target yang mengikat:
 - Error database mentah tidak boleh sampai ke klien; gunakan pesan aman + `ref`.
 - Rate limit untuk endpoint publik dan analytics; IP klien diambil dari
   `X-Forwarded-For` sisi kanan sesuai jumlah proxy tepercaya, bukan entri kiri
-  yang bisa dipalsukan.
+  yang bisa dipalsukan. Endpoint analytics juga punya batas global, dan tulis
+  `device-visit` hanya menerima token bertanda tangan server.
 - Perubahan peran dan aksi “cabut semua sesi” oleh owner langsung membatalkan
   token lama; pengguna harus login ulang.
 - Laporan kerentanan mengikuti [`../SECURITY.md`](../SECURITY.md).
@@ -151,7 +155,9 @@ Anggaran dan baseline ada di [`PERFORMA.md`](PERFORMA.md). Target yang mengikat:
 ## 7. Batasan dan keputusan produk
 
 - Satu penyewa (single-tenant) per deployment; belum ada multi-cabang dalam satu
-  database.
+  database. Keputusan SEC-26 (2026-10-23): tetap single-tenant sampai kebutuhan
+  multi-tenant disetujui secara produk. Jangan menambahkan `tokoId` sebagian;
+  isolasi antar-toko baru dikerjakan bersama migrasi data dan guard per toko.
 - Mata uang tunggal IDR; uang disimpan sebagai integer rupiah, nominal DB
   `Decimal(14,2)`.
 - Web dan Expo memakai kontrak REST yang sama; mobile tidak mengakses Prisma.
@@ -209,21 +215,19 @@ Aturan sinkronisasi:
 
 > **Snapshot otomatis.** Dihasilkan oleh `bun run docs:sync`; jangan edit manual.
 
-- **Item selesai:** 260/273 (95%)
-- **Item terbuka:** 13
-- **Terblokir / sebagian:** 4 / 2
-- **Cakupan:** 29 rute · 52 file route REST · 39 model · 17 migrasi
-- **Test:** 48 file unit · 6 file e2e
-- **Dokumen / aturan:** 16 / 16
+- **Item selesai:** 271/277 (98%)
+- **Item terbuka:** 6
+- **Terblokir / sebagian:** 3 / 1
+- **Cakupan:** 29 rute · 54 file route REST · 39 model · 18 migrasi
+- **Test:** 52 file unit · 6 file e2e
+- **Dokumen / aturan:** 18 / 16
 
 **Item yang perlu perhatian:**
 
-- `PRINT-02` · terblokir
 - `CICD-02` · terblokir
 - `CICD-15` · terblokir
 - `CICD-25` · terblokir
 - `CICD-11` · sebagian
-- `CICD-16` · sebagian
 
 Status terperinci dan kriteria tiap item: [`DAFTAR-TUGAS.md`](DAFTAR-TUGAS.md).
 <!-- AUTO:PRD:END -->

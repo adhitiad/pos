@@ -341,6 +341,9 @@ model Transaksi {
   id      String   @id @default(cuid())
   nomor   String   @unique // nomor struk, mis. POS-20251016-0001
   tanggal DateTime @default(now())
+  // Waktu server menerima transaksi. Selalu diisi server; laporan resmi
+  // memakai `tanggal`/`diterimaPada`, bukan `waktuKlien` dari klien (SEC-21).
+  diterimaPada DateTime @default(now())
 
   memberId String?
   member   Member? @relation(fields: [memberId], references: [id])
@@ -403,7 +406,8 @@ model Transaksi {
   idempotencyKey String?   @unique
   // True bila transaksi dibuat dari antrean offline (luring).
   dibuatOffline  Boolean   @default(false)
-  // Waktu saat klien membuat transaksi (untuk urutan & laporan offline).
+  // Waktu saat klien membuat transaksi. HANYA metadata offline (batas ±24 jam
+  // dari jam server di validations/transaksi.ts); bukan sumber laporan resmi.
   waktuKlien     DateTime?
   // HPP & diskon member pada saat transaksi ini — disimpan agar replay
   // idempoten mengembalikan angka yang sama persis.
@@ -671,7 +675,9 @@ model PageVisit {
 // Pelacakan perangkat & lokasi user/member.
 model DeviceVisit {
   id          String   @id @default(cuid())
-  deviceId    String
+  // Identitas perangkat dari token bertanda tangan server (SEC-24), bukan
+  // deviceId kiriman klien. Unik agar satu perangkat hanya punya satu baris.
+  deviceId    String   @unique
   deviceName  String?
   os          String // mac/windows/android/ios/linux
   ipv4        String?
@@ -682,11 +688,12 @@ model DeviceVisit {
   userId      String?
   user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userType    String // member / non-member (owner & kasir dikecualikan)
-  createdAt   DateTime @default(now())
+  createdAt        DateTime @default(now())
+  terakhirDilihat  DateTime @default(now())
+  jumlahKunjungan  Int      @default(1)
 
-  @@index([deviceId])
   @@index([userId])
-  @@index([createdAt])
+  @@index([terakhirDilihat])
   @@index([klasifikasi])
   @@index([userType])
 }

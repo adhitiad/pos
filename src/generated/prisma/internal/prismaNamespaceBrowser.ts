@@ -317,6 +317,7 @@ export const TransaksiScalarFieldEnum = {
   id: 'id',
   nomor: 'nomor',
   tanggal: 'tanggal',
+  diterimaPada: 'diterimaPada',
   memberId: 'memberId',
   kasirId: 'kasirId',
   shiftId: 'shiftId',
@@ -530,7 +531,9 @@ export const DeviceVisitScalarFieldEnum = {
   klasifikasi: 'klasifikasi',
   userId: 'userId',
   userType: 'userType',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  terakhirDilihat: 'terakhirDilihat',
+  jumlahKunjungan: 'jumlahKunjungan'
 } as const
 
 export type DeviceVisitScalarFieldEnum = (typeof DeviceVisitScalarFieldEnum)[keyof typeof DeviceVisitScalarFieldEnum]

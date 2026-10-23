@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { unggahGambar } from '#/lib/cloudinary'
 import { setIdentitasCache } from '#/lib/identitas'
 import { setLogoUrlCache } from '#/lib/logo'
+import { parsePersenPengaturan } from '#/lib/persen'
 import { UKURAN_KERTAS_TERMAL, labelUkuranKertas } from '#/lib/ukuran-kertas'
 import { m } from '#/paraglide/messages'
 import { getSessionFn } from '#/server/authFn'
@@ -14,6 +15,7 @@ import { pengaturanDataFn, setPengaturanFn } from '#/server/pengaturanFn'
 
 import DashboardLayout from '#/components/DashboardLayout'
 import IkonCropDialog from '#/components/pengaturan/IkonCropDialog'
+import KartuDiskonKasir from '#/components/pengaturan/KartuDiskonKasir'
 import { Button } from '#/components/ui/button'
 import {
   Card,
@@ -62,10 +64,10 @@ function Pengaturan() {
   const inputIkon = useRef<HTMLInputElement>(null)
   const [deskripsiApp, setDeskripsiApp] = useState(awal.deskripsiApp)
   const [pajakRestoPersen, setPajakRestoPersen] = useState(
-    awal.pajakRestoPersen,
+    String(awal.pajakRestoPersen),
   )
   const [pajakRetailPersen, setPajakRetailPersen] = useState(
-    awal.pajakRetailPersen,
+    String(awal.pajakRetailPersen),
   )
   const [modeFnb, setModeFnb] = useState(awal.modeFnb)
   const [riwayatBelanja, setRiwayatBelanja] = useState(awal.riwayatBelanja)
@@ -96,6 +98,17 @@ function Pengaturan() {
   }
 
   const onSubmit = async () => {
+    const pajakResto = parsePersenPengaturan(pajakRestoPersen)
+    const pajakRetail = parsePersenPengaturan(pajakRetailPersen)
+    if (pajakResto === null || pajakRetail === null) {
+      toast.error(m.pengaturan_pajak_invalid())
+      return
+    }
+    const nolBaru =
+      (pajakResto === 0 && awal.pajakRestoPersen !== 0) ||
+      (pajakRetail === 0 && awal.pajakRetailPersen !== 0)
+    if (nolBaru && !window.confirm(m.pengaturan_pajak_nol_konfirmasi())) return
+
     setSimpan(true)
     let logoBaru = logoUrl
     let ikonBaru = ikonUrl
@@ -129,18 +142,18 @@ function Pengaturan() {
         await setPengaturanFn({
           data: { kunci: 'deskripsi_app', nilai: deskripsiApp },
         })
-      if (pajakRestoPersen !== awal.pajakRestoPersen)
+      if (pajakResto !== awal.pajakRestoPersen)
         await setPengaturanFn({
           data: {
             kunci: 'pajak_resto_persen',
-            nilai: String(pajakRestoPersen),
+            nilai: String(pajakResto),
           },
         })
-      if (pajakRetailPersen !== awal.pajakRetailPersen)
+      if (pajakRetail !== awal.pajakRetailPersen)
         await setPengaturanFn({
           data: {
             kunci: 'pajak_retail_persen',
-            nilai: String(pajakRetailPersen),
+            nilai: String(pajakRetail),
           },
         })
       if (modeFnb !== awal.modeFnb)
@@ -355,15 +368,11 @@ function Pengaturan() {
             <Input
               id="pajak-resto"
               type="number"
+              inputMode="decimal"
               min={0}
               max={100}
               value={pajakRestoPersen}
-              onChange={(e) => {
-                const n = Number(e.target.value)
-                setPajakRestoPersen(
-                  Number.isFinite(n) ? Math.min(Math.max(0, n), 100) : 0,
-                )
-              }}
+              onChange={(e) => setPajakRestoPersen(e.target.value)}
               className="max-w-sm"
             />
           </div>
@@ -372,20 +381,18 @@ function Pengaturan() {
             <Input
               id="pajak-retail"
               type="number"
+              inputMode="decimal"
               min={0}
               max={100}
               value={pajakRetailPersen}
-              onChange={(e) => {
-                const n = Number(e.target.value)
-                setPajakRetailPersen(
-                  Number.isFinite(n) ? Math.min(Math.max(0, n), 100) : 0,
-                )
-              }}
+              onChange={(e) => setPajakRetailPersen(e.target.value)}
               className="max-w-sm"
             />
           </div>
         </CardContent>
       </Card>
+
+      <KartuDiskonKasir nilaiAwal={awal.diskonKasirMaksPersen} />
 
       <Card>
         <CardHeader>

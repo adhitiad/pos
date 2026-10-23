@@ -84,49 +84,59 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const location = useLocation()
   const nonce = useRouter().options.ssr?.nonce
 
-  const getDeviceId = (): string => {
-    if (typeof document === 'undefined') return ''
-    let id = localStorage.getItem('pos_device_id')
-    if (!id) {
-      id = crypto.randomUUID()
-      localStorage.setItem('pos_device_id', id)
-    }
-    return id
-  }
+  const KUNCI_TOKEN_PERANGKAT = 'pos_device_token'
 
-  const detectOS = (): 'mac' | 'windows' | 'android' | 'ios' | 'linux' => {
-    if (typeof navigator === 'undefined') return 'windows'
-    const ua = navigator.userAgent
-    if (/android/i.test(ua)) return 'android'
-    if (/iphone|ipad|ipod/i.test(ua)) return 'ios'
-    if (/mac/i.test(ua)) return 'mac'
-    if (/linux/i.test(ua)) return 'linux'
-    return 'windows'
-  }
-
-  const detectKlasifikasi = (): 'hp' | 'tablet' | 'laptop' | 'pc' | 'mobil' => {
-    if (typeof window === 'undefined') return 'pc'
-    const ua = navigator.userAgent
-    if (/mobi/i.test(ua)) {
-      if (window.innerWidth > 600) return 'tablet'
-      return 'hp'
-    }
-    if (window.innerWidth > 1024) return 'pc'
-    return 'laptop'
-  }
-
-  const getLokasi = (): string | undefined => {
-    if (typeof Intl === 'undefined') return undefined
+  const ambilTokenPerangkat = async (): Promise<string | null> => {
     try {
-      return Intl.DateTimeFormat().resolvedOptions().timeZone
+      const res = await fetch('/api/v1/device-visit-token', { method: 'POST' })
+      if (!res.ok) {
+        await res.body?.cancel()
+        return null
+      }
+      const json: unknown = await res.json()
+      const data =
+        json && typeof json === 'object'
+          ? (json as { data?: unknown }).data
+          : undefined
+      const token =
+        data && typeof data === 'object'
+          ? (data as { token?: unknown }).token
+          : undefined
+      if (typeof token !== 'string' || token.length < 20) return null
+      localStorage.setItem(KUNCI_TOKEN_PERANGKAT, token)
+      return token
     } catch {
-      return undefined
+      return null
     }
+  }
+
+  const kirimDeviceVisit = async () => {
+    let token = localStorage.getItem(KUNCI_TOKEN_PERANGKAT)
+    if (!token) token = await ambilTokenPerangkat()
+    if (!token) return
+
+    let res = await fetch('/api/v1/device-visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    })
+    // Token kedaluwarsa / User-Agent berubah → minta token baru sekali.
+    if (res.status === 422 || res.status === 401) {
+      await res.body?.cancel()
+      token = await ambilTokenPerangkat()
+      if (!token) return
+      res = await fetch('/api/v1/device-visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      })
+    }
+    await res.body?.cancel()
   }
 
   useEffect(() => {
     // Metadata analytics diturunkan di server dari sesi/header tepercaya;
-    // klien hanya mengirim atribut perangkat yang memang tak terlihat server.
+    // klien hanya mengirim token perangkat bertanda tangan server (SEC-24).
     // Body selalu dikonsumsi (`body.cancel()`) — fetch fire-and-forget yang
     // bodynya tak dibaca membuat koneksi tetap "in-flight" di browser.
     void fetch('/api/v1/kunjungan', { method: 'POST' })
@@ -135,24 +145,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         // page visit tracking non-fatal (mis. saat offline)
       })
 
-    void fetch('/api/v1/device-visit', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        deviceId: getDeviceId(),
-        deviceName:
-          typeof navigator !== 'undefined' ? navigator.platform : undefined,
-        os: detectOS(),
-        klasifikasi: detectKlasifikasi(),
-        lokasi: getLokasi(),
-      }),
+    void kirimDeviceVisit().catch(() => {
+      // device visit tracking non-fatal
     })
-      .then((res) => res.body?.cancel())
-      .catch(() => {
-        // device visit tracking non-fatal
-      })
   }, [location.pathname])
 
   return (

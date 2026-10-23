@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { prisma } from '#/db'
+import { parsePersenPengaturan } from '#/lib/persen'
 import { pengaturanData, setPengaturan } from '#/server/pengaturan'
 import { SetPengaturanSchema } from '#/validations/pengaturan'
 
@@ -82,6 +83,52 @@ describe('pengaturan', () => {
       SetPengaturanSchema.parse({
         kunci: 'ukuran_kertas_termal',
         nilai: '99x99',
+      }),
+    ).toThrow()
+  })
+
+  it('tarif pajak menerima 0–100 dan menolak kosong/invalid', () => {
+    expect(parsePersenPengaturan('0')).toBe(0)
+    expect(parsePersenPengaturan('100')).toBe(100)
+    expect(parsePersenPengaturan('10.5')).toBe(10.5)
+    expect(parsePersenPengaturan('')).toBeNull()
+    expect(parsePersenPengaturan('   ')).toBeNull()
+    expect(parsePersenPengaturan('abc')).toBeNull()
+    expect(parsePersenPengaturan('-1')).toBeNull()
+    expect(parsePersenPengaturan('101')).toBeNull()
+
+    expect(
+      SetPengaturanSchema.parse({ kunci: 'pajak_resto_persen', nilai: '11' }),
+    ).toEqual({ kunci: 'pajak_resto_persen', nilai: '11' })
+    expect(() =>
+      SetPengaturanSchema.parse({ kunci: 'pajak_resto_persen', nilai: '' }),
+    ).toThrow()
+    expect(() =>
+      SetPengaturanSchema.parse({ kunci: 'pajak_retail_persen', nilai: '101' }),
+    ).toThrow()
+    expect(() =>
+      SetPengaturanSchema.parse({ kunci: 'pajak_persen', nilai: 'abc' }),
+    ).toThrow()
+  })
+
+  it('mode_fnb dan stok_dikurangi_saat hanya menerima enum', () => {
+    expect(
+      SetPengaturanSchema.parse({ kunci: 'mode_fnb', nilai: 'true' }),
+    ).toEqual({ kunci: 'mode_fnb', nilai: 'true' })
+    expect(() =>
+      SetPengaturanSchema.parse({ kunci: 'mode_fnb', nilai: 'ya' }),
+    ).toThrow()
+
+    expect(
+      SetPengaturanSchema.parse({
+        kunci: 'stok_dikurangi_saat',
+        nilai: 'payment',
+      }),
+    ).toEqual({ kunci: 'stok_dikurangi_saat', nilai: 'payment' })
+    expect(() =>
+      SetPengaturanSchema.parse({
+        kunci: 'stok_dikurangi_saat',
+        nilai: 'kapan-saja',
       }),
     ).toThrow()
   })

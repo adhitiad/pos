@@ -1,6 +1,9 @@
 # POS-17 — Cross-platform sign-in (opsional, low)
 
-> Status: **Belum mulai** — menunggu kredensial Google OAuth (POS-11). Tidak ditulis code yang belum teruji.
+> Status: **desain awal, sudah diimplementasikan dan direvisi.** Kontrak aktif
+> ada di [`API.md`](API.md) dan [`EXPO.md`](EXPO.md). Sejak SEC-25
+> (2026-10-23), token native hanya keluar dari `POST /api/v1/auth-native`
+> dengan verifikasi `aud` client native; `x-client` tidak dipakai lagi.
 
 ## Latar belakang
 

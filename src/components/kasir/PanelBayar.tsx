@@ -27,6 +27,7 @@ import {
 
 import AntreanPanel from './AntreanPanel'
 import DaftarDraft from './DaftarDraft'
+import DiskonField from './DiskonField'
 import PembayaranPanel from './PembayaranPanel'
 import RingkasanBayar from './RingkasanBayar'
 import Struk from './Struk'
@@ -37,9 +38,11 @@ const rupiah = (n: number) =>
 export default function PanelBayar({
   data,
   bolehBayar,
+  peran,
 }: {
   data: DataKasir
   bolehBayar: boolean
+  peran: 'OWNER' | 'KASIR'
 }) {
   const cart = useStore(cartStore)
   const [memberTerpilih, setMemberTerpilih] = useState('')
@@ -283,17 +286,13 @@ export default function PanelBayar({
         <div className="grid grid-cols-2 gap-2">
           <form.Field name="diskon">
             {(field) => (
-              <div className="space-y-1">
-                <Label>{m.kasir_discount()}</Label>
-                <Input
-                  type="number"
-                  min={0}
-                  value={field.state.value}
-                  onChange={(e) => {
-                    field.handleChange(Number(e.target.value))
-                  }}
-                />
-              </div>
+              <DiskonField
+                nilai={field.state.value}
+                onChange={field.handleChange}
+                subtotal={subtotal}
+                persen={data.diskonKasirMaksPersen}
+                peran={peran}
+              />
             )}
           </form.Field>
           <form.Field name="tukarPoin">

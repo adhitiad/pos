@@ -190,7 +190,7 @@
 - [x] **SEC-03 (High)** Belum ada CSRF middleware untuk server function (`src/start.ts`). Tambah `createCsrfMiddleware` (`filter: handlerType === 'serverFn'`) di `requestMiddleware`
 - [x] **SEC-04 (Medium)** Matriks peran tidak konsisten antara route, `*Fn.ts`, dan REST (`/kasir`, `/dapur`, `/meja`, `/pengaturan`). Dibuat `src/server/peran.ts` (`AKSES.operasional`=OWNER+KASIR, `manajerial`=OWNER, `semua`=OWNER+KASIR+MEMBER + `punyaAkses`); guard server function (`auth.ts` → `requireKasir`/`requireOwner`), REST (`apiPengguna` di 19 route), guard halaman (`beforeLoad` via `punyaAkses`), dan nav (`RelNav`) semua memakai konstanta ini. Kekeliruan diperbaiki: `kasirDataFn`/`dapurFn` requireOwner→KASIR; REST GET `/meja` OWNER→operasional; unit test `tests/vitest/peran.test.ts`
 - [x] **SEC-05 (Medium)** `recordDeviceVisitFn`/`recordPageVisitFn` publik tanpa rate limit (REST-nya punya, server function tidak) → storage DoS. Rate limit dipindah ke server function (`batasiNama`: device-visit 60/menit, kunjungan 120/menit di `deviceVisitFn.ts`/`kunjunganFn.ts`); pembatas di route REST `device-visit` & `kunjungan/index` dihapus
-- [x] **SEC-06 (Medium)** `signInSocial` mengembalikan token sesi di body JSON (bisa dibaca XSS). `src/routes/api/v1/auth-social.ts` kini mengirim `{ user }` saja untuk web (cookie httpOnly tetap di-set); token sesi di body hanya bila klien mengirim header `x-client: expo`
+- [x] **SEC-06 (Medium)** `signInSocial` mengembalikan token sesi di body JSON (bisa dibaca XSS). `src/routes/api/v1/auth-social.ts` kini mengirim `{ user }` saja untuk web (cookie httpOnly tetap di-set); token sesi di body hanya bila klien mengirim header `x-client: expo` — **digantikan SEC-25:** token native kini hanya lewat `/api/v1/auth-native` dan `x-client` tidak lagi dipercaya.
 - [x] **SEC-07 (Medium)** `trustedOrigins` bisa `undefined` di produksi; `useSecureCookies` bentrok dengan atribut `secure`. `src/lib/auth.ts`: `trustedOrigins` selalu terdefinisi (origin `BETTER_AUTH_URL` + `TRUSTED_ORIGINS`); `useSecureCookies` murni dari `NODE_ENV`; atribut `secure` ganda dihapus dari `defaultCookieAttributes`
 - [x] **SEC-08 (Medium)** Rate limiter in-memory + IP dari header yang bisa dipalsukan; tidak efektif di serverless. Diganti store bersama Postgres (model `RateLimit`, upsert atomik `INSERT ... ON CONFLICT ... RETURNING` di `src/server/rateLimit.ts`); IP dari `getRequestIP` (header proxy hanya bila `TRUST_PROXY`); `batasi` async dipakai `rateLimit` (REST 429) & `batasiNama` (server fn → `GalatRateLimit`/429); tambah `TRUST_PROXY` di `src/env.ts`; unit test `tests/vitest/api.test.ts`
 - [x] **SEC-09 (Low)** CSP hanya di produksi, `style-src 'unsafe-inline'`, `img-src https:` terlalu luas. `src/lib/csp.ts` kini digate flag eksplisit `ENABLE_CSP` (default menyala di produksi, bisa dipaksa di staging/dev); `img-src` dipersempit ke `'self' data: blob: https://res.cloudinary.com https://*.googleusercontent.com`; komentar menjelaskan `style-src 'unsafe-inline'` masih perlu untuk style inline Radix/next-themes; env baru di `src/env.ts` + `.env.example`/`README.md`
@@ -444,21 +444,22 @@
 
 ### Ringkasan prioritas
 
-| Prioritas        | ID     | Temuan                                        | Status | Alasan singkat                                                               |
-| ---------------- | ------ | --------------------------------------------- | ------ | ---------------------------------------------------------------------------- |
-| **Critical**     | —      | Tidak ada                                     | —      | Tidak ada RCE, bypass auth tanpa kredensial, atau kebocoran lintas pengguna. |
-| **High**         | SEC-20 | Rate limit percaya `X-Forwarded-For` mentah   | `[x]`  | Selesai: XFF dibaca dari kanan (+hops); endpoint auth per user.              |
-| **High**         | SEC-22 | Diskon kasir tanpa batas/approval             | `[ ]`  | Kasir bisa membuat transaksi diskon 100%; risiko fraud internal.             |
-| **High**         | SEC-27 | Sesi tidak bisa dicabut massal                | `[x]`  | Selesai: role berubah/revoke-all menghapus sesi; tombol di `/user`.          |
-| **Medium**       | SEC-24 | Tulisan `device-visit` publik dapat dicemari  | `[ ]`  | `deviceId`/`lokasi`/`klasifikasi` dari klien; analytics/storage pollution.   |
-| **Low**          | SEC-21 | `waktuKlien`/`dibuatOffline` tanpa validasi   | `[ ]`  | Belum dipakai laporan; hardening agar tidak disalahgunakan nanti.            |
-| **Low**          | SEC-23 | Validasi angka pengaturan pajak/mode          | `[ ]`  | Nilai sudah di-clamp saat baca; ini data-quality/UX.                         |
-| **Low**          | SEC-25 | `x-client: expo` sebagai pemilih bearer token | `[ ]`  | Bukan jalur XSS yang diklaim; defense-in-depth.                              |
-| **Low / future** | SEC-26 | Isolasi multi-toko (`tokoId`)                 | `[ ]`  | PRD single-tenant; tunda sampai multi-tenant jadi kebutuhan.                 |
+| Prioritas        | ID     | Temuan                                        | Status | Alasan singkat                                                                |
+| ---------------- | ------ | --------------------------------------------- | ------ | ----------------------------------------------------------------------------- |
+| **Critical**     | —      | Tidak ada                                     | —      | Tidak ada RCE, bypass auth tanpa kredensial, atau kebocoran lintas pengguna.  |
+| **High**         | SEC-20 | Rate limit percaya `X-Forwarded-For` mentah   | `[x]`  | Selesai: XFF dibaca dari kanan (+hops); endpoint auth per user.               |
+| **High**         | SEC-22 | Diskon kasir tanpa batas/approval             | `[x]`  | Selesai: batas KASIR 10% (configurable), OWNER override diaudit.              |
+| **High**         | SEC-27 | Sesi tidak bisa dicabut massal                | `[x]`  | Selesai: role berubah/revoke-all menghapus sesi; tombol di `/user`.           |
+| **Medium**       | SEC-24 | Tulisan `device-visit` publik dapat dicemari  | `[x]`  | Selesai: token HMAC server, UA-derived, upsert per device, batas global.      |
+| **Low**          | SEC-21 | `waktuKlien`/`dibuatOffline` tanpa validasi   | `[x]`  | Selesai: waktuKlien ±24 jam, diterimaPada server, laporan tetap server.       |
+| **Low**          | SEC-23 | Validasi angka pengaturan pajak/mode          | `[x]`  | Selesai: pajak 0–100, enum mode/stok, konfirmasi 0, fallback legacy.          |
+| **Low**          | SEC-25 | `x-client: expo` sebagai pemilih bearer token | `[x]`  | Selesai: endpoint native terpisah + verifikasi aud; web tanpa bearer.         |
+| **Low / future** | SEC-26 | Isolasi multi-toko (`tokoId`)                 | `[ ]`  | Diputuskan tetap single-tenant; multi-tenant ditunda sampai kebutuhan produk. |
 
-**Urutan eksekusi yang disarankan:** SEC-20 dan SEC-27 sudah selesai. Berikutnya
-SEC-22 (butuh keputusan kebijakan diskon) → SEC-24 → item Low. SEC-22 jangan
-dipatch sebelum ambang diskon/approval disepakati.
+**Urutan eksekusi yang disarankan:** SEC-20, SEC-27, SEC-22, SEC-24, SEC-21,
+SEC-23, dan SEC-25 sudah selesai. SEC-26 tetap ditunda: keputusan produk saat
+ini adalah single-tenant per deployment, dan `tokoId` tidak ditambahkan
+setengah-setengah.
 
 ### P1 — High (dahulukan)
 
@@ -476,16 +477,21 @@ dipatch sebelum ambang diskon/approval disepakati.
       Kriteria terpenuhi: XFF palsu tidak membuat bucket baru; IP korban tidak bisa
       dihabiskan lewat entri kiri; endpoint publik tetap punya batas per IP.
 
-- [ ] **SEC-22 (High, A01/A06)** Batasi diskon kasir dan tambahkan approval owner.
-      `postingTransaksi.ts` hanya memakai `Math.min(data.diskon, subtotal)`; tidak ada
-      batas per role. KASIR (`AKSES.operasional`) bisa membuat transaksi diskon 100%
-      sehingga barang keluar tanpa pendapatan. Ini bukan eskalasi hak akses, tetapi
-      kontrol fraud internal.
-      Perbaikan: tentukan kebijakan diskon (nominal/persen per role); tolak diskon di
-      atas ambang kasir; buat alur approval owner untuk diskon besar (owner menyetujui
-      sebelum posting atau menandai transaksi); audit setiap diskon di atas ambang.
-      Kriteria: KASIR tidak bisa melewati ambang; OWNER bisa memberi diskon sesuai
-      kebijakan; percobaan melewati ambang ditolak 422/403 dan tercatat.
+- [x] **SEC-22 (High, A01/A06)** Batasi diskon kasir dan tambahkan approval owner.
+      **Selesai 2026-10-23:** kebijakan default KASIR maks **10% dari subtotal**,
+      dapat diubah OWNER di `/pengaturan` melalui `diskon_kasir_maks_persen`
+      (validasi 0–100). `postingTransaksi.ts` menghitung ulang ambang dari pengaturan
+      server dan menolak diskon manual KASIR di atasnya dengan galat domain (HTTP
+      422). OWNER tetap boleh melewati ambang; setiap diskon OWNER di atas ambang
+      dicatat ke `AuditLog` (`transaksi.diskon.owner`), dan percobaan KASIR yang
+      ditolak dicatat sebagai `transaksi.diskon.ditolak` di luar transaction yang
+      di-rollback. UI kasir menampilkan batas dan meng-clamp input; server tetap
+      penentu akhir. Tidak ada antrean approval terpisah: persetujuan owner
+      dilakukan dengan owner memposting transaksi tersebut.
+      Test `tests/vitest/diskon.test.ts` mencakup normalisasi ambang, penolakan
+      KASIR + audit, diskon tepat di ambang, dan override OWNER + audit.
+      Kriteria terpenuhi: KASIR tidak bisa melewati ambang; OWNER bisa memberi
+      diskon sesuai kebijakan; percobaan melewati ambang ditolak 422 dan tercatat.
 
 - [x] **SEC-27 (High, A07)** Sesi dicabut saat role berubah dan tersedia
       revoke-all. **Selesai 2026-10-23:** `updateUserRole` menghapus semua `Session`
@@ -502,58 +508,72 @@ dipatch sebelum ambang diskon/approval disepakati.
 
 ### P2 — Medium
 
-- [ ] **SEC-24 (Medium, A09)** Perketat tulisan `device-visit`.
-      Endpoint publik disengaja, tetapi `deviceId`, `lokasi`, dan `klasifikasi` masih
-      dari klien; `ipv4`/`dns` sudah diabaikan dan `userId` dari sesi. Klien bisa
-      mengirim baris palsu untuk mencemari analytics/mengisi storage; rate limit
-      sudah diperketat oleh SEC-20, tetapi data tetap berasal dari klien.
-      Perbaikan: terbitkan `deviceId`/token analytics bertanda tangan dari server,
-      turunkan `klasifikasi`/OS dari User-Agent, dedupe/upsert per device, dan/atau
-      wajibkan login untuk write. Turunkan batas per IP dan tambahkan batas global.
-      Kriteria: data palsu tidak menambah baris baru; device sah tetap tercatat;
-      endpoint tetap tidak membocorkan data ke publik.
+- [x] **SEC-24 (Medium, A09)** Perketat tulisan `device-visit`.
+      **Selesai 2026-10-23:** endpoint publik tetap ada, tetapi body hanya berisi
+      `token` HMAC-SHA256 yang diterbitkan `POST /api/v1/device-visit-token`.
+      `deviceId` diturunkan server dari IP + User-Agent, OS/klasifikasi/nama
+      perangkat diturunkan dari User-Agent, dan lokasi hanya dari header geolokasi
+      platform (Vercel/Cloudflare). `DeviceVisit.deviceId` kini unik dengan
+      `terakhirDilihat`/`jumlahKunjungan`; tulisan memakai upsert sehingga perangkat
+      sah tidak menambah baris berulang. Token terikat User-Agent dan kedaluwarsa
+      30 hari; token palsu/berbeda UA ditolak. Batas per IP diturunkan menjadi 20/menit
+      dan ditambah batas global 600/menit (token: 10/menit per IP, 120/menit global).
+      Migrasi `20261023120000_sec_21_22_24` mendedupe data lama sebelum unique index.
+      Test `tests/vitest/deviceToken.test.ts` dan `deviceVisit.test.ts` mencakup
+      determinisme token, penolakan token palsu/UA beda, derivasi perangkat, upsert,
+      dan sanitasi IP/DNS.
+      Kriteria terpenuhi: data palsu tidak menambah baris baru; perangkat sah tetap
+      tercatat; endpoint tetap tidak membocorkan data ke publik.
 
 ### P3 — Low
 
-- [ ] **SEC-21 (Low, A04)** Validasi `waktuKlien` dan `dibuatOffline`.
-      Keduanya diterima dari klien (`validations/transaksi.ts`) dan disimpan
-      (`postingTransaksi.ts`), tetapi laporan memakai `Transaksi.tanggal` server.
-      Belum ada dampak laporan; hardening agar metadata offline tidak menjadi sumber
-      kebenaran di masa depan.
-      Perbaikan: batasi selisih `waktuKlien` terhadap waktu server (mis. ±24 jam),
-      simpan `waktuServer`/`diterimaPada`, dan jangan pernah memakai `waktuKlien`
-      untuk filter/urutan laporan resmi. `dibuatOffline` hanya boleh menjadi metadata.
-      Kriteria: waktu di luar batas ditolak/dinormalisasi; laporan tetap memakai
-      `tanggal` server; test untuk waktu masa depan/masa lalu ekstrem.
+- [x] **SEC-21 (Low, A04)** Validasi `waktuKlien` dan `dibuatOffline`.
+      **Selesai 2026-10-23:** `PostingTransaksiSchema` menolak `waktuKlien` yang
+      selisihnya lebih dari ±24 jam dari jam server, menolak tanggal tidak valid, dan
+      mewajibkan `idempotencyKey` bila `dibuatOffline=true`. `Transaksi` mendapat
+      kolom `diterimaPada` yang selalu diisi server; laporan resmi tetap memakai
+      `tanggal`/`diterimaPada`, bukan `waktuKlien`. Data lama diisi dari `createdAt`
+      oleh migrasi. Test `tests/vitest/idempotensi.test.ts` mencakup waktu masa
+      depan/masa lalu ekstrem, offline tanpa kunci, serta penyimpanan `diterimaPada`.
+      Kriteria terpenuhi: waktu di luar batas ditolak; laporan memakai `tanggal`
+      server; test regresi tersedia.
 
-- [ ] **SEC-23 (Low, A04)** Validasi numerik pengaturan pajak/mode.
-      `normalisasiPersen` dan `hitungPajak` sudah clamp 0–100, jadi angka absurd tidak
-      merusak total. Namun `SetPengaturanSchema` masih menerima string apa pun; nilai
-      invalid/kosong menjadi 0 dan `mode_fnb` invalid menjadi `false`.
-      Perbaikan: validasi `pajak_*` sebagai angka 0–100 (termasuk penanganan string
-      kosong/fallback legacy), `mode_fnb`/`stok_dikurangi_saat` sebagai enum, dan
-      tampilkan konfirmasi untuk nilai 0. Audit before/after sudah ada.
-      Kriteria: nilai invalid ditolak 400; nilai kosong tidak mengubah tarif secara
-      diam-diam; test validasi dan fallback.
+- [x] **SEC-23 (Low, A04)** Validasi numerik pengaturan pajak/mode. Selesai:
+      `SetPengaturanSchema` menolak `pajak_*` kosong/non-angka/di luar 0–100 serta
+      membatasi `mode_fnb` ke `true|false` dan `stok_dikurangi_saat` ke
+      `order|payment`; string kosong pada kunci pajak baru jatuh ke `pajak_persen`
+      legacy, bukan diam-diam menjadi 0. UI mempertahankan input kosong agar
+      ditolak, dan meminta konfirmasi saat tarif diturunkan ke 0. Audit before/after
+      tetap. Test: `tests/vitest/pengaturan.test.ts`, `tests/vitest/pajak.test.ts`.
 
-- [ ] **SEC-25 (Low, A07)** Pisahkan jalur token native dari header `x-client`.
-      `POST /api/v1/auth-social` mewajibkan Google `idToken` dan membuat sesi baru;
-      header `x-client: expo` hanya memilih respons JSON. Jalur XSS “cookie → bearer”
-      yang diklaim tidak ada, tetapi header tetap bukan security boundary.
-      Perbaikan: endpoint native terpisah dengan attestation/PKCE atau client ID
-      terdaftar; pertahankan cookie httpOnly untuk web; jangan pernah menganggap
-      `x-client` sebagai bukti klien. Pastikan mobile memakai `expo-secure-store`.
-      Kriteria: web tidak bisa memperoleh bearer token; mobile sah tetap bisa;
-      test regresi untuk header palsu.
+- [x] **SEC-25 (Low, A07)** Pisahkan jalur token native dari header `x-client`.
+      **Selesai 2026-10-23:** `POST /api/v1/auth-social` kini hanya mengembalikan
+      `{ user }` + cookie httpOnly dan tidak pernah memuat `session.token`,
+      termasuk bila klien mengirim `x-client: expo` palsu. Token bearer hanya
+      keluar dari endpoint terpisah `POST /api/v1/auth-native`, yang aktif bila
+      `GOOGLE_NATIVE_CLIENT_ID` diisi, berbeda dari `GOOGLE_CLIENT_ID`, dan klaim
+      `aud` Google ID token cocok dengan client native tersebut. Jalur langsung
+      Better Auth `/api/auth/sign-in/social` dengan `idToken` diblokir plugin
+      `nativeIdTokenGuard` kecuali memakai header internal acak per proses dari
+      panggilan server-ke-server. Respons Better Auth `/api/auth/get-session`
+      dan `/api/auth/list-sessions` juga tidak lagi memuat `session.token`,
+      dan header `set-auth-token` dihapus dari semua respons Better Auth
+      (plugin `sembunyikanTokenSesi`), menutup jalur cookie → bearer. Mobile
+      memakai `expo-secure-store` (lihat `docs/EXPO.md`). Test regresi:
+      `tests/vitest/auth-native.test.ts`,
+      `tests/vitest/auth-routes.test.ts` (header `x-client` palsu, token web ke
+      endpoint native, client native belum dikonfigurasi).
 
 - [ ] **SEC-26 (Low / future, A01)** Isolasi multi-toko.
-      PRD menyatakan single-tenant per deployment; schema tidak punya `tokoId`.
-      Saat ini semua OWNER adalah co-owner toko yang sama, jadi belum ada IDOR
-      antar-tenant. Jangan tambah `tokoId` setengah-setengah.
-      Perbaikan (hanya bila multi-tenant menjadi kebutuhan): tambah `tokoId` pada
-      master/transaksi, scope semua query, guard per toko, dan migrasi data.
-      Kriteria: user toko A tidak bisa membaca/menulis data toko B; test isolasi
-      lintas toko; keputusan produk didokumentasikan.
+      **Keputusan produk 2026-10-23: tetap single-tenant per deployment; item
+      ditunda, bukan dikerjakan sebagian.** PRD menyatakan single-tenant; schema
+      tidak punya `tokoId`, dan semua OWNER saat ini adalah co-owner toko yang
+      sama sehingga belum ada IDOR antar-tenant. Jangan menambahkan `tokoId`
+      setengah-setengah. Implementasi hanya dimulai bila multi-tenant menjadi
+      kebutuhan produk yang disetujui: tambah `tokoId` pada master/transaksi,
+      scope semua query, guard per toko, migrasi data, dan test isolasi.
+      Kriteria bila dimulai: user toko A tidak bisa membaca/menulis data toko B;
+      test isolasi lintas toko tersedia.
 
 ### Ditunda / bukan temuan keamanan
 
@@ -773,14 +793,14 @@ dipatch sebelum ambang diskon/approval disepakati.
       (klaim satu kali, laporan hasil); `idempotencyKey` pada job agar retry tak
       menghasilkan job ganda; server fn `src/server/percetakanFn.ts`; unit test
       `tests/vitest/percetakan.test.ts`; didokumentasikan di `docs/API.md` + `docs/EXPO.md`.
-- [ ] **PRINT-02** Cetak ulang dari antrean struk — OWNER tanpa batas; KASIR
-      maksimal tiga kali per transaksi. Server menaikkan penghitung dan membuat
-      PrintJob secara atomik; antrean web OWNER/KASIR dan REST menampilkan
-      penghitung serta menegakkan batas; tes domain, UI, dan akses kasir.
-      **Terblokir untuk dicentang:** gate repo masih gagal pada perubahan lain di
-      workspace (`src/routes/buku-besar.tsx`, `src/server/pengeluaranFn.ts`,
-      `tests/vitest/pengeluaran.test.ts`) dan satu E2E produk tidak menemukan
-      data fixture; E2E antrean kasir sendiri lulus.
+- [x] **PRINT-02** Cetak ulang dari antrean struk — OWNER tanpa batas; KASIR
+      maksimal tiga kali per transaksi. Selesai: `buatPrintJob` menaikkan
+      `cetakOwner`/`cetakKasir` dan membuat PrintJob dalam satu transaksi DB;
+      KASIR ditolak setelah 3 cetak, OWNER tanpa batas. Antrean web menampilkan
+      hitungan OWNER/KASIR dan menyembunyikan tombol cetak ulang saat batas
+      tercapai; REST `/api/v1/percetakan` mengembalikan penghitung dan menegakkan
+      batas. Test domain, UI, dan akses kasir lulus; gate repo (tsc, lint, check,
+      unit, e2e, build, perf) lulus 2026-10-23.
 - [x] **API-01** REST retur/opname untuk Expo: `GET/POST /api/v1/retur` (+
       `retur/produk-aktif`, `retur/transaksi?id=`), `GET/POST /api/v1/opname` (+
       `opname/master?jenis=`), guard OWNER+KASIR, envelope standar; didokumentasikan di
@@ -805,6 +825,21 @@ dipatch sebelum ambang diskon/approval disepakati.
 - [x] **BIZ-01** Keputusan bisnis M-01: `POST /api/v1/pesan` publik mengurangi stok —
       diputuskan stok dipotong **saat pembayaran dikonfirmasi**, bukan saat order.
       Implementasi dan pengujian ada di **SEC-15** (2026-10-23).
+- [x] **MCP-01** MCP Server `mcp-expo.ts` untuk integrasi Expo — mengekspor 7 tool
+      (expo_api_docs, expo_expo_docs, expo_prd_ai, expo_operasional, expo_readme,
+      expo_barriers, expo_all_docs) yang membaca docs/API.md, EXPO.md, PRD-AI.md,
+      OPERASIONAL.md + barriers keamanan mobile. JSON-RPC over stdio; typecheck lulus.
+- [x] **MCP-02** Konfigurasi klien OpenCode — `opencode.json` (project) +
+      `C:\Users\humas\.config\opencode\opencode.json` (global) terdaftar 5 server MCP:
+      pos-expo, pos-backend (stdio/Bun), firecrawl, tavily, exa (http). API key via
+      `{env:VAR_NAME}` (tidak hardcode). Verifikasi JSON valid.
+- [x] **MOBIL-04 / SEC-28** Perbaiki autentikasi klien Expo — ganti
+      `POST /api/v1/auth-social` → `POST /api/v1/auth-native`, ganti cookie header →
+      `Authorization: Bearer <token>`, hapus `x-client: expo` (bukan security boundary),
+      hapus dead code `getSessionCookieName`. `tsc --noEmit` pos_mobile lulus; 0 referensi
+      lama tersisa. Dokumentasi di `docs/MOBILE-INTEGRASI.md`.
+- [x] **MOBIL-05** `.env.example` untuk pos_mobile — `EXPO_PUBLIC_API_BASE_URL`
+      (IP LAN untuk device, 10.0.2.2 untuk emulator Android, localhost untuk dev)
 
 ---
 
@@ -1088,7 +1123,7 @@ dipatch sebelum ambang diskon/approval disepakati.
       kebenaran; issue hanya tautan kerja. **Terblokir:** token `gh` belum punya
       scope `project` (repo `adhitiad/pos` sudah ada). Persiapan selesai:
       `docs/GITHUB-SETUP.md` + `scripts/siapkan-github.ts`. Dry-run
-      `bun scripts/siapkan-github.ts --dry-run` pada 2026-10-22 menemukan 6
+      `bun scripts/siapkan-github.ts --dry-run` pada 2026-10-23 menemukan 5
       item CICD terbuka dan tidak menemukan item PRN terbuka; jumlah ini dapat
       berubah mengikuti checklist. Skrip melewati judul issue yang sudah ada.
       Verifikasi saat ini: `gh auth status` hanya melaporkan scope `gist`,
@@ -1097,16 +1132,14 @@ dipatch sebelum ambang diskon/approval disepakati.
       `gh auth refresh -h github.com -s project`, buat project/field sesuai
       `docs/GITHUB-SETUP.md`, lalu jalankan skrip dengan nomor project.
 
-- [ ] **CICD-16** Selesaikan konfigurasi keamanan dependency dan pelaporan
-      kerentanan. `SECURITY.md`, `.github/dependabot.yml`, dan
-      `.github/workflows/dependency-review.yml` sudah ada; Dependabot alerts
-      serta automated security fixes aktif. **Sebagian selesai:** pemeriksaan
-      API GitHub pada 2026-10-22 mengonfirmasi alerts `204` dan automated fixes
-      `200`; endpoint private vulnerability reporting mengembalikan `404`,
-      sehingga fitur tersebut belum tersedia/terkonfirmasi untuk repo ini.
-      Sampai tersedia, `SECURITY.md` harus mengarahkan pelapor ke kanal privat
-      maintainer, bukan menganggap form GitHub aktif. Dependency review gagal
-      untuk severity `high` ke atas. CodeQL tetap opsional.
+- [x] **CICD-16** Selesaikan konfigurasi keamanan dependency dan pelaporan
+      kerentanan. Selesai: `SECURITY.md`, `.github/dependabot.yml`, dan
+      `.github/workflows/dependency-review.yml` aktif; Dependabot alerts (`204`)
+      serta automated security fixes (`200`) terverifikasi. Private vulnerability
+      reporting diaktifkan pada 2026-10-23 (`GET` → `{"enabled":true}`), dan
+      `SECURITY.md` mengarahkan pelapor ke form GitHub dengan fallback kanal privat
+      maintainer. Dependency review menggagalkan severity `high` ke atas. CodeQL
+      tetap opsional.
 
 ### Fase 4 — Operasional & konsistensi dokumen
 

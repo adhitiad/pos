@@ -3,7 +3,13 @@ import { UKURAN_KERTAS_DEFAULT, ukuranKertasDari } from '#/lib/ukuran-kertas'
 
 import { catatAudit } from './audit.js'
 import { hapusAset } from './cloudinary.js'
-import { normalisasiPersen } from './pajak.js'
+import { normalisasiBatasDiskon } from './diskon.js'
+import {
+  KUNCI_PAJAK_RETAIL,
+  KUNCI_PAJAK_RESTO,
+  normalisasiPersen,
+  pilihNilaiPajak,
+} from './pajak.js'
 import { SetPengaturanSchema } from '#/validations/pengaturan'
 import type { IdentitasApp } from '#/types/pengaturan'
 import type {
@@ -34,10 +40,15 @@ export async function pengaturanData() {
     // Tarif pajak (%) per mode; dipakai server saat posting & ditampilkan di UI.
     // PB1 untuk mode F&B (restoran/cafe), PPN untuk retail.
     pajakRestoPersen: normalisasiPersen(
-      peta.pajak_resto_persen ?? peta.pajak_persen,
+      pilihNilaiPajak(peta, KUNCI_PAJAK_RESTO),
     ),
     pajakRetailPersen: normalisasiPersen(
-      peta.pajak_retail_persen ?? peta.pajak_persen,
+      pilihNilaiPajak(peta, KUNCI_PAJAK_RETAIL),
+    ),
+    // Batas diskon manual KASIR (SEC-22). OWNER boleh melewati ambang ini,
+    // tetapi diskon di atasnya tetap dicatat ke audit log.
+    diskonKasirMaksPersen: normalisasiBatasDiskon(
+      peta.diskon_kasir_maks_persen,
     ),
     semua: peta,
   }

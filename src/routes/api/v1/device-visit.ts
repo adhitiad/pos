@@ -15,10 +15,10 @@ export const Route = createFileRoute('/api/v1/device-visit')({
       POST: async ({ request }) => {
         try {
           // Endpoint publik (analytics) → batasi agar tak di-spam tanpa henti.
-          const rl = await rateLimit(request, 30)
+          const rl = await rateLimit(request, 20)
           if (rl) return rl
           const body = await bacaJsonTerbatas(request, 16 * 1024)
-          // `userId` dari body ditimpa dengan hasil sesi di recordDeviceVisitFn.
+          // Body hanya `token`; metadata diturunkan server di recordDeviceVisitFn.
           const hasil = await recordDeviceVisitFn({ data: body })
           return ok(hasil)
         } catch (e) {

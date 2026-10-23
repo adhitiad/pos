@@ -9,7 +9,7 @@
 
 | Kebutuhan mobile                                   | Status          | Endpoint / cara                                                         |
 | -------------------------------------------------- | --------------- | ----------------------------------------------------------------------- |
-| Login Google native                                | ✅ siap         | `POST /api/v1/auth-social` (header `x-client: expo`) → `session.token`  |
+| Login Google native                                | ✅ siap         | `POST /api/v1/auth-native` → `session.token` (aud client native)        |
 | Sesi tanpa cookie jar                              | ✅ siap         | `Authorization: Bearer <token>` (plugin `bearer` aktif)                 |
 | Master kasir (kategori/produk/member/delivery)     | ✅ siap         | `GET /api/v1/kasir-data`                                                |
 | Transaksi POS (member, poin, split, F&B, modifier) | ✅ siap         | `POST /api/v1/transaksi`                                                |
@@ -38,9 +38,9 @@ Belum tersedia (lihat §6): sinkron offline ( sisi mobile), printer Bluetooth ES
 2. Tukar jadi sesi POS:
 
    ```ts
-   const res = await fetch(`${BASE}/api/v1/auth-social`, {
+   const res = await fetch(`${BASE}/api/v1/auth-native`, {
      method: 'POST',
-     headers: { 'content-type': 'application/json', 'x-client: 'expo' },
+     headers: { 'content-type': 'application/json' },
      body: JSON.stringify({
        provider: 'google',
        idToken,
@@ -50,6 +50,12 @@ Belum tersedia (lihat §6): sinkron offline ( sisi mobile), printer Bluetooth ES
    })
    const { data } = await res.json() // data.session.token
    ```
+
+   Endpoint ini hanya mengembalikan `session.token` bila Google ID token
+   diterbitkan untuk `GOOGLE_NATIVE_CLIENT_ID` (client OAuth native yang
+   terdaftar di server dan **berbeda** dari `GOOGLE_CLIENT_ID` web). Bila belum
+   diisi, server membalas `503 NOT_CONFIGURED`. Jangan mengirim header
+   `x-client`; header itu bukan bukti klien dan sudah tidak dipakai.
 
 3. **Simpan token** di `expo-secure-store` (bukan AsyncStorage).
 4. **Setiap request** kirim header:
@@ -79,7 +85,7 @@ Belum tersedia (lihat §6): sinkron offline ( sisi mobile), printer Bluetooth ES
 
 | Layar di aplikasi       | Panggilan                                                                               |
 | ----------------------- | --------------------------------------------------------------------------------------- |
-| Login                   | `POST /api/v1/auth-social`                                                              |
+| Login                   | `POST /api/v1/auth-native`                                                              |
 | Kasir (daftar produk)   | `GET /api/v1/kasir-data` → `produk[]`, `kategori[]`, `member[]`, `delivery[]`           |
 | Cari member             | data `member[]` dari `kasir-data` (cari di sisi klien) atau `GET /api/v1/member?take=`  |
 | Bayar                   | `POST /api/v1/transaksi` (body `PostingTransaksi`, lihat `docs/API.md`)                 |
@@ -140,7 +146,7 @@ Tak mengirim `Origin` → CORS tak relevan. Yang penting:
 - Master data (produk/bahan/kategori/supplier/member) = **OWNER** saja.
   Kasir hanya boleh: `kasir-data`, `transaksi`, `meja` (baca), `pengaturan`
   (baca), `shift`, `retur`, `opname`, `pesan`, `saya`.
-- Rate limit per IP: endpoint tulis sensitif dibatasi (mis. `auth-social`
+- Rate limit per IP: endpoint tulis sensitif dibatasi (mis. `auth-native`
   5/menit, `pesan` 10/menit). Jangan retry agresif.
 - Semua perhitungan uang/harga/pajak dihitung server — klien tak boleh
   mengirim nominal akhir (`harga`, `pajak`, `diskon` total, `total`).

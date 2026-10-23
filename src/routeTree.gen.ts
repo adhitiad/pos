@@ -43,9 +43,11 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiV1SplatRouteImport } from './routes/api/v1/$'
 import { Route as ApiV1AppIconRouteImport } from './routes/api/v1/app-icon'
 import { Route as ApiV1AuditLogRouteImport } from './routes/api/v1/audit-log'
+import { Route as ApiV1AuthNativeRouteImport } from './routes/api/v1/auth-native'
 import { Route as ApiV1AuthSocialRouteImport } from './routes/api/v1/auth-social'
 import { Route as ApiV1BahanRouteImport } from './routes/api/v1/bahan'
 import { Route as ApiV1DeviceVisitRouteImport } from './routes/api/v1/device-visit'
+import { Route as ApiV1DeviceVisitTokenRouteImport } from './routes/api/v1/device-visit-token'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
 import { Route as ApiV1IdentitasRouteImport } from './routes/api/v1/identitas'
 import { Route as ApiV1KasirDataRouteImport } from './routes/api/v1/kasir-data'
@@ -263,6 +265,11 @@ const ApiV1AuditLogRoute = ApiV1AuditLogRouteImport.update({
   path: '/api/v1/audit-log',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1AuthNativeRoute = ApiV1AuthNativeRouteImport.update({
+  id: '/api/v1/auth-native',
+  path: '/api/v1/auth-native',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiV1AuthSocialRoute = ApiV1AuthSocialRouteImport.update({
   id: '/api/v1/auth-social',
   path: '/api/v1/auth-social',
@@ -276,6 +283,11 @@ const ApiV1BahanRoute = ApiV1BahanRouteImport.update({
 const ApiV1DeviceVisitRoute = ApiV1DeviceVisitRouteImport.update({
   id: '/api/v1/device-visit',
   path: '/api/v1/device-visit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1DeviceVisitTokenRoute = ApiV1DeviceVisitTokenRouteImport.update({
+  id: '/api/v1/device-visit-token',
+  path: '/api/v1/device-visit-token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiV1HealthRoute = ApiV1HealthRouteImport.update({
@@ -547,9 +559,11 @@ export interface FileRoutesByFullPath {
   '/api/v1/$': typeof ApiV1SplatRoute
   '/api/v1/app-icon': typeof ApiV1AppIconRoute
   '/api/v1/audit-log': typeof ApiV1AuditLogRoute
+  '/api/v1/auth-native': typeof ApiV1AuthNativeRoute
   '/api/v1/auth-social': typeof ApiV1AuthSocialRoute
   '/api/v1/bahan': typeof ApiV1BahanRoute
   '/api/v1/device-visit': typeof ApiV1DeviceVisitRoute
+  '/api/v1/device-visit-token': typeof ApiV1DeviceVisitTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/identitas': typeof ApiV1IdentitasRoute
   '/api/v1/kasir-data': typeof ApiV1KasirDataRoute
@@ -632,9 +646,11 @@ export interface FileRoutesByTo {
   '/api/v1/$': typeof ApiV1SplatRoute
   '/api/v1/app-icon': typeof ApiV1AppIconRoute
   '/api/v1/audit-log': typeof ApiV1AuditLogRoute
+  '/api/v1/auth-native': typeof ApiV1AuthNativeRoute
   '/api/v1/auth-social': typeof ApiV1AuthSocialRoute
   '/api/v1/bahan': typeof ApiV1BahanRoute
   '/api/v1/device-visit': typeof ApiV1DeviceVisitRoute
+  '/api/v1/device-visit-token': typeof ApiV1DeviceVisitTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/identitas': typeof ApiV1IdentitasRoute
   '/api/v1/kasir-data': typeof ApiV1KasirDataRoute
@@ -718,9 +734,11 @@ export interface FileRoutesById {
   '/api/v1/$': typeof ApiV1SplatRoute
   '/api/v1/app-icon': typeof ApiV1AppIconRoute
   '/api/v1/audit-log': typeof ApiV1AuditLogRoute
+  '/api/v1/auth-native': typeof ApiV1AuthNativeRoute
   '/api/v1/auth-social': typeof ApiV1AuthSocialRoute
   '/api/v1/bahan': typeof ApiV1BahanRoute
   '/api/v1/device-visit': typeof ApiV1DeviceVisitRoute
+  '/api/v1/device-visit-token': typeof ApiV1DeviceVisitTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/identitas': typeof ApiV1IdentitasRoute
   '/api/v1/kasir-data': typeof ApiV1KasirDataRoute
@@ -805,9 +823,11 @@ export interface FileRouteTypes {
     | '/api/v1/$'
     | '/api/v1/app-icon'
     | '/api/v1/audit-log'
+    | '/api/v1/auth-native'
     | '/api/v1/auth-social'
     | '/api/v1/bahan'
     | '/api/v1/device-visit'
+    | '/api/v1/device-visit-token'
     | '/api/v1/health'
     | '/api/v1/identitas'
     | '/api/v1/kasir-data'
@@ -890,9 +910,11 @@ export interface FileRouteTypes {
     | '/api/v1/$'
     | '/api/v1/app-icon'
     | '/api/v1/audit-log'
+    | '/api/v1/auth-native'
     | '/api/v1/auth-social'
     | '/api/v1/bahan'
     | '/api/v1/device-visit'
+    | '/api/v1/device-visit-token'
     | '/api/v1/health'
     | '/api/v1/identitas'
     | '/api/v1/kasir-data'
@@ -975,9 +997,11 @@ export interface FileRouteTypes {
     | '/api/v1/$'
     | '/api/v1/app-icon'
     | '/api/v1/audit-log'
+    | '/api/v1/auth-native'
     | '/api/v1/auth-social'
     | '/api/v1/bahan'
     | '/api/v1/device-visit'
+    | '/api/v1/device-visit-token'
     | '/api/v1/health'
     | '/api/v1/identitas'
     | '/api/v1/kasir-data'
@@ -1060,9 +1084,11 @@ export interface RootRouteChildren {
   ApiV1SplatRoute: typeof ApiV1SplatRoute
   ApiV1AppIconRoute: typeof ApiV1AppIconRoute
   ApiV1AuditLogRoute: typeof ApiV1AuditLogRoute
+  ApiV1AuthNativeRoute: typeof ApiV1AuthNativeRoute
   ApiV1AuthSocialRoute: typeof ApiV1AuthSocialRoute
   ApiV1BahanRoute: typeof ApiV1BahanRoute
   ApiV1DeviceVisitRoute: typeof ApiV1DeviceVisitRoute
+  ApiV1DeviceVisitTokenRoute: typeof ApiV1DeviceVisitTokenRoute
   ApiV1HealthRoute: typeof ApiV1HealthRoute
   ApiV1IdentitasRoute: typeof ApiV1IdentitasRoute
   ApiV1KasirDataRoute: typeof ApiV1KasirDataRoute
@@ -1347,6 +1373,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1AuditLogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/auth-native': {
+      id: '/api/v1/auth-native'
+      path: '/api/v1/auth-native'
+      fullPath: '/api/v1/auth-native'
+      preLoaderRoute: typeof ApiV1AuthNativeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/auth-social': {
       id: '/api/v1/auth-social'
       path: '/api/v1/auth-social'
@@ -1366,6 +1399,13 @@ declare module '@tanstack/react-router' {
       path: '/api/v1/device-visit'
       fullPath: '/api/v1/device-visit'
       preLoaderRoute: typeof ApiV1DeviceVisitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/device-visit-token': {
+      id: '/api/v1/device-visit-token'
+      path: '/api/v1/device-visit-token'
+      fullPath: '/api/v1/device-visit-token'
+      preLoaderRoute: typeof ApiV1DeviceVisitTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/v1/health': {
@@ -1779,9 +1819,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1SplatRoute: ApiV1SplatRoute,
   ApiV1AppIconRoute: ApiV1AppIconRoute,
   ApiV1AuditLogRoute: ApiV1AuditLogRoute,
+  ApiV1AuthNativeRoute: ApiV1AuthNativeRoute,
   ApiV1AuthSocialRoute: ApiV1AuthSocialRoute,
   ApiV1BahanRoute: ApiV1BahanRoute,
   ApiV1DeviceVisitRoute: ApiV1DeviceVisitRoute,
+  ApiV1DeviceVisitTokenRoute: ApiV1DeviceVisitTokenRoute,
   ApiV1HealthRoute: ApiV1HealthRoute,
   ApiV1IdentitasRoute: ApiV1IdentitasRoute,
   ApiV1KasirDataRoute: ApiV1KasirDataRoute,

@@ -152,6 +152,7 @@ export async function seedKunjungan(memberId: string) {
         userId: memberId,
         userType: 'member',
         createdAt: hariLalu(1, 8, 30),
+        terakhirDilihat: hariLalu(1, 8, 30),
       },
       {
         deviceId: 'seed-device-tablet',
@@ -162,6 +163,7 @@ export async function seedKunjungan(memberId: string) {
         klasifikasi: 'tablet',
         userType: 'non-member',
         createdAt: hariLalu(2, 10, 0),
+        terakhirDilihat: hariLalu(2, 10, 0),
       },
       {
         deviceId: 'seed-device-laptop',
@@ -172,6 +174,7 @@ export async function seedKunjungan(memberId: string) {
         klasifikasi: 'laptop',
         userType: 'non-member',
         createdAt: hariLalu(3, 9, 0),
+        terakhirDilihat: hariLalu(3, 9, 0),
       },
     ],
   })

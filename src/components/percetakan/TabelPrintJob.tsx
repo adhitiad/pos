@@ -136,7 +136,7 @@ export default function TabelPrintJob({
   const kontrol = useKontrolTabel(
     daftar,
     (job) =>
-      `${job.printerNama ?? ''} ${job.status} ${job.pesanGalat ?? ''} ${job.percobaan}`,
+      `${job.printerNama ?? ''} ${job.status} ${job.pesanGalat ?? ''} ${job.percobaan} owner ${job.cetakOwner} kasir ${job.cetakKasir}`,
     {
       dibuat: (job) => job.createdAt,
       printer: (job) => job.printerNama ?? '',
@@ -189,6 +189,7 @@ export default function TabelPrintJob({
               >
                 {m.percetakan_percobaan()}
               </HeaderUrutTabel>
+              <TableHead>{m.percetakan_penghitung()}</TableHead>
               <TableHead>{m.percetakan_aksi()}</TableHead>
             </TableRow>
           </TableHeader>
@@ -206,6 +207,9 @@ export default function TabelPrintJob({
                   )}
                 </TableCell>
                 <TableCell className="text-right">{job.percobaan}</TableCell>
+                <TableCell className="whitespace-nowrap text-xs">
+                  {`OWNER ${job.cetakOwner} · KASIR ${job.cetakKasir}`}
+                </TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     <Button

@@ -223,3 +223,14 @@ export async function batasiNama(
   const hasil = await batasi(`${nama}:${ipSaatIni()}`, max, windowMs)
   if (!hasil.boleh) throw new GalatRateLimit()
 }
+
+// Batas global lintas IP untuk endpoint publik berisiko penyalahgunaan.
+// Mencegah satu bot farm membanjiri storage walau tiap IP masih di bawah kuota.
+export async function batasiGlobal(
+  nama: string,
+  max = KAPASITAS_DEFAULT,
+  windowMs = JENDELA_DEFAULT_MS,
+): Promise<void> {
+  const hasil = await batasi(`global:${nama}`, max, windowMs)
+  if (!hasil.boleh) throw new GalatRateLimit()
+}

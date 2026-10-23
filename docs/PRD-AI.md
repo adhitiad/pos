@@ -48,6 +48,13 @@ Perintah wajib `bun`/`bunx`; jangan memakai npm/npx/pnpm.
 - **Transaksi:** posting transaksi harus atomik; stok, jurnal, nomor struk, dan
   audit tidak boleh terpisah. Jalur panas mengikuti `postingTransaksi.ts` dan
   `penomoran.ts` (hindari `count()` di dalam transaksi tulis).
+- **Diskon:** ambang diskon manual KASIR dibaca server dari
+  `diskon_kasir_maks_persen` (default 10%, 0–100). KASIR di atas ambang ditolak
+  dengan galat domain; OWNER boleh melewati tetapi diskon di atas ambang wajib
+  diaudit. Jangan pernah memakai ambang dari body/klien.
+- **Waktu transaksi:** `waktuKlien` hanya metadata offline dan wajib dalam
+  ±24 jam dari jam server; laporan/filter resmi memakai `tanggal`/`diterimaPada`
+  yang diisi server. `dibuatOffline=true` wajib disertai `idempotencyKey`.
 - **Jurnal:** setiap transaksi yang memengaruhi uang harus menghasilkan jurnal
   seimbang. Jangan menulis jurnal dari klien.
 - **Stok:** kurangi lewat operasi teragregasi/atomik; jangan loop tulis per item.
@@ -62,11 +69,26 @@ Perintah wajib `bun`/`bunx`; jangan memakai npm/npx/pnpm.
 - **Peran:** gunakan `src/server/peran.ts` dan guard `requireOwner`/
   `requireKasir`; REST memakai guard yang sama. Jangan membuat matriks peran
   baru di route.
+- **Auth web vs native:** web hanya memakai cookie httpOnly; body respons web
+  tidak boleh memuat bearer token. Token bearer hanya dari
+  `/api/v1/auth-native`, setelah `aud` Google ID token cocok dengan
+  `GOOGLE_NATIVE_CLIENT_ID` yang berbeda dari client web. Jangan pernah
+  memperlakukan header `x-client` sebagai bukti klien. Jalur langsung Better
+  Auth `/sign-in/social` dengan `idToken` harus tetap diblokir untuk request
+  publik, `session.token` tidak boleh muncul di `/get-session` atau
+  `/list-sessions`, dan header `set-auth-token` tidak boleh dikirim ke klien
+  web.
+- **Single-tenant:** keputusan produk saat ini satu toko per deployment; tidak
+  ada `tokoId`. Jangan menambahkan `tokoId` sebagian. Multi-tenant hanya boleh
+  dimulai setelah keputusan produk eksplisit, dengan migrasi data, scope query,
+  guard per toko, dan test isolasi.
 - **Cetak ulang struk:** buat job STRUK melalui transaksi atomik; OWNER tidak
   dibatasi, KASIR maksimal tiga cetak per transaksi. Penegakan batas harus di
   server, bukan hanya dengan menyembunyikan tombol UI.
-- **Privasi analytics:** `userId`/IP/path diturunkan di server, bukan dipercaya
-  dari body/header klien. `ipv4`/`ipv6`/`dns` dari body diabaikan.
+- **Privasi analytics:** `userId`/IP/path/OS/klasifikasi/lokasi diturunkan di
+  server, bukan dipercaya dari body/header klien. `device-visit` hanya menerima
+  token HMAC server; deviceId di-upsert per perangkat, dan metadata dari body
+  diabaikan.
 - **Ekspor CSV:** sanitasi formula (`= + - @`, termasuk spasi/kontrol di depan)
   dilakukan **sebelum** quoting; jangan hanya mengandalkan tanda kutip.
 - **Error:** error DB mentah tidak boleh ke klien. Gunakan `GalatDomain` +
@@ -118,7 +140,9 @@ Aturan implementasi:
 ## 5. Keamanan dan operasional
 
 - Rate limit endpoint publik/analytics; jangan hanya mengandalkan pembatas di
-  route bila server function juga bisa dipanggil langsung.
+  route bila server function juga bisa dipanggil langsung. Endpoint publik
+  berisiko (`device-visit`) memakai batas per IP **dan** batas global.
+  Token analytics ditandatangani server, terikat User-Agent, dan kedaluwarsa.
 - Rate limit memakai bucket bersama yang atomik di PostgreSQL: default 100
   permintaan/menit per kunci, pembersihan kunci idle 30 menit; kunci umumnya
   per IP+endpoint, sedangkan endpoint printer/terautentikasi per pengguna.
@@ -216,12 +240,12 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 
 > **Snapshot otomatis.** Dihasilkan oleh `bun run docs:sync`; jangan edit manual.
 
-- **Item selesai:** 260/273 (95%)
-- **Item terbuka:** 13
-- **Terblokir / sebagian:** 4 / 2
-- **Cakupan:** 29 rute · 52 file route REST · 39 model · 17 migrasi
-- **Test:** 48 file unit · 6 file e2e
-- **Dokumen / aturan:** 16 / 16
+- **Item selesai:** 271/277 (98%)
+- **Item terbuka:** 6
+- **Terblokir / sebagian:** 3 / 1
+- **Cakupan:** 29 rute · 54 file route REST · 39 model · 18 migrasi
+- **Test:** 52 file unit · 6 file e2e
+- **Dokumen / aturan:** 18 / 16
 
 ### Rute halaman terdeteksi
 
@@ -257,17 +281,10 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 
 ### Tugas terbuka
 
-- `SEC-22 (High, A01/A06)`
-- `SEC-24 (Medium, A09)`
-- `SEC-21 (Low, A04)`
-- `SEC-23 (Low, A04)`
-- `SEC-25 (Low, A07)`
 - `SEC-26 (Low / future, A01)`
-- `PRINT-02` · terblokir
 - `CICD-02` · terblokir
 - `CICD-11` · sebagian
 - `CICD-15` · terblokir
-- `CICD-16` · sebagian
 - `CICD-17`
 - `CICD-25` · terblokir
 

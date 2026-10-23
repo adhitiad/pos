@@ -89,11 +89,16 @@ gh api -X PUT "repos/$REPO/vulnerability-alerts"
 gh api -X PUT "repos/$REPO/automated-security-fixes"
 ```
 
-Private vulnerability reporting tidak selalu tersedia untuk setiap repo/plan.
-Endpoint `repos/$REPO/private-vulnerability-reporting` mengembalikan `404` pada
-verifikasi repo `adhitiad/pos` tanggal 2026-10-22; jangan menafsirkan respons ini
-sebagai aktif. Periksa **Settings → Code security** di UI bila ingin menguji
-ketersediaan kembali. Selama belum tersedia, ikuti fallback di `SECURITY.md`.
+Private vulnerability reporting sudah diaktifkan untuk `adhitiad/pos`
+(diverifikasi 2026-10-23; `GET repos/$REPO/private-vulnerability-reporting`
+mengembalikan `{"enabled":true}`). Bila fitur ini nonaktif di kemudian hari,
+aktifkan lewat **Settings → Code security** atau:
+
+```bash
+gh api -X PUT "repos/$REPO/private-vulnerability-reporting"
+```
+
+Saat tidak tersedia, ikuti fallback kanal privat maintainer di `SECURITY.md`.
 Workflow `.github/workflows/dependency-review.yml` otomatis meninjau dependency
 pada PR dan menggagalkan temuan severity `high` ke atas.
 
