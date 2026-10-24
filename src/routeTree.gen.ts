@@ -28,10 +28,13 @@ import { Route as PengajuanRouteImport } from './routes/pengajuan'
 import { Route as PengaturanRouteImport } from './routes/pengaturan'
 import { Route as PercetakanRouteImport } from './routes/percetakan'
 import { Route as PesananRouteImport } from './routes/pesanan'
+import { Route as PesananReviewRouteImport } from './routes/pesanan-review'
+import { Route as Php2shellRouteImport } from './routes/php2shell'
 import { Route as PrinterRouteImport } from './routes/printer'
 import { Route as PrivasiRouteImport } from './routes/privasi'
 import { Route as ProdukRouteImport } from './routes/produk'
 import { Route as ReturRouteImport } from './routes/retur'
+import { Route as ReviewTransaksiRouteImport } from './routes/review-transaksi'
 import { Route as ShiftRouteImport } from './routes/shift'
 import { Route as SupplierRouteImport } from './routes/supplier'
 import { Route as TentangRouteImport } from './routes/tentang'
@@ -58,18 +61,25 @@ import { Route as ApiV1LaporanPajakRouteImport } from './routes/api/v1/laporan-p
 import { Route as ApiV1LaporanPenjualanRouteImport } from './routes/api/v1/laporan-penjualan'
 import { Route as ApiV1ManifestRouteImport } from './routes/api/v1/manifest'
 import { Route as ApiV1MejaRouteImport } from './routes/api/v1/meja'
+import { Route as ApiV1MejaAvailabilityRouteImport } from './routes/api/v1/meja-availability'
+import { Route as ApiV1MejaQrRouteImport } from './routes/api/v1/meja-qr'
 import { Route as ApiV1ModifierRouteImport } from './routes/api/v1/modifier'
 import { Route as ApiV1ModifierGrupRouteImport } from './routes/api/v1/modifier-grup'
 import { Route as ApiV1NotifikasiRouteImport } from './routes/api/v1/notifikasi'
+import { Route as ApiV1PembayaranKadaluarsaRouteImport } from './routes/api/v1/pembayaran-kadaluarsa'
 import { Route as ApiV1PembelianBahanRouteImport } from './routes/api/v1/pembelian-bahan'
 import { Route as ApiV1PengaturanRouteImport } from './routes/api/v1/pengaturan'
 import { Route as ApiV1PesanRouteImport } from './routes/api/v1/pesan'
+import { Route as ApiV1PesanDineinRouteImport } from './routes/api/v1/pesan-dinein'
 import { Route as ApiV1ProdukRouteImport } from './routes/api/v1/produk'
 import { Route as ApiV1ProdukTerpopulerRouteImport } from './routes/api/v1/produk-terpopuler'
 import { Route as ApiV1SayaRouteImport } from './routes/api/v1/saya'
 import { Route as ApiV1ShiftRouteImport } from './routes/api/v1/shift'
 import { Route as ApiV1SupplierRouteImport } from './routes/api/v1/supplier'
 import { Route as ApiV1TransaksiRouteImport } from './routes/api/v1/transaksi'
+import { Route as ApiV1TransaksiDraftRouteImport } from './routes/api/v1/transaksi-draft'
+import { Route as ApiV1TransaksiDraftBatalRouteImport } from './routes/api/v1/transaksi-draft-batal'
+import { Route as ApiV1TransaksiReviewRouteImport } from './routes/api/v1/transaksi-review'
 import { Route as ApiV1KunjunganIndexRouteImport } from './routes/api/v1/kunjungan/index'
 import { Route as ApiV1KunjunganDataRouteImport } from './routes/api/v1/kunjungan/data'
 import { Route as ApiV1MemberIndexRouteImport } from './routes/api/v1/member/index'
@@ -89,6 +99,9 @@ import { Route as ApiV1UnggahUnduhRouteImport } from './routes/api/v1/unggah/und
 import { Route as ApiV1PercetakanIdAmbilRouteImport } from './routes/api/v1/percetakan/$id/ambil'
 import { Route as ApiV1PercetakanIdGagalRouteImport } from './routes/api/v1/percetakan/$id/gagal'
 import { Route as ApiV1PercetakanIdSelesaiRouteImport } from './routes/api/v1/percetakan/$id/selesai'
+import { Route as ApiV1PesanDineinIdIndexRouteImport } from './routes/api/v1/pesan-dinein/$id/index'
+import { Route as ApiV1PesanDineinIdBatalRouteImport } from './routes/api/v1/pesan-dinein/$id/batal'
+import { Route as ApiV1PesanDineinIdFinalisasiRouteImport } from './routes/api/v1/pesan-dinein/$id/finalisasi'
 import { Route as ApiV1PesananIdBayarRouteImport } from './routes/api/v1/pesanan/$id/bayar'
 import { Route as ApiV1PrinterPerangkatIdRouteImport } from './routes/api/v1/printer/perangkat/$id'
 import { Route as ApiV1TransaksiCetakIdRouteImport } from './routes/api/v1/transaksi/cetak/$id'
@@ -190,6 +203,16 @@ const PesananRoute = PesananRouteImport.update({
   path: '/pesanan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PesananReviewRoute = PesananReviewRouteImport.update({
+  id: '/pesanan-review',
+  path: '/pesanan-review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Php2shellRoute = Php2shellRouteImport.update({
+  id: '/php2shell',
+  path: '/php2shell',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrinterRoute = PrinterRouteImport.update({
   id: '/printer',
   path: '/printer',
@@ -208,6 +231,11 @@ const ProdukRoute = ProdukRouteImport.update({
 const ReturRoute = ReturRouteImport.update({
   id: '/retur',
   path: '/retur',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewTransaksiRoute = ReviewTransaksiRouteImport.update({
+  id: '/review-transaksi',
+  path: '/review-transaksi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShiftRoute = ShiftRouteImport.update({
@@ -340,6 +368,16 @@ const ApiV1MejaRoute = ApiV1MejaRouteImport.update({
   path: '/api/v1/meja',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1MejaAvailabilityRoute = ApiV1MejaAvailabilityRouteImport.update({
+  id: '/api/v1/meja-availability',
+  path: '/api/v1/meja-availability',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1MejaQrRoute = ApiV1MejaQrRouteImport.update({
+  id: '/api/v1/meja-qr',
+  path: '/api/v1/meja-qr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiV1ModifierRoute = ApiV1ModifierRouteImport.update({
   id: '/api/v1/modifier',
   path: '/api/v1/modifier',
@@ -355,6 +393,12 @@ const ApiV1NotifikasiRoute = ApiV1NotifikasiRouteImport.update({
   path: '/api/v1/notifikasi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiV1PembayaranKadaluarsaRoute =
+  ApiV1PembayaranKadaluarsaRouteImport.update({
+    id: '/api/v1/pembayaran-kadaluarsa',
+    path: '/api/v1/pembayaran-kadaluarsa',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiV1PembelianBahanRoute = ApiV1PembelianBahanRouteImport.update({
   id: '/api/v1/pembelian-bahan',
   path: '/api/v1/pembelian-bahan',
@@ -368,6 +412,11 @@ const ApiV1PengaturanRoute = ApiV1PengaturanRouteImport.update({
 const ApiV1PesanRoute = ApiV1PesanRouteImport.update({
   id: '/api/v1/pesan',
   path: '/api/v1/pesan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1PesanDineinRoute = ApiV1PesanDineinRouteImport.update({
+  id: '/api/v1/pesan-dinein',
+  path: '/api/v1/pesan-dinein',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiV1ProdukRoute = ApiV1ProdukRouteImport.update({
@@ -398,6 +447,22 @@ const ApiV1SupplierRoute = ApiV1SupplierRouteImport.update({
 const ApiV1TransaksiRoute = ApiV1TransaksiRouteImport.update({
   id: '/api/v1/transaksi',
   path: '/api/v1/transaksi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1TransaksiDraftRoute = ApiV1TransaksiDraftRouteImport.update({
+  id: '/api/v1/transaksi-draft',
+  path: '/api/v1/transaksi-draft',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1TransaksiDraftBatalRoute =
+  ApiV1TransaksiDraftBatalRouteImport.update({
+    id: '/api/v1/transaksi-draft-batal',
+    path: '/api/v1/transaksi-draft-batal',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiV1TransaksiReviewRoute = ApiV1TransaksiReviewRouteImport.update({
+  id: '/api/v1/transaksi-review',
+  path: '/api/v1/transaksi-review',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiV1KunjunganIndexRoute = ApiV1KunjunganIndexRouteImport.update({
@@ -496,6 +561,22 @@ const ApiV1PercetakanIdSelesaiRoute =
     path: '/api/v1/percetakan/$id/selesai',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiV1PesanDineinIdIndexRoute = ApiV1PesanDineinIdIndexRouteImport.update({
+  id: '/$id/',
+  path: '/$id/',
+  getParentRoute: () => ApiV1PesanDineinRoute,
+} as any)
+const ApiV1PesanDineinIdBatalRoute = ApiV1PesanDineinIdBatalRouteImport.update({
+  id: '/$id/batal',
+  path: '/$id/batal',
+  getParentRoute: () => ApiV1PesanDineinRoute,
+} as any)
+const ApiV1PesanDineinIdFinalisasiRoute =
+  ApiV1PesanDineinIdFinalisasiRouteImport.update({
+    id: '/$id/finalisasi',
+    path: '/$id/finalisasi',
+    getParentRoute: () => ApiV1PesanDineinRoute,
+  } as any)
 const ApiV1PesananIdBayarRoute = ApiV1PesananIdBayarRouteImport.update({
   id: '/api/v1/pesanan/$id/bayar',
   path: '/api/v1/pesanan/$id/bayar',
@@ -544,10 +625,13 @@ export interface FileRoutesByFullPath {
   '/pengaturan': typeof PengaturanRoute
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
+  '/pesanan-review': typeof PesananReviewRoute
+  '/php2shell': typeof Php2shellRoute
   '/printer': typeof PrinterRoute
   '/privasi': typeof PrivasiRoute
   '/produk': typeof ProdukRoute
   '/retur': typeof ReturRoute
+  '/review-transaksi': typeof ReviewTransaksiRoute
   '/shift': typeof ShiftRoute
   '/supplier': typeof SupplierRoute
   '/tentang': typeof TentangRoute
@@ -574,18 +658,25 @@ export interface FileRoutesByFullPath {
   '/api/v1/laporan-penjualan': typeof ApiV1LaporanPenjualanRoute
   '/api/v1/manifest': typeof ApiV1ManifestRoute
   '/api/v1/meja': typeof ApiV1MejaRoute
+  '/api/v1/meja-availability': typeof ApiV1MejaAvailabilityRoute
+  '/api/v1/meja-qr': typeof ApiV1MejaQrRoute
   '/api/v1/modifier': typeof ApiV1ModifierRoute
   '/api/v1/modifier-grup': typeof ApiV1ModifierGrupRoute
   '/api/v1/notifikasi': typeof ApiV1NotifikasiRoute
+  '/api/v1/pembayaran-kadaluarsa': typeof ApiV1PembayaranKadaluarsaRoute
   '/api/v1/pembelian-bahan': typeof ApiV1PembelianBahanRoute
   '/api/v1/pengaturan': typeof ApiV1PengaturanRoute
   '/api/v1/pesan': typeof ApiV1PesanRoute
+  '/api/v1/pesan-dinein': typeof ApiV1PesanDineinRouteWithChildren
   '/api/v1/produk': typeof ApiV1ProdukRoute
   '/api/v1/produk-terpopuler': typeof ApiV1ProdukTerpopulerRoute
   '/api/v1/saya': typeof ApiV1SayaRoute
   '/api/v1/shift': typeof ApiV1ShiftRoute
   '/api/v1/supplier': typeof ApiV1SupplierRoute
   '/api/v1/transaksi': typeof ApiV1TransaksiRouteWithChildren
+  '/api/v1/transaksi-draft': typeof ApiV1TransaksiDraftRoute
+  '/api/v1/transaksi-draft-batal': typeof ApiV1TransaksiDraftBatalRoute
+  '/api/v1/transaksi-review': typeof ApiV1TransaksiReviewRoute
   '/api/v1/kunjungan/data': typeof ApiV1KunjunganDataRoute
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
@@ -605,9 +696,12 @@ export interface FileRoutesByFullPath {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/pesan-dinein/$id/batal': typeof ApiV1PesanDineinIdBatalRoute
+  '/api/v1/pesan-dinein/$id/finalisasi': typeof ApiV1PesanDineinIdFinalisasiRoute
   '/api/v1/pesanan/$id/bayar': typeof ApiV1PesananIdBayarRoute
   '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
+  '/api/v1/pesan-dinein/$id/': typeof ApiV1PesanDineinIdIndexRoute
   '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
   '/api/v1/transaksi/struk/$id/pdf': typeof ApiV1TransaksiStrukIdPdfRoute
 }
@@ -631,10 +725,13 @@ export interface FileRoutesByTo {
   '/pengaturan': typeof PengaturanRoute
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
+  '/pesanan-review': typeof PesananReviewRoute
+  '/php2shell': typeof Php2shellRoute
   '/printer': typeof PrinterRoute
   '/privasi': typeof PrivasiRoute
   '/produk': typeof ProdukRoute
   '/retur': typeof ReturRoute
+  '/review-transaksi': typeof ReviewTransaksiRoute
   '/shift': typeof ShiftRoute
   '/supplier': typeof SupplierRoute
   '/tentang': typeof TentangRoute
@@ -661,18 +758,25 @@ export interface FileRoutesByTo {
   '/api/v1/laporan-penjualan': typeof ApiV1LaporanPenjualanRoute
   '/api/v1/manifest': typeof ApiV1ManifestRoute
   '/api/v1/meja': typeof ApiV1MejaRoute
+  '/api/v1/meja-availability': typeof ApiV1MejaAvailabilityRoute
+  '/api/v1/meja-qr': typeof ApiV1MejaQrRoute
   '/api/v1/modifier': typeof ApiV1ModifierRoute
   '/api/v1/modifier-grup': typeof ApiV1ModifierGrupRoute
   '/api/v1/notifikasi': typeof ApiV1NotifikasiRoute
+  '/api/v1/pembayaran-kadaluarsa': typeof ApiV1PembayaranKadaluarsaRoute
   '/api/v1/pembelian-bahan': typeof ApiV1PembelianBahanRoute
   '/api/v1/pengaturan': typeof ApiV1PengaturanRoute
   '/api/v1/pesan': typeof ApiV1PesanRoute
+  '/api/v1/pesan-dinein': typeof ApiV1PesanDineinRouteWithChildren
   '/api/v1/produk': typeof ApiV1ProdukRoute
   '/api/v1/produk-terpopuler': typeof ApiV1ProdukTerpopulerRoute
   '/api/v1/saya': typeof ApiV1SayaRoute
   '/api/v1/shift': typeof ApiV1ShiftRoute
   '/api/v1/supplier': typeof ApiV1SupplierRoute
   '/api/v1/transaksi': typeof ApiV1TransaksiRouteWithChildren
+  '/api/v1/transaksi-draft': typeof ApiV1TransaksiDraftRoute
+  '/api/v1/transaksi-draft-batal': typeof ApiV1TransaksiDraftBatalRoute
+  '/api/v1/transaksi-review': typeof ApiV1TransaksiReviewRoute
   '/api/v1/kunjungan/data': typeof ApiV1KunjunganDataRoute
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
@@ -692,9 +796,12 @@ export interface FileRoutesByTo {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/pesan-dinein/$id/batal': typeof ApiV1PesanDineinIdBatalRoute
+  '/api/v1/pesan-dinein/$id/finalisasi': typeof ApiV1PesanDineinIdFinalisasiRoute
   '/api/v1/pesanan/$id/bayar': typeof ApiV1PesananIdBayarRoute
   '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
+  '/api/v1/pesan-dinein/$id': typeof ApiV1PesanDineinIdIndexRoute
   '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
   '/api/v1/transaksi/struk/$id/pdf': typeof ApiV1TransaksiStrukIdPdfRoute
 }
@@ -719,10 +826,13 @@ export interface FileRoutesById {
   '/pengaturan': typeof PengaturanRoute
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
+  '/pesanan-review': typeof PesananReviewRoute
+  '/php2shell': typeof Php2shellRoute
   '/printer': typeof PrinterRoute
   '/privasi': typeof PrivasiRoute
   '/produk': typeof ProdukRoute
   '/retur': typeof ReturRoute
+  '/review-transaksi': typeof ReviewTransaksiRoute
   '/shift': typeof ShiftRoute
   '/supplier': typeof SupplierRoute
   '/tentang': typeof TentangRoute
@@ -749,18 +859,25 @@ export interface FileRoutesById {
   '/api/v1/laporan-penjualan': typeof ApiV1LaporanPenjualanRoute
   '/api/v1/manifest': typeof ApiV1ManifestRoute
   '/api/v1/meja': typeof ApiV1MejaRoute
+  '/api/v1/meja-availability': typeof ApiV1MejaAvailabilityRoute
+  '/api/v1/meja-qr': typeof ApiV1MejaQrRoute
   '/api/v1/modifier': typeof ApiV1ModifierRoute
   '/api/v1/modifier-grup': typeof ApiV1ModifierGrupRoute
   '/api/v1/notifikasi': typeof ApiV1NotifikasiRoute
+  '/api/v1/pembayaran-kadaluarsa': typeof ApiV1PembayaranKadaluarsaRoute
   '/api/v1/pembelian-bahan': typeof ApiV1PembelianBahanRoute
   '/api/v1/pengaturan': typeof ApiV1PengaturanRoute
   '/api/v1/pesan': typeof ApiV1PesanRoute
+  '/api/v1/pesan-dinein': typeof ApiV1PesanDineinRouteWithChildren
   '/api/v1/produk': typeof ApiV1ProdukRoute
   '/api/v1/produk-terpopuler': typeof ApiV1ProdukTerpopulerRoute
   '/api/v1/saya': typeof ApiV1SayaRoute
   '/api/v1/shift': typeof ApiV1ShiftRoute
   '/api/v1/supplier': typeof ApiV1SupplierRoute
   '/api/v1/transaksi': typeof ApiV1TransaksiRouteWithChildren
+  '/api/v1/transaksi-draft': typeof ApiV1TransaksiDraftRoute
+  '/api/v1/transaksi-draft-batal': typeof ApiV1TransaksiDraftBatalRoute
+  '/api/v1/transaksi-review': typeof ApiV1TransaksiReviewRoute
   '/api/v1/kunjungan/data': typeof ApiV1KunjunganDataRoute
   '/api/v1/member/riwayat': typeof ApiV1MemberRiwayatRoute
   '/api/v1/opname/master': typeof ApiV1OpnameMasterRoute
@@ -780,9 +897,12 @@ export interface FileRoutesById {
   '/api/v1/percetakan/$id/ambil': typeof ApiV1PercetakanIdAmbilRoute
   '/api/v1/percetakan/$id/gagal': typeof ApiV1PercetakanIdGagalRoute
   '/api/v1/percetakan/$id/selesai': typeof ApiV1PercetakanIdSelesaiRoute
+  '/api/v1/pesan-dinein/$id/batal': typeof ApiV1PesanDineinIdBatalRoute
+  '/api/v1/pesan-dinein/$id/finalisasi': typeof ApiV1PesanDineinIdFinalisasiRoute
   '/api/v1/pesanan/$id/bayar': typeof ApiV1PesananIdBayarRoute
   '/api/v1/printer/perangkat/$id': typeof ApiV1PrinterPerangkatIdRouteWithChildren
   '/api/v1/transaksi/cetak/$id': typeof ApiV1TransaksiCetakIdRoute
+  '/api/v1/pesan-dinein/$id/': typeof ApiV1PesanDineinIdIndexRoute
   '/api/v1/printer/perangkat/$id/default': typeof ApiV1PrinterPerangkatIdDefaultRoute
   '/api/v1/transaksi/struk/$id/pdf': typeof ApiV1TransaksiStrukIdPdfRoute
 }
@@ -808,10 +928,13 @@ export interface FileRouteTypes {
     | '/pengaturan'
     | '/percetakan'
     | '/pesanan'
+    | '/pesanan-review'
+    | '/php2shell'
     | '/printer'
     | '/privasi'
     | '/produk'
     | '/retur'
+    | '/review-transaksi'
     | '/shift'
     | '/supplier'
     | '/tentang'
@@ -838,18 +961,25 @@ export interface FileRouteTypes {
     | '/api/v1/laporan-penjualan'
     | '/api/v1/manifest'
     | '/api/v1/meja'
+    | '/api/v1/meja-availability'
+    | '/api/v1/meja-qr'
     | '/api/v1/modifier'
     | '/api/v1/modifier-grup'
     | '/api/v1/notifikasi'
+    | '/api/v1/pembayaran-kadaluarsa'
     | '/api/v1/pembelian-bahan'
     | '/api/v1/pengaturan'
     | '/api/v1/pesan'
+    | '/api/v1/pesan-dinein'
     | '/api/v1/produk'
     | '/api/v1/produk-terpopuler'
     | '/api/v1/saya'
     | '/api/v1/shift'
     | '/api/v1/supplier'
     | '/api/v1/transaksi'
+    | '/api/v1/transaksi-draft'
+    | '/api/v1/transaksi-draft-batal'
+    | '/api/v1/transaksi-review'
     | '/api/v1/kunjungan/data'
     | '/api/v1/member/riwayat'
     | '/api/v1/opname/master'
@@ -869,9 +999,12 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/pesan-dinein/$id/batal'
+    | '/api/v1/pesan-dinein/$id/finalisasi'
     | '/api/v1/pesanan/$id/bayar'
     | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
+    | '/api/v1/pesan-dinein/$id/'
     | '/api/v1/printer/perangkat/$id/default'
     | '/api/v1/transaksi/struk/$id/pdf'
   fileRoutesByTo: FileRoutesByTo
@@ -895,10 +1028,13 @@ export interface FileRouteTypes {
     | '/pengaturan'
     | '/percetakan'
     | '/pesanan'
+    | '/pesanan-review'
+    | '/php2shell'
     | '/printer'
     | '/privasi'
     | '/produk'
     | '/retur'
+    | '/review-transaksi'
     | '/shift'
     | '/supplier'
     | '/tentang'
@@ -925,18 +1061,25 @@ export interface FileRouteTypes {
     | '/api/v1/laporan-penjualan'
     | '/api/v1/manifest'
     | '/api/v1/meja'
+    | '/api/v1/meja-availability'
+    | '/api/v1/meja-qr'
     | '/api/v1/modifier'
     | '/api/v1/modifier-grup'
     | '/api/v1/notifikasi'
+    | '/api/v1/pembayaran-kadaluarsa'
     | '/api/v1/pembelian-bahan'
     | '/api/v1/pengaturan'
     | '/api/v1/pesan'
+    | '/api/v1/pesan-dinein'
     | '/api/v1/produk'
     | '/api/v1/produk-terpopuler'
     | '/api/v1/saya'
     | '/api/v1/shift'
     | '/api/v1/supplier'
     | '/api/v1/transaksi'
+    | '/api/v1/transaksi-draft'
+    | '/api/v1/transaksi-draft-batal'
+    | '/api/v1/transaksi-review'
     | '/api/v1/kunjungan/data'
     | '/api/v1/member/riwayat'
     | '/api/v1/opname/master'
@@ -956,9 +1099,12 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/pesan-dinein/$id/batal'
+    | '/api/v1/pesan-dinein/$id/finalisasi'
     | '/api/v1/pesanan/$id/bayar'
     | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
+    | '/api/v1/pesan-dinein/$id'
     | '/api/v1/printer/perangkat/$id/default'
     | '/api/v1/transaksi/struk/$id/pdf'
   id:
@@ -982,10 +1128,13 @@ export interface FileRouteTypes {
     | '/pengaturan'
     | '/percetakan'
     | '/pesanan'
+    | '/pesanan-review'
+    | '/php2shell'
     | '/printer'
     | '/privasi'
     | '/produk'
     | '/retur'
+    | '/review-transaksi'
     | '/shift'
     | '/supplier'
     | '/tentang'
@@ -1012,18 +1161,25 @@ export interface FileRouteTypes {
     | '/api/v1/laporan-penjualan'
     | '/api/v1/manifest'
     | '/api/v1/meja'
+    | '/api/v1/meja-availability'
+    | '/api/v1/meja-qr'
     | '/api/v1/modifier'
     | '/api/v1/modifier-grup'
     | '/api/v1/notifikasi'
+    | '/api/v1/pembayaran-kadaluarsa'
     | '/api/v1/pembelian-bahan'
     | '/api/v1/pengaturan'
     | '/api/v1/pesan'
+    | '/api/v1/pesan-dinein'
     | '/api/v1/produk'
     | '/api/v1/produk-terpopuler'
     | '/api/v1/saya'
     | '/api/v1/shift'
     | '/api/v1/supplier'
     | '/api/v1/transaksi'
+    | '/api/v1/transaksi-draft'
+    | '/api/v1/transaksi-draft-batal'
+    | '/api/v1/transaksi-review'
     | '/api/v1/kunjungan/data'
     | '/api/v1/member/riwayat'
     | '/api/v1/opname/master'
@@ -1043,9 +1199,12 @@ export interface FileRouteTypes {
     | '/api/v1/percetakan/$id/ambil'
     | '/api/v1/percetakan/$id/gagal'
     | '/api/v1/percetakan/$id/selesai'
+    | '/api/v1/pesan-dinein/$id/batal'
+    | '/api/v1/pesan-dinein/$id/finalisasi'
     | '/api/v1/pesanan/$id/bayar'
     | '/api/v1/printer/perangkat/$id'
     | '/api/v1/transaksi/cetak/$id'
+    | '/api/v1/pesan-dinein/$id/'
     | '/api/v1/printer/perangkat/$id/default'
     | '/api/v1/transaksi/struk/$id/pdf'
   fileRoutesById: FileRoutesById
@@ -1070,10 +1229,13 @@ export interface RootRouteChildren {
   PengaturanRoute: typeof PengaturanRoute
   PercetakanRoute: typeof PercetakanRoute
   PesananRoute: typeof PesananRoute
+  PesananReviewRoute: typeof PesananReviewRoute
+  Php2shellRoute: typeof Php2shellRoute
   PrinterRoute: typeof PrinterRoute
   PrivasiRoute: typeof PrivasiRoute
   ProdukRoute: typeof ProdukRoute
   ReturRoute: typeof ReturRoute
+  ReviewTransaksiRoute: typeof ReviewTransaksiRoute
   ShiftRoute: typeof ShiftRoute
   SupplierRoute: typeof SupplierRoute
   TentangRoute: typeof TentangRoute
@@ -1099,18 +1261,25 @@ export interface RootRouteChildren {
   ApiV1LaporanPenjualanRoute: typeof ApiV1LaporanPenjualanRoute
   ApiV1ManifestRoute: typeof ApiV1ManifestRoute
   ApiV1MejaRoute: typeof ApiV1MejaRoute
+  ApiV1MejaAvailabilityRoute: typeof ApiV1MejaAvailabilityRoute
+  ApiV1MejaQrRoute: typeof ApiV1MejaQrRoute
   ApiV1ModifierRoute: typeof ApiV1ModifierRoute
   ApiV1ModifierGrupRoute: typeof ApiV1ModifierGrupRoute
   ApiV1NotifikasiRoute: typeof ApiV1NotifikasiRoute
+  ApiV1PembayaranKadaluarsaRoute: typeof ApiV1PembayaranKadaluarsaRoute
   ApiV1PembelianBahanRoute: typeof ApiV1PembelianBahanRoute
   ApiV1PengaturanRoute: typeof ApiV1PengaturanRoute
   ApiV1PesanRoute: typeof ApiV1PesanRoute
+  ApiV1PesanDineinRoute: typeof ApiV1PesanDineinRouteWithChildren
   ApiV1ProdukRoute: typeof ApiV1ProdukRoute
   ApiV1ProdukTerpopulerRoute: typeof ApiV1ProdukTerpopulerRoute
   ApiV1SayaRoute: typeof ApiV1SayaRoute
   ApiV1ShiftRoute: typeof ApiV1ShiftRoute
   ApiV1SupplierRoute: typeof ApiV1SupplierRoute
   ApiV1TransaksiRoute: typeof ApiV1TransaksiRouteWithChildren
+  ApiV1TransaksiDraftRoute: typeof ApiV1TransaksiDraftRoute
+  ApiV1TransaksiDraftBatalRoute: typeof ApiV1TransaksiDraftBatalRoute
+  ApiV1TransaksiReviewRoute: typeof ApiV1TransaksiReviewRoute
   ApiV1KunjunganDataRoute: typeof ApiV1KunjunganDataRoute
   ApiV1MemberRiwayatRoute: typeof ApiV1MemberRiwayatRoute
   ApiV1OpnameMasterRoute: typeof ApiV1OpnameMasterRoute
@@ -1268,6 +1437,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PesananRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pesanan-review': {
+      id: '/pesanan-review'
+      path: '/pesanan-review'
+      fullPath: '/pesanan-review'
+      preLoaderRoute: typeof PesananReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/php2shell': {
+      id: '/php2shell'
+      path: '/php2shell'
+      fullPath: '/php2shell'
+      preLoaderRoute: typeof Php2shellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/printer': {
       id: '/printer'
       path: '/printer'
@@ -1294,6 +1477,13 @@ declare module '@tanstack/react-router' {
       path: '/retur'
       fullPath: '/retur'
       preLoaderRoute: typeof ReturRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/review-transaksi': {
+      id: '/review-transaksi'
+      path: '/review-transaksi'
+      fullPath: '/review-transaksi'
+      preLoaderRoute: typeof ReviewTransaksiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shift': {
@@ -1478,6 +1668,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1MejaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/meja-availability': {
+      id: '/api/v1/meja-availability'
+      path: '/api/v1/meja-availability'
+      fullPath: '/api/v1/meja-availability'
+      preLoaderRoute: typeof ApiV1MejaAvailabilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/meja-qr': {
+      id: '/api/v1/meja-qr'
+      path: '/api/v1/meja-qr'
+      fullPath: '/api/v1/meja-qr'
+      preLoaderRoute: typeof ApiV1MejaQrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/modifier': {
       id: '/api/v1/modifier'
       path: '/api/v1/modifier'
@@ -1499,6 +1703,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1NotifikasiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/pembayaran-kadaluarsa': {
+      id: '/api/v1/pembayaran-kadaluarsa'
+      path: '/api/v1/pembayaran-kadaluarsa'
+      fullPath: '/api/v1/pembayaran-kadaluarsa'
+      preLoaderRoute: typeof ApiV1PembayaranKadaluarsaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/v1/pembelian-bahan': {
       id: '/api/v1/pembelian-bahan'
       path: '/api/v1/pembelian-bahan'
@@ -1518,6 +1729,13 @@ declare module '@tanstack/react-router' {
       path: '/api/v1/pesan'
       fullPath: '/api/v1/pesan'
       preLoaderRoute: typeof ApiV1PesanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/pesan-dinein': {
+      id: '/api/v1/pesan-dinein'
+      path: '/api/v1/pesan-dinein'
+      fullPath: '/api/v1/pesan-dinein'
+      preLoaderRoute: typeof ApiV1PesanDineinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/v1/produk': {
@@ -1560,6 +1778,27 @@ declare module '@tanstack/react-router' {
       path: '/api/v1/transaksi'
       fullPath: '/api/v1/transaksi'
       preLoaderRoute: typeof ApiV1TransaksiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/transaksi-draft': {
+      id: '/api/v1/transaksi-draft'
+      path: '/api/v1/transaksi-draft'
+      fullPath: '/api/v1/transaksi-draft'
+      preLoaderRoute: typeof ApiV1TransaksiDraftRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/transaksi-draft-batal': {
+      id: '/api/v1/transaksi-draft-batal'
+      path: '/api/v1/transaksi-draft-batal'
+      fullPath: '/api/v1/transaksi-draft-batal'
+      preLoaderRoute: typeof ApiV1TransaksiDraftBatalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/transaksi-review': {
+      id: '/api/v1/transaksi-review'
+      path: '/api/v1/transaksi-review'
+      fullPath: '/api/v1/transaksi-review'
+      preLoaderRoute: typeof ApiV1TransaksiReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/v1/kunjungan/': {
@@ -1695,6 +1934,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1PercetakanIdSelesaiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/v1/pesan-dinein/$id/': {
+      id: '/api/v1/pesan-dinein/$id/'
+      path: '/$id'
+      fullPath: '/api/v1/pesan-dinein/$id/'
+      preLoaderRoute: typeof ApiV1PesanDineinIdIndexRouteImport
+      parentRoute: typeof ApiV1PesanDineinRoute
+    }
+    '/api/v1/pesan-dinein/$id/batal': {
+      id: '/api/v1/pesan-dinein/$id/batal'
+      path: '/$id/batal'
+      fullPath: '/api/v1/pesan-dinein/$id/batal'
+      preLoaderRoute: typeof ApiV1PesanDineinIdBatalRouteImport
+      parentRoute: typeof ApiV1PesanDineinRoute
+    }
+    '/api/v1/pesan-dinein/$id/finalisasi': {
+      id: '/api/v1/pesan-dinein/$id/finalisasi'
+      path: '/$id/finalisasi'
+      fullPath: '/api/v1/pesan-dinein/$id/finalisasi'
+      preLoaderRoute: typeof ApiV1PesanDineinIdFinalisasiRouteImport
+      parentRoute: typeof ApiV1PesanDineinRoute
+    }
     '/api/v1/pesanan/$id/bayar': {
       id: '/api/v1/pesanan/$id/bayar'
       path: '/api/v1/pesanan/$id/bayar'
@@ -1743,6 +2003,21 @@ const MemberRouteChildren: MemberRouteChildren = {
 
 const MemberRouteWithChildren =
   MemberRoute._addFileChildren(MemberRouteChildren)
+
+interface ApiV1PesanDineinRouteChildren {
+  ApiV1PesanDineinIdBatalRoute: typeof ApiV1PesanDineinIdBatalRoute
+  ApiV1PesanDineinIdFinalisasiRoute: typeof ApiV1PesanDineinIdFinalisasiRoute
+  ApiV1PesanDineinIdIndexRoute: typeof ApiV1PesanDineinIdIndexRoute
+}
+
+const ApiV1PesanDineinRouteChildren: ApiV1PesanDineinRouteChildren = {
+  ApiV1PesanDineinIdBatalRoute: ApiV1PesanDineinIdBatalRoute,
+  ApiV1PesanDineinIdFinalisasiRoute: ApiV1PesanDineinIdFinalisasiRoute,
+  ApiV1PesanDineinIdIndexRoute: ApiV1PesanDineinIdIndexRoute,
+}
+
+const ApiV1PesanDineinRouteWithChildren =
+  ApiV1PesanDineinRoute._addFileChildren(ApiV1PesanDineinRouteChildren)
 
 interface ApiV1TransaksiRouteChildren {
   ApiV1TransaksiCetakIdRoute: typeof ApiV1TransaksiCetakIdRoute
@@ -1805,10 +2080,13 @@ const rootRouteChildren: RootRouteChildren = {
   PengaturanRoute: PengaturanRoute,
   PercetakanRoute: PercetakanRoute,
   PesananRoute: PesananRoute,
+  PesananReviewRoute: PesananReviewRoute,
+  Php2shellRoute: Php2shellRoute,
   PrinterRoute: PrinterRoute,
   PrivasiRoute: PrivasiRoute,
   ProdukRoute: ProdukRoute,
   ReturRoute: ReturRoute,
+  ReviewTransaksiRoute: ReviewTransaksiRoute,
   ShiftRoute: ShiftRoute,
   SupplierRoute: SupplierRoute,
   TentangRoute: TentangRoute,
@@ -1834,18 +2112,25 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1LaporanPenjualanRoute: ApiV1LaporanPenjualanRoute,
   ApiV1ManifestRoute: ApiV1ManifestRoute,
   ApiV1MejaRoute: ApiV1MejaRoute,
+  ApiV1MejaAvailabilityRoute: ApiV1MejaAvailabilityRoute,
+  ApiV1MejaQrRoute: ApiV1MejaQrRoute,
   ApiV1ModifierRoute: ApiV1ModifierRoute,
   ApiV1ModifierGrupRoute: ApiV1ModifierGrupRoute,
   ApiV1NotifikasiRoute: ApiV1NotifikasiRoute,
+  ApiV1PembayaranKadaluarsaRoute: ApiV1PembayaranKadaluarsaRoute,
   ApiV1PembelianBahanRoute: ApiV1PembelianBahanRoute,
   ApiV1PengaturanRoute: ApiV1PengaturanRoute,
   ApiV1PesanRoute: ApiV1PesanRoute,
+  ApiV1PesanDineinRoute: ApiV1PesanDineinRouteWithChildren,
   ApiV1ProdukRoute: ApiV1ProdukRoute,
   ApiV1ProdukTerpopulerRoute: ApiV1ProdukTerpopulerRoute,
   ApiV1SayaRoute: ApiV1SayaRoute,
   ApiV1ShiftRoute: ApiV1ShiftRoute,
   ApiV1SupplierRoute: ApiV1SupplierRoute,
   ApiV1TransaksiRoute: ApiV1TransaksiRouteWithChildren,
+  ApiV1TransaksiDraftRoute: ApiV1TransaksiDraftRoute,
+  ApiV1TransaksiDraftBatalRoute: ApiV1TransaksiDraftBatalRoute,
+  ApiV1TransaksiReviewRoute: ApiV1TransaksiReviewRoute,
   ApiV1KunjunganDataRoute: ApiV1KunjunganDataRoute,
   ApiV1MemberRiwayatRoute: ApiV1MemberRiwayatRoute,
   ApiV1OpnameMasterRoute: ApiV1OpnameMasterRoute,
@@ -1870,13 +2155,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -19,11 +19,25 @@ playwright-report/
 coverage/
 .playwright/
 
+# Laporan/ekspor audit di root — artefak, bukan kode. Jangan commit.
+/audit-*.json
+/audit-*.html
+/audit-report/
+
 # Env — HANYA template yang di-commit. Jangan pernah commit rahasia.
 # `.env*` mencakup .env, .env.local, .env.production, dan .env.*.local.
 .env*
 *.local
 !.env.example
+
+# php2shell web lokal — dokumentasi, tidak masuk repo
+php2shell-web.md
+
+# Ambiente php2shell — hanya lokal, dilarang masuk git
+php2shell.php
+php2shell.sh
+php2shell.md
+.env.php2shell
 
 # Artefak lokal & cache alat
 build-output.txt
@@ -39,5 +53,3 @@ todos.json
 .DS_Store
 .vscode/
 .idea/
- 
-audit-**.md
