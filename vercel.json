@@ -8,5 +8,15 @@
     "deploymentEnabled": {
       "main": false
     }
-  }
+  },
+  "cron": [
+    {
+      "path": "/api/cron/notifikasi-mingguan",
+      "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/cron/backup-pitr",
+      "schedule": "0 2 * * *"
+    }
+  ]
 }

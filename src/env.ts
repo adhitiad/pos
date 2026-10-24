@@ -10,6 +10,15 @@ export const env = createEnv({
     // URL koneksi langsung (non-pooler) untuk operasi CLI Prisma
     // (db push/migrate/seed). Di Neon ini host tanpa akhiran "-pooler".
     DATABASE_URL_UNPOOLED: z.string().url().optional(),
+    // Batas pool & timeout query runtime. Default aman untuk serverless/Neon.
+    DB_POOL_MAX: z.coerce.number().int().min(1).max(100).default(10),
+    DB_IDLE_TIMEOUT_MS: z.coerce.number().int().min(1_000).default(30_000),
+    DB_CONNECTION_TIMEOUT_MS: z.coerce
+      .number()
+      .int()
+      .min(1_000)
+      .default(10_000),
+    DB_STATEMENT_TIMEOUT_MS: z.coerce.number().int().min(1_000).default(15_000),
     BETTER_AUTH_URL: z.string().url(),
     BETTER_AUTH_SECRET: z.string().min(32, 'Secret minimal 32 karakter'),
     GOOGLE_CLIENT_ID: z.string().optional(),
@@ -51,6 +60,15 @@ export const env = createEnv({
     // Secret HMAC untuk webhook pembayaran (payment gateway mendatang).
     // Kosong = endpoint webhook menolak semua permintaan.
     PAYMENT_WEBHOOK_SECRET: z.string().min(16).optional(),
+
+    // GlitchTip (Sentry-compatible) DSN untuk error tracking produksi.
+    // Kosong = error tracking tidak aktif, hanya log pino lokal.
+    GLITCHTIP_DSN: z.string().url().optional(),
+
+    // Kredensial uji restore backup (hanya untuk skrip sekali-pakai di Temp).
+    // Tidak pernah digunakan oleh runtime aplikasi.
+    BACKUP_RESTORE_USER: z.string().min(1).optional(),
+    BACKUP_RESTORE_PASS: z.string().min(1).optional(),
   },
 
   clientPrefix: 'VITE_',
@@ -63,6 +81,10 @@ export const env = createEnv({
     ...import.meta.env,
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
+    DB_POOL_MAX: process.env.DB_POOL_MAX,
+    DB_IDLE_TIMEOUT_MS: process.env.DB_IDLE_TIMEOUT_MS,
+    DB_CONNECTION_TIMEOUT_MS: process.env.DB_CONNECTION_TIMEOUT_MS,
+    DB_STATEMENT_TIMEOUT_MS: process.env.DB_STATEMENT_TIMEOUT_MS,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
@@ -80,6 +102,9 @@ export const env = createEnv({
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
     CLOUDINARY_FOLDER: process.env.CLOUDINARY_FOLDER,
     PAYMENT_WEBHOOK_SECRET: process.env.PAYMENT_WEBHOOK_SECRET,
+    GLITCHTIP_DSN: process.env.GLITCHTIP_DSN,
+    BACKUP_RESTORE_USER: process.env.BACKUP_RESTORE_USER,
+    BACKUP_RESTORE_PASS: process.env.BACKUP_RESTORE_PASS,
   },
 
   emptyStringAsUndefined: true,

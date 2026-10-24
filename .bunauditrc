@@ -1,0 +1,8 @@
+{
+  "ignore": [
+    {
+      "advisory": "postcss-selector-parser",
+      "reason": "Transitif via @tailwindcss/typography. Diketahui, tidak ada fix upstream. Pantau update versi. (docs/PRD-AI.md #9)"
+    }
+  ]
+}

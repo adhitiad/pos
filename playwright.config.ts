@@ -1,4 +1,4 @@
-import { defineConfig } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test'
 
 // Port khusus e2e (bukan 3000): dev server sering sudah jalan di 3000 dan
 // bisa stale/berubah state, sehingga e2e ikut gagal atau timeout. Port
@@ -17,6 +17,16 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'webkit-mobile',
+      use: { ...devices['iPhone 13'], browserName: 'webkit' },
+    },
+  ],
   webServer: {
     command: `bun --bun run dev --port ${PORT_E2E}`,
     url: `${BASE}/login`,
