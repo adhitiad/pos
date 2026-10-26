@@ -19,8 +19,8 @@ export const dapurDataFn = createServerFn({ method: 'GET' }).handler(
 export const updateStatusPesananFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => UpdateStatusPesananSchema.parse(input))
   .handler(async ({ data }) => {
-    await requireKasir()
-    return updateStatusPesanan(data)
+    const pengguna = await requireKasir()
+    return updateStatusPesanan(data, pengguna.id)
   })
 
 export const tandaiLunasFn = createServerFn({ method: 'POST' })

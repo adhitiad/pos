@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 import { m } from '#/paraglide/messages'
-import { useNotifikasiDibaca, useSegarkanNotifikasi } from '#/lib/notifikasi'
+import { useNotifikasiDibaca, useSegarkanNotifikasi } from '#/hooks/notifikasi'
 import { notifikasiFn } from '#/server/notifikasiFn'
 import type {
   Notifikasi,
@@ -68,7 +68,6 @@ export default function NotificationBell() {
   const [daftar, setDaftar] = useState<Notifikasi[]>([])
   const [memuat, setMemuat] = useState(true)
   const [versi, setVersi] = useState(0)
-
   useEffect(() => {
     let aktif = true
     setMemuat(true)
@@ -91,6 +90,9 @@ export default function NotificationBell() {
   useSegarkanNotifikasi(segarkan)
 
   const belumDibaca = daftar.filter((n) => !dibaca.has(n.id))
+  // Angka badge adalah teks yang terlihat; aria-label wajib memuatnya agar
+  // tidak melanggar WCAG "label in name" (axe label-content-name-mismatch).
+  const badge = belumDibaca.length > 9 ? '9+' : String(belumDibaca.length)
 
   const buka = (notif: Notifikasi) => {
     tandai([notif.id])
@@ -106,12 +108,18 @@ export default function NotificationBell() {
           variant="ghost"
           size="icon"
           className="relative size-11"
-          aria-label={m.notif_label()}
+          aria-label={
+            belumDibaca.length > 0
+              ? // Tanpa tanda kurung: axe membuang isi parenthetical sebelum
+                // membandingkan nama aksesibel dengan teks yang terlihat.
+                `${m.notif_label()} ${badge}`
+              : m.notif_label()
+          }
         >
           <Bell className="size-4" />
           {belumDibaca.length > 0 && (
             <span className="absolute right-2 top-2 flex size-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-white">
-              {belumDibaca.length > 9 ? '9+' : belumDibaca.length}
+              {badge}
             </span>
           )}
         </Button>

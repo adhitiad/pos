@@ -5,12 +5,14 @@ import {
   mejaData,
   createMeja,
   hapusMeja,
+  qrMeja,
   toggleMeja,
   updateMeja,
 } from './meja.js'
 import {
   HapusMejaSchema,
   MejaInputSchema,
+  QrMejaSchema,
   ToggleMejaSchema,
   UpdateMejaSchema,
 } from '#/validations/meja'
@@ -48,4 +50,11 @@ export const toggleMejaFn = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     await requireOwner()
     return toggleMeja(data)
+  })
+
+export const qrMejaFn = createServerFn({ method: 'GET' })
+  .validator((input: unknown) => QrMejaSchema.parse(input))
+  .handler(async ({ data }) => {
+    await requireOwner()
+    return qrMeja(data)
   })

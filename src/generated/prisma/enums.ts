@@ -95,3 +95,21 @@ export const JenisPengeluaran = {
 } as const
 
 export type JenisPengeluaran = (typeof JenisPengeluaran)[keyof typeof JenisPengeluaran]
+
+
+export const StatusDraftTransaksi = {
+  MENUNGGU: 'MENUNGGU',
+  DISETUJUI: 'DISETUJUI',
+  DITOLAK: 'DITOLAK'
+} as const
+
+export type StatusDraftTransaksi = (typeof StatusDraftTransaksi)[keyof typeof StatusDraftTransaksi]
+
+
+export const StatusPesananDraf = {
+  MENUNGGU: 'MENUNGGU',
+  FINAL: 'FINAL',
+  DIBATALKAN: 'DIBATALKAN'
+} as const
+
+export type StatusPesananDraf = (typeof StatusPesananDraf)[keyof typeof StatusPesananDraf]

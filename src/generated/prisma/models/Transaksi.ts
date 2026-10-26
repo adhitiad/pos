@@ -77,8 +77,10 @@ export type TransaksiMinAggregateOutputType = {
   poinDapat: number | null
   metodeBayar: $Enums.MetodeBayar | null
   catatan: string | null
+  alamat: string | null
   mejaId: string | null
   statusPesanan: $Enums.StatusPesanan | null
+  statusKasirReview: string | null
   sumber: $Enums.SumberTransaksi | null
   dibayarPada: Date | null
   dibayarVia: $Enums.ViaPembayaran | null
@@ -116,8 +118,10 @@ export type TransaksiMaxAggregateOutputType = {
   poinDapat: number | null
   metodeBayar: $Enums.MetodeBayar | null
   catatan: string | null
+  alamat: string | null
   mejaId: string | null
   statusPesanan: $Enums.StatusPesanan | null
+  statusKasirReview: string | null
   sumber: $Enums.SumberTransaksi | null
   dibayarPada: Date | null
   dibayarVia: $Enums.ViaPembayaran | null
@@ -155,8 +159,10 @@ export type TransaksiCountAggregateOutputType = {
   poinDapat: number
   metodeBayar: number
   catatan: number
+  alamat: number
   mejaId: number
   statusPesanan: number
+  statusKasirReview: number
   sumber: number
   dibayarPada: number
   dibayarVia: number
@@ -228,8 +234,10 @@ export type TransaksiMinAggregateInputType = {
   poinDapat?: true
   metodeBayar?: true
   catatan?: true
+  alamat?: true
   mejaId?: true
   statusPesanan?: true
+  statusKasirReview?: true
   sumber?: true
   dibayarPada?: true
   dibayarVia?: true
@@ -267,8 +275,10 @@ export type TransaksiMaxAggregateInputType = {
   poinDapat?: true
   metodeBayar?: true
   catatan?: true
+  alamat?: true
   mejaId?: true
   statusPesanan?: true
+  statusKasirReview?: true
   sumber?: true
   dibayarPada?: true
   dibayarVia?: true
@@ -306,8 +316,10 @@ export type TransaksiCountAggregateInputType = {
   poinDapat?: true
   metodeBayar?: true
   catatan?: true
+  alamat?: true
   mejaId?: true
   statusPesanan?: true
+  statusKasirReview?: true
   sumber?: true
   dibayarPada?: true
   dibayarVia?: true
@@ -432,8 +444,10 @@ export type TransaksiGroupByOutputType = {
   poinDapat: number
   metodeBayar: $Enums.MetodeBayar
   catatan: string | null
+  alamat: string | null
   mejaId: string | null
   statusPesanan: $Enums.StatusPesanan
+  statusKasirReview: string
   sumber: $Enums.SumberTransaksi
   dibayarPada: Date | null
   dibayarVia: $Enums.ViaPembayaran | null
@@ -494,8 +508,10 @@ export type TransaksiWhereInput = {
   poinDapat?: Prisma.IntFilter<"Transaksi"> | number
   metodeBayar?: Prisma.EnumMetodeBayarFilter<"Transaksi"> | $Enums.MetodeBayar
   catatan?: Prisma.StringNullableFilter<"Transaksi"> | string | null
+  alamat?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   mejaId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   statusPesanan?: Prisma.EnumStatusPesananFilter<"Transaksi"> | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFilter<"Transaksi"> | string
   sumber?: Prisma.EnumSumberTransaksiFilter<"Transaksi"> | $Enums.SumberTransaksi
   dibayarPada?: Prisma.DateTimeNullableFilter<"Transaksi"> | Date | string | null
   dibayarVia?: Prisma.EnumViaPembayaranNullableFilter<"Transaksi"> | $Enums.ViaPembayaran | null
@@ -522,6 +538,9 @@ export type TransaksiWhereInput = {
   returs?: Prisma.ReturListRelationFilter
   printJobs?: Prisma.PrintJobListRelationFilter
   jurnal?: Prisma.XOR<Prisma.JurnalNullableScalarRelationFilter, Prisma.JurnalWhereInput> | null
+  pesananDraf?: Prisma.XOR<Prisma.PesananDrafNullableScalarRelationFilter, Prisma.PesananDrafWhereInput> | null
+  draftHasil?: Prisma.XOR<Prisma.DraftTransaksiNullableScalarRelationFilter, Prisma.DraftTransaksiWhereInput> | null
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditListRelationFilter
 }
 
 export type TransaksiOrderByWithRelationInput = {
@@ -543,8 +562,10 @@ export type TransaksiOrderByWithRelationInput = {
   poinDapat?: Prisma.SortOrder
   metodeBayar?: Prisma.SortOrder
   catatan?: Prisma.SortOrderInput | Prisma.SortOrder
+  alamat?: Prisma.SortOrderInput | Prisma.SortOrder
   mejaId?: Prisma.SortOrderInput | Prisma.SortOrder
   statusPesanan?: Prisma.SortOrder
+  statusKasirReview?: Prisma.SortOrder
   sumber?: Prisma.SortOrder
   dibayarPada?: Prisma.SortOrderInput | Prisma.SortOrder
   dibayarVia?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -571,6 +592,9 @@ export type TransaksiOrderByWithRelationInput = {
   returs?: Prisma.ReturOrderByRelationAggregateInput
   printJobs?: Prisma.PrintJobOrderByRelationAggregateInput
   jurnal?: Prisma.JurnalOrderByWithRelationInput
+  pesananDraf?: Prisma.PesananDrafOrderByWithRelationInput
+  draftHasil?: Prisma.DraftTransaksiOrderByWithRelationInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditOrderByRelationAggregateInput
 }
 
 export type TransaksiWhereUniqueInput = Prisma.AtLeast<{
@@ -597,8 +621,10 @@ export type TransaksiWhereUniqueInput = Prisma.AtLeast<{
   poinDapat?: Prisma.IntFilter<"Transaksi"> | number
   metodeBayar?: Prisma.EnumMetodeBayarFilter<"Transaksi"> | $Enums.MetodeBayar
   catatan?: Prisma.StringNullableFilter<"Transaksi"> | string | null
+  alamat?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   mejaId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   statusPesanan?: Prisma.EnumStatusPesananFilter<"Transaksi"> | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFilter<"Transaksi"> | string
   sumber?: Prisma.EnumSumberTransaksiFilter<"Transaksi"> | $Enums.SumberTransaksi
   dibayarPada?: Prisma.DateTimeNullableFilter<"Transaksi"> | Date | string | null
   dibayarVia?: Prisma.EnumViaPembayaranNullableFilter<"Transaksi"> | $Enums.ViaPembayaran | null
@@ -623,6 +649,9 @@ export type TransaksiWhereUniqueInput = Prisma.AtLeast<{
   returs?: Prisma.ReturListRelationFilter
   printJobs?: Prisma.PrintJobListRelationFilter
   jurnal?: Prisma.XOR<Prisma.JurnalNullableScalarRelationFilter, Prisma.JurnalWhereInput> | null
+  pesananDraf?: Prisma.XOR<Prisma.PesananDrafNullableScalarRelationFilter, Prisma.PesananDrafWhereInput> | null
+  draftHasil?: Prisma.XOR<Prisma.DraftTransaksiNullableScalarRelationFilter, Prisma.DraftTransaksiWhereInput> | null
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditListRelationFilter
 }, "id" | "nomor" | "paymentRef" | "idempotencyKey">
 
 export type TransaksiOrderByWithAggregationInput = {
@@ -644,8 +673,10 @@ export type TransaksiOrderByWithAggregationInput = {
   poinDapat?: Prisma.SortOrder
   metodeBayar?: Prisma.SortOrder
   catatan?: Prisma.SortOrderInput | Prisma.SortOrder
+  alamat?: Prisma.SortOrderInput | Prisma.SortOrder
   mejaId?: Prisma.SortOrderInput | Prisma.SortOrder
   statusPesanan?: Prisma.SortOrder
+  statusKasirReview?: Prisma.SortOrder
   sumber?: Prisma.SortOrder
   dibayarPada?: Prisma.SortOrderInput | Prisma.SortOrder
   dibayarVia?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -691,8 +722,10 @@ export type TransaksiScalarWhereWithAggregatesInput = {
   poinDapat?: Prisma.IntWithAggregatesFilter<"Transaksi"> | number
   metodeBayar?: Prisma.EnumMetodeBayarWithAggregatesFilter<"Transaksi"> | $Enums.MetodeBayar
   catatan?: Prisma.StringNullableWithAggregatesFilter<"Transaksi"> | string | null
+  alamat?: Prisma.StringNullableWithAggregatesFilter<"Transaksi"> | string | null
   mejaId?: Prisma.StringNullableWithAggregatesFilter<"Transaksi"> | string | null
   statusPesanan?: Prisma.EnumStatusPesananWithAggregatesFilter<"Transaksi"> | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringWithAggregatesFilter<"Transaksi"> | string
   sumber?: Prisma.EnumSumberTransaksiWithAggregatesFilter<"Transaksi"> | $Enums.SumberTransaksi
   dibayarPada?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaksi"> | Date | string | null
   dibayarVia?: Prisma.EnumViaPembayaranNullableWithAggregatesFilter<"Transaksi"> | $Enums.ViaPembayaran | null
@@ -726,7 +759,9 @@ export type TransaksiCreateInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -753,6 +788,9 @@ export type TransaksiCreateInput = {
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateInput = {
@@ -774,8 +812,10 @@ export type TransaksiUncheckedCreateInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -797,6 +837,9 @@ export type TransaksiUncheckedCreateInput = {
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUpdateInput = {
@@ -814,7 +857,9 @@ export type TransaksiUpdateInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -841,6 +886,9 @@ export type TransaksiUpdateInput = {
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateInput = {
@@ -862,8 +910,10 @@ export type TransaksiUncheckedUpdateInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -885,6 +935,9 @@ export type TransaksiUncheckedUpdateInput = {
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiCreateManyInput = {
@@ -906,8 +959,10 @@ export type TransaksiCreateManyInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -941,7 +996,9 @@ export type TransaksiUpdateManyMutationInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -979,8 +1036,10 @@ export type TransaksiUncheckedUpdateManyInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -1028,8 +1087,10 @@ export type TransaksiCountOrderByAggregateInput = {
   poinDapat?: Prisma.SortOrder
   metodeBayar?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
+  alamat?: Prisma.SortOrder
   mejaId?: Prisma.SortOrder
   statusPesanan?: Prisma.SortOrder
+  statusKasirReview?: Prisma.SortOrder
   sumber?: Prisma.SortOrder
   dibayarPada?: Prisma.SortOrder
   dibayarVia?: Prisma.SortOrder
@@ -1083,8 +1144,10 @@ export type TransaksiMaxOrderByAggregateInput = {
   poinDapat?: Prisma.SortOrder
   metodeBayar?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
+  alamat?: Prisma.SortOrder
   mejaId?: Prisma.SortOrder
   statusPesanan?: Prisma.SortOrder
+  statusKasirReview?: Prisma.SortOrder
   sumber?: Prisma.SortOrder
   dibayarPada?: Prisma.SortOrder
   dibayarVia?: Prisma.SortOrder
@@ -1122,8 +1185,10 @@ export type TransaksiMinOrderByAggregateInput = {
   poinDapat?: Prisma.SortOrder
   metodeBayar?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
+  alamat?: Prisma.SortOrder
   mejaId?: Prisma.SortOrder
   statusPesanan?: Prisma.SortOrder
+  statusKasirReview?: Prisma.SortOrder
   sumber?: Prisma.SortOrder
   dibayarPada?: Prisma.SortOrder
   dibayarVia?: Prisma.SortOrder
@@ -1468,6 +1533,54 @@ export type TransaksiUpdateOneWithoutPrintJobsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TransaksiUpdateToOneWithWhereWithoutPrintJobsInput, Prisma.TransaksiUpdateWithoutPrintJobsInput>, Prisma.TransaksiUncheckedUpdateWithoutPrintJobsInput>
 }
 
+export type TransaksiCreateNestedOneWithoutDraftHasilInput = {
+  create?: Prisma.XOR<Prisma.TransaksiCreateWithoutDraftHasilInput, Prisma.TransaksiUncheckedCreateWithoutDraftHasilInput>
+  connectOrCreate?: Prisma.TransaksiCreateOrConnectWithoutDraftHasilInput
+  connect?: Prisma.TransaksiWhereUniqueInput
+}
+
+export type TransaksiUpdateOneWithoutDraftHasilNestedInput = {
+  create?: Prisma.XOR<Prisma.TransaksiCreateWithoutDraftHasilInput, Prisma.TransaksiUncheckedCreateWithoutDraftHasilInput>
+  connectOrCreate?: Prisma.TransaksiCreateOrConnectWithoutDraftHasilInput
+  upsert?: Prisma.TransaksiUpsertWithoutDraftHasilInput
+  disconnect?: Prisma.TransaksiWhereInput | boolean
+  delete?: Prisma.TransaksiWhereInput | boolean
+  connect?: Prisma.TransaksiWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TransaksiUpdateToOneWithWhereWithoutDraftHasilInput, Prisma.TransaksiUpdateWithoutDraftHasilInput>, Prisma.TransaksiUncheckedUpdateWithoutDraftHasilInput>
+}
+
+export type TransaksiCreateNestedOneWithoutTransaksiReviewAuditInput = {
+  create?: Prisma.XOR<Prisma.TransaksiCreateWithoutTransaksiReviewAuditInput, Prisma.TransaksiUncheckedCreateWithoutTransaksiReviewAuditInput>
+  connectOrCreate?: Prisma.TransaksiCreateOrConnectWithoutTransaksiReviewAuditInput
+  connect?: Prisma.TransaksiWhereUniqueInput
+}
+
+export type TransaksiUpdateOneWithoutTransaksiReviewAuditNestedInput = {
+  create?: Prisma.XOR<Prisma.TransaksiCreateWithoutTransaksiReviewAuditInput, Prisma.TransaksiUncheckedCreateWithoutTransaksiReviewAuditInput>
+  connectOrCreate?: Prisma.TransaksiCreateOrConnectWithoutTransaksiReviewAuditInput
+  upsert?: Prisma.TransaksiUpsertWithoutTransaksiReviewAuditInput
+  disconnect?: Prisma.TransaksiWhereInput | boolean
+  delete?: Prisma.TransaksiWhereInput | boolean
+  connect?: Prisma.TransaksiWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TransaksiUpdateToOneWithWhereWithoutTransaksiReviewAuditInput, Prisma.TransaksiUpdateWithoutTransaksiReviewAuditInput>, Prisma.TransaksiUncheckedUpdateWithoutTransaksiReviewAuditInput>
+}
+
+export type TransaksiCreateNestedOneWithoutPesananDrafInput = {
+  create?: Prisma.XOR<Prisma.TransaksiCreateWithoutPesananDrafInput, Prisma.TransaksiUncheckedCreateWithoutPesananDrafInput>
+  connectOrCreate?: Prisma.TransaksiCreateOrConnectWithoutPesananDrafInput
+  connect?: Prisma.TransaksiWhereUniqueInput
+}
+
+export type TransaksiUpdateOneWithoutPesananDrafNestedInput = {
+  create?: Prisma.XOR<Prisma.TransaksiCreateWithoutPesananDrafInput, Prisma.TransaksiUncheckedCreateWithoutPesananDrafInput>
+  connectOrCreate?: Prisma.TransaksiCreateOrConnectWithoutPesananDrafInput
+  upsert?: Prisma.TransaksiUpsertWithoutPesananDrafInput
+  disconnect?: Prisma.TransaksiWhereInput | boolean
+  delete?: Prisma.TransaksiWhereInput | boolean
+  connect?: Prisma.TransaksiWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TransaksiUpdateToOneWithWhereWithoutPesananDrafInput, Prisma.TransaksiUpdateWithoutPesananDrafInput>, Prisma.TransaksiUncheckedUpdateWithoutPesananDrafInput>
+}
+
 export type TransaksiCreateWithoutKasirInput = {
   id?: string
   nomor: string
@@ -1483,7 +1596,9 @@ export type TransaksiCreateWithoutKasirInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -1509,6 +1624,9 @@ export type TransaksiCreateWithoutKasirInput = {
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutKasirInput = {
@@ -1529,8 +1647,10 @@ export type TransaksiUncheckedCreateWithoutKasirInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -1552,6 +1672,9 @@ export type TransaksiUncheckedCreateWithoutKasirInput = {
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutKasirInput = {
@@ -1602,8 +1725,10 @@ export type TransaksiScalarWhereInput = {
   poinDapat?: Prisma.IntFilter<"Transaksi"> | number
   metodeBayar?: Prisma.EnumMetodeBayarFilter<"Transaksi"> | $Enums.MetodeBayar
   catatan?: Prisma.StringNullableFilter<"Transaksi"> | string | null
+  alamat?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   mejaId?: Prisma.StringNullableFilter<"Transaksi"> | string | null
   statusPesanan?: Prisma.EnumStatusPesananFilter<"Transaksi"> | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFilter<"Transaksi"> | string
   sumber?: Prisma.EnumSumberTransaksiFilter<"Transaksi"> | $Enums.SumberTransaksi
   dibayarPada?: Prisma.DateTimeNullableFilter<"Transaksi"> | Date | string | null
   dibayarVia?: Prisma.EnumViaPembayaranNullableFilter<"Transaksi"> | $Enums.ViaPembayaran | null
@@ -1637,7 +1762,9 @@ export type TransaksiCreateWithoutMemberInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -1663,6 +1790,9 @@ export type TransaksiCreateWithoutMemberInput = {
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutMemberInput = {
@@ -1683,8 +1813,10 @@ export type TransaksiUncheckedCreateWithoutMemberInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -1706,6 +1838,9 @@ export type TransaksiUncheckedCreateWithoutMemberInput = {
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutMemberInput = {
@@ -1749,7 +1884,9 @@ export type TransaksiCreateWithoutDeliveryInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -1775,6 +1912,9 @@ export type TransaksiCreateWithoutDeliveryInput = {
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutDeliveryInput = {
@@ -1795,8 +1935,10 @@ export type TransaksiUncheckedCreateWithoutDeliveryInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -1818,6 +1960,9 @@ export type TransaksiUncheckedCreateWithoutDeliveryInput = {
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutDeliveryInput = {
@@ -1861,7 +2006,9 @@ export type TransaksiCreateWithoutItemsInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -1887,6 +2034,9 @@ export type TransaksiCreateWithoutItemsInput = {
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutItemsInput = {
@@ -1908,8 +2058,10 @@ export type TransaksiUncheckedCreateWithoutItemsInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -1930,6 +2082,9 @@ export type TransaksiUncheckedCreateWithoutItemsInput = {
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutItemsInput = {
@@ -1963,7 +2118,9 @@ export type TransaksiUpdateWithoutItemsInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -1989,6 +2146,9 @@ export type TransaksiUpdateWithoutItemsInput = {
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutItemsInput = {
@@ -2010,8 +2170,10 @@ export type TransaksiUncheckedUpdateWithoutItemsInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -2032,6 +2194,9 @@ export type TransaksiUncheckedUpdateWithoutItemsInput = {
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiCreateWithoutPembayaranInput = {
@@ -2049,7 +2214,9 @@ export type TransaksiCreateWithoutPembayaranInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2075,6 +2242,9 @@ export type TransaksiCreateWithoutPembayaranInput = {
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutPembayaranInput = {
@@ -2096,8 +2266,10 @@ export type TransaksiUncheckedCreateWithoutPembayaranInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2118,6 +2290,9 @@ export type TransaksiUncheckedCreateWithoutPembayaranInput = {
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutPembayaranInput = {
@@ -2151,7 +2326,9 @@ export type TransaksiUpdateWithoutPembayaranInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -2177,6 +2354,9 @@ export type TransaksiUpdateWithoutPembayaranInput = {
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutPembayaranInput = {
@@ -2198,8 +2378,10 @@ export type TransaksiUncheckedUpdateWithoutPembayaranInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -2220,6 +2402,9 @@ export type TransaksiUncheckedUpdateWithoutPembayaranInput = {
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiCreateWithoutShiftInput = {
@@ -2237,7 +2422,9 @@ export type TransaksiCreateWithoutShiftInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2263,6 +2450,9 @@ export type TransaksiCreateWithoutShiftInput = {
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutShiftInput = {
@@ -2283,8 +2473,10 @@ export type TransaksiUncheckedCreateWithoutShiftInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2306,6 +2498,9 @@ export type TransaksiUncheckedCreateWithoutShiftInput = {
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutShiftInput = {
@@ -2349,7 +2544,9 @@ export type TransaksiCreateWithoutJurnalInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2375,6 +2572,9 @@ export type TransaksiCreateWithoutJurnalInput = {
   pembayaran?: Prisma.PembayaranCreateNestedManyWithoutTransaksiInput
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutJurnalInput = {
@@ -2396,8 +2596,10 @@ export type TransaksiUncheckedCreateWithoutJurnalInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2418,6 +2620,9 @@ export type TransaksiUncheckedCreateWithoutJurnalInput = {
   pembayaran?: Prisma.PembayaranUncheckedCreateNestedManyWithoutTransaksiInput
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutJurnalInput = {
@@ -2451,7 +2656,9 @@ export type TransaksiUpdateWithoutJurnalInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -2477,6 +2684,9 @@ export type TransaksiUpdateWithoutJurnalInput = {
   pembayaran?: Prisma.PembayaranUpdateManyWithoutTransaksiNestedInput
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutJurnalInput = {
@@ -2498,8 +2708,10 @@ export type TransaksiUncheckedUpdateWithoutJurnalInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -2520,6 +2732,9 @@ export type TransaksiUncheckedUpdateWithoutJurnalInput = {
   pembayaran?: Prisma.PembayaranUncheckedUpdateManyWithoutTransaksiNestedInput
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiCreateWithoutMejaInput = {
@@ -2537,7 +2752,9 @@ export type TransaksiCreateWithoutMejaInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2563,6 +2780,9 @@ export type TransaksiCreateWithoutMejaInput = {
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutMejaInput = {
@@ -2584,7 +2804,9 @@ export type TransaksiUncheckedCreateWithoutMejaInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2606,6 +2828,9 @@ export type TransaksiUncheckedCreateWithoutMejaInput = {
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutMejaInput = {
@@ -2649,7 +2874,9 @@ export type TransaksiCreateWithoutRetursInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2675,6 +2902,9 @@ export type TransaksiCreateWithoutRetursInput = {
   pembayaran?: Prisma.PembayaranCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutRetursInput = {
@@ -2696,8 +2926,10 @@ export type TransaksiUncheckedCreateWithoutRetursInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2718,6 +2950,9 @@ export type TransaksiUncheckedCreateWithoutRetursInput = {
   pembayaran?: Prisma.PembayaranUncheckedCreateNestedManyWithoutTransaksiInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutRetursInput = {
@@ -2751,7 +2986,9 @@ export type TransaksiUpdateWithoutRetursInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -2777,6 +3014,9 @@ export type TransaksiUpdateWithoutRetursInput = {
   pembayaran?: Prisma.PembayaranUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutRetursInput = {
@@ -2798,8 +3038,10 @@ export type TransaksiUncheckedUpdateWithoutRetursInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -2820,6 +3062,9 @@ export type TransaksiUncheckedUpdateWithoutRetursInput = {
   pembayaran?: Prisma.PembayaranUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiCreateWithoutPrintJobsInput = {
@@ -2837,7 +3082,9 @@ export type TransaksiCreateWithoutPrintJobsInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2863,6 +3110,9 @@ export type TransaksiCreateWithoutPrintJobsInput = {
   pembayaran?: Prisma.PembayaranCreateNestedManyWithoutTransaksiInput
   returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiUncheckedCreateWithoutPrintJobsInput = {
@@ -2884,8 +3134,10 @@ export type TransaksiUncheckedCreateWithoutPrintJobsInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -2906,6 +3158,9 @@ export type TransaksiUncheckedCreateWithoutPrintJobsInput = {
   pembayaran?: Prisma.PembayaranUncheckedCreateNestedManyWithoutTransaksiInput
   returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
   jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
 }
 
 export type TransaksiCreateOrConnectWithoutPrintJobsInput = {
@@ -2939,7 +3194,9 @@ export type TransaksiUpdateWithoutPrintJobsInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -2965,6 +3222,9 @@ export type TransaksiUpdateWithoutPrintJobsInput = {
   pembayaran?: Prisma.PembayaranUpdateManyWithoutTransaksiNestedInput
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutPrintJobsInput = {
@@ -2986,8 +3246,10 @@ export type TransaksiUncheckedUpdateWithoutPrintJobsInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3008,6 +3270,633 @@ export type TransaksiUncheckedUpdateWithoutPrintJobsInput = {
   pembayaran?: Prisma.PembayaranUncheckedUpdateManyWithoutTransaksiNestedInput
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
+}
+
+export type TransaksiCreateWithoutDraftHasilInput = {
+  id?: string
+  nomor: string
+  tanggal?: Date | string
+  diterimaPada?: Date | string
+  ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: string | null
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: number
+  poinDapat?: number
+  metodeBayar?: $Enums.MetodeBayar
+  catatan?: string | null
+  alamat?: string | null
+  statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
+  sumber?: $Enums.SumberTransaksi
+  dibayarPada?: Date | string | null
+  dibayarVia?: $Enums.ViaPembayaran | null
+  paymentRef?: string | null
+  stokTerpotong?: boolean
+  uangDiterima?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: number
+  cetakKasir?: number
+  idempotencyKey?: string | null
+  dibuatOffline?: boolean
+  waktuKlien?: Date | string | null
+  hpp?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  member?: Prisma.MemberCreateNestedOneWithoutTransaksiInput
+  kasir?: Prisma.UserCreateNestedOneWithoutTransaksiKasirInput
+  shift?: Prisma.ShiftCreateNestedOneWithoutTransaksiInput
+  delivery?: Prisma.DeliveryCreateNestedOneWithoutTransaksiInput
+  meja?: Prisma.MejaCreateNestedOneWithoutTransaksiInput
+  items?: Prisma.TransaksiItemCreateNestedManyWithoutTransaksiInput
+  pembayaran?: Prisma.PembayaranCreateNestedManyWithoutTransaksiInput
+  returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
+  jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
+}
+
+export type TransaksiUncheckedCreateWithoutDraftHasilInput = {
+  id?: string
+  nomor: string
+  tanggal?: Date | string
+  diterimaPada?: Date | string
+  memberId?: string | null
+  kasirId?: string | null
+  shiftId?: string | null
+  deliveryId?: string | null
+  ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: string | null
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: number
+  poinDapat?: number
+  metodeBayar?: $Enums.MetodeBayar
+  catatan?: string | null
+  alamat?: string | null
+  mejaId?: string | null
+  statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
+  sumber?: $Enums.SumberTransaksi
+  dibayarPada?: Date | string | null
+  dibayarVia?: $Enums.ViaPembayaran | null
+  paymentRef?: string | null
+  stokTerpotong?: boolean
+  uangDiterima?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: number
+  cetakKasir?: number
+  idempotencyKey?: string | null
+  dibuatOffline?: boolean
+  waktuKlien?: Date | string | null
+  hpp?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutTransaksiInput
+  pembayaran?: Prisma.PembayaranUncheckedCreateNestedManyWithoutTransaksiInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
+  jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
+}
+
+export type TransaksiCreateOrConnectWithoutDraftHasilInput = {
+  where: Prisma.TransaksiWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransaksiCreateWithoutDraftHasilInput, Prisma.TransaksiUncheckedCreateWithoutDraftHasilInput>
+}
+
+export type TransaksiUpsertWithoutDraftHasilInput = {
+  update: Prisma.XOR<Prisma.TransaksiUpdateWithoutDraftHasilInput, Prisma.TransaksiUncheckedUpdateWithoutDraftHasilInput>
+  create: Prisma.XOR<Prisma.TransaksiCreateWithoutDraftHasilInput, Prisma.TransaksiUncheckedCreateWithoutDraftHasilInput>
+  where?: Prisma.TransaksiWhereInput
+}
+
+export type TransaksiUpdateToOneWithWhereWithoutDraftHasilInput = {
+  where?: Prisma.TransaksiWhereInput
+  data: Prisma.XOR<Prisma.TransaksiUpdateWithoutDraftHasilInput, Prisma.TransaksiUncheckedUpdateWithoutDraftHasilInput>
+}
+
+export type TransaksiUpdateWithoutDraftHasilInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nomor?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: Prisma.IntFieldUpdateOperationsInput | number
+  poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
+  metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
+  sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
+  dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
+  paymentRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stokTerpotong?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  uangDiterima?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: Prisma.IntFieldUpdateOperationsInput | number
+  cetakKasir?: Prisma.IntFieldUpdateOperationsInput | number
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dibuatOffline?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waktuKlien?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hpp?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  member?: Prisma.MemberUpdateOneWithoutTransaksiNestedInput
+  kasir?: Prisma.UserUpdateOneWithoutTransaksiKasirNestedInput
+  shift?: Prisma.ShiftUpdateOneWithoutTransaksiNestedInput
+  delivery?: Prisma.DeliveryUpdateOneWithoutTransaksiNestedInput
+  meja?: Prisma.MejaUpdateOneWithoutTransaksiNestedInput
+  items?: Prisma.TransaksiItemUpdateManyWithoutTransaksiNestedInput
+  pembayaran?: Prisma.PembayaranUpdateManyWithoutTransaksiNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
+  jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
+}
+
+export type TransaksiUncheckedUpdateWithoutDraftHasilInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nomor?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: Prisma.IntFieldUpdateOperationsInput | number
+  poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
+  metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
+  sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
+  dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
+  paymentRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stokTerpotong?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  uangDiterima?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: Prisma.IntFieldUpdateOperationsInput | number
+  cetakKasir?: Prisma.IntFieldUpdateOperationsInput | number
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dibuatOffline?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waktuKlien?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hpp?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.TransaksiItemUncheckedUpdateManyWithoutTransaksiNestedInput
+  pembayaran?: Prisma.PembayaranUncheckedUpdateManyWithoutTransaksiNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
+  jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
+}
+
+export type TransaksiCreateWithoutTransaksiReviewAuditInput = {
+  id?: string
+  nomor: string
+  tanggal?: Date | string
+  diterimaPada?: Date | string
+  ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: string | null
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: number
+  poinDapat?: number
+  metodeBayar?: $Enums.MetodeBayar
+  catatan?: string | null
+  alamat?: string | null
+  statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
+  sumber?: $Enums.SumberTransaksi
+  dibayarPada?: Date | string | null
+  dibayarVia?: $Enums.ViaPembayaran | null
+  paymentRef?: string | null
+  stokTerpotong?: boolean
+  uangDiterima?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: number
+  cetakKasir?: number
+  idempotencyKey?: string | null
+  dibuatOffline?: boolean
+  waktuKlien?: Date | string | null
+  hpp?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  member?: Prisma.MemberCreateNestedOneWithoutTransaksiInput
+  kasir?: Prisma.UserCreateNestedOneWithoutTransaksiKasirInput
+  shift?: Prisma.ShiftCreateNestedOneWithoutTransaksiInput
+  delivery?: Prisma.DeliveryCreateNestedOneWithoutTransaksiInput
+  meja?: Prisma.MejaCreateNestedOneWithoutTransaksiInput
+  items?: Prisma.TransaksiItemCreateNestedManyWithoutTransaksiInput
+  pembayaran?: Prisma.PembayaranCreateNestedManyWithoutTransaksiInput
+  returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
+  jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+}
+
+export type TransaksiUncheckedCreateWithoutTransaksiReviewAuditInput = {
+  id?: string
+  nomor: string
+  tanggal?: Date | string
+  diterimaPada?: Date | string
+  memberId?: string | null
+  kasirId?: string | null
+  shiftId?: string | null
+  deliveryId?: string | null
+  ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: string | null
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: number
+  poinDapat?: number
+  metodeBayar?: $Enums.MetodeBayar
+  catatan?: string | null
+  alamat?: string | null
+  mejaId?: string | null
+  statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
+  sumber?: $Enums.SumberTransaksi
+  dibayarPada?: Date | string | null
+  dibayarVia?: $Enums.ViaPembayaran | null
+  paymentRef?: string | null
+  stokTerpotong?: boolean
+  uangDiterima?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: number
+  cetakKasir?: number
+  idempotencyKey?: string | null
+  dibuatOffline?: boolean
+  waktuKlien?: Date | string | null
+  hpp?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutTransaksiInput
+  pembayaran?: Prisma.PembayaranUncheckedCreateNestedManyWithoutTransaksiInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
+  jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+}
+
+export type TransaksiCreateOrConnectWithoutTransaksiReviewAuditInput = {
+  where: Prisma.TransaksiWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransaksiCreateWithoutTransaksiReviewAuditInput, Prisma.TransaksiUncheckedCreateWithoutTransaksiReviewAuditInput>
+}
+
+export type TransaksiUpsertWithoutTransaksiReviewAuditInput = {
+  update: Prisma.XOR<Prisma.TransaksiUpdateWithoutTransaksiReviewAuditInput, Prisma.TransaksiUncheckedUpdateWithoutTransaksiReviewAuditInput>
+  create: Prisma.XOR<Prisma.TransaksiCreateWithoutTransaksiReviewAuditInput, Prisma.TransaksiUncheckedCreateWithoutTransaksiReviewAuditInput>
+  where?: Prisma.TransaksiWhereInput
+}
+
+export type TransaksiUpdateToOneWithWhereWithoutTransaksiReviewAuditInput = {
+  where?: Prisma.TransaksiWhereInput
+  data: Prisma.XOR<Prisma.TransaksiUpdateWithoutTransaksiReviewAuditInput, Prisma.TransaksiUncheckedUpdateWithoutTransaksiReviewAuditInput>
+}
+
+export type TransaksiUpdateWithoutTransaksiReviewAuditInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nomor?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: Prisma.IntFieldUpdateOperationsInput | number
+  poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
+  metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
+  sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
+  dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
+  paymentRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stokTerpotong?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  uangDiterima?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: Prisma.IntFieldUpdateOperationsInput | number
+  cetakKasir?: Prisma.IntFieldUpdateOperationsInput | number
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dibuatOffline?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waktuKlien?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hpp?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  member?: Prisma.MemberUpdateOneWithoutTransaksiNestedInput
+  kasir?: Prisma.UserUpdateOneWithoutTransaksiKasirNestedInput
+  shift?: Prisma.ShiftUpdateOneWithoutTransaksiNestedInput
+  delivery?: Prisma.DeliveryUpdateOneWithoutTransaksiNestedInput
+  meja?: Prisma.MejaUpdateOneWithoutTransaksiNestedInput
+  items?: Prisma.TransaksiItemUpdateManyWithoutTransaksiNestedInput
+  pembayaran?: Prisma.PembayaranUpdateManyWithoutTransaksiNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
+  jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+}
+
+export type TransaksiUncheckedUpdateWithoutTransaksiReviewAuditInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nomor?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: Prisma.IntFieldUpdateOperationsInput | number
+  poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
+  metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
+  sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
+  dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
+  paymentRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stokTerpotong?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  uangDiterima?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: Prisma.IntFieldUpdateOperationsInput | number
+  cetakKasir?: Prisma.IntFieldUpdateOperationsInput | number
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dibuatOffline?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waktuKlien?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hpp?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.TransaksiItemUncheckedUpdateManyWithoutTransaksiNestedInput
+  pembayaran?: Prisma.PembayaranUncheckedUpdateManyWithoutTransaksiNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
+  jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+}
+
+export type TransaksiCreateWithoutPesananDrafInput = {
+  id?: string
+  nomor: string
+  tanggal?: Date | string
+  diterimaPada?: Date | string
+  ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: string | null
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: number
+  poinDapat?: number
+  metodeBayar?: $Enums.MetodeBayar
+  catatan?: string | null
+  alamat?: string | null
+  statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
+  sumber?: $Enums.SumberTransaksi
+  dibayarPada?: Date | string | null
+  dibayarVia?: $Enums.ViaPembayaran | null
+  paymentRef?: string | null
+  stokTerpotong?: boolean
+  uangDiterima?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: number
+  cetakKasir?: number
+  idempotencyKey?: string | null
+  dibuatOffline?: boolean
+  waktuKlien?: Date | string | null
+  hpp?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  member?: Prisma.MemberCreateNestedOneWithoutTransaksiInput
+  kasir?: Prisma.UserCreateNestedOneWithoutTransaksiKasirInput
+  shift?: Prisma.ShiftCreateNestedOneWithoutTransaksiInput
+  delivery?: Prisma.DeliveryCreateNestedOneWithoutTransaksiInput
+  meja?: Prisma.MejaCreateNestedOneWithoutTransaksiInput
+  items?: Prisma.TransaksiItemCreateNestedManyWithoutTransaksiInput
+  pembayaran?: Prisma.PembayaranCreateNestedManyWithoutTransaksiInput
+  returs?: Prisma.ReturCreateNestedManyWithoutTransaksiInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTransaksiInput
+  jurnal?: Prisma.JurnalCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutTransaksiInput
+}
+
+export type TransaksiUncheckedCreateWithoutPesananDrafInput = {
+  id?: string
+  nomor: string
+  tanggal?: Date | string
+  diterimaPada?: Date | string
+  memberId?: string | null
+  kasirId?: string | null
+  shiftId?: string | null
+  deliveryId?: string | null
+  ongkir?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: string | null
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: number
+  poinDapat?: number
+  metodeBayar?: $Enums.MetodeBayar
+  catatan?: string | null
+  alamat?: string | null
+  mejaId?: string | null
+  statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
+  sumber?: $Enums.SumberTransaksi
+  dibayarPada?: Date | string | null
+  dibayarVia?: $Enums.ViaPembayaran | null
+  paymentRef?: string | null
+  stokTerpotong?: boolean
+  uangDiterima?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: number
+  cetakKasir?: number
+  idempotencyKey?: string | null
+  dibuatOffline?: boolean
+  waktuKlien?: Date | string | null
+  hpp?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutTransaksiInput
+  pembayaran?: Prisma.PembayaranUncheckedCreateNestedManyWithoutTransaksiInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutTransaksiInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTransaksiInput
+  jurnal?: Prisma.JurnalUncheckedCreateNestedOneWithoutTransaksiInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedCreateNestedOneWithoutTransaksiInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutTransaksiInput
+}
+
+export type TransaksiCreateOrConnectWithoutPesananDrafInput = {
+  where: Prisma.TransaksiWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransaksiCreateWithoutPesananDrafInput, Prisma.TransaksiUncheckedCreateWithoutPesananDrafInput>
+}
+
+export type TransaksiUpsertWithoutPesananDrafInput = {
+  update: Prisma.XOR<Prisma.TransaksiUpdateWithoutPesananDrafInput, Prisma.TransaksiUncheckedUpdateWithoutPesananDrafInput>
+  create: Prisma.XOR<Prisma.TransaksiCreateWithoutPesananDrafInput, Prisma.TransaksiUncheckedCreateWithoutPesananDrafInput>
+  where?: Prisma.TransaksiWhereInput
+}
+
+export type TransaksiUpdateToOneWithWhereWithoutPesananDrafInput = {
+  where?: Prisma.TransaksiWhereInput
+  data: Prisma.XOR<Prisma.TransaksiUpdateWithoutPesananDrafInput, Prisma.TransaksiUncheckedUpdateWithoutPesananDrafInput>
+}
+
+export type TransaksiUpdateWithoutPesananDrafInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nomor?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: Prisma.IntFieldUpdateOperationsInput | number
+  poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
+  metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
+  sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
+  dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
+  paymentRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stokTerpotong?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  uangDiterima?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: Prisma.IntFieldUpdateOperationsInput | number
+  cetakKasir?: Prisma.IntFieldUpdateOperationsInput | number
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dibuatOffline?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waktuKlien?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hpp?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  member?: Prisma.MemberUpdateOneWithoutTransaksiNestedInput
+  kasir?: Prisma.UserUpdateOneWithoutTransaksiKasirNestedInput
+  shift?: Prisma.ShiftUpdateOneWithoutTransaksiNestedInput
+  delivery?: Prisma.DeliveryUpdateOneWithoutTransaksiNestedInput
+  meja?: Prisma.MejaUpdateOneWithoutTransaksiNestedInput
+  items?: Prisma.TransaksiItemUpdateManyWithoutTransaksiNestedInput
+  pembayaran?: Prisma.PembayaranUpdateManyWithoutTransaksiNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
+  jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
+}
+
+export type TransaksiUncheckedUpdateWithoutPesananDrafInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nomor?: Prisma.StringFieldUpdateOperationsInput | string
+  tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  diterimaPada?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kasirId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shiftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deliveryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ongkir?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskon?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajak?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  pajakJenis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  poinPakai?: Prisma.IntFieldUpdateOperationsInput | number
+  poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
+  metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
+  sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
+  dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
+  paymentRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stokTerpotong?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  uangDiterima?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  kembalian?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  cetakOwner?: Prisma.IntFieldUpdateOperationsInput | number
+  cetakKasir?: Prisma.IntFieldUpdateOperationsInput | number
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dibuatOffline?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waktuKlien?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hpp?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonMember?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.TransaksiItemUncheckedUpdateManyWithoutTransaksiNestedInput
+  pembayaran?: Prisma.PembayaranUncheckedUpdateManyWithoutTransaksiNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
+  jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiCreateManyKasirInput = {
@@ -3028,8 +3917,10 @@ export type TransaksiCreateManyKasirInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -3063,7 +3954,9 @@ export type TransaksiUpdateWithoutKasirInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3089,6 +3982,9 @@ export type TransaksiUpdateWithoutKasirInput = {
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutKasirInput = {
@@ -3109,8 +4005,10 @@ export type TransaksiUncheckedUpdateWithoutKasirInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3132,6 +4030,9 @@ export type TransaksiUncheckedUpdateWithoutKasirInput = {
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateManyWithoutKasirInput = {
@@ -3152,8 +4053,10 @@ export type TransaksiUncheckedUpdateManyWithoutKasirInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3190,8 +4093,10 @@ export type TransaksiCreateManyMemberInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -3225,7 +4130,9 @@ export type TransaksiUpdateWithoutMemberInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3251,6 +4158,9 @@ export type TransaksiUpdateWithoutMemberInput = {
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutMemberInput = {
@@ -3271,8 +4181,10 @@ export type TransaksiUncheckedUpdateWithoutMemberInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3294,6 +4206,9 @@ export type TransaksiUncheckedUpdateWithoutMemberInput = {
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateManyWithoutMemberInput = {
@@ -3314,8 +4229,10 @@ export type TransaksiUncheckedUpdateManyWithoutMemberInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3352,8 +4269,10 @@ export type TransaksiCreateManyDeliveryInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -3387,7 +4306,9 @@ export type TransaksiUpdateWithoutDeliveryInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3413,6 +4334,9 @@ export type TransaksiUpdateWithoutDeliveryInput = {
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutDeliveryInput = {
@@ -3433,8 +4357,10 @@ export type TransaksiUncheckedUpdateWithoutDeliveryInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3456,6 +4382,9 @@ export type TransaksiUncheckedUpdateWithoutDeliveryInput = {
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateManyWithoutDeliveryInput = {
@@ -3476,8 +4405,10 @@ export type TransaksiUncheckedUpdateManyWithoutDeliveryInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3514,8 +4445,10 @@ export type TransaksiCreateManyShiftInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   mejaId?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -3549,7 +4482,9 @@ export type TransaksiUpdateWithoutShiftInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3575,6 +4510,9 @@ export type TransaksiUpdateWithoutShiftInput = {
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutShiftInput = {
@@ -3595,8 +4533,10 @@ export type TransaksiUncheckedUpdateWithoutShiftInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3618,6 +4558,9 @@ export type TransaksiUncheckedUpdateWithoutShiftInput = {
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateManyWithoutShiftInput = {
@@ -3638,8 +4581,10 @@ export type TransaksiUncheckedUpdateManyWithoutShiftInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mejaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3677,7 +4622,9 @@ export type TransaksiCreateManyMejaInput = {
   poinDapat?: number
   metodeBayar?: $Enums.MetodeBayar
   catatan?: string | null
+  alamat?: string | null
   statusPesanan?: $Enums.StatusPesanan
+  statusKasirReview?: string
   sumber?: $Enums.SumberTransaksi
   dibayarPada?: Date | string | null
   dibayarVia?: $Enums.ViaPembayaran | null
@@ -3711,7 +4658,9 @@ export type TransaksiUpdateWithoutMejaInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3737,6 +4686,9 @@ export type TransaksiUpdateWithoutMejaInput = {
   returs?: Prisma.ReturUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateWithoutMejaInput = {
@@ -3758,7 +4710,9 @@ export type TransaksiUncheckedUpdateWithoutMejaInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3780,6 +4734,9 @@ export type TransaksiUncheckedUpdateWithoutMejaInput = {
   returs?: Prisma.ReturUncheckedUpdateManyWithoutTransaksiNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTransaksiNestedInput
   jurnal?: Prisma.JurnalUncheckedUpdateOneWithoutTransaksiNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateOneWithoutTransaksiNestedInput
+  draftHasil?: Prisma.DraftTransaksiUncheckedUpdateOneWithoutTransaksiNestedInput
+  transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiNestedInput
 }
 
 export type TransaksiUncheckedUpdateManyWithoutMejaInput = {
@@ -3801,7 +4758,9 @@ export type TransaksiUncheckedUpdateManyWithoutMejaInput = {
   poinDapat?: Prisma.IntFieldUpdateOperationsInput | number
   metodeBayar?: Prisma.EnumMetodeBayarFieldUpdateOperationsInput | $Enums.MetodeBayar
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statusPesanan?: Prisma.EnumStatusPesananFieldUpdateOperationsInput | $Enums.StatusPesanan
+  statusKasirReview?: Prisma.StringFieldUpdateOperationsInput | string
   sumber?: Prisma.EnumSumberTransaksiFieldUpdateOperationsInput | $Enums.SumberTransaksi
   dibayarPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dibayarVia?: Prisma.NullableEnumViaPembayaranFieldUpdateOperationsInput | $Enums.ViaPembayaran | null
@@ -3830,6 +4789,7 @@ export type TransaksiCountOutputType = {
   pembayaran: number
   returs: number
   printJobs: number
+  transaksiReviewAudit: number
 }
 
 export type TransaksiCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3837,6 +4797,7 @@ export type TransaksiCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   pembayaran?: boolean | TransaksiCountOutputTypeCountPembayaranArgs
   returs?: boolean | TransaksiCountOutputTypeCountRetursArgs
   printJobs?: boolean | TransaksiCountOutputTypeCountPrintJobsArgs
+  transaksiReviewAudit?: boolean | TransaksiCountOutputTypeCountTransaksiReviewAuditArgs
 }
 
 /**
@@ -3877,6 +4838,13 @@ export type TransaksiCountOutputTypeCountPrintJobsArgs<ExtArgs extends runtime.T
   where?: Prisma.PrintJobWhereInput
 }
 
+/**
+ * TransaksiCountOutputType without action
+ */
+export type TransaksiCountOutputTypeCountTransaksiReviewAuditArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TransaksiReviewAuditWhereInput
+}
+
 
 export type TransaksiSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3897,8 +4865,10 @@ export type TransaksiSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   poinDapat?: boolean
   metodeBayar?: boolean
   catatan?: boolean
+  alamat?: boolean
   mejaId?: boolean
   statusPesanan?: boolean
+  statusKasirReview?: boolean
   sumber?: boolean
   dibayarPada?: boolean
   dibayarVia?: boolean
@@ -3925,6 +4895,9 @@ export type TransaksiSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   returs?: boolean | Prisma.Transaksi$retursArgs<ExtArgs>
   printJobs?: boolean | Prisma.Transaksi$printJobsArgs<ExtArgs>
   jurnal?: boolean | Prisma.Transaksi$jurnalArgs<ExtArgs>
+  pesananDraf?: boolean | Prisma.Transaksi$pesananDrafArgs<ExtArgs>
+  draftHasil?: boolean | Prisma.Transaksi$draftHasilArgs<ExtArgs>
+  transaksiReviewAudit?: boolean | Prisma.Transaksi$transaksiReviewAuditArgs<ExtArgs>
   _count?: boolean | Prisma.TransaksiCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["transaksi"]>
 
@@ -3947,8 +4920,10 @@ export type TransaksiSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   poinDapat?: boolean
   metodeBayar?: boolean
   catatan?: boolean
+  alamat?: boolean
   mejaId?: boolean
   statusPesanan?: boolean
+  statusKasirReview?: boolean
   sumber?: boolean
   dibayarPada?: boolean
   dibayarVia?: boolean
@@ -3991,8 +4966,10 @@ export type TransaksiSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   poinDapat?: boolean
   metodeBayar?: boolean
   catatan?: boolean
+  alamat?: boolean
   mejaId?: boolean
   statusPesanan?: boolean
+  statusKasirReview?: boolean
   sumber?: boolean
   dibayarPada?: boolean
   dibayarVia?: boolean
@@ -4035,8 +5012,10 @@ export type TransaksiSelectScalar = {
   poinDapat?: boolean
   metodeBayar?: boolean
   catatan?: boolean
+  alamat?: boolean
   mejaId?: boolean
   statusPesanan?: boolean
+  statusKasirReview?: boolean
   sumber?: boolean
   dibayarPada?: boolean
   dibayarVia?: boolean
@@ -4055,7 +5034,7 @@ export type TransaksiSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TransaksiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "tanggal" | "diterimaPada" | "memberId" | "kasirId" | "shiftId" | "deliveryId" | "ongkir" | "subtotal" | "diskon" | "pajak" | "pajakJenis" | "total" | "poinPakai" | "poinDapat" | "metodeBayar" | "catatan" | "mejaId" | "statusPesanan" | "sumber" | "dibayarPada" | "dibayarVia" | "paymentRef" | "stokTerpotong" | "uangDiterima" | "kembalian" | "cetakOwner" | "cetakKasir" | "idempotencyKey" | "dibuatOffline" | "waktuKlien" | "hpp" | "diskonMember" | "createdAt" | "updatedAt", ExtArgs["result"]["transaksi"]>
+export type TransaksiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "tanggal" | "diterimaPada" | "memberId" | "kasirId" | "shiftId" | "deliveryId" | "ongkir" | "subtotal" | "diskon" | "pajak" | "pajakJenis" | "total" | "poinPakai" | "poinDapat" | "metodeBayar" | "catatan" | "alamat" | "mejaId" | "statusPesanan" | "statusKasirReview" | "sumber" | "dibayarPada" | "dibayarVia" | "paymentRef" | "stokTerpotong" | "uangDiterima" | "kembalian" | "cetakOwner" | "cetakKasir" | "idempotencyKey" | "dibuatOffline" | "waktuKlien" | "hpp" | "diskonMember" | "createdAt" | "updatedAt", ExtArgs["result"]["transaksi"]>
 export type TransaksiInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   member?: boolean | Prisma.Transaksi$memberArgs<ExtArgs>
   kasir?: boolean | Prisma.Transaksi$kasirArgs<ExtArgs>
@@ -4067,6 +5046,9 @@ export type TransaksiInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   returs?: boolean | Prisma.Transaksi$retursArgs<ExtArgs>
   printJobs?: boolean | Prisma.Transaksi$printJobsArgs<ExtArgs>
   jurnal?: boolean | Prisma.Transaksi$jurnalArgs<ExtArgs>
+  pesananDraf?: boolean | Prisma.Transaksi$pesananDrafArgs<ExtArgs>
+  draftHasil?: boolean | Prisma.Transaksi$draftHasilArgs<ExtArgs>
+  transaksiReviewAudit?: boolean | Prisma.Transaksi$transaksiReviewAuditArgs<ExtArgs>
   _count?: boolean | Prisma.TransaksiCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TransaksiIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4097,6 +5079,9 @@ export type $TransaksiPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     returs: Prisma.$ReturPayload<ExtArgs>[]
     printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
     jurnal: Prisma.$JurnalPayload<ExtArgs> | null
+    pesananDraf: Prisma.$PesananDrafPayload<ExtArgs> | null
+    draftHasil: Prisma.$DraftTransaksiPayload<ExtArgs> | null
+    transaksiReviewAudit: Prisma.$TransaksiReviewAuditPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4117,8 +5102,10 @@ export type $TransaksiPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     poinDapat: number
     metodeBayar: $Enums.MetodeBayar
     catatan: string | null
+    alamat: string | null
     mejaId: string | null
     statusPesanan: $Enums.StatusPesanan
+    statusKasirReview: string
     sumber: $Enums.SumberTransaksi
     dibayarPada: Date | null
     dibayarVia: $Enums.ViaPembayaran | null
@@ -4539,6 +5526,9 @@ export interface Prisma__TransaksiClient<T, Null = never, ExtArgs extends runtim
   returs<T extends Prisma.Transaksi$retursArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaksi$retursArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReturPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   printJobs<T extends Prisma.Transaksi$printJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaksi$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   jurnal<T extends Prisma.Transaksi$jurnalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaksi$jurnalArgs<ExtArgs>>): Prisma.Prisma__JurnalClient<runtime.Types.Result.GetResult<Prisma.$JurnalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  pesananDraf<T extends Prisma.Transaksi$pesananDrafArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaksi$pesananDrafArgs<ExtArgs>>): Prisma.Prisma__PesananDrafClient<runtime.Types.Result.GetResult<Prisma.$PesananDrafPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  draftHasil<T extends Prisma.Transaksi$draftHasilArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaksi$draftHasilArgs<ExtArgs>>): Prisma.Prisma__DraftTransaksiClient<runtime.Types.Result.GetResult<Prisma.$DraftTransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  transaksiReviewAudit<T extends Prisma.Transaksi$transaksiReviewAuditArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaksi$transaksiReviewAuditArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiReviewAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4586,8 +5576,10 @@ export interface TransaksiFieldRefs {
   readonly poinDapat: Prisma.FieldRef<"Transaksi", 'Int'>
   readonly metodeBayar: Prisma.FieldRef<"Transaksi", 'MetodeBayar'>
   readonly catatan: Prisma.FieldRef<"Transaksi", 'String'>
+  readonly alamat: Prisma.FieldRef<"Transaksi", 'String'>
   readonly mejaId: Prisma.FieldRef<"Transaksi", 'String'>
   readonly statusPesanan: Prisma.FieldRef<"Transaksi", 'StatusPesanan'>
+  readonly statusKasirReview: Prisma.FieldRef<"Transaksi", 'String'>
   readonly sumber: Prisma.FieldRef<"Transaksi", 'SumberTransaksi'>
   readonly dibayarPada: Prisma.FieldRef<"Transaksi", 'DateTime'>
   readonly dibayarVia: Prisma.FieldRef<"Transaksi", 'ViaPembayaran'>
@@ -5212,6 +6204,68 @@ export type Transaksi$jurnalArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.JurnalInclude<ExtArgs> | null
   where?: Prisma.JurnalWhereInput
+}
+
+/**
+ * Transaksi.pesananDraf
+ */
+export type Transaksi$pesananDrafArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PesananDraf
+   */
+  select?: Prisma.PesananDrafSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PesananDraf
+   */
+  omit?: Prisma.PesananDrafOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PesananDrafInclude<ExtArgs> | null
+  where?: Prisma.PesananDrafWhereInput
+}
+
+/**
+ * Transaksi.draftHasil
+ */
+export type Transaksi$draftHasilArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DraftTransaksi
+   */
+  select?: Prisma.DraftTransaksiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DraftTransaksi
+   */
+  omit?: Prisma.DraftTransaksiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DraftTransaksiInclude<ExtArgs> | null
+  where?: Prisma.DraftTransaksiWhereInput
+}
+
+/**
+ * Transaksi.transaksiReviewAudit
+ */
+export type Transaksi$transaksiReviewAuditArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TransaksiReviewAudit
+   */
+  select?: Prisma.TransaksiReviewAuditSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TransaksiReviewAudit
+   */
+  omit?: Prisma.TransaksiReviewAuditOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TransaksiReviewAuditInclude<ExtArgs> | null
+  where?: Prisma.TransaksiReviewAuditWhereInput
+  orderBy?: Prisma.TransaksiReviewAuditOrderByWithRelationInput | Prisma.TransaksiReviewAuditOrderByWithRelationInput[]
+  cursor?: Prisma.TransaksiReviewAuditWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TransaksiReviewAuditScalarFieldEnum | Prisma.TransaksiReviewAuditScalarFieldEnum[]
 }
 
 /**

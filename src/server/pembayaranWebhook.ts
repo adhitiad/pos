@@ -1,14 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { z } from 'zod'
 
-export const PaymentWebhookSchema = z.object({
-  event: z.enum(['payment.paid', 'payment.failed', 'payment.expired']),
-  orderId: z.string().min(1).max(64),
-  reference: z.string().min(1).max(128),
-  amount: z.number().int().nonnegative().optional(),
-})
-
-export type PaymentWebhookInput = z.infer<typeof PaymentWebhookSchema>
+export { PaymentWebhookSchema } from '#/validations/pembayaran'
 
 // Signature header: `x-payment-signature: sha256=<hex>` atau hex saja.
 export function verifikasiTandaTangan(

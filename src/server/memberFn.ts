@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 
 import { requireOwner } from './auth.js'
 import {
-  memberData,
+  memberPage,
   memberRiwayat,
   createMember,
   hapusMember,
@@ -11,15 +11,16 @@ import {
 import {
   MemberIdSchema,
   MemberInputSchema,
+  MemberQuerySchema,
   UpdateMemberSchema,
 } from '#/validations/member'
 
-export const memberDataFn = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const memberDataFn = createServerFn({ method: 'GET' })
+  .validator((input: unknown) => MemberQuerySchema.parse(input ?? {}))
+  .handler(async ({ data }) => {
     await requireOwner()
-    return memberData()
-  },
-)
+    return memberPage(data)
+  })
 
 export const memberRiwayatFn = createServerFn({ method: 'GET' })
   .validator((input: unknown) => MemberIdSchema.parse(input))

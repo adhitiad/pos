@@ -1,6 +1,8 @@
 import { prisma } from '#/db'
+import type { InputKonfirmasiPembayaran } from '#/types/pesanan'
 import type { HasilTransaksiRingkas } from '#/types/transaksi'
 import { GalatDomain, GalatKonflik } from './galat.js'
+import { kirimAlertFraud } from './fraudAlert.js'
 import { kodeHarian, nomorBerikut } from './penomoran.js'
 import { RUPIAH_PER_POIN } from './poin.js'
 import { AKUN, bangunEntriJurnal } from './postingHitung.js'
@@ -12,12 +14,7 @@ import {
 } from './postingStok.js'
 import { muatHasilTransaksi } from './transaksiIdempotensi.js'
 
-export type InputKonfirmasiPembayaran = {
-  id: string
-  via: 'MANUAL' | 'WEBHOOK'
-  paymentRef?: string
-  jumlahDibayar?: number
-}
+export type { InputKonfirmasiPembayaran } from '#/types/pesanan'
 
 // Konfirmasi pembayaran pesanan online. Stok dipotong, poin diberikan, dan
 // jurnal dibuat tepat sekali di sini. Klaim `dibayarPada` memakai updateMany
@@ -177,12 +174,14 @@ export async function tandaiPesananLunas(
 // stok yang tidak pernah keluar.
 export async function batalkanPesananOnline(
   id: string,
+  aktorId?: string | null,
 ): Promise<{ id: string; statusPesanan: 'DIBATALKAN' }> {
-  return await prisma.$transaction(async (tx) => {
+  const hasil = await prisma.$transaction(async (tx) => {
     const transaksi = await tx.transaksi.findUnique({
       where: { id },
       select: {
         id: true,
+        nomor: true,
         sumber: true,
         dibayarPada: true,
         stokTerpotong: true,
@@ -200,7 +199,7 @@ export async function batalkanPesananOnline(
       )
     }
     if (transaksi.statusPesanan === 'DIBATALKAN') {
-      return { id, statusPesanan: 'DIBATALKAN' as const }
+      return { id, nomor: transaksi.nomor, baru: false }
     }
     if (transaksi.stokTerpotong) {
       await kembalikanStok(tx, await kebutuhanStokTransaksi(tx, id))
@@ -209,6 +208,16 @@ export async function batalkanPesananOnline(
       where: { id },
       data: { statusPesanan: 'DIBATALKAN', stokTerpotong: false },
     })
-    return { id, statusPesanan: 'DIBATALKAN' as const }
+    return { id, nomor: transaksi.nomor, baru: true }
   })
+
+  if (hasil.baru) {
+    void kirimAlertFraud({
+      jenis: 'transaksi.dibatalkan',
+      pesan: `Pesanan online ${hasil.nomor} dibatalkan sebelum dibayar`,
+      aktorId,
+      entitasId: hasil.id,
+    })
+  }
+  return { id: hasil.id, statusPesanan: 'DIBATALKAN' as const }
 }

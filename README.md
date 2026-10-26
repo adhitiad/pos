@@ -13,7 +13,8 @@ Indeks dokumentasi: [`docs/README.md`](docs/README.md) · PRD manusia:
 ## Prasyarat
 
 - Bun 1.x (`bun --version`)
-- PostgreSQL lokal (service `postgresql-x64-18`, database `pos`)
+- PostgreSQL 15+ — lokal **atau** Neon (connection string pooled untuk app,
+  unpooled untuk `db:seed`/`db:push`)
 
 ## Mulai
 
@@ -24,6 +25,9 @@ bun run db:migrate:deploy
 bun run db:seed
 bun --bun run dev   # http://localhost:3000
 ```
+
+> `db:migrate` (mode dev) membutuhkan `SHADOW_DATABASE_URL`. Untuk Neon, pakai
+> `db:migrate:deploy` atau siapkan database shadow terpisah.
 
 Setup Google OAuth langkah-demi-langkah: `docs/setup-google-oauth.md`.
 
@@ -111,21 +115,21 @@ Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` di
 
 ## Skrip
 
-| Perintah                                                         | Fungsi                                                           |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `bun --bun run dev`                                              | dev server :3000                                                 |
-| `bun --bun run build`                                            | production build                                                 |
-| `bun run generate-routes`                                        | regenerasi route tree (wajib tiap tambah route)                  |
-| `bun run db:migrate` / `db:migrate:deploy` / `db:migrate:status` | buat migration (dev), apply (dev/prod/CI), cek status            |
-| `bun run db:migrate:drift`                                       | cek schema vs migration (butuh `SHADOW_DATABASE_URL`)            |
-| `bun run db:generate` / `db:seed` / `db:studio`                  | generate client, seed data, studio                               |
-| `bun run db:push`                                                | sinkron cepat tanpa migration (dev sekali-pakai)                 |
-| `bun run db:reset`                                               | isi ulang data demo (setara `db:seed`)                           |
-| `bun run lint` / `bun run format` / `bun run check`              | eslint / prettier --write / prettier --check                     |
-| `bun run docs:sync` / `bun run docs:check`                       | perbarui / cek snapshot PRD dari `DAFTAR-TUGAS.md`               |
-| `bun run perf:budget`                                            | cek anggaran bundle setelah `bun --bun run build`                |
-| `bun run test:vitest` / `bun run test`                           | unit (vitest, `tests/vitest/**`, dotenv `.env.local`)            |
-| `bun run test:e2e`                                               | smoke browser (playwright + chromium, `tests/e2e/**`, port 3100) |
+| Perintah                                                         | Fungsi                                                          |
+| ---------------------------------------------------------------- | --------------------------------------------------------------- |
+| `bun --bun run dev`                                              | dev server :3000                                                |
+| `bun --bun run build`                                            | production build                                                |
+| `bun run generate-routes`                                        | regenerasi route tree (wajib tiap tambah route)                 |
+| `bun run db:migrate` / `db:migrate:deploy` / `db:migrate:status` | buat migration (dev), apply (dev/prod/CI), cek status           |
+| `bun run db:migrate:drift`                                       | cek schema vs migration (butuh `SHADOW_DATABASE_URL`)           |
+| `bun run db:generate` / `db:seed` / `db:studio`                  | generate client, seed data, studio                              |
+| `bun run db:push`                                                | sinkron cepat tanpa migration (dev sekali-pakai)                |
+| `bun run db:reset`                                               | isi ulang data demo (setara `db:seed`)                          |
+| `bun run lint` / `bun run format` / `bun run check`              | eslint / prettier --write / prettier --check                    |
+| `bun run docs:sync` / `bun run docs:check`                       | perbarui / cek snapshot PRD dari `DAFTAR-TUGAS.md`              |
+| `bun run perf:budget`                                            | cek anggaran bundle setelah `bun --bun run build`               |
+| `bun run test:vitest` / `bun run test`                           | unit (vitest, `tests/vitest/**`, dotenv `.env.local`)           |
+| `bun run test:e2e`                                               | smoke browser (playwright: chromium + webkit mobile, port 3100) |
 
 Setelah mengubah `prisma/schema.prisma`: jalankan `bun run db:migrate` (dev) atau
 `bun run db:migrate:deploy` (CI/prod) **sebelum** `bun run test` — unit test
@@ -162,10 +166,13 @@ pakai database yang sama, bukan mock.
 - Checklist uji manual web + backend (3–4 hari, sebelum lanjut ke app Expo):
   [`docs/TEST-MANUAL.md`](docs/TEST-MANUAL.md).
 - Panduan integrasi mobile (Expo): [`docs/EXPO.md`](docs/EXPO.md).
-- Laporan audit terbaru: [`audit-2026-10-19-0848.md`](audit-2026-10-19-0848.md).
-  Riwayat: `audit-2026-10-18-2140.md`, `audit-2026-10-18.md`. Berkas ini adalah
-  dokumen riwayat (dibaca dari README/DAFTAR-TUGAS) — **di-commit**, bukan di-ignore.
-- Pindai kode mati: `bunx knip` — bersih (sisa hanya `prisma/*` generated yang aman diabaikan).
+- Laporan audit lokal (`audit-*.md`, `audit-*.json`, `audit-*.html`) adalah
+  artefak riwayat dan **di-ignore** — tidak ikut repo. Ringkasan temuan yang
+  masih berlaku ada di `docs/DAFTAR-TUGAS.md` dan `SECURITY.md`.
+- Pindai kode mati: `bunx knip` — entry point nyata sudah dikonfigurasi di
+  `knip.json`, jadi file yatim dan ekspor tak terpakai terdeteksi. Ekspor
+  `ui/*` yang belum dipakai adalah cadangan registry shadcn (sengaja tidak
+  dihapus).
 - Operasional produksi (backup/PITR Neon, uptime, deploy GitHub ke Vercel/Netlify): [`docs/OPERASIONAL.md`](docs/OPERASIONAL.md).
 
 ## Diagram Alur
@@ -185,7 +192,7 @@ src/
   server/*Fn.ts  wrapper createServerFn (sering hanya ini yang diimpor route)
   validations/   semua skema Zod (satu sumber kebenaran input)
   types/         semua type/interface TypeScript (*.d.ts)
-  hooks/         hook React bersama (useAntreanOffline, useFormKasir, use-mobile)
+  hooks/         hook React bersama (useControlTabel, useAntreanOffline, useFormKasir, useIsMobile, useIdentitasApp, useLogoUrl, useNotifikasiDibaca, useSegarkanNotifikasi)
   lib/           auth, auth-client, cloudinary, kasir-store, kasir-total, csp, logger, outbox, printer
   components/    UI domain (kasir, produk, pesanan) + ui/ shadcn
   prisma/        schema.prisma, seed.ts

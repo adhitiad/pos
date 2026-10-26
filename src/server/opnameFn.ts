@@ -1,9 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
-import { z } from 'zod'
 
 import { requireKasir } from './auth.js'
-import { simpanOpname, dataOpname, daftarMasterAktif } from './opname.js'
-import { SimpanOpnameSchema, DataOpnameSchema } from '#/validations/opname'
+import { simpanOpname, daftarMasterAktif } from './opname.js'
+import { SimpanOpnameSchema, JenisMasterSchema } from '#/validations/opname'
 
 // ─── Server function Stok Opname (kasir + owner) ───
 
@@ -15,17 +14,8 @@ export const simpanOpnameFn = createServerFn({ method: 'POST' })
   })
 
 export const masterAktifFn = createServerFn({ method: 'GET' })
-  .validator((input: unknown) =>
-    z.object({ jenis: z.enum(['PRODUK', 'BAHAN']) }).parse(input),
-  )
+  .validator((input: unknown) => JenisMasterSchema.parse(input))
   .handler(async ({ data }) => {
     await requireKasir()
     return daftarMasterAktif(data.jenis)
-  })
-
-export const dataOpnameFn = createServerFn({ method: 'GET' })
-  .validator((input: unknown) => DataOpnameSchema.parse(input))
-  .handler(async ({ data }) => {
-    await requireKasir()
-    return dataOpname(data)
   })

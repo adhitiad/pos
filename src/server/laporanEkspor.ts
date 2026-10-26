@@ -29,9 +29,11 @@ export function eksporCsv(l: LaporanPenjualan): EksporHasil {
   const rows: (string | number)[][] = [
     ['Laporan Penjualan'],
     ['Dari', l.dari, 'Sampai', l.sampai, 'Kelompok', l.grup],
+    l.dimensi ? ['Dimensi', l.dimensi] : [],
     [],
     ['Ringkasan'],
     ['Jumlah transaksi', l.ringkasan.jumlahTransaksi],
+    ['Qty terjual', l.ringkasan.qtyTerjual],
     ['Omzet (subtotal - diskon)', l.ringkasan.omzet],
     ['HPP', l.ringkasan.hpp],
     ['Laba kotor', l.ringkasan.labaKotor],
@@ -50,6 +52,17 @@ export function eksporCsv(l: LaporanPenjualan): EksporHasil {
       r.labaKotor,
       r.total,
     ]),
+  ]
+
+  if (l.rekapDimensi) {
+    rows.push([], [`Rekap per ${l.dimensi}`])
+    rows.push(['Dimensi', 'Label', 'Transaksi', 'Omzet', 'Total'])
+    for (const r of l.rekapDimensi) {
+      rows.push([r.kunci, r.label, r.jumlahTransaksi, r.omzet, r.total])
+    }
+  }
+
+  rows.push(
     [],
     ['Produk terlaris'],
     ['Produk', 'Qty', 'Omzet'],
@@ -58,7 +71,7 @@ export function eksporCsv(l: LaporanPenjualan): EksporHasil {
     ['Performa kasir'],
     ['Kasir', 'Transaksi', 'Omzet'],
     ...l.performaKasir.map((k) => [k.nama, k.jumlahTransaksi, k.omzet]),
-  ]
+  )
   return {
     nama: namaFile(l, 'csv'),
     tipe: 'text/csv; charset=utf-8',
@@ -74,9 +87,11 @@ export function eksporXlsx(l: LaporanPenjualan): EksporHasil {
   const wsRingkasan = XLSX.utils.aoa_to_sheet([
     ['Laporan Penjualan'],
     ['Dari', l.dari, 'Sampai', l.sampai, 'Kelompok', l.grup],
+    l.dimensi ? ['Dimensi', l.dimensi] : [],
     [],
     ['Metrik', 'Nilai'],
     ['Jumlah transaksi', l.ringkasan.jumlahTransaksi],
+    ['Qty terjual', l.ringkasan.qtyTerjual],
     ['Omzet (subtotal - diskon)', l.ringkasan.omzet],
     ['HPP', l.ringkasan.hpp],
     ['Laba kotor', l.ringkasan.labaKotor],
@@ -99,6 +114,20 @@ export function eksporXlsx(l: LaporanPenjualan): EksporHasil {
     ]),
   ])
   XLSX.utils.book_append_sheet(wb, wsRekap, 'Rekap')
+
+  if (l.rekapDimensi) {
+    const wsDimensi = XLSX.utils.aoa_to_sheet([
+      ['Dimensi', 'Label', 'Transaksi', 'Omzet', 'Total'],
+      ...l.rekapDimensi.map((r) => [
+        r.kunci,
+        r.label,
+        r.jumlahTransaksi,
+        r.omzet,
+        r.total,
+      ]),
+    ])
+    XLSX.utils.book_append_sheet(wb, wsDimensi, `Rekap ${l.dimensi}`)
+  }
 
   const wsProduk = XLSX.utils.aoa_to_sheet([
     ['Produk', 'Qty', 'Omzet'],
@@ -178,13 +207,19 @@ export async function eksporPdf(l: LaporanPenjualan): Promise<EksporHasil> {
       h(
         Text,
         { style: gaya.sub },
-        `Periode ${l.dari} s/d ${l.sampai} — kelompok ${l.grup}`,
+        `Periode ${l.dari} s/d ${l.sampai} — kelompok ${l.grup}${
+          l.dimensi ? ` — dimensi ${l.dimensi}` : ''
+        }`,
       ),
 
       h(Text, { style: gaya.h2 }, 'Ringkasan'),
       baris([
         { teks: 'Jumlah transaksi' },
         { teks: String(l.ringkasan.jumlahTransaksi), rata: true },
+      ]),
+      baris([
+        { teks: 'Qty terjual' },
+        { teks: String(l.ringkasan.qtyTerjual), rata: true },
       ]),
       baris([
         { teks: 'Omzet (subtotal - diskon)' },
@@ -220,6 +255,31 @@ export async function eksporPdf(l: LaporanPenjualan): Promise<EksporHasil> {
           { teks: rupiah(r.labaKotor), rata: true },
         ]),
       ),
+
+      ...(l.rekapDimensi
+        ? [
+            h(Text, { style: gaya.h2 }, `Rekap per ${l.dimensi}`),
+            baris(
+              [
+                { teks: 'Dimensi', tebal: true },
+                { teks: 'Label', tebal: true },
+                { teks: 'Trx', rata: true, tebal: true },
+                { teks: 'Omzet', rata: true, tebal: true },
+                { teks: 'Total', rata: true, tebal: true },
+              ],
+              true,
+            ),
+            ...l.rekapDimensi.map((r) =>
+              baris([
+                { teks: r.kunci },
+                { teks: r.label },
+                { teks: String(r.jumlahTransaksi), rata: true },
+                { teks: rupiah(r.omzet), rata: true },
+                { teks: rupiah(r.total), rata: true },
+              ]),
+            ),
+          ]
+        : []),
 
       h(Text, { style: gaya.h2 }, 'Produk terlaris'),
       baris(

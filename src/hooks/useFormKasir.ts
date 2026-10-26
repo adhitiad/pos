@@ -6,7 +6,8 @@ import { toast } from 'sonner'
 import { cartClear } from '#/lib/kasir-store'
 import { hitungTotal } from '#/lib/kasir-total'
 import { m } from '#/paraglide/messages'
-import { postingTransaksiFn } from '#/server/transaksiFn'
+import { createDraftTransaksiFn } from '#/server/draftTransaksiFn'
+import { reviewTransaksiFn } from '#/server/reviewTransaksiFn'
 import type {
   BarisBayar,
   BarisKeranjang,
@@ -123,7 +124,25 @@ export function useFormKasir({
       }
       setPending(true)
       try {
-        const hasil = await postingTransaksiFn({ data: payload })
+        // A1 two-phase: kasir membuat draft, lalu mereview (self-approve) untuk
+        // memposting. Keputusan dicatat ke audit terpisah (TransaksiReviewAudit).
+        const draft = await createDraftTransaksiFn({ data: payload })
+        const reviewed = await reviewTransaksiFn({
+          data: {
+            draftId: draft.id,
+            keputusan: 'DISETUJUI',
+            catatan: value.catatan || undefined,
+          },
+        })
+        // Kebijakan owner: draft tersimpan & masuk antrean, belum diposting.
+        if (reviewed.keputusan === 'MENUNGGU') {
+          setelahSukses()
+          toast.info(m.review_menunggu_owner())
+          await router.invalidate()
+          return
+        }
+        const hasil = reviewed.hasil
+        if (!hasil) throw new Error('Gagal memposting transaksi')
         setStruk({
           nomor: hasil.nomor,
           tanggal: hasil.tanggal,

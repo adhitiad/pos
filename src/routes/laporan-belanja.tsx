@@ -33,7 +33,7 @@ import {
   PaginasiTabel,
   PencarianTabel,
   useKontrolTabel,
-} from '#/components/ui/table-controls'
+} from '#/hooks/table-controls'
 
 const rupiah = (n: number) =>
   new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(n)

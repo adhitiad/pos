@@ -50,6 +50,16 @@ describe('pengaturan', () => {
     expect((await pengaturanData()).modeFnb).toBe(true)
   })
 
+  it('kasir tidak boleh mengubah pengaturan non-operasional', async () => {
+    await expect(
+      setPengaturan(
+        { kunci: 'nama_toko', nilai: 'Diubah Kasir' },
+        undefined,
+        'KASIR',
+      ),
+    ).rejects.toThrow('FORBIDDEN')
+  })
+
   it('nilai default saat baris belum ada', async () => {
     await prisma.pengaturan.deleteMany({ where: { kunci: 'nama_toko' } })
     expect((await pengaturanData()).namaToko).toBe('POS')

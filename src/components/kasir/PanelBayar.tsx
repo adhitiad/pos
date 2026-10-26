@@ -218,7 +218,7 @@ export default function PanelBayar({
                         form.setFieldValue('tukarPoin', 0)
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger aria-label={m.kasir_pilih_member()}>
                         <SelectValue placeholder={m.kasir_pilih_member()} />
                       </SelectTrigger>
                       <SelectContent>
@@ -268,7 +268,7 @@ export default function PanelBayar({
                 value={field.state.value}
                 onValueChange={field.handleChange}
               >
-                <SelectTrigger>
+                <SelectTrigger aria-label={m.kasir_delivery()}>
                   <SelectValue placeholder={m.kasir_no_delivery()} />
                 </SelectTrigger>
                 <SelectContent>
@@ -305,6 +305,7 @@ export default function PanelBayar({
                     {m.kasir_tukar()} ({field.state.value}/{maks})
                   </Label>
                   <Slider
+                    aria-label={m.kasir_tukar()}
                     value={[field.state.value]}
                     max={Math.max(maks, 1)}
                     step={1}
@@ -328,7 +329,7 @@ export default function PanelBayar({
                   value={field.state.value}
                   onValueChange={field.handleChange}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger aria-label={m.kasir_meja()}>
                     <SelectValue placeholder={m.kasir_pilih_meja()} />
                   </SelectTrigger>
                   <SelectContent>
@@ -362,8 +363,9 @@ export default function PanelBayar({
         <form.Field name="catatan">
           {(field) => (
             <div className="space-y-1">
-              <Label>{m.kasir_note()}</Label>
+              <Label htmlFor="kasir-catatan">{m.kasir_note()}</Label>
               <Textarea
+                id="kasir-catatan"
                 rows={2}
                 value={field.state.value}
                 onChange={(e) => {

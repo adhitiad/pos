@@ -25,8 +25,9 @@ export default function DiskonField({
     peran === 'KASIR' ? Math.floor((subtotal * persen) / 100) : undefined
   return (
     <div className="space-y-1">
-      <Label>{m.kasir_discount()}</Label>
+      <Label htmlFor="kasir-diskon">{m.kasir_discount()}</Label>
       <Input
+        id="kasir-diskon"
         type="number"
         min={0}
         max={maks}

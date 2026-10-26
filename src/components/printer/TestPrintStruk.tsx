@@ -4,7 +4,7 @@ import { Printer, SkipForward } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { m } from '#/paraglide/messages'
-import { useIdentitasApp } from '#/lib/identitas'
+import { useIdentitasApp } from '#/hooks/identitas'
 import { cetakEscpos, dukunganSerial } from '#/lib/printer'
 import { printerTerpilih } from '#/lib/printer-scan'
 import { barisStrukUji, strukUji } from '#/lib/struk-uji'
@@ -15,7 +15,7 @@ import {
   ukuranKertasDari,
 } from '#/lib/ukuran-kertas'
 import { pengaturanDataFn } from '#/server/pengaturanFn'
-import type { IdUkuranKertasTermal } from '#/lib/ukuran-kertas'
+import type { IdUkuranKertasTermal } from '#/types/printer'
 
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'

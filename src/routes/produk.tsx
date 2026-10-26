@@ -1,5 +1,10 @@
-import { useMemo, useState } from 'react'
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
 import { m } from '#/paraglide/messages'
@@ -32,6 +37,8 @@ import type { ProdukRow } from '#/types/produk'
 import { ProdukForm, formKosong } from '#/components/produk/ProdukForm'
 import { ProdukKategori } from '#/components/produk/ProdukKategori'
 import { ProdukHapusDialog } from '#/components/produk/ProdukHapusDialog'
+import { ProdukQuerySchema } from '#/validations/produk'
+import type { ProdukQueryInput } from '#/validations/produk'
 import {
   unggahFotoProduk,
   unduhDariCloudinary,
@@ -39,24 +46,24 @@ import {
 } from '#/lib/cloudinary'
 
 export const Route = createFileRoute('/produk')({
+  validateSearch: (search) => ProdukQuerySchema.parse(search),
   beforeLoad: async () => {
     const user = await getSessionFn()
     if (!user) throw redirect({ to: '/login' })
     if (!punyaAkses(user.role, 'manajerial'))
       throw redirect({ to: user.role === 'KASIR' ? '/kasir' : '/' })
   },
-  loader: async () => produkDataFn(),
+  loaderDeps: ({ search }) => search,
+  loader: async ({ deps }) => produkDataFn({ data: deps }),
   component: Produk,
 })
 
 function Produk() {
   const data = Route.useLoaderData()
+  const search = Route.useSearch()
+  const navigate = useNavigate()
   const router = useRouter()
-  const [cari, setCari] = useState('')
-  const [filterStatus, setFilterStatus] = useState<
-    'semua' | 'aktif' | 'nonaktif'
-  >('semua')
-  const [filterKategori, setFilterKategori] = useState('semua')
+  const [cari, setCari] = useState(search.q ?? '')
   const [panel, setPanel] = useState<null | { id: string | null }>(null)
   const [resep, setResep] = useState<{ bahanId: string; jumlah: number }[]>([])
   const [hapusId, setHapusId] = useState<string | null>(null)
@@ -64,22 +71,55 @@ function Produk() {
   const [pending, setPending] = useState(false)
   const [fileFoto, setFileFoto] = useState<File | null>(null)
 
-  const baris = useMemo(() => {
-    const q = cari.trim().toLowerCase()
-    return data.produk.filter((p) => {
-      if (filterStatus === 'aktif' && !p.aktif) return false
-      if (filterStatus === 'nonaktif' && p.aktif) return false
-      if (filterKategori !== 'semua' && p.kategoriId !== filterKategori)
-        return false
-      if (!q) return true
-      return (
-        p.nama.toLowerCase().includes(q) ||
-        (p.sku ?? '').toLowerCase().includes(q) ||
-        (p.barcode ?? '').toLowerCase().includes(q) ||
-        (p.kategoriNama ?? '').toLowerCase().includes(q)
-      )
+  const baris = data.produk
+
+  // Search terkini untuk timer debounce (hindari menimpa navigasi lain).
+  const searchRef = useRef(search)
+  useEffect(() => {
+    searchRef.current = search
+  })
+  // Id timer debounce; dikirim ulang/batalkan oleh kontrol tabel.
+  const timerRef: { current: ReturnType<typeof setTimeout> | null } =
+    useRef(null)
+
+  // Pencarian diketik lokal lalu dikirim ke server setelah jeda singkat.
+  useEffect(() => {
+    const teks = cari.trim()
+    if (teks === (search.q ?? '')) return
+    const timer = setTimeout(() => {
+      const terkini = searchRef.current
+      // Navigasi lain (urut/halaman) bisa terjadi saat menunggu; jika teks
+      // telah terkirim olehnya, timer ini tidak perlu menulis lagi.
+      if (teks === (terkini.q ?? '')) return
+      void navigate({
+        to: '/produk',
+        search: { ...terkini, q: teks || undefined, skip: 0 },
+        replace: true,
+      })
+    }, 300)
+    timerRef.current = timer
+    return () => {
+      clearTimeout(timer)
+      timerRef.current = null
+    }
+  }, [cari, search.q, navigate])
+
+  // Seluruh kontrol tabel ikut membawa teks pencarian terbaru agar navigasi
+  // yang berlangsung sebelum debounce tidak membuang teks yang baru diketik.
+  const kirim = (patch: Partial<ProdukQueryInput>) => {
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+    void navigate({
+      to: '/produk',
+      search: {
+        ...searchRef.current,
+        q: cari || undefined,
+        ...patch,
+      },
     })
-  }, [data.produk, cari, filterStatus, filterKategori])
+  }
 
   const muatUlang = async () => {
     await router.invalidate()
@@ -280,10 +320,13 @@ function Produk() {
           className="max-w-sm"
         />
         <Select
-          value={filterStatus}
-          onValueChange={(nilai) =>
-            setFilterStatus(nilai as 'semua' | 'aktif' | 'nonaktif')
-          }
+          value={search.status}
+          onValueChange={(nilai) => {
+            void kirim({
+              status: nilai as 'semua' | 'aktif' | 'nonaktif',
+              skip: 0,
+            })
+          }}
         >
           <SelectTrigger
             className="w-[160px]"
@@ -297,7 +340,15 @@ function Produk() {
             <SelectItem value="nonaktif">{m.produk_nonaktif()}</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={filterKategori} onValueChange={setFilterKategori}>
+        <Select
+          value={search.kategoriId ?? 'semua'}
+          onValueChange={(nilai) => {
+            void kirim({
+              kategoriId: nilai === 'semua' ? undefined : nilai,
+              skip: 0,
+            })
+          }}
+        >
           <SelectTrigger
             className="w-[180px]"
             aria-label={m.produk_filter_kategori()}
@@ -316,7 +367,7 @@ function Produk() {
         <span className="text-sm text-muted-foreground">
           {m.produk_menampilkan({
             tampil: baris.length,
-            total: data.produk.length,
+            total: data.total,
           })}
         </span>
       </div>
@@ -343,7 +394,52 @@ function Produk() {
         />
       )}
 
-      <ProdukTabel baris={baris} columns={columns} />
+      <ProdukTabel
+        baris={baris}
+        columns={columns}
+        total={data.total}
+        pagination={{
+          pageIndex: Math.floor(search.skip / search.take),
+          pageSize: search.take,
+        }}
+        onPaginationChange={(updater) => {
+          const sekarang = {
+            pageIndex: Math.floor(search.skip / search.take),
+            pageSize: search.take,
+          }
+          const baru =
+            typeof updater === 'function' ? updater(sekarang) : updater
+          kirim({
+            take: baru.pageSize,
+            skip: baru.pageIndex * baru.pageSize,
+          })
+        }}
+        sorting={[
+          {
+            id: search.sort === 'kategori' ? 'kategoriNama' : search.sort,
+            desc: search.arah === 'desc',
+          },
+        ]}
+        onSortingChange={(updater) => {
+          const sekarang = [
+            {
+              id: search.sort === 'kategori' ? 'kategoriNama' : search.sort,
+              desc: search.arah === 'desc',
+            },
+          ]
+          const baru =
+            typeof updater === 'function' ? updater(sekarang) : updater
+          const pertama = baru[0] ?? sekarang[0]
+          const sort = (
+            pertama.id === 'kategoriNama' ? 'kategori' : pertama.id
+          ) as 'nama' | 'sku' | 'harga' | 'stok' | 'aktif' | 'kategori'
+          kirim({
+            sort,
+            arah: pertama.desc ? 'desc' : 'asc',
+            skip: 0,
+          })
+        }}
+      />
 
       <ProdukHapusDialog
         terbuka={hapusId !== null}

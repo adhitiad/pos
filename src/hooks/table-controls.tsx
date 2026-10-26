@@ -27,12 +27,11 @@ import {
   SelectValue,
 } from '#/components/ui/select'
 import { TableHead } from '#/components/ui/table'
+import type { PengurutTabel } from '#/types/table'
+
+export type { PengurutTabel } from '#/types/table'
 
 export const UKURAN_HALAMAN_TABEL = [10, 25, 50, 100] as const
-
-type NilaiUrut = string | number | Date | null | undefined
-
-export type PengurutTabel<T> = Partial<Record<string, (baris: T) => NilaiUrut>>
 
 function daftarHalaman(aktif: number, total: number): Array<number | '…'> {
   if (total <= 7)

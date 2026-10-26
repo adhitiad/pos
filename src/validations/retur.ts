@@ -1,11 +1,18 @@
 import { z } from 'zod'
 
-// Item yang dikembalikan dalam satu retur: produk + qty (snapshot harga
-// diambil dari item transaksi asal di sisi server).
-export const ReturItemInputSchema = z.object({
-  produkId: z.string().min(1),
-  qty: z.number().int().positive(),
-})
+// Item yang dikembalikan dalam satu retur: baris transaksi asal + qty.
+// `transaksiItemId` adalah identitas baris; `produkId` dipertahankan sebagai
+// alias lama (selama ini UI mengirim ID baris transaksi di field ini).
+export const ReturItemInputSchema = z
+  .object({
+    transaksiItemId: z.string().min(1).optional(),
+    produkId: z.string().min(1).optional(),
+    qty: z.number().int().positive(),
+  })
+  .refine((v) => Boolean(v.transaksiItemId ?? v.produkId), {
+    message: 'Item retur wajib menyertakan transaksiItemId atau produkId',
+    path: ['transaksiItemId'],
+  })
 
 // Buat retur pasca-jual. Referensi transaksi asal wajib; minimal 1 item
 // dikembalikan; alasan wajib ditulis (jejak audit).
@@ -30,3 +37,6 @@ export const DataReturSchema = z.object({
 })
 
 export type DataReturInput = z.infer<typeof DataReturSchema>
+
+// Detail transaksi asal untuk form retur.
+export const DetailTransaksiSchema = z.object({ id: z.string().min(1) })

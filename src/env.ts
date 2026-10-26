@@ -4,6 +4,12 @@ import { z } from 'zod'
 
 config({ path: '.env.local' })
 
+// Vercel selalu berada di belakang proxy-nya dan menulis ulang
+// X-Forwarded-For. Bila TRUST_PROXY tidak diset, aktifkan otomatis di Vercel
+// agar rate limit auth membaca IP klien, bukan satu bucket global
+// "no-trusted-ip". Set TRUST_PROXY=false untuk mematikan eksplisit.
+const trustProxyDefault = process.env.VERCEL === '1'
+
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
@@ -33,7 +39,9 @@ export const env = createEnv({
     TRUST_PROXY: z
       .string()
       .optional()
-      .transform((v) => v === 'true' || v === '1'),
+      .transform((v) =>
+        v === undefined ? trustProxyDefault : v === 'true' || v === '1',
+      ),
     // Jumlah proxy tepercaya yang MENAMBAHKAN entri X-Forwarded-For.
     // XFF dibaca dari kanan; Vercel = 1 hop. Naikkan bila ada proxy tambahan.
     TRUST_PROXY_HOPS: z.coerce.number().int().min(1).max(10).default(1),
@@ -60,10 +68,17 @@ export const env = createEnv({
     // Secret HMAC untuk webhook pembayaran (payment gateway mendatang).
     // Kosong = endpoint webhook menolak semua permintaan.
     PAYMENT_WEBHOOK_SECRET: z.string().min(16).optional(),
+    // Secret untuk route cron (/api/cron/*). Vercel mengirim header
+    // Authorization: Bearer <CRON_SECRET>. Kosong = cron menolak semua.
+    CRON_SECRET: z.string().min(16).optional(),
 
     // GlitchTip (Sentry-compatible) DSN untuk error tracking produksi.
     // Kosong = error tracking tidak aktif, hanya log pino lokal.
     GLITCHTIP_DSN: z.string().url().optional(),
+
+    // Webhook opsional untuk alert fraud (pembatalan, retur, perubahan
+    // pengaturan sensitif). Kosong = alert hanya masuk log pino level warn.
+    FRAUD_WEBHOOK_URL: z.string().url().optional(),
 
     // Kredensial uji restore backup (hanya untuk skrip sekali-pakai di Temp).
     // Tidak pernah digunakan oleh runtime aplikasi.
@@ -102,7 +117,9 @@ export const env = createEnv({
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
     CLOUDINARY_FOLDER: process.env.CLOUDINARY_FOLDER,
     PAYMENT_WEBHOOK_SECRET: process.env.PAYMENT_WEBHOOK_SECRET,
+    CRON_SECRET: process.env.CRON_SECRET,
     GLITCHTIP_DSN: process.env.GLITCHTIP_DSN,
+    FRAUD_WEBHOOK_URL: process.env.FRAUD_WEBHOOK_URL,
     BACKUP_RESTORE_USER: process.env.BACKUP_RESTORE_USER,
     BACKUP_RESTORE_PASS: process.env.BACKUP_RESTORE_PASS,
   },

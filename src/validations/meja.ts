@@ -19,5 +19,9 @@ export const ToggleMejaSchema = z.object({
   aktif: z.boolean(),
 })
 
+export const QrMejaSchema = z.object({
+  id: z.string().min(1).max(64),
+})
+
 export type MejaInput = z.infer<typeof MejaInputSchema>
 export type UpdateMejaInput = z.infer<typeof UpdateMejaSchema>

@@ -21,6 +21,17 @@ export const Route = createFileRoute('/api/v1/laporan-penjualan')({
             dari: q.get('dari'),
             sampai: q.get('sampai'),
             grup: q.get('grup') ?? 'harian',
+            dimensi: q.get('dimensi') || undefined,
+            kategoriId: q.get('kategoriId') || undefined,
+            kasirId: q.get('kasirId') || undefined,
+            shiftId: q.get('shiftId') || undefined,
+            memberId: q.get('memberId') || undefined,
+            metodeBayar: q.get('metodeBayar') || undefined,
+            mejaId: q.get('mejaId') || undefined,
+            deliveryId: q.get('deliveryId') || undefined,
+            sumber: q.get('sumber') || undefined,
+            statusPesanan: q.get('statusPesanan') || undefined,
+            pajakJenis: q.get('pajakJenis') || undefined,
           })
           const laporan = await laporanPenjualan(data)
 

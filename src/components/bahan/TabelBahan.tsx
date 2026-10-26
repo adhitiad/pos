@@ -3,11 +3,7 @@ import type { BahanRow } from '#/types/bahan'
 
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
-import {
-  HeaderUrutTabel,
-  PaginasiTabel,
-  useKontrolTabel,
-} from '#/components/ui/table-controls'
+import { HeaderUrutTabel, PaginasiTabel } from '#/hooks/table-controls'
 import {
   Table,
   TableBody,
@@ -17,27 +13,37 @@ import {
   TableRow,
 } from '#/components/ui/table'
 
+type KunciUrutBahan = 'nama' | 'satuan' | 'stok' | 'minimum'
+
 export default function TabelBahan({
   baris,
+  sort,
+  arah,
+  total,
+  take,
+  skip,
+  onUrut,
+  onHalaman,
+  onUkuranHalaman,
   onTambahStok,
   onEdit,
   onHapus,
 }: {
   baris: BahanRow[]
+  sort: KunciUrutBahan
+  arah: 'asc' | 'desc'
+  total: number
+  take: number
+  skip: number
+  onUrut: (kunci: string) => void
+  onHalaman: (halaman: number) => void
+  onUkuranHalaman: (ukuran: number) => void
   onTambahStok: (id: string) => void
   onEdit: (row: BahanRow) => void
   onHapus: (id: string) => void
 }) {
-  const kontrol = useKontrolTabel(
-    baris,
-    (b) => `${b.nama} ${b.satuan} ${b.jenis ?? ''}`,
-    {
-      nama: (b) => b.nama,
-      satuan: (b) => b.satuan,
-      stok: (b) => b.stok,
-      minimum: (b) => b.stokMinimum,
-    },
-  )
+  const halamanAktif = Math.floor(skip / take)
+  const jumlahHalaman = Math.max(1, Math.ceil(total / take))
 
   return (
     <div className="-mx-2 overflow-x-auto">
@@ -46,34 +52,34 @@ export default function TabelBahan({
           <TableRow>
             <HeaderUrutTabel
               kunci="nama"
-              aktif={kontrol.kunciUrut === 'nama'}
-              arah={kontrol.arahUrut}
-              onUrut={kontrol.toggleUrut}
+              aktif={sort === 'nama'}
+              arah={arah}
+              onUrut={onUrut}
             >
               {m.bahan_nama()}
             </HeaderUrutTabel>
             <HeaderUrutTabel
               kunci="satuan"
-              aktif={kontrol.kunciUrut === 'satuan'}
-              arah={kontrol.arahUrut}
-              onUrut={kontrol.toggleUrut}
+              aktif={sort === 'satuan'}
+              arah={arah}
+              onUrut={onUrut}
             >
               {m.bahan_satuan()}
             </HeaderUrutTabel>
             <HeaderUrutTabel
               kunci="stok"
-              aktif={kontrol.kunciUrut === 'stok'}
-              arah={kontrol.arahUrut}
-              onUrut={kontrol.toggleUrut}
+              aktif={sort === 'stok'}
+              arah={arah}
+              onUrut={onUrut}
               className="text-right"
             >
               {m.bahan_stok()}
             </HeaderUrutTabel>
             <HeaderUrutTabel
               kunci="minimum"
-              aktif={kontrol.kunciUrut === 'minimum'}
-              arah={kontrol.arahUrut}
-              onUrut={kontrol.toggleUrut}
+              aktif={sort === 'minimum'}
+              arah={arah}
+              onUrut={onUrut}
               className="text-right"
             >
               {m.bahan_minimum()}
@@ -82,7 +88,7 @@ export default function TabelBahan({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {kontrol.baris.map((b) => (
+          {baris.map((b) => (
             <TableRow
               key={b.id}
               className={b.menipis ? 'bg-destructive/10' : ''}
@@ -134,7 +140,7 @@ export default function TabelBahan({
           ))}
         </TableBody>
       </Table>
-      {kontrol.jumlahBaris === 0 && (
+      {total === 0 && (
         <>
           <p className="py-4 text-sm text-neutral-500">{m.bahan_kosong()}</p>
           <p className="py-1 text-sm text-neutral-400">
@@ -143,12 +149,12 @@ export default function TabelBahan({
         </>
       )}
       <PaginasiTabel
-        halamanAktif={kontrol.halamanAktif}
-        jumlahHalaman={kontrol.jumlahHalaman}
-        jumlahBaris={kontrol.jumlahBaris}
-        ukuranHalaman={kontrol.ukuranHalaman}
-        onHalaman={kontrol.setHalaman}
-        onUkuranHalaman={kontrol.setUkuranHalaman}
+        halamanAktif={halamanAktif}
+        jumlahHalaman={jumlahHalaman}
+        jumlahBaris={total}
+        ukuranHalaman={take}
+        onHalaman={onHalaman}
+        onUkuranHalaman={onUkuranHalaman}
       />
     </div>
   )

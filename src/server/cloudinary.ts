@@ -45,9 +45,13 @@ export function tandaTanganUnggah(
   sekarang = Math.floor(Date.now() / 1000),
 ): TandaTanganUnggah {
   const { cloud, apiKey, apiSecret, folder } = konfigurasi()
+  // max_file_size ikut ditandatangani: Cloudinary menolak unggahan bila
+  // parameter yang dikirim klien berbeda dari yang ditandatangani, jadi batas
+  // ukuran tak bisa dilonggarkan lewat klien kustom.
   const params = {
     allowed_formats: FORMAT_DIIZINKAN,
     folder,
+    max_file_size: String(MAKS_BYTE),
     timestamp: String(sekarang),
   }
   return {

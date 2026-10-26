@@ -243,6 +243,7 @@ export type TransaksiItemWhereInput = {
   transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   produk?: Prisma.XOR<Prisma.ProdukNullableScalarRelationFilter, Prisma.ProdukWhereInput> | null
   modifiers?: Prisma.TransaksiItemModifierListRelationFilter
+  returItems?: Prisma.ReturItemListRelationFilter
 }
 
 export type TransaksiItemOrderByWithRelationInput = {
@@ -256,6 +257,7 @@ export type TransaksiItemOrderByWithRelationInput = {
   transaksi?: Prisma.TransaksiOrderByWithRelationInput
   produk?: Prisma.ProdukOrderByWithRelationInput
   modifiers?: Prisma.TransaksiItemModifierOrderByRelationAggregateInput
+  returItems?: Prisma.ReturItemOrderByRelationAggregateInput
 }
 
 export type TransaksiItemWhereUniqueInput = Prisma.AtLeast<{
@@ -272,6 +274,7 @@ export type TransaksiItemWhereUniqueInput = Prisma.AtLeast<{
   transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   produk?: Prisma.XOR<Prisma.ProdukNullableScalarRelationFilter, Prisma.ProdukWhereInput> | null
   modifiers?: Prisma.TransaksiItemModifierListRelationFilter
+  returItems?: Prisma.ReturItemListRelationFilter
 }, "id">
 
 export type TransaksiItemOrderByWithAggregationInput = {
@@ -311,6 +314,7 @@ export type TransaksiItemCreateInput = {
   transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   produk?: Prisma.ProdukCreateNestedOneWithoutItemInput
   modifiers?: Prisma.TransaksiItemModifierCreateNestedManyWithoutTransaksiItemInput
+  returItems?: Prisma.ReturItemCreateNestedManyWithoutTransaksiItemInput
 }
 
 export type TransaksiItemUncheckedCreateInput = {
@@ -322,6 +326,7 @@ export type TransaksiItemUncheckedCreateInput = {
   qty: number
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   modifiers?: Prisma.TransaksiItemModifierUncheckedCreateNestedManyWithoutTransaksiItemInput
+  returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutTransaksiItemInput
 }
 
 export type TransaksiItemUpdateInput = {
@@ -333,6 +338,7 @@ export type TransaksiItemUpdateInput = {
   transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   produk?: Prisma.ProdukUpdateOneWithoutItemNestedInput
   modifiers?: Prisma.TransaksiItemModifierUpdateManyWithoutTransaksiItemNestedInput
+  returItems?: Prisma.ReturItemUpdateManyWithoutTransaksiItemNestedInput
 }
 
 export type TransaksiItemUncheckedUpdateInput = {
@@ -344,6 +350,7 @@ export type TransaksiItemUncheckedUpdateInput = {
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifiers?: Prisma.TransaksiItemModifierUncheckedUpdateManyWithoutTransaksiItemNestedInput
+  returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutTransaksiItemNestedInput
 }
 
 export type TransaksiItemCreateManyInput = {
@@ -429,6 +436,11 @@ export type TransaksiItemSumOrderByAggregateInput = {
 export type TransaksiItemScalarRelationFilter = {
   is?: Prisma.TransaksiItemWhereInput
   isNot?: Prisma.TransaksiItemWhereInput
+}
+
+export type TransaksiItemNullableScalarRelationFilter = {
+  is?: Prisma.TransaksiItemWhereInput | null
+  isNot?: Prisma.TransaksiItemWhereInput | null
 }
 
 export type TransaksiItemCreateNestedManyWithoutProdukInput = {
@@ -529,6 +541,22 @@ export type TransaksiItemUpdateOneRequiredWithoutModifiersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TransaksiItemUpdateToOneWithWhereWithoutModifiersInput, Prisma.TransaksiItemUpdateWithoutModifiersInput>, Prisma.TransaksiItemUncheckedUpdateWithoutModifiersInput>
 }
 
+export type TransaksiItemCreateNestedOneWithoutReturItemsInput = {
+  create?: Prisma.XOR<Prisma.TransaksiItemCreateWithoutReturItemsInput, Prisma.TransaksiItemUncheckedCreateWithoutReturItemsInput>
+  connectOrCreate?: Prisma.TransaksiItemCreateOrConnectWithoutReturItemsInput
+  connect?: Prisma.TransaksiItemWhereUniqueInput
+}
+
+export type TransaksiItemUpdateOneWithoutReturItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.TransaksiItemCreateWithoutReturItemsInput, Prisma.TransaksiItemUncheckedCreateWithoutReturItemsInput>
+  connectOrCreate?: Prisma.TransaksiItemCreateOrConnectWithoutReturItemsInput
+  upsert?: Prisma.TransaksiItemUpsertWithoutReturItemsInput
+  disconnect?: Prisma.TransaksiItemWhereInput | boolean
+  delete?: Prisma.TransaksiItemWhereInput | boolean
+  connect?: Prisma.TransaksiItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TransaksiItemUpdateToOneWithWhereWithoutReturItemsInput, Prisma.TransaksiItemUpdateWithoutReturItemsInput>, Prisma.TransaksiItemUncheckedUpdateWithoutReturItemsInput>
+}
+
 export type TransaksiItemCreateWithoutProdukInput = {
   id?: string
   namaProduk: string
@@ -537,6 +565,7 @@ export type TransaksiItemCreateWithoutProdukInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   modifiers?: Prisma.TransaksiItemModifierCreateNestedManyWithoutTransaksiItemInput
+  returItems?: Prisma.ReturItemCreateNestedManyWithoutTransaksiItemInput
 }
 
 export type TransaksiItemUncheckedCreateWithoutProdukInput = {
@@ -547,6 +576,7 @@ export type TransaksiItemUncheckedCreateWithoutProdukInput = {
   qty: number
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   modifiers?: Prisma.TransaksiItemModifierUncheckedCreateNestedManyWithoutTransaksiItemInput
+  returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutTransaksiItemInput
 }
 
 export type TransaksiItemCreateOrConnectWithoutProdukInput = {
@@ -596,6 +626,7 @@ export type TransaksiItemCreateWithoutTransaksiInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   produk?: Prisma.ProdukCreateNestedOneWithoutItemInput
   modifiers?: Prisma.TransaksiItemModifierCreateNestedManyWithoutTransaksiItemInput
+  returItems?: Prisma.ReturItemCreateNestedManyWithoutTransaksiItemInput
 }
 
 export type TransaksiItemUncheckedCreateWithoutTransaksiInput = {
@@ -606,6 +637,7 @@ export type TransaksiItemUncheckedCreateWithoutTransaksiInput = {
   qty: number
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   modifiers?: Prisma.TransaksiItemModifierUncheckedCreateNestedManyWithoutTransaksiItemInput
+  returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutTransaksiItemInput
 }
 
 export type TransaksiItemCreateOrConnectWithoutTransaksiInput = {
@@ -642,6 +674,7 @@ export type TransaksiItemCreateWithoutModifiersInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   produk?: Prisma.ProdukCreateNestedOneWithoutItemInput
+  returItems?: Prisma.ReturItemCreateNestedManyWithoutTransaksiItemInput
 }
 
 export type TransaksiItemUncheckedCreateWithoutModifiersInput = {
@@ -652,6 +685,7 @@ export type TransaksiItemUncheckedCreateWithoutModifiersInput = {
   harga: runtime.Decimal | runtime.DecimalJsLike | number | string
   qty: number
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutTransaksiItemInput
 }
 
 export type TransaksiItemCreateOrConnectWithoutModifiersInput = {
@@ -678,6 +712,7 @@ export type TransaksiItemUpdateWithoutModifiersInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   produk?: Prisma.ProdukUpdateOneWithoutItemNestedInput
+  returItems?: Prisma.ReturItemUpdateManyWithoutTransaksiItemNestedInput
 }
 
 export type TransaksiItemUncheckedUpdateWithoutModifiersInput = {
@@ -688,6 +723,67 @@ export type TransaksiItemUncheckedUpdateWithoutModifiersInput = {
   harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutTransaksiItemNestedInput
+}
+
+export type TransaksiItemCreateWithoutReturItemsInput = {
+  id?: string
+  namaProduk: string
+  harga: runtime.Decimal | runtime.DecimalJsLike | number | string
+  qty: number
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
+  produk?: Prisma.ProdukCreateNestedOneWithoutItemInput
+  modifiers?: Prisma.TransaksiItemModifierCreateNestedManyWithoutTransaksiItemInput
+}
+
+export type TransaksiItemUncheckedCreateWithoutReturItemsInput = {
+  id?: string
+  transaksiId: string
+  produkId?: string | null
+  namaProduk: string
+  harga: runtime.Decimal | runtime.DecimalJsLike | number | string
+  qty: number
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  modifiers?: Prisma.TransaksiItemModifierUncheckedCreateNestedManyWithoutTransaksiItemInput
+}
+
+export type TransaksiItemCreateOrConnectWithoutReturItemsInput = {
+  where: Prisma.TransaksiItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransaksiItemCreateWithoutReturItemsInput, Prisma.TransaksiItemUncheckedCreateWithoutReturItemsInput>
+}
+
+export type TransaksiItemUpsertWithoutReturItemsInput = {
+  update: Prisma.XOR<Prisma.TransaksiItemUpdateWithoutReturItemsInput, Prisma.TransaksiItemUncheckedUpdateWithoutReturItemsInput>
+  create: Prisma.XOR<Prisma.TransaksiItemCreateWithoutReturItemsInput, Prisma.TransaksiItemUncheckedCreateWithoutReturItemsInput>
+  where?: Prisma.TransaksiItemWhereInput
+}
+
+export type TransaksiItemUpdateToOneWithWhereWithoutReturItemsInput = {
+  where?: Prisma.TransaksiItemWhereInput
+  data: Prisma.XOR<Prisma.TransaksiItemUpdateWithoutReturItemsInput, Prisma.TransaksiItemUncheckedUpdateWithoutReturItemsInput>
+}
+
+export type TransaksiItemUpdateWithoutReturItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
+  harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  qty?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
+  produk?: Prisma.ProdukUpdateOneWithoutItemNestedInput
+  modifiers?: Prisma.TransaksiItemModifierUpdateManyWithoutTransaksiItemNestedInput
+}
+
+export type TransaksiItemUncheckedUpdateWithoutReturItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  transaksiId?: Prisma.StringFieldUpdateOperationsInput | string
+  produkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
+  harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  qty?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  modifiers?: Prisma.TransaksiItemModifierUncheckedUpdateManyWithoutTransaksiItemNestedInput
 }
 
 export type TransaksiItemCreateManyProdukInput = {
@@ -707,6 +803,7 @@ export type TransaksiItemUpdateWithoutProdukInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   modifiers?: Prisma.TransaksiItemModifierUpdateManyWithoutTransaksiItemNestedInput
+  returItems?: Prisma.ReturItemUpdateManyWithoutTransaksiItemNestedInput
 }
 
 export type TransaksiItemUncheckedUpdateWithoutProdukInput = {
@@ -717,6 +814,7 @@ export type TransaksiItemUncheckedUpdateWithoutProdukInput = {
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifiers?: Prisma.TransaksiItemModifierUncheckedUpdateManyWithoutTransaksiItemNestedInput
+  returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutTransaksiItemNestedInput
 }
 
 export type TransaksiItemUncheckedUpdateManyWithoutProdukInput = {
@@ -745,6 +843,7 @@ export type TransaksiItemUpdateWithoutTransaksiInput = {
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   produk?: Prisma.ProdukUpdateOneWithoutItemNestedInput
   modifiers?: Prisma.TransaksiItemModifierUpdateManyWithoutTransaksiItemNestedInput
+  returItems?: Prisma.ReturItemUpdateManyWithoutTransaksiItemNestedInput
 }
 
 export type TransaksiItemUncheckedUpdateWithoutTransaksiInput = {
@@ -755,6 +854,7 @@ export type TransaksiItemUncheckedUpdateWithoutTransaksiInput = {
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   modifiers?: Prisma.TransaksiItemModifierUncheckedUpdateManyWithoutTransaksiItemNestedInput
+  returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutTransaksiItemNestedInput
 }
 
 export type TransaksiItemUncheckedUpdateManyWithoutTransaksiInput = {
@@ -773,10 +873,12 @@ export type TransaksiItemUncheckedUpdateManyWithoutTransaksiInput = {
 
 export type TransaksiItemCountOutputType = {
   modifiers: number
+  returItems: number
 }
 
 export type TransaksiItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   modifiers?: boolean | TransaksiItemCountOutputTypeCountModifiersArgs
+  returItems?: boolean | TransaksiItemCountOutputTypeCountReturItemsArgs
 }
 
 /**
@@ -796,6 +898,13 @@ export type TransaksiItemCountOutputTypeCountModifiersArgs<ExtArgs extends runti
   where?: Prisma.TransaksiItemModifierWhereInput
 }
 
+/**
+ * TransaksiItemCountOutputType without action
+ */
+export type TransaksiItemCountOutputTypeCountReturItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReturItemWhereInput
+}
+
 
 export type TransaksiItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -808,6 +917,7 @@ export type TransaksiItemSelect<ExtArgs extends runtime.Types.Extensions.Interna
   transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.TransaksiItem$produkArgs<ExtArgs>
   modifiers?: boolean | Prisma.TransaksiItem$modifiersArgs<ExtArgs>
+  returItems?: boolean | Prisma.TransaksiItem$returItemsArgs<ExtArgs>
   _count?: boolean | Prisma.TransaksiItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["transaksiItem"]>
 
@@ -850,6 +960,7 @@ export type TransaksiItemInclude<ExtArgs extends runtime.Types.Extensions.Intern
   transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.TransaksiItem$produkArgs<ExtArgs>
   modifiers?: boolean | Prisma.TransaksiItem$modifiersArgs<ExtArgs>
+  returItems?: boolean | Prisma.TransaksiItem$returItemsArgs<ExtArgs>
   _count?: boolean | Prisma.TransaksiItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TransaksiItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -867,6 +978,7 @@ export type $TransaksiItemPayload<ExtArgs extends runtime.Types.Extensions.Inter
     transaksi: Prisma.$TransaksiPayload<ExtArgs>
     produk: Prisma.$ProdukPayload<ExtArgs> | null
     modifiers: Prisma.$TransaksiItemModifierPayload<ExtArgs>[]
+    returItems: Prisma.$ReturItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1273,6 +1385,7 @@ export interface Prisma__TransaksiItemClient<T, Null = never, ExtArgs extends ru
   transaksi<T extends Prisma.TransaksiDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiDefaultArgs<ExtArgs>>): Prisma.Prisma__TransaksiClient<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   produk<T extends Prisma.TransaksiItem$produkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiItem$produkArgs<ExtArgs>>): Prisma.Prisma__ProdukClient<runtime.Types.Result.GetResult<Prisma.$ProdukPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   modifiers<T extends Prisma.TransaksiItem$modifiersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiItem$modifiersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiItemModifierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  returItems<T extends Prisma.TransaksiItem$returItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiItem$returItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReturItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1750,6 +1863,30 @@ export type TransaksiItem$modifiersArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.TransaksiItemModifierScalarFieldEnum | Prisma.TransaksiItemModifierScalarFieldEnum[]
+}
+
+/**
+ * TransaksiItem.returItems
+ */
+export type TransaksiItem$returItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReturItem
+   */
+  select?: Prisma.ReturItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReturItem
+   */
+  omit?: Prisma.ReturItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReturItemInclude<ExtArgs> | null
+  where?: Prisma.ReturItemWhereInput
+  orderBy?: Prisma.ReturItemOrderByWithRelationInput | Prisma.ReturItemOrderByWithRelationInput[]
+  cursor?: Prisma.ReturItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReturItemScalarFieldEnum | Prisma.ReturItemScalarFieldEnum[]
 }
 
 /**

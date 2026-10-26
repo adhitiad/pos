@@ -125,7 +125,10 @@ describe('idempotensi offline', () => {
     ).toThrow(/di luar batas/)
 
     expect(() =>
-      PostingTransaksiSchema.parse({ ...dasar, dibuatOffline: true }),
+      PostingTransaksiSchema.parse({
+        ...dasar,
+        dibuatOffline: true,
+      }),
     ).toThrow(/idempotencyKey/)
   })
 

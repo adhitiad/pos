@@ -47,6 +47,9 @@ model User {
   pengajuanKasir PengajuanPengeluaran[]
   pengajuanOwner PengajuanPengeluaran[] @relation("PengajuanOwner")
   notifikasi     Notifikasi[]
+  draftTransaksiKasir DraftTransaksi[] @relation("DraftTransaksiKasir")
+  draftTransaksiReviewer DraftTransaksi[] @relation("DraftTransaksiReviewer")
+  transaksiReviewAudit TransaksiReviewAudit[] @relation("TransaksiReviewAuditKasir")
 
   @@unique([email])
   @@map("user")
@@ -184,6 +187,7 @@ model PembelianBahan {
   @@index([supplierId])
   @@index([tanggal])
   @@index([sumberBelanja])
+  @@index([supplierId, sumberBelanja, tanggal])
 }
 
 // ──────────────────────────────
@@ -251,6 +255,7 @@ model Produk {
 
   @@index([aktif])
   @@index([kategoriId])
+  @@index([nama])
 }
 
 // Resep / BOM: komposisi bahan untuk 1 satuan produk.
@@ -280,9 +285,13 @@ model Member {
   tier         TierMember @default(BRONZE)
 
   transaksi Transaksi[]
+  pesananDraf PesananDraf[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([nama])
 }
 
 // Tier member diturunkan dari totalBelanja (dihitung ulang tiap transaksi).
@@ -374,12 +383,15 @@ model Transaksi {
 
   metodeBayar MetodeBayar @default(TUNAI)
   catatan     String?
+  // Alamat pengiriman untuk pesanan antar (online/POS). Null = bukan antar.
+  alamat      String?
 
   // Meja dalam mode F&B / restoran (opsional, kosong = take away / antar)
   mejaId String?
   meja   Meja?   @relation(fields: [mejaId], references: [id])
 
   statusPesanan StatusPesanan @default(MENUNGGU)
+  statusKasirReview String @default("PENDING")
 
   // Kanal transaksi: POS dibayar saat checkout; ONLINE menunggu konfirmasi.
   sumber SumberTransaksi @default(POS)
@@ -422,6 +434,14 @@ model Transaksi {
   // Jurnal yang terposting otomatis dari transaksi ini
   jurnal Jurnal?
 
+  // Draft dine-in yang dikonversi ke transaksi ini (jika ada)
+  pesananDraf PesananDraf?
+
+  // Draft transaksi kasir yang diposting dari draft ini (jika ada)
+  draftHasil DraftTransaksi? @relation("DraftTransaksiHasil")
+  // Audit review transaksi terkait
+  transaksiReviewAudit TransaksiReviewAudit[] @relation("TransaksiReviewAuditTransaksi")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -433,8 +453,10 @@ model Transaksi {
   @@index([mejaId])
   @@index([metodeBayar])
   @@index([statusPesanan])
+  @@index([statusPesanan, createdAt])
   @@index([tanggal, kasirId])
   @@index([sumber, dibayarPada])
+  @@index([memberId, tanggal])
 }
 
 model TransaksiItem {
@@ -453,9 +475,11 @@ model TransaksiItem {
 
   // Modifier yang dipilih untuk item ini (mode F&B / restoran)
   modifiers TransaksiItemModifier[]
+  returItems ReturItem[]
 
   @@index([transaksiId])
   @@index([produkId])
+  @@index([produkId, qty])
 }
 
 // Rincian pembayaran per metode (mendukung split payment).
@@ -586,6 +610,7 @@ model Meja {
   nama      String? // nama meja opsional, mis. "Meja Sudut"
   aktif     Boolean     @default(true)
   transaksi Transaksi[]
+  pesananDraf PesananDraf[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -728,6 +753,9 @@ model ReturItem {
   id          String  @id @default(cuid())
   returId     String
   retur       Retur   @relation(fields: [returId], references: [id], onDelete: Cascade)
+  // Identitas baris transaksi asal; membedakan dua baris produk sama.
+  transaksiItemId String?
+  transaksiItem   TransaksiItem? @relation(fields: [transaksiItemId], references: [id], onDelete: SetNull)
   produkId    String?
   produk      Produk? @relation(fields: [produkId], references: [id], onDelete: SetNull)
   namaProduk  String // snapshot nama saat dijual
@@ -736,6 +764,7 @@ model ReturItem {
   subtotal    Decimal @db.Decimal(14, 2) // qty × hargaSatuan
 
   @@index([returId])
+  @@index([transaksiItemId])
   @@index([produkId])
   @@map("retur_item")
 }
@@ -813,7 +842,6 @@ model Printer {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, perangkat])
-  @@index([userId])
   @@index([userId, aktif, dipindaiPada])
   @@index([koneksi])
 }
@@ -859,6 +887,8 @@ model AuditLog {
   entityId  String? // ID of the entity (if applicable)
   before    Json? // state before change (JSON string)
   after     Json? // state after change (JSON string)
+  // Alasan tindakan (mis. alasan retur, catatan koreksi stok).
+  catatan   String?
   timestamp DateTime @default(now())
 
   @@index([userId])
@@ -916,6 +946,127 @@ model PengajuanPengeluaran {
   @@map("pengajuan_pengeluaran")
 }
 
+// ──────────────────────────────
+// Pesanan Draf Dine-In (FIT-01)
+// ─── Draft transaksi POS (kasir): draft → review kasir → post atomik ───
+// Stok & jurnal TIDAK disentuh sampai review disetujui (A1 two-phase, semua sumber).
+enum StatusDraftTransaksi {
+  MENUNGGU   // menunggu review kasir
+  DISETUJUI  // sudah disetujui & diposting ke Transaksi
+  DITOLAK    // ditolak oleh kasir reviewer
+}
+
+// Draft transaksi POS umum (bukan dine-in): kasir menyusun, baru setelah
+// review disetujui diposting ke Transaksi (stok & jurnal baru terpotong).
+model DraftTransaksi {
+  id        String   @id @default(cuid())
+  nomor     String   @unique // nomor draft, mis. DRAFT-20251016-0001
+  kasirId   String
+  kasir     User     @relation("DraftTransaksiKasir", fields: [kasirId], references: [id])
+
+  // Lengkap input posting (tanpa statusKasirReview, yang diisi saat review).
+  payloadJson Json
+
+  // Ringkas untuk tampilan daftar draft.
+  subtotal        Decimal @db.Decimal(14, 2)
+  total           Decimal @db.Decimal(14, 2)
+  metodeBayar     String
+  catatan         String?
+
+  // Metadata offline (opsional, sama seperti Transaksi)
+  waktuKlien      DateTime?
+  dibuatOffline   Boolean @default(false)
+  idempotencyKey  String?   @unique
+
+  status          StatusDraftTransaksi @default(MENUNGGU)
+  reviewedById    String?
+  reviewedBy      User?   @relation("DraftTransaksiReviewer", fields: [reviewedById], references: [id])
+  reviewedAt      DateTime?
+  transaksiId String?   @unique // Transaksi hasil posting (jika disetujui)
+  transaksi       Transaksi? @relation("DraftTransaksiHasil", fields: [transaksiId], references: [id])
+  reviewAudits    TransaksiReviewAudit[] @relation("TransaksiReviewAuditDraft")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kasirId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("draft_transaksi")
+}
+
+// ─── Audit terpisah untuk review transaksi (bukan AuditLog umum) ───
+// Setiap keputusan review (setuju/tolak) dicatat di sini agar terpisah dari
+// AuditLog operasi biasa.
+model TransaksiReviewAudit {
+  id          String          @id @default(cuid())
+  // Draft sumber review (selalu ada, termasuk saat ditolak).
+  draftId     String?
+  draft       DraftTransaksi? @relation("TransaksiReviewAuditDraft", fields: [draftId], references: [id])
+  // Transaksi hasil posting; null bila draft ditolak.
+  transaksiId String?
+  transaksi   Transaksi?      @relation("TransaksiReviewAuditTransaksi", fields: [transaksiId], references: [id])
+  // Peninjau (kasir pembuat atau owner, tergantung kebijakan).
+  kasirId     String
+  kasir       User            @relation("TransaksiReviewAuditKasir", fields: [kasirId], references: [id])
+  status      String          // DISETUJUI | DITOLAK
+  catatan     String?
+  createdAt   DateTime        @default(now())
+
+  @@index([draftId])
+  @@index([transaksiId])
+  @@index([kasirId])
+  @@index([createdAt])
+  @@map("transaksi_review_audit")
+}
+
+// Draft pesanan dine-in yang dikirim customer, direview & difinalisasi
+// oleh kasir sebelum dikonversi ke Transaksi POS.
+// ──────────────────────────────
+
+// Status draft pesanan dine-in.
+enum StatusPesananDraf {
+  MENUNGGU   // menunggu kasir review
+  FINAL      // sudah dikonversi ke Transaksi
+  DIBATALKAN // dibatalkan oleh kasir atau customer
+}
+
+// Draft pesanan dine-in: customer order dari meja, kasir review & finalisasi.
+// Items disimpan sebagai JSON untuk fleksibilitas kasir menambah/kurangi
+// sebelum finalisasi. Setelah finalisasi, items dikonversi ke TransaksiItem.
+model PesananDraf {
+  id        String             @id @default(cuid())
+  mejaId    String?
+  meja      Meja?              @relation(fields: [mejaId], references: [id])
+  memberId  String?
+  member    Member?            @relation(fields: [memberId], references: [id])
+
+  // Identitas pelanggan (untuk member: otomatis dari member; untuk non-member: diisi manual)
+  nama      String?            // nama non-member (atau nama member jika tidak login)
+  telepon   String?            // nomor HP member atau non-member
+
+  catatan   String?
+  status    StatusPesananDraf @default(MENUNGGU)
+
+  // Items: [{produkId, namaProduk, harga, qty, modifiers:[{modifierId,qty,catatan,hargaTambahan}]}]
+  itemsJson Json
+  subtotal  Decimal            @db.Decimal(14, 2)
+
+  // Finalisasi oleh kasir → buat Transaksi POS
+  finalisasiPada  DateTime?
+  transaksi       Transaksi?   @relation(fields: [transaksiId], references: [id])
+  transaksiId     String?      @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([mejaId])
+  @@index([status, createdAt])
+  @@index([createdAt])
+  @@index([finalisasiPada])
+  @@map("pesanan_draf")
+}
+
 // Notifikasi sistem antar pengguna (kasir ↔ owner).
 model Notifikasi {
   id        String   @id @default(cuid())
@@ -928,7 +1079,7 @@ model Notifikasi {
   entitasId String? // ID entitas terkait (mis. pengajuanId)
   createdAt DateTime @default(now())
 
-  @@index([userId])
+  @@index([userId, createdAt])
   @@index([dibaca])
   @@index([createdAt])
   @@map("notifikasi")

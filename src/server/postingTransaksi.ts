@@ -2,8 +2,11 @@ import { prisma } from '#/db'
 import { Prisma } from '#/generated/prisma/client.js'
 import type { PostingTransaksiInput } from '#/validations/transaksi'
 import { PostingTransaksiSchema } from '#/validations/transaksi'
-import type { HasilTransaksiRingkas, ProdukHitung } from '#/types/transaksi'
-import type { Role } from '#/generated/prisma/enums.js'
+import type {
+  HasilTransaksiRingkas,
+  OpsiPosting,
+  ProdukHitung,
+} from '#/types/transaksi'
 import {
   BATAS_DISKON_KASIR_DEFAULT,
   catatDiskonOwner,
@@ -23,6 +26,7 @@ import {
   terapkanPoinMember,
 } from './postingMember.js'
 import { muatReplayByKey } from './transaksiIdempotensi.js'
+import { cekTokoBuka, modeReviewTransaksi } from './pengaturan.js'
 import {
   AKUN,
   bangunEntriJurnal,
@@ -33,12 +37,7 @@ import {
 } from './postingHitung.js'
 import { kebutuhanDariBaris, kurangiStok } from './postingStok.js'
 
-export type OpsiPosting = {
-  /** POS (default) atau pesanan online yang dibayar belakangan. */
-  sumber?: 'POS' | 'ONLINE'
-  /** Pelaku pemosting untuk kebijakan diskon & audit (SEC-22). */
-  aktor?: { id?: string; peran?: Role }
-}
+export type { OpsiPosting } from '#/types/transaksi'
 
 // ─── Fungsi utama ───
 // Membuat transaksi + kurangi stok produk & bahan + tulis jurnal,
@@ -59,6 +58,23 @@ export async function postingTransaksi(
     if (replay) return replay
   }
 
+  // Kebijakan review ditegakkan di sini, bukan di wrapper, agar semua jalur
+  // (server function, REST, replay offline, finalisasi draft) tunduk aturan
+  // yang sama. Pesanan online bukan penjualan POS, jadi tidak terkena policy.
+  if (!online && (await modeReviewTransaksi()) === 'owner') {
+    if (opsi.aktor?.peran !== 'OWNER') {
+      throw new GalatDomain(
+        'Mode review owner: transaksi POS harus melalui draft dan disetujui owner',
+      )
+    }
+  }
+
+  // Cek apakah toko buka untuk pemesanan (POS & online).
+  const statusToko = await cekTokoBuka()
+  if (!statusToko.buka) {
+    throw new GalatDomain(statusToko.alasan ?? 'Toko tutup')
+  }
+
   // Nomor unik harian bisa tabrakan bila 2 kasir posting bersamaan,
   // ulangi seluruh transaction bila kena unique constraint (P2002).
   let hasilTransaksi: HasilTransaksiRingkas | null = null
@@ -66,7 +82,7 @@ export async function postingTransaksi(
   let subtotalTransaksi = 0
   for (let percobaan = 1; percobaan <= 3; percobaan++) {
     try {
-      hasilTransaksi = await prisma.$transaction(async (tx) => {
+      const jalankan = async (tx: Prisma.TransactionClient) => {
         // 1. Muat produk + resep + bahan + modifier grup
         const ids = [...new Set(data.items.map((i) => i.produkId))]
         const daftarProduk = await tx.produk.findMany({
@@ -243,12 +259,16 @@ export async function postingTransaksi(
             metodeBayar: bayar.metodeUtama,
             mejaId: data.mejaId,
             statusPesanan: data.statusPesanan,
+            // Disetujui server setelah kebijakan review lolos; klien tidak
+            // pernah boleh menentukan status review.
+            statusKasirReview: 'DISETUJUI',
             uangDiterima: online ? null : bayar.uangDiterimaTotal,
             kembalian:
               online || bayar.uangDiterimaTotal == null
                 ? null
                 : bayar.kembalian,
             catatan: data.catatan,
+            alamat: data.alamat,
             // Jejak offline & idempotensi: kunci retry, penanda luring, dan
             // waktu saat klien membuat transaksi.
             idempotencyKey: data.idempotencyKey ?? null,
@@ -294,6 +314,21 @@ export async function postingTransaksi(
             pembayaran: true,
           },
         })
+
+        // Enforce struk wajib: jika status Pesanan sudah LUNAS harus ada PrintJob DICETAK
+        if (
+          data.statusPesanan === 'LUNAS' ||
+          data.statusPesanan === 'SELESAI'
+        ) {
+          const cetak = await tx.printJob.findFirst({
+            where: { transaksiId: transaksi.id, status: 'DICETAK' },
+          })
+          if (!cetak) {
+            throw new GalatDomain(
+              'Struk wajib dicetak (PrintJob DICETAK) sebelum status LUNAS',
+            )
+          }
+        }
 
         if (harusMengurangiStok) {
           // 5. Kurangi stok produk & bahan secara atomik.
@@ -346,7 +381,10 @@ export async function postingTransaksi(
           diskonMember,
           memberInfo,
         }
-      })
+      }
+      hasilTransaksi = opsi.tx
+        ? await jalankan(opsi.tx)
+        : await prisma.$transaction(jalankan)
       break
     } catch (e) {
       if (e instanceof GalatDiskonDitolak) {
@@ -355,6 +393,9 @@ export async function postingTransaksi(
         await catatPenolakanDiskon(e)
         throw e
       }
+      // Transaksi pemanggil tidak bisa diulang setelah constraint violation;
+      // biarkan rollback dan tangani di lapisan luar.
+      if (opsi.tx) throw e
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
         e.code === 'P2002'

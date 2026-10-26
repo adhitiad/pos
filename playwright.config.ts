@@ -24,6 +24,9 @@ export default defineConfig({
     },
     {
       name: 'webkit-mobile',
+      // Flake dev-server: overlay Vite saat dependensi dioptimasi pada run
+      // pertama. Retry sekali hanya untuk WebKit; Chromium tetap tanpa retry.
+      retries: 1,
       use: { ...devices['iPhone 13'], browserName: 'webkit' },
     },
   ],

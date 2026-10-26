@@ -37,7 +37,9 @@ export default function DaftarDraft({ items }: { items: BarisKeranjang[] }) {
       {items.length === 0 ? (
         <div className="space-y-1 rounded-md border border-dashed border-border p-4 text-center">
           <p className="text-sm text-neutral-500">{m.kasir_empty()}</p>
-          <p className="text-xs text-neutral-400">{m.kasir_empty_hint()}</p>
+          <p className="text-xs text-muted-foreground">
+            {m.kasir_empty_hint()}
+          </p>
         </div>
       ) : (
         <div className="space-y-2">

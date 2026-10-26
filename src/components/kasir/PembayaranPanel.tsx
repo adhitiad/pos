@@ -125,7 +125,7 @@ export default function PembayaranPanel({
 
       {split && (
         <div className="space-y-2">
-          {baris.map((b) => (
+          {baris.map((b, i) => (
             <div key={b.key} className="flex items-center gap-2">
               <Select
                 value={b.metode}
@@ -133,7 +133,10 @@ export default function PembayaranPanel({
                   ubahBaris(b.key, { metode: v as TipeBayar })
                 }}
               >
-                <SelectTrigger className="w-32 shrink-0">
+                <SelectTrigger
+                  aria-label={`${m.kasir_payment()} ${i + 1}`}
+                  className="w-32 shrink-0"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,6 +151,7 @@ export default function PembayaranPanel({
                 type="number"
                 min={0}
                 inputMode="numeric"
+                aria-label={`${m.kasir_paid()} ${i + 1}`}
                 className="text-right"
                 value={b.jumlah || ''}
                 onChange={(e) => {

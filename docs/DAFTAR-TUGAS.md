@@ -157,6 +157,41 @@
 
 > Keputusan: fitur = Laporan+ekspor, Pembayaran lokal (split), CRM lanjutan, Perangkat keras, F&B (di balik flag). Multi-outlet ditunda. Flag lewat model `Pengaturan`. Ekspor pakai `xlsx` + `@react-pdf/renderer`. Tiap fase wajib lolos tsc/lint/build/test/test:e2e + update `docs/API.md`.
 
+### Roadmap fitur dari audit 2026-10-23
+
+> Empat item ini adalah fitur atau verifikasi klien, **bukan temuan keamanan
+> backend**. Jangan dicentang sebagai bug keamanan; prioritaskan setelah item
+> P0/P1 dan setelah ada keputusan produk yang jelas.
+
+- [x] **FIT-01 — QR dine-in & delivery.** Token QR meja stateless (HMAC,
+      30 hari, rate limit via `/api/v1/pesan`), generate QR di `/meja` (owner),
+      scan lewat `/pesanan?meja=<token>`, dan `PesananOnlineSchema` menerima
+      `deliveryId`/`mejaToken`/`alamat`; ongkir antar dari master Delivery di
+      server, `mejaId`/`deliveryId`/`mejaToken` saling eksklusif, alamat wajib
+      untuk antar.
+- [~] **FIT-02 — Offline-first Expo.** Kontrak server siap (`idempotencyKey`,
+  `dibuatOffline`, `waktuKlien`). Implementasi SQLite (`expo-sqlite`) +
+  outbox + sinkronisasi otomatis di `pos_mobile`:
+  `src/services/offline/{db,schema,transaksi-store,outbox-store}.ts`,
+  `src/hooks/{use-offline-transaksi-draft,use-sinkron-offline,
+use-posting-transaksi}.ts`, `src/app/_layout.tsx` (inisialisasi tabel).
+  `tsc --noEmit` + `expo lint` lulus. Perlu development build (Expo Go
+  tidak muat native module baru).
+- [x] **FIT-03 — Laporan & analitik komprehensif.** Endpoint `GET /api/v1/laporan-penjualan`
+      diperluas dengan dimensi (`kategori`, `kasir`, `shift`, `member`, `metodeBayar`,
+      `meja`, `delivery`, `sumber`, `statusPesanan`, `pajakJenis`), grup `tahunan`,
+      dan metrik tambahan (`qtyTerjual`, `poinTerpakai`, `poinDapat`). Rekap per
+      dimensi, ekspor CSV/XLSX/PDF, dan i18n ×4. Unit test `laporan.test.ts` +
+      `laporan-ekspor.test.ts` lulus. Gate penuh (tsc, lint, check, test, build)
+      lulus.
+- [x] **FIT-04 — Verifikasi penyimpanan token Expo.** Audit di
+      `pos_mobile` (`docs/FIT-04-AUDIT.md`): token disimpan di
+      `expo-secure-store`, dikirim via header `Authorization: Bearer`,
+      tidak ada token di `AsyncStorage`/log/konsol, logout menghapus token.
+      **Rekomendasi #4 diimplementasi**: response interceptor di `client.ts`
+      memanggil `clearPosSessionToken()` otomatis saat 401. Semua gate lulus
+      (tsc + expo lint di `pos_mobile`).
+
 ### T.txt — Refactor & Dokumentasi
 
 - [x] **TXT-03** RelNav.tsx tipe `.to` — hapus type assertion `as NavPath` yang unnecessarily; TanStack Router type inference sudah tepat tanpa cast
@@ -577,17 +612,10 @@ setengah-setengah.
 
 ### Ditunda / bukan temuan keamanan
 
-- **QR dine-in & delivery (fitur):** `Meja`/`mejaId` ada, tetapi belum ada alur
-  generate/scan QR; `Delivery` ada untuk POS, sedangkan `PesananOnlineSchema` belum
-  menerima `deliveryId`. Catat sebagai roadmap fitur, bukan bug keamanan.
-- **Offline-first (fitur):** web sudah punya outbox IndexedDB + idempotency; sisi
-  Expo (SQLite/WatermelonDB) belum ada di repo ini. Bukan temuan keamanan.
-- **Laporan & analitik komprehensif (fitur):** endpoint laporan penjualan/pajak/
-  belanja + ekspor sudah ada; perlu daftar laporan yang diminta sebelum dijadikan
-  tugas.
-- **Local Storage Expo:** tidak dapat diverifikasi dari repo ini; jika mobile
-  menyimpan bearer token di AsyncStorage/localStorage, itu temuan klien terpisah.
-  Backend sudah mengarahkan `expo-secure-store` di `docs/EXPO.md`.
+- **Roadmap fitur:** QR dine-in/delivery, offline-first Expo, laporan/analitik
+  komprehensif, dan verifikasi penyimpanan token Expo sudah dicatat sebagai
+  `FIT-01`..`FIT-04` di bagian **RENCANA — Fitur Utama POS**. Tidak ada item
+  keamanan backend yang perlu ditindaklanjuti dari daftar ini.
 
 ---
 
@@ -985,6 +1013,11 @@ setengah-setengah.
       `db:seed` untuk mengembalikan data demo. Perbarui `docs/API.md` (rate limit,
       kode `LIMIT_PERANGKAT`, endpoint nonaktif/default), `docs/EXPO.md`,
       `docs/TEST-MANUAL.md`, dan centang item di dokumen ini setelah semua lulus.
+      **Diverifikasi ulang 2026-10-24:** `docs/API.md` memuat rate limit,
+      `LIMIT_PERANGKAT`, endpoint nonaktif/hapus/default; `docs/EXPO.md` §7.1
+      memuat siklus sesi pindai; `docs/TEST-MANUAL.md` §2.3/§5 memuat uji manual
+      printer. Gate penuh hijau (tsc, lint, check, vitest 343/343, e2e 67/67,
+      build, perf:budget 505,0 KB). Tidak ada item printer yang tersisa.
 
 ---
 
@@ -1026,11 +1059,13 @@ setengah-setengah.
       dengan Vitest 5. Saat ini `bunx vitest run --coverage` gagal dengan
       `MISSING DEPENDENCY`, jadi job `test` berhenti sebelum menjalankan tes.
       Selesai: `@vitest/coverage-v8@5.0.5` terpasang; coverage dibatasi ke logika
-      `src/server/**` + `src/validations/**` (wrapper `*Fn.ts` diuji E2E), baseline
-      nyata 66.11% statements / 55.98% branch / 59.90% function / 68.47% line, dan
-      ambang 63/53/57/65. `bun run test:coverage` lulus (exit 0). Threshold 80%
-      global sebelumnya tidak realistis karena mengikutkan UI/generated/paraglide
-      dan tidak pernah benar-benar dievaluasi (`global` bukan key Vitest).
+      `src/server/**` + `src/validations/**` (wrapper `*Fn.ts` diuji E2E),
+      baseline 2026-10-26: 65.04% statements / 55.57% branch / 60.96% function /
+      67.56% line, ambang **64/54/59/66** di `vitest.config.ts` (margin ±1 poin,
+      wajib dinaikkan saat tes bertambah). `bun run test:coverage` lulus (exit 0).
+      Threshold 80% global sebelumnya tidak realistis karena mengikutkan
+      UI/generated/paraglide dan tidak pernah benar-benar dievaluasi (`global`
+      bukan key Vitest).
 
 - [x] **CICD-05** Pasang browser Playwright di job `e2e`:
       `bunx playwright install --with-deps chromium` sebelum `playwright test`.
@@ -1199,3 +1234,522 @@ setengah-setengah.
       (LCP/INP/CLS p75), p95 API baca/tulis, dan `/api/health`, lalu bandingkan
       dengan `docs/PERFORMA.md`. Jangan mengklaim target tercapai tanpa data.
       **Terblokir:** menunggu secret produksi (CICD-11) dan deploy nyata.
+
+## FITUR — Kasir review dua-fasa (Opsi B / A1), selesai 2026-10-23
+
+- [x] **FEAT-03** Semua posting wajib `statusKasirReview = DISETUJUI`
+      (tidak hanya offline; blok `superRefine` dipindahkan keluar dari `waktuKlien`).
+      Model baru: `DraftTransaksi` (stok/jurnal belum disentuh sampai review) +
+      `TransaksiReviewAudit` (audit terpisah dari `AuditLog`), migrasi
+      `20261023160000_add_draft_transaksi_dan_review_audit`.
+- [x] Alur kasir: `buatDraftTransaksi` → `reviewTransaksi` (self-approve,
+      posting atomik dalam satu transaksi DB) via server Fn dan route API:
+      `POST /api/v1/transaksi-draft`, `POST /api/v1/transaksi-draft-batal`,
+      `POST /api/v1/transaksi-review`; kasir checkout (`useFormKasir`) dipindah ke
+      alur draft → review; `outbox.ts` offline menandai `statusKasirReview:
+'DISETUJUI'` untuk replay.
+- [x] Unit test diperbarui: semua pemanggilan `postingTransaksi`/`PostingTransaksiSchema.parse`
+      menyertakan `statusKasirReview: 'DISETUJUI'`; 343/343 lulus.
+- [x] `docs/API.md` diperbarui (endpoint draft/review), `docs/PERFORMA.md`
+      baseline diubah ke 499,9 KB gzip (build 2026-10-23).
+
+## FITUR — Audit trail ketat & notifikasi pembayaran 45 menit, selesai 2026-10-24
+
+- [x] **FEAT-04** Audit trail ketat pada `AuditLog`: tambah kolom `catatan`
+      (alasan tindakan); `catatAudit` terpanggil di `buatRetur` (refund/void)
+      dan `simpanOpname` (koreksi stok) dengan aktor, timestamp, dan alasan.
+      Migrasi `20261023160000_add_draft_transaksi_dan_review_audit` diperluas
+      dengan `ALTER TABLE audit_log ADD COLUMN catatan`.
+- [x] **FEAT-05** Notifikasi pembayaran kadaluarsa 45 menit:
+      `cekPembayaranKadaluarsa` menemukan transaksi belum dibayar >45 menit,
+      tandai `DIBATALKAN`, catat audit, dan kirim notifikasi ke kasir. Route
+      `POST /api/v1/pembayaran-kadaluarsa` (guard `requireKasir`). Klien bisa
+      membersihkan cache/order dari ID transaksi yang dikembalikan.
+- [x] Unit test: 343/343 lulus (termasuk retur + opname dengan audit). Gate
+      penuh (tsc, lint, check, docs, test, test:e2e, build, perf:budget)
+      lulus.
+- [x] Cakupan tes didokumentasikan di `vitest.config.ts`: komponen/rute React
+      diuji lewat E2E Playwright, Paraglide adalah kode hasil kompilasi, dan
+      wrapper `*Fn.ts` diuji lewat E2E — bukan unit. Ini keputusan sadar, bukan
+      celah yang terlupa.
+
+## FITUR — UI antrean review owner (FEAT-06), selesai 2026-10-24
+
+- [x] **FEAT-06** UI antrean review owner untuk `TransaksiReviewAudit`.
+      Halaman `/review-transaksi` (OWNER): antrean draft `MENUNGGU` lintas
+      kasir, aksi setujui/tolak (dialog + catatan), riwayat keputusan, dan
+      switch kebijakan `review_transaksi_mode` (`kasir` = self-approve default,
+      `owner` = wajib persetujuan owner). Kasir tetap memakai alur draft →
+      review seperti sebelumnya, sesuai permintaan "cust yaitu kasir".
+- [x] Kebijakan & guard: `src/server/reviewPolicy.ts`
+      (`bolehReviewTransaksi`) dipakai `reviewTransaksi`. Kasir tidak bisa
+      memutus draft kasir lain, dan tidak bisa memutus sama sekali saat mode
+      `owner`; OWNER selalu boleh. Aturan ini diuji unit tanpa database.
+- [x] Audit: setiap keputusan (setuju **dan** tolak) menulis
+      `TransaksiReviewAudit` (`draftId` + `transaksiId` nullable agar penolakan
+      tercatat) dan `AuditLog` (`transaksi.review.setujui|tolak` + catatan).
+      Pemilik transaksi tetap kasir pembuat draft; aktor kebijakan diskon
+      mengikuti peninjau.
+- [x] API: `GET /api/v1/transaksi-draft?semua=1` (antrean OWNER) dan
+      `GET /api/v1/transaksi-review?take=` (riwayat). Server Fn:
+      `listDraftMenungguFn`, `riwayatReviewTransaksiFn`,
+      `setModeReviewTransaksiFn` (OWNER).
+- [x] Navigasi + i18n empat bahasa (`nav_review`, `review_*`) + Paraglide
+      dikompilasi; unit test `reviewPolicy` (5 kasus) → 348/348 lulus.
+- [x] Gate: `tsc`, `lint`, `check`, `docs:sync`/`docs:check`, `test:vitest`,
+      `test:e2e`, `build`, `perf:budget`.
+
+## AUDIT AKHIR — Kebersihan kode, keamanan, performa, kesehatan (2026-10-24)
+
+### Yang sudah dikerjakan
+
+- [x] Inventaris hook: seluruh hook React berada di `src/hooks/**`; tidak ada
+      file `use*.ts`/`use*.tsx` di luar folder itu.
+- [x] Tipe domain dipindah ke `src/types/**/*.d.ts` (audit, laporan,
+      notifikasi, pesanan, pesanan-draf, pengajuan, review, transaksi,
+      rate-limit, percetakan, printer, table, produk). Modul asal tetap
+      mengekspor ulang agar impor lama tidak rusak. `types/review.ts` diganti
+      `types/review.d.ts`.
+- [x] Skema Zod dipusatkan di `src/validations/**`: `DraftIdSchema`,
+      `SetModeReviewSchema`, `JenisMasterSchema` (memakai yang sudah ada),
+      `DetailTransaksiSchema`, dan `PaymentWebhookSchema` (baru:
+      `validations/pembayaran.ts`).
+- [x] Hapus kode mati: `src/server/pembayaranKadaluarsaFn.ts` (tidak diimpor;
+      route memakai fungsi murni), `listDraftTransaksiFn`,
+      `getDraftTransaksiFn`, `batalDraftTransaksiFn`,
+      `tandaiNotifikasiDibacaFn`, `printerDefaultFn`, lima Fn pesanan draf yang
+      tak dipakai, `dataReturFn`/`produkAktifFn`/`dataOpnameFn` (REST tetap
+      tersedia), dan `urlIkonSekarang`.
+- [x] Perbaikan migrasi: `20261022094437_add_nominal_disetujui` dibuat
+      kondisional; migrasi baru
+      `20261024000000_fix_nominal_disetujui_order`; migrasi
+      `20261023160000_add_draft_transaksi_dan_review_audit` dibuat idempoten.
+      `migrate resolve --rolled-back` + `migrate deploy` → seluruh 23 migrasi
+      terpasang, `DraftTransaksi`/`TransaksiReviewAudit` ada.
+- [x] `db:seed` ulang: 47 produk, 24 bahan, 4 user, 8 transaksi demo, jurnal
+      berimbang.
+- [x] `.gitignore`: hapus baris berisi spasi dan pola `audit-**.md` yang
+      bertentangan dengan README (audit justru dokumen yang di-commit).
+- [x] `README.md`: prasyarat PostgreSQL lokal/Neon dan catatan knip diperbaiki.
+- [x] `scripts/sinkron-dokumen.ts`: pemotongan ID tugas kini membuang backtick
+      agar snapshot PRD tetap valid dan stabil terhadap Prettier.
+
+### Hasil gate (2026-10-24)
+
+- [x] `bunx tsc --noEmit` — lolos.
+- [x] `bunx eslint .` — lolos (0 error/warning).
+- [x] `bunx prettier --check .` — lolos.
+- [x] `bun run docs:sync` + `docs:check` — sinkron.
+- [x] `bun run test:vitest` — **348/348 lolos** (54 file). Catatan: percobaan
+      pertama sempat 2 timeout 5 detik pada `posting.test.ts` dan
+      `percetakan.test.ts` karena beban paralel/Neon; kedua file lolos saat
+      dijalankan ulang, lalu seluruh suite lolos. Bukan regresi tipe/Zod.
+- [x] `bun run test:e2e` — **71/71 lolos** (Chromium, 2,8 menit).
+- [x] `bun --bun run build` — lolos.
+- [x] `bun run perf:budget` — 90 file, 504,5 KB gzip total, aset terbesar
+      114,1 KB, CSS 18,2 KB; semua di bawah anggaran.
+- [x] `bun run db:seed` — 47 produk, 24 bahan, 4 user, 8 transaksi demo,
+      jurnal berimbang.
+- [x] `bun run db:migrate:status` — 23 migrasi terpasang, schema up to date.
+
+### Pengecualian sadar (bukan kelalaian)
+
+- Tipe hasil `z.infer` tetap di samping skemanya (satu sumber kebenaran;
+  memindahkan ke `types/` menciptakan impor melingkar).
+- Tipe lokal internal komponen/route (mis. `type Props`) tetap di file
+  pemiliknya demi enkapsulasi.
+- `src/env.ts` tetap memakai Zod untuk bootstrap env (bukan input request).
+- Ekspor `src/components/ui/*` yang belum dipakai adalah cadangan registry
+  shadcn; aturan repo melarang menulis ulang komponen registry.
+- `src/server/pembayaranWebhook.ts` adalah utilitas HMAC yang dipakai
+  `src/routes/api/v1/pembayaran/webhook.ts`; skemanya dipindah ke
+  `validations/pembayaran.ts` dan diekspor ulang agar impor route tetap stabil.
+
+### Temuan kritis yang sudah diperbaiki
+
+- [x] Urutan migrasi rusak: `add_nominal_disetujui` (09:44) berjalan sebelum
+      tabel `pengajuan_pengeluaran` dibuat (16:19) sehingga instalasi baru
+      gagal. Diperbaiki dengan `IF EXISTS` + migrasi penutup.
+- [x] Migrasi `20261023160000` gagal parsial (enum dibuat, tabel tidak) dan
+      memblokir `migrate deploy`. Diperbaiki dengan migrasi idempoten +
+      `migrate resolve`.
+
+### Backlog P0 performa (selesai 2026-10-24)
+
+- [x] Paginasi server-side `bahanPage`/`produkPage`/`memberPage` —
+      where/orderBy/skip/take/count diproses DB via `TabelQuerySchema`
+      (`src/validations/pagination.ts`); tabel `/bahan`, `/produk`, `/member`
+      terkendali server (URL search param = sumber kebenaran). Wrapper
+      `bahanData`/`produkData`/`memberData` diperbiarkan demi pemakai lama/test.
+- [x] Pisahkan `dashboardData` dari `kasirData`; `/dashboard` kini memakai
+      agregat hari ini (`src/server/dashboard.ts`) — HPP dari `Transaksi.hpp`, /
+      `kasir` tetap unduh katalog khusus POS.
+- [x] Laporan penjualan/pajak/belanja: agregasi SQL — `laporanPajak` penuh
+      `$queryRaw GROUP BY` (`to_char` per hari/minggu ISO/bulan di
+      `Asia/Jakarta`, mengikuti semantik `kunciPeriode`), `laporanBelanja`
+      `groupBy` per sumber + `date_trunc` bulanan, `laporanPenjualan` buang
+      kueri ganda HPP (hitung dari items yang sudah dimuat hanya dengan
+      `Math.round` setelah penjumlahan). Kontrak keluaran & test tetap.
+- [x] `pembayaranKadaluarsa`: satu transaksi berbasis batch — `findMany`
+      (`take` `BATAS_KADALUARSA_PER_SIKLUS = 100`, tertua dulu) + `updateMany`
+      (ber-syarat, idempoten) + `createMany` audit; notifikasi dikirim di luar
+      transaksi DB. Schedule declared di `vercel.json` tetap backlog.
+- [x] Prisma pool/timeout configurable — `DB_POOL_MAX`,
+      `DB_IDLE_TIMEOUT_MS`, `DB_CONNECTION_TIMEOUT_MS`,
+      `DB_STATEMENT_TIMEOUT_MS` di `src/db.ts` + `src/env.ts` +
+      `.env.example` dengan default aman.
+
+### Backlog P1 performa/ketahanan (sebagian selesai 2026-10-26)
+
+- [x] Cache sesi per request — `src/server/auth.ts` menyimpan promise
+      `getPengguna()` per objek `Headers` di `WeakMap`, jadi sesi + role hanya
+      dibaca sekali per request meski loader dan server function memanggilnya
+      berkali-kali.
+- [x] `staleTime` preload/route dan hentikan `router.invalidate()` global tiap
+      20 detik di KDS. `src/routes/dapur.tsx` memakai
+      `router.invalidate({ filter: routeId === '/dapur' })`; router kini memakai
+      `defaultStaleTime` + `defaultPreloadStaleTime` 30 detik sehingga navigasi
+      tidak mem-fetch ulang loader yang baru dijalankan, sementara aksi tulis tetap
+      memanggil `router.invalidate`.
+- [x] Index (bagian 1, 2026-10-24, migration
+      `20261024020000_add_composite_indexes`): `Transaksi(memberId, tanggal)`,
+      `PembelianBahan(supplierId, sumberBelanja, tanggal)`,
+      `TransaksiItem(produkId, qty)` (PSL `@@index`) + partial SQL
+      `Transaksi_terjual_tanggal_idx` (filter laporan) dan
+      `Transaksi_kadaluarsa_idx` (cron); `@@index` representatif ikut masuk
+      `schema.prisma` agar tidak drift. `EXPLAIN` rinci belum diverifikasi.
+- [x] Index (bagian 2, 2026-10-26, migration
+      `20261026090000_add_indexes_part2`): `Member(email)`, `Member(nama)`,
+      `Produk(nama)`, `notifikasi(userId, createdAt)`,
+      `pesanan_draf(status, createdAt)`, `Transaksi(statusPesanan, createdAt)`;
+      `Printer_userId_idx` dihapus karena redundan. Idempoten
+      (`IF NOT EXISTS`/`IF EXISTS`), sudah diterapkan ke Neon dev.
+- [~] Rate limit health check dan endpoint publik sudah terpasang (health
+  60/menit; publik 10–120/menit sesuai risiko; dine-in 10/menit per IP +
+  5/menit per nomor telepon). Beban tulis limiter (satu transaksi 3 query
+  per permintaan di `src/server/rateLimit.ts`) belum dikurangi — kandidat:
+  cache token bucket per proses atau gabung query.
+- [x] Penomoran harian atomik — diverifikasi 2026-10-26:
+      `src/server/penomoran.ts` sudah memakai `UPDATE ... RETURNING` di dalam
+      transaksi (tidak ada `count()`); catatan lama sudah basi.
+- [x] Font self-host lewat `@fontsource` (Manrope/Fraunces) dan
+      `NotificationBellLazy` untuk memuat lonceng notifikasi secara malas di
+      `Header.tsx` serta halaman pesanan publik.
+
+### Temuan keamanan (audit statis OWASP, 2026-10-24)
+
+Tidak ditemukan SQL injection, XSS, SSRF, path traversal, atau secret
+hardcoded. Kontrol yang sudah baik: HMAC webhook/QR meja + `timingSafeEqual`,
+CSP nonce, header keamanan, CSRF, error aman + `ref`, audit log, body limit,
+rate-limit token bucket di Postgres, validasi URL Cloudinary, sanitasi CSV.
+Risiko utama ada di **otorisasi dan integritas transaksi**.
+
+**Sudah diperbaiki pada putaran ini**
+
+- [x] IDOR notifikasi: `tandaiNotifikasiDibacaFn` dan fungsi
+      `tandaiNotifikasiDibaca(ids)` dihapus. Mark-read kini murni localStorage
+      per perangkat (`src/hooks/notifikasi.ts`); `tandaiEntitasDibaca` tetap
+      dibatasi `userId`.
+- [x] Server function publik `buatPesananDrafFn` tanpa rate limit dihapus
+      (tidak dipakai); jalur publik hanya REST `/api/v1/pesan-dinein` yang
+      sudah ber-rate-limit dan berbatas body.
+
+**P0 — fraud/otorisasi (diperbaiki 2026-10-24)**
+
+- [x] **Kritis:** kasir dapat mengirim `statusPesanan: 'DIBATALKAN'` saat
+      posting. Diperbaiki: `PostingTransaksiSchema` dan
+      `BuatDraftTransaksiSchema` menolak `DIBATALKAN` (enum input menyaring
+      nilai itu), dan pembatalan POS hanya lewat retur. Filter laporan tetap
+      mengecualikan `DIBATALKAN`; alur pembatalan khusus owner (reversal
+      stok/jurnal/pembayaran atomik) tetap backlog PLA-02.
+- [x] **Tinggi:** `statusKasirReview: 'DISETUJUI'` dari klien. Diperbaiki:
+      field disaring dari input publik (`PostingTransaksiSchema` strip), mode
+      review `kasir`/`owner` diverifikasi di server oleh `postingTransaksi`
+      (owner-mode tanpa draft disetujui ditolak), draft/keputusan review
+      dicatat atomik (`opsi.tx`) + `TransaksiReviewAudit`.
+- [x] **Tinggi:** `setPengaturanFn` memakai `requireKasir`. Diperbaiki:
+      kunci sensitif (pajak, diskon maks, `review_transaksi_mode`, status toko)
+      kini owner-only pada lapisan `setPengaturan`; peran aktor diteruskan ke
+      seluruh jalur penulisan (server fn + REST).
+- [x] **Tinggi:** retur bisa direfund berulang. Diperbaiki: agregasi retur
+      kumulatif per `transaksiItemId` di dalam `$transaction` dengan
+      `pg_advisory_xact_lock`, retur menolak transaksi belum lunas/dibatalkan,
+      jurnal pembalik dikoreksi (debit Pendapatan, credit Kas).
+- [x] **Tinggi:** `POST /api/v1/pesan-dinein` menerima `memberId` klien.
+      Diperbaiki: `memberId` disaring dari body publik dan respons hanya
+      memuat nama/tier dari lookup telepon; rate limit per nomor telepon
+      5/menit (`rateLimitKunci`). Verifikasi telepon lanjutan (OTP) tetap
+      backlog.
+
+**P1 — penyalahgunaan publik (sebagian diperbaiki 2026-10-26)**
+
+- [x] Meja dapat dikunci pesanan online tanpa pembayaran. Diperbaiki:
+      dine-in publik **wajib** `mejaToken` QR bertanda tangan
+      (`PesananOnlineSchema`, `BuatPesananDrafSchema`); `mejaId` mentah
+      di-strip Zod dan tidak pernah dipakai; UI publik tidak lagi menerima
+      pilihan meja manual (harus pindai QR). Expiry pesanan belum dibayar
+      dijalankan cron ber-secret `GET /api/cron/pembayaran-kadaluarsa`
+      (`Authorization: Bearer <CRON_SECRET>`, jadwal `*/15 * * * *` di
+      `vercel.json`); endpoint staf `POST /api/v1/pembayaran-kadaluarsa` tetap
+      ada.
+- [x] Rate limit auth tidak efektif: default `TRUST_PROXY=false` mematikan IP
+      tracking Better Auth; storage `memory` tidak lintas instance; `customRules`
+      memakai path yang salah. **Diperbaiki 2026-10-26:** storage diganti token
+      bucket PostgreSQL yang sama dengan endpoint lain (`customStorage.consume`
+      → `batasi`), jadi kuota berlaku lintas instance serverless tanpa Redis;
+      aturan `*` untuk `/sign-in*` 5/menit, `/sign-up*` 3/menit, `/callback*`
+      20/menit; `TRUST_PROXY` otomatis `true` bila `VERCEL=1` (bisa dimatikan
+      eksplisit) dengan `TRUST_PROXY_HOPS=1`. Env Vercel tetap boleh diisi
+      manual sebagai dokumentasi, tetapi tidak lagi wajib.
+- [x] `max_file_size` Cloudinary tidak ikut ditandatangani. Diperbaiki:
+      `max_file_size` masuk parameter signature (`src/server/cloudinary.ts`)
+      dan dikirim klien (`src/lib/cloudinary.ts`), sehingga batas 2 MB tidak
+      bisa dilonggarkan lewat klien kustom.
+
+**P2 — rendah (sebagian diperbaiki 2026-10-26)**
+
+- [x] Audit `PUT /api/v1/pengaturan` tidak mengirim `aktorId` — diverifikasi
+      2026-10-26: route REST dan `setPengaturanFn` sudah meneruskan id
+      pengguna, dan `catatAudit` menyimpannya. Catatan lama sudah basi.
+- [x] 5 advisory dependensi. Diperbaiki: `@tailwindcss/typography` (tidak
+      dipakai) dihapus, `overrides.fast-uri ^3.1.9` ditambahkan; `bun audit`
+      kini **No vulnerabilities found** (781 paket).
+- [x] Alerting fraud: `src/server/fraudAlert.ts` mencatat `logger.warn`
+      terstruktur untuk pembatalan pesanan online, retur, dan perubahan
+      pengaturan sensitif (pajak/diskon/mode review/status toko), plus POST
+      opsional ke `FRAUD_WEBHOOK_URL`. Tidak pernah melempar error.
+- [ ] MFA untuk OWNER belum ada. **Blocker:** butuh keputusan produk
+      (TOTP vs passkey), kolom/enrollment di `User`/Better Auth, UI
+      pendaftaran + verifikasi, dan kode pemulihan. Belum dikerjakan.
+- [x] `$queryRawUnsafe('SELECT 1')` di health check diganti `$queryRaw`
+      (2026-10-26).
+
+---
+
+## HARDENING & SKALA — Fase 1–2 (2026-10-24) — Selesai
+
+> Implementasi atas audit 2026-10-24: blok "Backlog P0 performa" +
+> "Temuan kritis" (migrasi) + P0 fraud/otorisasi. Fase 3 (operasional:
+> GlitchTip/fraud-alert, uji restore backup, MFA OWNER, `bun audit` bersih,
+> e2e WebKit/mobile) masih backlog.
+
+- [x] **HARD-SEC-01..05** Lima temuan P0 fraud/otorisasi ditutup (detail di
+      seksi "Temuan keamanan" di atas): status POS `DIBATALKAN` ditolak,
+      `statusKasirReview` disaring + kebijakan review dipaksa server,
+      pengaturan sensitif owner-only, retur kumulatif memakai
+      `pg_advisory_xact_lock` + penolakan sumber belum lunas/dibatalkan +
+      jurnal pembalik dikoreksi, `pesan-dinein` tanpa `memberId` + rate limit
+      per telepon.
+- [x] **HARD-MIG-01** Perbaikan/idempotensi migrasi:
+      `20261022094437_add_nominal_disetujui` (kondisional),
+      `20261024000000_fix_nominal_disetujui_order`,
+      `20261023160000_add_draft_transaksi_dan_review_audit` (idempoten).
+      Semua migration diverifikasi apply bersih pada DB Neon kosong sekali-pakai
+      (skrip sementara `verify-migrations.ts`, DB dibuang setelah uji).
+- [x] **HARD-DB-01** Prisma pool/timeout env-configurable (lihat
+      HARD-PERF-05 di "Backlog P0 performa").
+- [x] **HARD-PERF-01..05** Backlog P0 performa tuntas (detail di seksi
+      "Backlog P0 performa" di atas): paginasi server `/bahan`/`/produk`/
+      `/member`, dashboard terpisah dari katalog kasir, agregasi SQL laporan
+      penjualan/pajak/belanja, cron kadaluarsa berbatch, koneksi DB
+      configurable.
+- [x] **HARD-IDX-01** Migration `20261024020000_add_composite_indexes`
+      (idempoten `IF NOT EXISTS`): partial `Transaksi_terjual_tanggal_idx`
+      & `Transaksi_kadaluarsa_idx`, komposit `Transaksi(memberId, tanggal)`,
+      `PembelianBahan(supplierId, sumberBelanja, tanggal)`,
+      `TransaksiItem(produkId, qty)`; bagian representatif dicatat di
+      `schema.prisma` (`@@index`) lalu `prisma generate`.
+- [x] **HARD-TES-01** Flake test dituntaskan: `mejaToken` "tolak token yang
+      dirusak" kini memilih pengganti karakter yang pasti berbeda (dulu bisa
+      no-op saat karakter terakhir memang 'A').
+- [x] **HARD-GATE** Gate penuh hijau setelah seluruh perubahan:
+      `bunx tsc --noEmit` bersih, `bun run lint` 0 temuan, `bun run check`
+      (Prettier) lulus, `bun run test:vitest` **355/355** (54 file),
+      `bun run test:e2e` **71/71** (Chromium), `bun --bun run build` exit 0,
+      `bun run perf:budget` 505,6 KB gzip < 600 KB, `db:migrate:status`
+      25 migrasi up to date, `db:seed` dijalankan terakhir. Smoke DB sekali-pakai:
+      laporan (pajak – `periode Minggu` `2026-W43` = minggu ISO JS; belanja;
+      penjualan) dan cron (3 pembatalan + 3 audit + status `DIBATALKAN`,
+      idempoten diulang).
+
+---
+
+## CLEANUP & ANALISIS CODEBASE (2026-10-26)
+
+> Pemutakhiran menyeluruh: kode mati, duplikasi tipe, konfigurasi analisis,
+> dan verifikasi gate penuh. Tidak ada perubahan perilaku produk.
+
+### Yang dibersihkan / diperbaiki
+
+- [x] Hapus route mati `src/routes/php2shell.tsx` (alat dev tanpa UI/pemakai,
+      memicu 3 error lint + Prettier) dan regenerasi `src/routeTree.gen.ts`.
+- [x] Hapus `src/types/shift.d.ts` — satu-satunya orphan sejati dari pemindaian
+      382 modul `src` (381 terjangkau dari route/titik masuk).
+- [x] Hapus 9 lokasi ekspor tipe tak terpakai: `NilaiUrut`,
+      `PeriodeNotifikasi`, `PaymentWebhookInput` (2 lokasi), `DraftItemDetail`,
+      `MemberSiap`, `KodeKebijakan`, `ModeReviewTransaksi`,
+      `BuatDraftTransaksiInput`, `ReviewTransaksiInput`, `TandaiLunasInput`.
+- [x] Deduplikasi tipe notifikasi: `TipeNotifikasi`/`PesanNotifikasi` hanya di
+      `src/types/notifikasi.d.ts`; `src/server/notifikasiPesan.ts` mengimpor,
+      tidak lagi mendefinisikan ulang.
+- [x] Pindahkan `IdUkuranKertasTermal` ke `src/types/printer.d.ts` (diturunkan
+      dari `UKURAN_KERTAS_TERMAL`); 3 pemakai diarahkan ke sana,
+      `src/lib/ukuran-kertas.ts` tetap re-export untuk kompatibilitas.
+- [x] `src/routes/api/v1/health.ts`: `$queryRawUnsafe('SELECT 1')` →
+      `$queryRaw` tagged template.
+- [x] `knip.json`: entry point nyata (route tree, router, start, scripts, tests,
+      prisma, config, MCP) + `ignoreIssues` untuk `components/ui`,
+      `generated`, dan `paraglide`. Sebelumnya `entry: ["src/**/*"]` membuat
+      semua file dianggap terpakai sehingga orphan tidak pernah terdeteksi.
+- [x] `.gitignore`: tambah `/audit-*.md`, `.vitest/`, dan `opencode.json`
+      (konfigurasi agen berisi path absolut, tidak portabel).
+- [x] CI e2e (`.github/workflows/ci.yml`): install browser `chromium` **dan**
+      `webkit`. Sebelumnya hanya Chromium, padahal `playwright.config.ts`
+      menjalankan proyek `webkit-mobile` — job e2e pasti gagal di CI.
+- [x] Verifikasi struktur: seluruh hook `use*` berada di `src/hooks/` (7 file),
+      seluruh skema Zod domain di `src/validations/` (29 file), tipe domain di
+      `src/types/`. Sisa impor `zod` di `src/server/galat.ts` hanya untuk
+      `ZodError` dan `src/env.ts` untuk skema environment — sesuai aturan.
+
+### Hasil gate (2026-10-26)
+
+- [x] `bunx tsc --noEmit` — bersih.
+- [x] `bun run lint` — 0 temuan.
+- [x] `bun run check` — Prettier bersih.
+- [x] `bunx knip` — exit 0 setelah konfigurasi diperbaiki.
+- [x] `bun run test:vitest` — **359/359** (55 file).
+- [x] `bun run test:e2e` — **141 lulus + 1 flaky** (Chromium 71 + WebKit
+      mobile 70 lulus, 1 flaky pada form produk WebKit yang lolos saat retry
+      `retries: 1`; tidak ada kegagalan keras).
+- [x] `bun --bun run build` — exit 0 (hanya peringatan `use client` rolldown
+      dari dependensi, bukan kode aplikasi).
+- [x] `bun run perf:budget` — 92 file; gzip 505,8 KB/600 KB; JS terbesar
+      91,1 KB/160 KB; CSS 18,2 KB/50 KB.
+- [x] `bun run db:migrate:status` — 27 migrasi, up to date; `prisma migrate
+diff --from-config-datasource` kosong (tidak ada drift).
+- [x] `bun run db:seed` — 47 produk, 24 bahan, 3 member, 8 transaksi,
+      7 jurnal (berimbang), 4 user, 5 shift.
+- [x] `bun run docs:sync` + `bun run docs:check` — sinkron.
+
+### Temuan yang masih terbuka
+
+- [x] **Batas file 397 baris** — 3 file terbesar sudah dipecah 2026-10-26:
+      `src/server/percetakan.ts` (765 → barrel 26 baris + `printerUmum.ts`
+      273 + `printerPerangkat.ts` 238 + `printJob.ts` 273),
+      `src/routes/pengaturan.tsx` (597 → 41 baris + `usePengaturanForm.ts`
+      231 + `BagianIdentitas.tsx` 183 + `BagianOperasional.tsx` 257), dan
+      `src/components/pesanan/Pesanan.tsx` (510 → 259 baris + `usePesanan.ts`
+      322). Impor publik lama tetap jalan.
+      Sisa 9 file masih melebihi: `src/routes/buku-besar.tsx` (495),
+      `src/routes/produk.tsx` (484), `src/server/pesananDraf.ts` (481),
+      `src/routes/member.tsx` (468), `src/routes/member.$id.tsx` (441),
+      `src/server/postingTransaksi.ts` (431), `src/routes/meja.tsx` (420),
+      `src/routes/shift.tsx` (419), `src/routes/laporan-belanja.tsx` (419).
+- [x] **Flake E2E WebKit** — `retries: 1` dipasang khusus proyek
+      `webkit-mobile` (`playwright.config.ts`); Chromium tetap tanpa retry.
+- [x] **Rate limit auth lintas instance** — selesai 2026-10-26 tanpa Redis:
+      Better Auth memakai token bucket PostgreSQL (`customStorage`), aturan
+      wildcard untuk sign-in/sign-up/callback, dan `TRUST_PROXY` otomatis aktif
+      di Vercel. Detail di P1 keamanan.
+- [ ] **MFA OWNER** — butuh keputusan produk + skema/enrollment (lihat P2).
+
+### Hardening tambahan 2026-10-26
+
+- [x] **Service worker/PWA**: `public/sw.js` + plugin build
+      `precacheServiceWorker()` (`vite.config.ts`) menghasilkan
+      `/sw-manifest.js` berisi seluruh aset build; registrasi hanya produksi
+      lewat `src/components/DaftarServiceWorker.tsx` di `__root.tsx`.
+      Navigasi offline dibatasi ke halaman publik (`/`, `/pesanan`, `/login`)
+      agar HTML ber-sesi tidak pernah di-cache; `/api/**` selalu network.
+- [x] **Cron expiry ber-secret**: `src/server/cronAuth.ts` (perbandingan
+      `timingSafeEqual`), route `GET /api/cron/pembayaran-kadaluarsa`, env
+      `CRON_SECRET`; jadwal Vercel `*/15 * * * *`.
+- [x] **Cloudinary `max_file_size`** ikut ditandatangani server + dikirim klien.
+- [x] **Dine-in token-only**: `mejaId` mentah dihapus dari schema publik,
+      `pesananData` tidak lagi mengirim daftar meja, UI publik hanya menerima
+      meja dari QR.
+- [x] **Fraud alert** terstruktur untuk pembatalan/retur/pengaturan sensitif
+      (`FRAUD_WEBHOOK_URL` opsional).
+- [x] **Dependensi bersih**: `bun audit` 0 temuan; `@tailwindcss/typography`
+      dihapus.
+- [x] **Performa**: cache sesi per request (`WeakMap<Headers>`), invalidasi
+      KDS terfilter, index bagian 2
+      (`20261026090000_add_indexes_part2`).
+- [x] **Drift migrasi lama (diperbaiki 2026-10-26)**: `DraftTransaksi` dan
+      `TransaksiReviewAudit` dibuat PascalCase oleh
+      `20261023160000_add_draft_transaksi_dan_review_audit`, sedangkan
+      `schema.prisma` memetakan `draft_transaksi`/`transaksi_review_audit`.
+      Migrasi aditif `20261026100000_fix_draft_review_table_names` me-rename
+      tabel PascalCase menjadi snake_case (data ikut), atau menghapus versi
+      PascalCase yang kosong bila versi snake_case sudah ada; bila keduanya
+      berisi data migrasi berhenti agar tidak ada data hilang. Nama
+      index/constraint disamakan dengan default Prisma, unique index
+      `draft_transaksi_transaksiId_key` ditambahkan, dan
+      `PembelianBahan_supplier_tanggal_idx` di-rename ke
+      `PembelianBahan_supplierId_sumberBelanja_tanggal_idx`. DB dev sudah
+      diterapkan; `prisma migrate diff` kini kosong. Jalur fresh-deploy diuji
+      dalam transaksi rollback (nama tabel/index/constraint benar, data
+      bertahan).
+
+### Catatan analisis
+
+- Tidak ditemukan SQL injection, XSS, SSRF, path traversal, `eval`,
+  `child_process`, atau secret hardcoded di kode aplikasi. Raw SQL yang ada
+  memakai tagged template/parameter; satu-satunya `$queryRawUnsafe` sudah
+  dihapus. Satu-satunya `child_process` ada di `scripts/uji-beban.ts` (memanggil
+  k6 dari wrapper uji beban, bukan kode yang melayani request).
+- Ekspor tak terpakai yang tersisa hanya di `src/components/ui/**` (cadangan
+  registry shadcn) dan `src/generated/prisma/**` (kode generator) — sengaja
+  tidak disentuh sesuai aturan repo.
+
+---
+
+## Kesehatan jangka panjang (2026-10-26)
+
+> Menutup item B: pemecahan file besar, sisa P1 performa, ambang cakupan,
+> uji beban, dan audit aksesibilitas.
+
+- [x] **Split file prioritas** (detail di "Temuan yang masih terbuka"):
+      `percetakan.ts`, `pengaturan.tsx`, dan `Pesanan.tsx` kini di bawah batas;
+      impor publik lama tetap bekerja lewat barrel/hook.
+- [x] **Sisa P1 performa**: `defaultStaleTime`/`defaultPreloadStaleTime` 30
+      detik di router, font Manrope/Fraunces self-host, dan
+      `NotificationBellLazy` untuk memuat lonceng notifikasi secara malas.
+- [x] **Ambang cakupan**: 64% statements / 54% branch / 59% functions / 66%
+      lines di `vitest.config.ts`, naik dari 63/53/57/65 setelah baseline
+      diukur ulang (65,04/55,57/60,96/67,56).
+- [x] **Uji beban k6**: `tests/load/checkout.js` + `scripts/uji-beban.ts` +
+      `bun run test:load`; sesi KASIR sementara dibuat dan dihapus otomatis,
+      ambang gagal `http_req_failed < 1%`, p95 < 1,5 s, p99 < 3 s.
+- [x] **Audit aksesibilitas**: `tests/e2e/a11y.spec.ts` (axe WCAG 2.1 A/AA +
+      fokus keyboard) lulus 9/9 di Chromium dan WebKit mobile. Perbaikan yang
+      menyertainya: label slider/select/input split payment/diskon/catatan,
+      kontras `DaftarDraft`, `tabIndex` pada wadah gulir tabel/grafik,
+      `aria-label` pada thumb slider, dan seeding produk khusus E2E.
+- [ ] **Sisa 9 file > 397 baris** — lihat daftar di "Temuan yang masih
+      terbuka"; dipecah bertahap tanpa mengubah kontrak.
+- [ ] **Uji beban di staging/produksi** — angka k6 saat ini hanya regresi
+      lokal; jalankan pada environment nyata sebelum mengklaim kapasitas.
+- [ ] **PITR/uptime/error monitoring** — masih butuh konsol/akun eksternal
+      (Neon, UptimeRobot, GlitchTip/Sentry).
+
+### Gate penuh (2026-10-26, setelah perubahan)
+
+- [x] `bunx tsc --noEmit` — bersih.
+- [x] `bun run lint` — 0 temuan.
+- [x] `bun run check` — Prettier bersih.
+- [x] `bun run docs:check` — snapshot PRD sinkron.
+- [x] `bun run test:vitest` — **359/359** (55 file).
+- [x] `bun run test:coverage` — ambang lulus; 65,04% statements / 55,57%
+      branch / 60,96% functions / 67,56% lines.
+- [x] `bun run test:e2e` — **158 lulus**, 2 flaky WebKit yang lolos saat retry
+      (`/pengaturan` console error sementara dan form produk), 0 gagal keras.
+- [x] `tests/e2e/a11y.spec.ts` — 9/9 Chromium dan 9/9 WebKit mobile.
+- [x] `bun --bun run build` — exit 0 (hanya peringatan `use client` dari
+      dependensi).
+- [x] `bun run perf:budget` — 100 file; gzip 532,8/600 KB; aset terbesar
+      102,7/160 KB; CSS 37,4/50 KB.
+- [x] `bun run db:seed` — 47 produk, 24 bahan, 3 member, 8 transaksi,
+      7 jurnal berimbang, 4 user, 5 shift.
+- [ ] `bun run test:load` — k6 belum terpasang di mesin pengembangan ini;
+      skrip + wrapper siap dijalankan di staging/CI (lihat `docs/PERFORMA.md`).

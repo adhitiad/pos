@@ -11,7 +11,7 @@ export const Route = createFileRoute('/api/v1/health')({
         try {
           const batas = await rateLimit(request, 60)
           if (batas) return batas
-          await prisma.$queryRawUnsafe('SELECT 1')
+          await prisma.$queryRaw`SELECT 1`
           return ok({
             status: 'ok',
             timestamp: new Date().toISOString(),

@@ -1,4 +1,4 @@
-import type { Grup } from '#/validations/laporan-penjualan'
+import type { Grup, Dimensi } from '#/validations/laporan-penjualan'
 
 export interface BarisTransaksi {
   tanggal: Date
@@ -8,6 +8,18 @@ export interface BarisTransaksi {
   ongkir: number
   total: number
   hpp: number
+  qtyTerjual: number
+  kategoriId: string | null
+  kategoriNama: string | null
+  kasirId: string | null
+  shiftId: string | null
+  memberId: string | null
+  metodeBayar: string
+  mejaId: string | null
+  deliveryId: string | null
+  sumber: string
+  statusPesanan: string
+  pajakJenis: string | null
 }
 
 export interface RekapRow {
@@ -21,6 +33,7 @@ export interface RekapRow {
 
 export interface Ringkasan {
   jumlahTransaksi: number
+  qtyTerjual: number
   subtotal: number
   diskon: number
   pajak: number
@@ -29,6 +42,8 @@ export interface Ringkasan {
   omzet: number
   hpp: number
   labaKotor: number
+  poinTerpakai: number
+  poinDapat: number
 }
 
 export interface ProdukTerlaris {
@@ -45,12 +60,23 @@ export interface PerformaKasir {
   omzet: number
 }
 
+export interface RekapDimensi {
+  dimensi: Dimensi
+  kunci: string
+  label: string
+  jumlahTransaksi: number
+  omzet: number
+  total: number
+}
+
 export interface LaporanPenjualan {
   dari: string
   sampai: string
   grup: Grup
+  dimensi?: Dimensi
   ringkasan: Ringkasan
   rekap: RekapRow[]
+  rekapDimensi?: RekapDimensi[]
   produkTerlaris: ProdukTerlaris[]
   performaKasir: PerformaKasir[]
 }

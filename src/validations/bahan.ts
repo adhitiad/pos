@@ -1,5 +1,14 @@
 import { z } from 'zod'
 
+import { TabelQuerySchema } from './pagination'
+
+export const BahanQuerySchema = TabelQuerySchema.extend({
+  sort: z.enum(['nama', 'satuan', 'stok', 'minimum']).default('nama'),
+  filter: z.enum(['semua', 'menipis']).default('semua'),
+})
+
+export type BahanQueryInput = z.infer<typeof BahanQuerySchema>
+
 export const BahanInputSchema = z.object({
   nama: z.string().trim().min(1, 'Nama wajib diisi').max(100),
   satuan: z.string().trim().min(1, 'Satuan wajib diisi').max(10),

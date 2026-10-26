@@ -1,11 +1,16 @@
 import { prisma } from '#/db'
 import { Prisma } from '#/generated/prisma/client.js'
+import type { TierMember } from '#/generated/prisma/enums.js'
 import {
   MemberIdSchema,
   MemberInputSchema,
   UpdateMemberSchema,
 } from '#/validations/member'
-import type { MemberInput, UpdateMemberInput } from '#/validations/member'
+import type {
+  MemberInput,
+  MemberQueryInput,
+  UpdateMemberInput,
+} from '#/validations/member'
 import { pengaturanData } from './pengaturan.js'
 import { GalatDomain } from './galat.js'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
@@ -21,20 +26,20 @@ export async function memberIdDariEmail(email: string) {
   return member?.id ?? null
 }
 
-// Helper to get all member raw data with include (no pagination)
-function getAllMemberRaw() {
-  return prisma.member.findMany({
-    orderBy: { nama: 'asc' },
-    include: {
-      _count: { select: { transaksi: true } },
-      transaksi: {
-        where: FILTER_TRANSAKSI_TERJUAL,
-        orderBy: { tanggal: 'desc' },
-        take: 1,
-        select: { tanggal: true, total: true },
-      },
-    },
+// Cari member berdasarkan nomor telepon (untuk dine-in non-member lookup).
+export async function memberDariTelepon(telepon: string | undefined): Promise<{
+  id: string
+  nama: string
+  telepon: string | null
+  poin: number
+  tier: TierMember
+} | null> {
+  if (!telepon || telepon.trim().length < 3) return null
+  const member = await prisma.member.findFirst({
+    where: { telepon: { equals: telepon.trim(), mode: 'insensitive' } },
+    select: { id: true, nama: true, telepon: true, poin: true, tier: true },
   })
+  return member
 }
 
 function pesanUnik(e: unknown, konteks: string): GalatDomain {
@@ -44,33 +49,95 @@ function pesanUnik(e: unknown, konteks: string): GalatDomain {
   throw e
 }
 
-export async function memberData(opts?: { take?: number; skip?: number }) {
-  // Ambil semua member dari DB, lalu paginasi.
-  const rawMembers = await getAllMemberRaw()
+const pilihMember = {
+  id: true,
+  nama: true,
+  telepon: true,
+  email: true,
+  alamat: true,
+  poin: true,
+  totalBelanja: true,
+  diskonPersen: true,
+  tier: true,
+  _count: { select: { transaksi: true } },
+  transaksi: {
+    where: FILTER_TRANSAKSI_TERJUAL,
+    orderBy: { tanggal: 'desc' },
+    take: 1,
+    select: { tanggal: true, total: true },
+  },
+} satisfies Prisma.MemberSelect
 
-  const take = opts?.take ?? rawMembers.length
-  const skip = opts?.skip ?? 0
-  const sliced = rawMembers.slice(skip, skip + take)
+// Paginasi + pencarian member di database.
+export async function memberPage(query: MemberQueryInput) {
+  const q = query.q?.trim()
+  const where: Prisma.MemberWhereInput = q
+    ? {
+        OR: [
+          { nama: { contains: q, mode: 'insensitive' } },
+          { telepon: { contains: q, mode: 'insensitive' } },
+          { email: { contains: q, mode: 'insensitive' } },
+        ],
+      }
+    : {}
 
-  // Bentuk keluaran untuk UI.
-  return sliced.map((m) => ({
-    id: m.id,
-    nama: m.nama,
-    telepon: m.telepon,
-    email: m.email,
-    alamat: m.alamat,
-    poin: m.poin,
-    totalBelanja: m.totalBelanja.toNumber(),
-    diskonPersen: m.diskonPersen?.toNumber() ?? null,
-    tier: m.tier,
-    jumlahTransaksi: m._count.transaksi,
-    terakhir: m.transaksi[0]
-      ? {
-          tanggal: m.transaksi[0].tanggal.toISOString(),
-          total: m.transaksi[0].total.toNumber(),
-        }
-      : null,
-  }))
+  const urut: Prisma.MemberOrderByWithRelationInput =
+    query.sort === 'telepon'
+      ? { telepon: query.arah }
+      : query.sort === 'poin'
+        ? { poin: query.arah }
+        : query.sort === 'transaksi'
+          ? { transaksi: { _count: query.arah } }
+          : { nama: query.arah }
+
+  const [total, raw] = await Promise.all([
+    prisma.member.count({ where }),
+    prisma.member.findMany({
+      where,
+      orderBy: urut,
+      skip: query.skip,
+      take: query.take,
+      select: pilihMember,
+    }),
+  ])
+
+  return {
+    baris: raw.map((m) => ({
+      id: m.id,
+      nama: m.nama,
+      telepon: m.telepon,
+      email: m.email,
+      alamat: m.alamat,
+      poin: m.poin,
+      totalBelanja: m.totalBelanja.toNumber(),
+      diskonPersen: m.diskonPersen?.toNumber() ?? null,
+      tier: m.tier,
+      jumlahTransaksi: m._count.transaksi,
+      terakhir: m.transaksi[0]
+        ? {
+            tanggal: m.transaksi[0].tanggal.toISOString(),
+            total: m.transaksi[0].total.toNumber(),
+          }
+        : null,
+    })),
+    total,
+  }
+}
+
+// Kompatibilitas untuk pemakai lama: array tanpa metadata.
+export async function memberData(opts?: {
+  take?: number
+  skip?: number
+  q?: string
+}) {
+  const hasil = await memberPage({
+    take: opts?.take ?? 10_000,
+    skip: opts?.skip ?? 0,
+    q: opts?.q,
+    sort: 'nama',
+    arah: 'asc',
+  })
+  return hasil.baris
 }
 
 // Ambang total belanja untuk tiap tier (Rupiah).

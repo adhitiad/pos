@@ -1,3 +1,5 @@
+import type { Prisma } from '#/generated/prisma/client.js'
+import type { Role } from '#/generated/prisma/enums.js'
 import type { METODE_BAYAR } from '#/validations/transaksi'
 
 export type MetodeBayar = (typeof METODE_BAYAR)[number]
@@ -96,6 +98,8 @@ export interface HasilTransaksiRingkas {
     pajak: { toNumber: () => number }
     pajakJenis: string | null
     ongkir: { toNumber: () => number }
+    alamat: string | null
+    deliveryId: string | null
     total: { toNumber: () => number }
     metodeBayar: string
     mejaId: string | null
@@ -127,4 +131,37 @@ export interface HasilTransaksiRingkas {
   memberInfo?: { nama: string; totalBelanja: number; tier: string } | null
   /** True bila respons ini hasil replay idempoten (transaksi sudah ada). */
   replay?: boolean
+}
+
+export interface MemberSiap {
+  id: string
+  nama: string
+  poin: number
+  diskonPersen: Prisma.Decimal | null
+  totalBelanja: Prisma.Decimal
+  tier: string
+}
+
+export interface HasilMember {
+  member: MemberSiap | null
+  /** Poin yang ditukar (dikurangi dari saldo member). */
+  poinTerpakai: number
+  /** Diskon otomatis dari tier member (rupiah). */
+  diskonMember: number
+}
+
+// Kebutuhan stok gabungan untuk satu transaksi. Map mencegah item yang sama
+// dihitung dua kali saat diproses dalam satu query.
+export type KebutuhanStok = {
+  qtyProduk: Map<string, number>
+  qtyBahan: Map<string, number>
+}
+
+export type OpsiPosting = {
+  /** POS (default) atau pesanan online yang dibayar belakangan. */
+  sumber?: 'POS' | 'ONLINE'
+  /** Pelaku pemosting untuk kebijakan diskon & audit (SEC-22). */
+  aktor?: { id?: string; peran?: Role }
+  /** Transaksi pemanggil untuk posting + audit review yang atomik. */
+  tx?: Prisma.TransactionClient
 }

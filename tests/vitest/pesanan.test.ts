@@ -1,6 +1,7 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
 import { prisma } from '../../src/db.js'
+import { buatTokenMeja } from '../../src/server/mejaToken.js'
 import { notifikasiData } from '../../src/server/notifikasi.js'
 import { pesanTransaksi } from '../../src/server/pesanan.js'
 import {
@@ -43,6 +44,7 @@ async function bersihkan() {
   await prisma.produk.deleteMany()
   await prisma.kategori.deleteMany()
   await prisma.meja.deleteMany()
+  await prisma.delivery.deleteMany()
 }
 
 describe('pesanTransaksi (pesanan online)', () => {
@@ -59,10 +61,11 @@ describe('pesanTransaksi (pesanan online)', () => {
   it('membuat pesanan dine-in dengan pembayaran online QRIS, kasirId null', async () => {
     const produk = await buatProduk('Kopi', 'P-ONLINE-1', 20000, 10)
     const meja = await buatMeja('M1', 'Meja 1')
+    const { token } = buatTokenMeja(meja.id)
 
     const hasil = await pesanTransaksi({
       items: [{ produkId: produk.id, qty: 2 }],
-      mejaId: meja.id,
+      mejaToken: token,
       metodeBayar: 'QRIS',
     })
 
@@ -105,6 +108,23 @@ describe('pesanTransaksi (pesanan online)', () => {
     expect(hasil.statusPesanan).toBe('MENUNGGU')
     expect(hasil.mejaId).toBeNull()
     expect(hasil.total).toBe(15000)
+  })
+
+  it('mengabaikan mejaId mentah pada pesanan publik', async () => {
+    const produk = await buatProduk('Teh', 'P-ONLINE-MENTAH', 15000, 10)
+    const meja = await buatMeja('M-MENTAH', 'Meja Mentah')
+
+    const hasil = await pesanTransaksi({
+      items: [{ produkId: produk.id, qty: 1 }],
+      mejaId: meja.id,
+      metodeBayar: 'QRIS',
+    })
+
+    expect(hasil.mejaId).toBeNull()
+    const trx = await prisma.transaksi.findUniqueOrThrow({
+      where: { id: hasil.transaksiId },
+    })
+    expect(trx.mejaId).toBeNull()
   })
 
   it('mengembalikan error bila produk tidak ditemukan', async () => {
@@ -229,5 +249,107 @@ describe('pesanTransaksi (pesanan online)', () => {
       where: { id: produk.id },
     })
     expect(produkSetelah.stok).toBe(5)
+  })
+
+  it('membuat pesanan antar dengan ongkir dari master delivery', async () => {
+    const kurir = await prisma.delivery.create({
+      data: {
+        nama: 'Kurir Test',
+        tarif: 7000,
+        estimasi: '45 menit',
+        aktif: true,
+      },
+    })
+    const produk = await buatProduk('Mie', 'P-ANTAR-1', 25000, 10)
+
+    const hasil = await pesanTransaksi({
+      items: [{ produkId: produk.id, qty: 1 }],
+      deliveryId: kurir.id,
+      alamat: 'Jl. Contoh No. 123, Kota',
+      metodeBayar: 'QRIS',
+    })
+
+    expect(hasil.deliveryId).toBe(kurir.id)
+    expect(hasil.ongkir).toBe(7000)
+    expect(hasil.total).toBe(25000 + 7000)
+    expect(hasil.mejaId).toBeNull()
+
+    const trx = await prisma.transaksi.findUniqueOrThrow({
+      where: { id: hasil.transaksiId },
+    })
+    expect(trx.deliveryId).toBe(kurir.id)
+    expect(trx.ongkir.toNumber()).toBe(7000)
+    expect(trx.alamat).toBe('Jl. Contoh No. 123, Kota')
+  })
+
+  it('tolak pesanan antar bila layanan antar tidak aktif', async () => {
+    const kurir = await prisma.delivery.create({
+      data: {
+        nama: 'Kurir Mati',
+        tarif: 7000,
+        estimasi: '45 menit',
+        aktif: false,
+      },
+    })
+    const produk = await buatProduk('Mie', 'P-ANTAR-2', 25000, 10)
+
+    await expect(
+      pesanTransaksi({
+        items: [{ produkId: produk.id, qty: 1 }],
+        deliveryId: kurir.id,
+        alamat: 'Jl. Contoh No. 123, Kota',
+        metodeBayar: 'QRIS',
+      }),
+    ).rejects.toThrow('Layanan antar tidak tersedia')
+  })
+
+  it('membuat pesanan dine-in dari token QR meja', async () => {
+    const meja = await buatMeja('Q1', 'Meja QR')
+    const produk = await buatProduk('Es Teh', 'P-QR-1', 12000, 10)
+
+    const { token } = buatTokenMeja(meja.id)
+
+    const hasil = await pesanTransaksi({
+      items: [{ produkId: produk.id, qty: 2 }],
+      mejaToken: token,
+      metodeBayar: 'QRIS',
+    })
+
+    expect(hasil.mejaId).toBe(meja.id)
+    expect(hasil.total).toBe(24000)
+
+    const trx = await prisma.transaksi.findUniqueOrThrow({
+      where: { id: hasil.transaksiId },
+    })
+    expect(trx.mejaId).toBe(meja.id)
+    expect(trx.deliveryId).toBeNull()
+  })
+
+  it('tolak token QR meja yang tidak valid', async () => {
+    const produk = await buatProduk('Es Teh', 'P-QR-2', 12000, 10)
+
+    await expect(
+      pesanTransaksi({
+        items: [{ produkId: produk.id, qty: 1 }],
+        mejaToken: 'bukan-token-yang-valid',
+        metodeBayar: 'QRIS',
+      }),
+    ).rejects.toThrow('QR meja tidak valid')
+  })
+
+  it('tolak token QR meja yang meja-nya sudah nonaktif', async () => {
+    const meja = await buatMeja('Q2', 'Meja Nonaktif')
+    await prisma.meja.update({ where: { id: meja.id }, data: { aktif: false } })
+    const produk = await buatProduk('Es Teh', 'P-QR-3', 12000, 10)
+
+    const { token } = buatTokenMeja(meja.id)
+
+    await expect(
+      pesanTransaksi({
+        items: [{ produkId: produk.id, qty: 1 }],
+        mejaToken: token,
+        metodeBayar: 'QRIS',
+      }),
+    ).rejects.toThrow('Meja tidak tersedia')
   })
 })

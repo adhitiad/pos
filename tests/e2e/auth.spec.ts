@@ -288,9 +288,8 @@ test.describe('halaman owner (dengan sesi)', () => {
     page,
   }) => {
     await page.goto('/produk', { waitUntil: 'networkidle' })
-    await expect(
-      page.locator('header').getByRole('link', { name: 'Kasir' }),
-    ).toBeVisible()
+    // Desktop: tautan ada di header; mobile: nav bawah yang terlihat.
+    await expect(page.locator('a[href="/kasir"]:visible').first()).toBeVisible()
     await expect(
       page.locator('header').getByRole('link', { name: 'Pesanan Online' }),
     ).toHaveCount(0)

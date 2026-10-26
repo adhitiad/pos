@@ -30,11 +30,14 @@ export default [
     ignores: [
       'eslint.config.js',
       'prettier.config.js',
+      'public/**',
       '.output/**',
       '.vercel/**',
       '.netlify/**',
       'test-results/**',
       'playwright-report/**',
+      // Skrip k6 berjalan di runtime Goja, bukan proyek TypeScript.
+      'tests/load/**',
       'src/paraglide/**',
       'src/generated/**',
     ],

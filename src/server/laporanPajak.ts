@@ -1,68 +1,29 @@
 import { prisma } from '#/db'
+import { Prisma } from '#/generated/prisma/client.js'
 import { GalatDomain } from './galat.js'
 import { LaporanPajakSchema } from '#/validations/laporan-pajak'
-import type { Grup, LaporanPajakInput } from '#/validations/laporan-pajak'
-import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
+import type { LaporanPajakInput } from '#/validations/laporan-pajak'
+import type { LaporanPajakOutput } from '#/types/laporan'
 
-export interface LaporanPajakOutput {
-  dari: string
-  sampai: string
-  grup: Grup
-  totalPerJenis: {
-    jenis: string
-    jumlahTransaksi: number
-    pajak: number
-    total: number
-    subtotal: number
-  }[]
-  riwayat: {
-    periode: string
-    jenis: {
-      jenis: string
-      pajak: number
-    }[]
-  }[]
-}
+export type { LaporanPajakOutput } from '#/types/laporan'
+
+// Zona waktu untuk pengelompokan periode laporan. Server laporan berjalan
+// dengan waktu Indonesia Barat; kolom tanggal tersimpan sebagai UTC.
+const ZONA_LAPORAN = 'Asia/Jakarta'
+
+// Ekspresi SQL: ubah instant UTC ke waktu lokal laporan.
+const tglLokal = Prisma.sql`("tanggal" AT TIME ZONE 'UTC') AT TIME ZONE ${ZONA_LAPORAN}`
 
 // ─── Laporan rekap pajak periode (PB1/PPN) ───
 // Mengelompokkan transaksi per jenis pajak (PB1 restoran/cafe, PPN retail)
 // dan periode. Data sudah tersimpan per transaksi di Transaksi.pajakJenis +
 // Transaksi.pajak; fungsi ini hanya agregasi — tidak mengubah apa pun.
 
-interface BarisPajak {
-  tanggal: Date
-  jenis: string
-  pajak: number
-  total: number
-  subtotal: number
-}
-
 interface Agregat {
   trx: number
   pajak: number
   total: number
   subtotal: number
-}
-
-function kunciPeriode(
-  tgl: Date,
-  grup: 'harian' | 'mingguan' | 'bulanan',
-): string {
-  const y = tgl.getFullYear()
-  const m = String(tgl.getMonth() + 1).padStart(2, '0')
-  const d = String(tgl.getDate()).padStart(2, '0')
-  if (grup === 'bulanan') return `${y}-${m}`
-  if (grup === 'mingguan') {
-    const d2 = new Date(Date.UTC(y, tgl.getMonth(), tgl.getDate()))
-    const hari = d2.getUTCDay() || 7
-    d2.setUTCDate(d2.getUTCDate() + 4 - hari)
-    const awalTahun = new Date(Date.UTC(d2.getUTCFullYear(), 0, 1))
-    const minggu = Math.ceil(
-      ((d2.getTime() - awalTahun.getTime()) / 86_400_000 + 1) / 7,
-    )
-    return `${d2.getUTCFullYear()}-W${String(minggu).padStart(2, '0')}`
-  }
-  return `${y}-${m}-${d}`
 }
 
 export async function laporanPajak(
@@ -73,74 +34,76 @@ export async function laporanPajak(
   const akhir = new Date(`${data.sampai}T23:59:59.999`)
   if (akhir < awal) throw new GalatDomain('Rentang tanggal tidak valid')
 
-  const transaksi = await prisma.transaksi.findMany({
-    where: {
-      tanggal: { gte: awal, lte: akhir },
-      ...FILTER_TRANSAKSI_TERJUAL,
-    },
-    orderBy: { tanggal: 'asc' },
-    select: {
-      tanggal: true,
-      pajakJenis: true,
-      pajak: true,
-      total: true,
-      subtotal: true,
-    },
-  })
+  // Format periode mengikuti kunci kunciPeriode (ISO-8601 untuk mingguan).
+  const periode =
+    data.grup === 'bulanan'
+      ? Prisma.sql`to_char(${tglLokal}, 'YYYY-MM')`
+      : data.grup === 'mingguan'
+        ? Prisma.sql`to_char(${tglLokal}, 'IYYY-"W"IW')`
+        : Prisma.sql`to_char(${tglLokal}, 'YYYY-MM-DD')`
 
-  const baris: BarisPajak[] = transaksi.map((t) => ({
-    tanggal: t.tanggal,
-    jenis: t.pajakJenis ?? 'Tanpa pajak',
-    pajak: t.pajak.toNumber(),
-    total: t.total.toNumber(),
-    subtotal: t.subtotal.toNumber(),
-  }))
-
-  // Agregat per periode + jenis pajak.
-  const peta = new Map<string, Map<string, Agregat>>()
-  for (const b of baris) {
-    const periode = kunciPeriode(b.tanggal, data.grup)
-    let perJenis = peta.get(periode)
-    if (!perJenis) {
-      perJenis = new Map()
-      peta.set(periode, perJenis)
-    }
-    let cur = perJenis.get(b.jenis)
-    if (!cur) {
-      cur = { trx: 0, pajak: 0, total: 0, subtotal: 0 }
-      perJenis.set(b.jenis, cur)
-    }
-    cur.trx += 1
-    cur.pajak += b.pajak
-    cur.total += b.total
-    cur.subtotal += b.subtotal
-  }
+  // Agregasi penuh di SQL: satu baris per (periode, jenis pajak).
+  const barisAgg = await prisma.$queryRaw<
+    Array<{
+      periode: string
+      jenis: string
+      trx: bigint
+      pajak: Prisma.Decimal
+      total: Prisma.Decimal
+      subtotal: Prisma.Decimal
+    }>
+  >(Prisma.sql`
+    SELECT ${periode} AS "periode",
+           COALESCE("pajakJenis", 'Tanpa pajak') AS "jenis",
+           COUNT(*) AS "trx",
+           SUM(COALESCE("pajak", 0)) AS "pajak",
+           SUM("total") AS "total",
+           SUM("subtotal") AS "subtotal"
+    FROM "Transaksi"
+    WHERE "tanggal" BETWEEN ${awal} AND ${akhir}
+      AND "dibayarPada" IS NOT NULL
+      AND "statusPesanan" <> 'DIBATALKAN'
+    GROUP BY 1, 2
+    ORDER BY 1 ASC
+  `)
 
   // Ringkasan keseluruhan per jenis pajak.
   const totalPerJenis = new Map<string, Agregat>()
-  for (const perJenis of peta.values()) {
-    for (const [jenis, cur] of perJenis) {
-      let a = totalPerJenis.get(jenis)
-      if (!a) {
-        a = { trx: 0, pajak: 0, total: 0, subtotal: 0 }
-        totalPerJenis.set(jenis, a)
-      }
-      a.trx += cur.trx
-      a.pajak += cur.pajak
-      a.total += cur.total
-      a.subtotal += cur.subtotal
+  for (const b of barisAgg) {
+    let a = totalPerJenis.get(b.jenis)
+    if (!a) {
+      a = { trx: 0, pajak: 0, total: 0, subtotal: 0 }
+      totalPerJenis.set(b.jenis, a)
     }
+    a.trx += Number(b.trx)
+    a.pajak += b.pajak.toNumber()
+    a.total += b.total.toNumber()
+    a.subtotal += b.subtotal.toNumber()
   }
 
-  const riwayat = [...peta.entries()]
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([periode, perJenis]) => ({
-      periode,
-      jenis: [...perJenis.entries()].map(([jenis, cur]) => ({
-        jenis,
-        pajak: cur.pajak,
-      })),
-    }))
+  const perJenisPeriode = new Map<string, Map<string, Agregat>>()
+  for (const b of barisAgg) {
+    let perJenis = perJenisPeriode.get(b.periode)
+    if (!perJenis) {
+      perJenis = new Map()
+      perJenisPeriode.set(b.periode, perJenis)
+    }
+    perJenis.set(b.jenis, {
+      trx: Number(b.trx),
+      pajak: b.pajak.toNumber(),
+      total: b.total.toNumber(),
+      subtotal: b.subtotal.toNumber(),
+    })
+  }
+
+  // BarisAgg sudah diurutkan per periode; pertahankan urutan SQL.
+  const riwayat = [...perJenisPeriode.entries()].map(([kunci, perJenis]) => ({
+    periode: kunci,
+    jenis: [...perJenis.entries()].map(([jenis, cur]) => ({
+      jenis,
+      pajak: cur.pajak,
+    })),
+  }))
 
   return {
     dari: data.dari,

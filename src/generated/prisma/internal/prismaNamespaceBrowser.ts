@@ -89,6 +89,9 @@ export const ModelName = {
   PrintJob: 'PrintJob',
   AuditLog: 'AuditLog',
   PengajuanPengeluaran: 'PengajuanPengeluaran',
+  DraftTransaksi: 'DraftTransaksi',
+  TransaksiReviewAudit: 'TransaksiReviewAudit',
+  PesananDraf: 'PesananDraf',
   Notifikasi: 'Notifikasi'
 } as const
 
@@ -332,8 +335,10 @@ export const TransaksiScalarFieldEnum = {
   poinDapat: 'poinDapat',
   metodeBayar: 'metodeBayar',
   catatan: 'catatan',
+  alamat: 'alamat',
   mejaId: 'mejaId',
   statusPesanan: 'statusPesanan',
+  statusKasirReview: 'statusKasirReview',
   sumber: 'sumber',
   dibayarPada: 'dibayarPada',
   dibayarVia: 'dibayarVia',
@@ -555,6 +560,7 @@ export type ReturScalarFieldEnum = (typeof ReturScalarFieldEnum)[keyof typeof Re
 export const ReturItemScalarFieldEnum = {
   id: 'id',
   returId: 'returId',
+  transaksiItemId: 'transaksiItemId',
   produkId: 'produkId',
   namaProduk: 'namaProduk',
   qty: 'qty',
@@ -641,6 +647,7 @@ export const AuditLogScalarFieldEnum = {
   entityId: 'entityId',
   before: 'before',
   after: 'after',
+  catatan: 'catatan',
   timestamp: 'timestamp'
 } as const
 
@@ -665,6 +672,61 @@ export const PengajuanPengeluaranScalarFieldEnum = {
 } as const
 
 export type PengajuanPengeluaranScalarFieldEnum = (typeof PengajuanPengeluaranScalarFieldEnum)[keyof typeof PengajuanPengeluaranScalarFieldEnum]
+
+
+export const DraftTransaksiScalarFieldEnum = {
+  id: 'id',
+  nomor: 'nomor',
+  kasirId: 'kasirId',
+  payloadJson: 'payloadJson',
+  subtotal: 'subtotal',
+  total: 'total',
+  metodeBayar: 'metodeBayar',
+  catatan: 'catatan',
+  waktuKlien: 'waktuKlien',
+  dibuatOffline: 'dibuatOffline',
+  idempotencyKey: 'idempotencyKey',
+  status: 'status',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  transaksiId: 'transaksiId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DraftTransaksiScalarFieldEnum = (typeof DraftTransaksiScalarFieldEnum)[keyof typeof DraftTransaksiScalarFieldEnum]
+
+
+export const TransaksiReviewAuditScalarFieldEnum = {
+  id: 'id',
+  draftId: 'draftId',
+  transaksiId: 'transaksiId',
+  kasirId: 'kasirId',
+  status: 'status',
+  catatan: 'catatan',
+  createdAt: 'createdAt'
+} as const
+
+export type TransaksiReviewAuditScalarFieldEnum = (typeof TransaksiReviewAuditScalarFieldEnum)[keyof typeof TransaksiReviewAuditScalarFieldEnum]
+
+
+export const PesananDrafScalarFieldEnum = {
+  id: 'id',
+  mejaId: 'mejaId',
+  memberId: 'memberId',
+  nama: 'nama',
+  telepon: 'telepon',
+  catatan: 'catatan',
+  status: 'status',
+  itemsJson: 'itemsJson',
+  subtotal: 'subtotal',
+  finalisasiPada: 'finalisasiPada',
+  transaksiId: 'transaksiId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PesananDrafScalarFieldEnum = (typeof PesananDrafScalarFieldEnum)[keyof typeof PesananDrafScalarFieldEnum]
 
 
 export const NotifikasiScalarFieldEnum = {
@@ -695,6 +757,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

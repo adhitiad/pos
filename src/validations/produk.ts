@@ -1,5 +1,17 @@
 import { z } from 'zod'
 
+import { TabelQuerySchema } from './pagination'
+
+export const ProdukQuerySchema = TabelQuerySchema.extend({
+  sort: z
+    .enum(['nama', 'sku', 'harga', 'stok', 'aktif', 'kategori'])
+    .default('nama'),
+  status: z.enum(['semua', 'aktif', 'nonaktif']).default('semua'),
+  kategoriId: z.string().max(64).optional(),
+})
+
+export type ProdukQueryInput = z.infer<typeof ProdukQuerySchema>
+
 const ResepInputSchema = z.object({
   bahanId: z.string().min(1),
   jumlah: z.number().positive(),

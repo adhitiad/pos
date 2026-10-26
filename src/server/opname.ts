@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { catatAudit } from './audit.js'
 import type { SimpanOpnameInput, DataOpnameInput } from '#/validations/opname'
 import { SimpanOpnameSchema, DataOpnameSchema } from '#/validations/opname'
 import { GalatDomain } from './galat.js'
@@ -20,7 +21,7 @@ interface ItemOpnameHitung {
 export async function simpanOpname(kasirId: string, input: SimpanOpnameInput) {
   const data = SimpanOpnameSchema.parse(input)
 
-  return await prisma.$transaction(async (tx) => {
+  const hasilOpname = await prisma.$transaction(async (tx) => {
     // Muat stok tercatat semua item sebelum menulis.
     const hitung: ItemOpnameHitung[] = []
     for (const it of data.items) {
@@ -84,6 +85,17 @@ export async function simpanOpname(kasirId: string, input: SimpanOpnameInput) {
 
     return { id: opname.id, nomor: opname.nomor, jenis: opname.jenis }
   })
+
+  // Audit trail ketat: catat siapa, kapan, dan catatan koreksi stok.
+  await catatAudit({
+    aktorId: kasirId,
+    aksi: 'stok.opname',
+    entitas: 'StokOpname',
+    entitasId: hasilOpname.id,
+    catatan: data.catatan ?? null,
+  })
+
+  return hasilOpname
 }
 
 // Daftar master aktif untuk dropdown form opname (produk atau bahan).

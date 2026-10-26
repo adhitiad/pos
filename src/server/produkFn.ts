@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 
 import { requireOwner } from '#/server/auth'
-import { produkData, produkLanding, produkTerpopuler } from '#/server/produk'
+import { produkPage, produkLanding, produkTerpopuler } from '#/server/produk'
 import {
   createKategori,
   createProduk,
@@ -15,17 +15,18 @@ import {
   HapusProdukSchema,
   KategoriInputSchema,
   ProdukInputSchema,
+  ProdukQuerySchema,
   ProdukTerpopulerSchema,
   ToggleProdukSchema,
   UpdateProdukSchema,
 } from '#/validations/produk'
 
-export const produkDataFn = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const produkDataFn = createServerFn({ method: 'GET' })
+  .validator((input: unknown) => ProdukQuerySchema.parse(input ?? {}))
+  .handler(async ({ data }) => {
     await requireOwner()
-    return produkData()
-  },
-)
+    return produkPage(data)
+  })
 
 export const createProdukFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => ProdukInputSchema.parse(input))

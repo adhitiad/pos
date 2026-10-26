@@ -17,7 +17,10 @@ export const Route = createFileRoute('/api/v1/pesan')({
         try {
           const rl = await rateLimit(request, 60)
           if (rl) return rl
-          return ok(await pesananData())
+          const mejaToken = new URL(request.url).searchParams
+            .get('mejaToken')
+            ?.slice(0, 512)
+          return ok(await pesananData({ mejaToken: mejaToken || undefined }))
         } catch (e) {
           return apiError(e)
         }

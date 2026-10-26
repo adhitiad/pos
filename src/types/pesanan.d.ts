@@ -30,6 +30,13 @@ export type Meja = {
   nama: string | null
 }
 
+export type Delivery = {
+  id: string
+  nama: string
+  tarif: number
+  estimasi: string | null
+}
+
 export type PesananItem = {
   produkId: string
   nama: string
@@ -44,22 +51,42 @@ export type PesananModifierPilihan = {
   catatan: string
 }
 
-export type ModePesanan = 'DINE_IN' | 'TAKE_AWAY'
+export type ModePesanan = 'DINE_IN' | 'TAKE_AWAY' | 'DELIVERY'
 
 export type MetodeBayarOnline = 'QRIS' | 'TRANSFER' | 'EWALLET'
 
+// Member yang sedang login di halaman pemesanan publik.
+export type MemberSaya = {
+  id: string
+  nama: string
+  alamat: string | null
+  poin: number
+  diskonPersen: number | null
+}
+
+export type PesananOpsi = {
+  mejaTokenAwal?: string
+  tokoBuka?: boolean
+  tokoAlasan?: string
+}
+
 export interface CheckoutProps {
   mode: ModePesanan
-  mejaId: string
+  mejaNomor: string | null
   namaPelanggan: string
   pembayaran: MetodeBayarOnline
-  daftarMeja: Meja[]
+  deliveryId: string
+  daftarDelivery: Delivery[]
+  alamat: string
+  subtotal: number
+  ongkir: number
   total: number
   pending: boolean
   onModeChange: (mode: ModePesanan) => void
-  onMejaChange: (id: string) => void
   onNamaChange: (v: string) => void
   onPembayaranChange: (m: MetodeBayarOnline) => void
+  onDeliveryChange: (id: string) => void
+  onAlamatChange: (v: string) => void
   onCheckout: () => void
 }
 
@@ -76,4 +103,11 @@ export interface ProdukItemProps {
   habis: boolean
   onTambah: () => void
   onKurang: () => void
+}
+
+export type InputKonfirmasiPembayaran = {
+  id: string
+  via: 'MANUAL' | 'WEBHOOK'
+  paymentRef?: string
+  jumlahDibayar?: number
 }

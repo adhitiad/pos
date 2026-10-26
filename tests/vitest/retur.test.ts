@@ -90,6 +90,7 @@ async function buatTransaksiDenganItem(
       pajak: 0,
       total: 10000,
       metodeBayar: 'TUNAI',
+      dibayarPada: new Date(),
       items: {
         create: [
           {
@@ -137,10 +138,10 @@ describe('retur — buatRetur', () => {
     const entri = await prisma.jurnalDetail.findMany({
       where: { jurnalId: jurnal!.id },
     })
-    const kas = entri.find((e) => e.debit.toNumber() > 0)
-    const pendapatan = entri.find((e) => e.kredit.toNumber() > 0)
-    expect(kas?.debit.toNumber()).toBe(20000)
-    expect(pendapatan?.kredit.toNumber()).toBe(20000)
+    const pendapatan = entri.find((e) => e.debit.toNumber() > 0)
+    const kas = entri.find((e) => e.kredit.toNumber() > 0)
+    expect(pendapatan?.debit.toNumber()).toBe(20000)
+    expect(kas?.kredit.toNumber()).toBe(20000)
   })
 
   it('tolak qty retur melebihi qty dibeli', async () => {
@@ -157,7 +158,30 @@ describe('retur — buatRetur', () => {
         alasan: 'Test',
         items: [{ produkId: trx.items[0].id, qty: 99 }],
       }),
-    ).rejects.toThrow('melebihi qty dibeli')
+    ).rejects.toThrow('melebihi sisa qty')
+  })
+
+  it('menolak retur kumulatif melebihi qty dibeli', async () => {
+    const produk = await buatProduk('Kopi', 10, 8000)
+    const kasir = await buatUser(
+      'Kasir 3',
+      'kasir3+' + Math.random() + '@test.com',
+    )
+    const trx = await buatTransaksiDenganItem(produk.id, kasir.id, 3)
+
+    await buatRetur(kasir.id, {
+      transaksiId: trx.id,
+      alasan: 'Retur pertama',
+      items: [{ produkId: trx.items[0].id, qty: 2 }],
+    })
+
+    await expect(
+      buatRetur(kasir.id, {
+        transaksiId: trx.id,
+        alasan: 'Retur kedua',
+        items: [{ produkId: trx.items[0].id, qty: 2 }],
+      }),
+    ).rejects.toThrow('melebihi sisa qty')
   })
 
   it('schema tolak items kosong', () => {

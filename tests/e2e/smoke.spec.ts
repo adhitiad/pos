@@ -159,6 +159,7 @@ for (const rute of [
   '/pengaturan',
   '/notifikasi',
   '/pengajuan',
+  '/review-transaksi',
 ]) {
   test(`${rute} tanpa sesi → /login`, async ({ page }) => {
     await page.goto(rute)

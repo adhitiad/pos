@@ -1,19 +1,20 @@
 import { createServerFn } from '@tanstack/react-start'
 
 import { requireOwner } from './auth.js'
-import { bahanData, createBahan, hapusBahan, updateBahan } from './bahan.js'
+import { bahanPage, createBahan, hapusBahan, updateBahan } from './bahan.js'
 import {
   BahanInputSchema,
+  BahanQuerySchema,
   HapusBahanSchema,
   UpdateBahanSchema,
 } from '#/validations/bahan'
 
-export const bahanDataFn = createServerFn({ method: 'GET' }).handler(
-  async () => {
+export const bahanDataFn = createServerFn({ method: 'GET' })
+  .validator((input: unknown) => BahanQuerySchema.parse(input ?? {}))
+  .handler(async ({ data }) => {
     await requireOwner()
-    return bahanData()
-  },
-)
+    return bahanPage(data)
+  })
 
 export const createBahanFn = createServerFn({ method: 'POST' })
   .validator((input: unknown) => BahanInputSchema.parse(input))

@@ -18,6 +18,8 @@ bun run docs:sync          # sinkronkan snapshot PRD dari DAFTAR-TUGAS
 bun run docs:check         # gagal bila snapshot PRD basi
 bun run perf:budget        # cek anggaran bundle setelah build
 bun run test:vitest        # vitest (unit, tests/vitest/*.test.ts)
+bun run test:coverage      # unit + ambang cakupan (vitest.config.ts)
+bun run test:load          # k6 checkout bersamaan (butuh k6 + server hidup)
 bun run test               # alias test:vitest
 bun run test:e2e            # playwright (tests/e2e/*.spec.ts, chromium)
 bunx tsc --noEmit          # typecheck

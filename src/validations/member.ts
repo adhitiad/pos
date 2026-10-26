@@ -1,5 +1,13 @@
 import { z } from 'zod'
 
+import { TabelQuerySchema } from './pagination'
+
+export const MemberQuerySchema = TabelQuerySchema.extend({
+  sort: z.enum(['nama', 'telepon', 'poin', 'transaksi']).default('nama'),
+})
+
+export type MemberQueryInput = z.infer<typeof MemberQuerySchema>
+
 export const MemberInputSchema = z.object({
   nama: z.string().trim().min(1, 'Nama wajib diisi').max(100),
   telepon: z.string().trim().max(20).optional(),

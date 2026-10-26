@@ -3,7 +3,13 @@ import { getRequestHeaders, getRequestIP } from '@tanstack/react-start/server'
 import { prisma } from '#/db'
 import { env } from '#/env'
 import { GalatRateLimit } from './galat.js'
-import type { HasilBatasi } from '#/types/rate-limit'
+import type {
+  HasilBatasi,
+  HasilHitungToken,
+  PilihanIpKlien,
+} from '#/types/rate-limit'
+
+export type { HasilHitungToken, PilihanIpKlien } from '#/types/rate-limit'
 
 const MILI_TOKEN = 1_000
 export const KAPASITAS_DEFAULT = 100
@@ -13,10 +19,6 @@ export const IDLE_MS = 30 * 60_000
 // Rate limit bersama berbasis Postgres: atomik dan berlaku lintas instance
 // server (bukan in-memory per-proses). Baris lama disapu sesekali.
 let hitunganSapu = 0
-
-export interface HasilHitungToken extends HasilBatasi {
-  tokenMili: number
-}
 
 // Token bucket murni: `hit` di DB menyimpan token x 1.000 agar pengisian
 // ulang fraksional tetap presisi. Baris idle >= 30 menit otomatis penuh.
@@ -104,13 +106,6 @@ export async function batasi(
   return { boleh: hasil.boleh, retryAfter: hasil.retryAfter }
 }
 
-export interface PilihanIpKlien {
-  xForwardedFor?: string | null
-  socketIp?: string | null
-  trustProxy?: boolean
-  hops?: number
-}
-
 function bersihkanIp(nilai: string | null | undefined): string | null {
   const ip = nilai?.trim()
   if (!ip || ip.toLowerCase() === 'unknown') return null
@@ -184,6 +179,18 @@ export async function rateLimit(
   windowMs = JENDELA_DEFAULT_MS,
 ): Promise<Response | null> {
   const kunci = `${new URL(request.url).pathname}:${ipSaatIni()}`
+  const hasil = await batasi(kunci, max, windowMs)
+  if (hasil.boleh) return null
+  return responsRateLimit(hasil, max)
+}
+
+// Batas berbasis kunci domain (mis. nomor telepon) untuk endpoint publik yang
+// mudah disalahgunakan dengan banyak IP.
+export async function rateLimitKunci(
+  kunci: string,
+  max = KAPASITAS_DEFAULT,
+  windowMs = JENDELA_DEFAULT_MS,
+): Promise<Response | null> {
   const hasil = await batasi(kunci, max, windowMs)
   if (hasil.boleh) return null
   return responsRateLimit(hasil, max)

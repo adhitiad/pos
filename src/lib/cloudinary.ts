@@ -53,6 +53,7 @@ export async function unggahGambar(file: File): Promise<string> {
   body.append('signature', ttd.signature)
   body.append('folder', ttd.folder)
   body.append('allowed_formats', ttd.allowedFormats)
+  body.append('max_file_size', String(ttd.maxFileSize))
 
   const res = await fetch(
     `https://api.cloudinary.com/v1_1/${ttd.cloudName}/image/upload`,

@@ -11,12 +11,8 @@
   },
   "cron": [
     {
-      "path": "/api/cron/notifikasi-mingguan",
-      "schedule": "0 9 * * 1"
-    },
-    {
-      "path": "/api/cron/backup-pitr",
-      "schedule": "0 2 * * *"
+      "path": "/api/cron/pembayaran-kadaluarsa",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

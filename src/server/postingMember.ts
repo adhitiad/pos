@@ -1,5 +1,6 @@
 import type { Prisma } from '#/generated/prisma/client.js'
 import { tierDariTotal } from '#/server/member'
+import type { HasilMember, MemberSiap } from '#/types/transaksi'
 import { GalatDomain } from './galat.js'
 import {
   hitungDiskonMember,
@@ -8,22 +9,7 @@ import {
   RUPIAH_PER_POIN,
 } from './poin.js'
 
-interface MemberSiap {
-  id: string
-  nama: string
-  poin: number
-  diskonPersen: Prisma.Decimal | null
-  totalBelanja: Prisma.Decimal
-  tier: string
-}
-
-export interface HasilMember {
-  member: MemberSiap | null
-  /** Poin yang ditukar (dikurangi dari saldo member). */
-  poinTerpakai: number
-  /** Diskon otomatis dari tier member (rupiah). */
-  diskonMember: number
-}
+export type { HasilMember } from '#/types/transaksi'
 
 // Muat data member + hitung poin yang ditukar & diskon member. Dipisah dari
 // orkestrasi posting agar file posting tetap ringkas.

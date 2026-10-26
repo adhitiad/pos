@@ -63,8 +63,12 @@ export const PostingTransaksiSchema = z
     uangDiterima: z.number().int().nonnegative().max(1_000_000_000).optional(),
     pembayaran: z.array(PembayaranInputSchema).max(20).min(1).optional(),
     mejaId: z.string().min(1).max(64).optional(),
+    // Pembatalan bukan bagian dari posting: transaksi yang sudah dibayar
+    // dibatalkan lewat retur/pembalik, bukan dengan menulis status DIBATALKAN.
     statusPesanan: z.enum(STATUS_PESANAN).optional().default('MENUNGGU'),
     catatan: z.string().max(500).optional(),
+    // Alamat pengiriman; hanya bermakna bila deliveryId diisi.
+    alamat: z.string().trim().min(5).max(300).optional(),
     // Idempotensi (antrean offline): kunci stabil buatan klien. Retry dengan
     // kunci sama tidak membuat transaksi ganda (stok & pendapatan tak dobel).
     idempotencyKey: z.string().trim().min(8).max(64).optional(),
@@ -80,6 +84,14 @@ export const PostingTransaksiSchema = z
       .optional(),
   })
   .superRefine((data, ctx) => {
+    if (data.statusPesanan === 'DIBATALKAN') {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['statusPesanan'],
+        message:
+          'Transaksi tidak dapat diposting sebagai DIBATALKAN; gunakan pembatalan/retur',
+      })
+    }
     if (data.dibuatOffline && !data.idempotencyKey) {
       ctx.addIssue({
         code: 'custom',
@@ -112,17 +124,40 @@ export type PostingTransaksiInput = z.input<typeof PostingTransaksiSchema>
 export const METODE_BAYAR_ONLINE = ['QRIS', 'TRANSFER', 'EWALLET'] as const
 
 // Schema khusus pesanan online. Pelanggan TIDAK boleh menyetel memberId,
-// deliveryId, diskon, pajak, tukarPoin, atau statusPesanan: semua dipaksa
-// aman di sisi server (SEC-02). Field tak dikenal di-strip Zod.
-export const PesananOnlineSchema = z.object({
-  items: z
-    .array(PostingItemSchema)
-    .min(1, 'Minimal 1 item')
-    .max(MAKS_ITEM_PESANAN, `Maksimal ${MAKS_ITEM_PESANAN} item`),
-  mejaId: z.string().min(1).max(64).optional(),
-  metodeBayar: z.enum(METODE_BAYAR_ONLINE).default('QRIS'),
-  catatan: z.string().max(500).optional(),
-})
+// diskon, pajak, tukarPoin, atau statusPesanan: semua dipaksa aman di sisi
+// server (SEC-02). `deliveryId`/`mejaToken` diterima tetapi divalidasi ketat
+// dan tarif antar selalu diambil dari master Delivery di server. Field tak
+// dikenal di-strip Zod.
+export const PesananOnlineSchema = z
+  .object({
+    items: z
+      .array(PostingItemSchema)
+      .min(1, 'Minimal 1 item')
+      .max(MAKS_ITEM_PESANAN, `Maksimal ${MAKS_ITEM_PESANAN} item`),
+    // Dine-in publik wajib memakai token QR bertanda tangan; mejaId mentah
+    // tidak diterima agar pelanggan tak bisa mengunci meja sembarangan.
+    mejaToken: z.string().min(1).max(512).optional(),
+    deliveryId: z.string().min(1).max(64).optional(),
+    alamat: z.string().trim().min(5).max(300).optional(),
+    metodeBayar: z.enum(METODE_BAYAR_ONLINE).default('QRIS'),
+    catatan: z.string().max(500).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.deliveryId && data.mejaToken) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['deliveryId'],
+        message: 'Pesanan antar tidak boleh memakai QR meja',
+      })
+    }
+    if (data.deliveryId && !data.alamat) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['alamat'],
+        message: 'Alamat pengiriman wajib diisi untuk pesanan antar',
+      })
+    }
+  })
 
 // Dapur/KDS: ubah status pesanan F&B.
 export const UpdateStatusPesananSchema = z.object({
@@ -135,8 +170,6 @@ export type UpdateStatusPesananInput = z.infer<typeof UpdateStatusPesananSchema>
 export const TandaiLunasSchema = z.object({
   id: z.string().min(1).max(64),
 })
-
-export type TandaiLunasInput = z.infer<typeof TandaiLunasSchema>
 
 // Cetak struk: hitung berapa kali struk dicetak per peran.
 export const CetakStrukSchema = z.object({

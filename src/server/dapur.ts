@@ -76,20 +76,32 @@ export async function dapurData() {
   }))
 }
 
-export async function updateStatusPesanan(input: UpdateStatusPesananInput) {
+export async function updateStatusPesanan(
+  input: UpdateStatusPesananInput,
+  aktorId?: string | null,
+) {
   const data = UpdateStatusPesananSchema.parse(input)
   const lama = await prisma.transaksi.findUnique({ where: { id: data.id } })
   if (!lama) throw new GalatDomain('Transaksi tidak ditemukan')
 
   if (lama.sumber === 'ONLINE') {
     if (data.statusPesanan === 'DIBATALKAN') {
-      return await batalkanPesananOnline(data.id)
+      return await batalkanPesananOnline(data.id, aktorId)
     }
     if (data.statusPesanan === 'LUNAS') {
       throw new GalatDomain(
         'Gunakan tombol Tandai lunas untuk menyelesaikan pembayaran online',
       )
     }
+  }
+
+  // Transaksi POS sudah dibayar & stoknya terpotong saat posting. Membiarkan
+  // status DIBATALKAN di sini akan menghilangkan penjualan dari laporan tanpa
+  // pembalik stok/jurnal. Refund POS wajib lewat retur.
+  if (lama.sumber !== 'ONLINE' && data.statusPesanan === 'DIBATALKAN') {
+    throw new GalatDomain(
+      'Transaksi POS tidak dapat dibatalkan; gunakan retur untuk refund',
+    )
   }
 
   await prisma.transaksi.update({

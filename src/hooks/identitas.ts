@@ -63,10 +63,6 @@ export function useIdentitasApp(): IdentitasApp {
   return nilai
 }
 
-export function urlIkonSekarang(versi = Date.now()): string {
-  return `/api/v1/app-icon?v=${versi}`
-}
-
 export function urlIkonPng(url: string, px: number): string {
   if (!url.includes('res.cloudinary.com')) return url
   return url.replace('/upload/', `/upload/w_${px},h_${px},c_fill,q_auto,f_png/`)

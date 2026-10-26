@@ -16,21 +16,24 @@ export default defineConfig({
     maxWorkers: 1,
     coverage: {
       provider: 'v8',
-      // Ukur logika yang memang diuji unit. Komponen/rute/paraglide belum punya
-      // unit test dan membuat angka global menyesatkan (34% saat audit CI).
-      // Wrapper *Fn.ts diuji lewat E2E, bukan unit; menambahkannya di sini hanya
-      // menurunkan sinyal karena isinya guard + panggilan fungsi murni.
+      // Cakupan sengaja dibatasi pada logika murni: `src/server/**` (kecuali
+      // wrapper *Fn.ts) dan `src/validations/**`. Komponen/rute React diuji
+      // lewat E2E Playwright (`tests/e2e/*.spec.ts`), bukan unit; menambahkannya
+      // di sini hanya menurunkan sinyal dan membuat angka global menyesatkan.
+      // Paraglide (`src/paraglide/**`) adalah kode hasil kompilasi sehingga tidak
+      // dihitung. Wrapper *Fn.ts berisi guard + panggilan fungsi murni dan
+      // diuji lewat E2E.
       include: ['src/server/**/*.ts', 'src/validations/**/*.ts'],
       exclude: ['src/server/**/*Fn.ts'],
       reporter: ['text', 'json-summary', 'json', 'html'],
-      // Baseline nyata 2026-10-21 (tanpa wrapper Fn): stmts 66.11,
-      // branch 55.98, fn 59.90, lines 68.47. Ambang diberi margin kecil dan
+      // Baseline nyata 2026-10-26 (tanpa wrapper Fn): stmts 65.04,
+      // branch 55.57, fn 60.96, lines 67.56. Ambang diberi margin ~1 poin dan
       // harus dinaikkan saat tes bertambah — jangan diturunkan tanpa catatan.
       thresholds: {
-        statements: 63,
-        branches: 53,
-        functions: 57,
-        lines: 65,
+        statements: 64,
+        branches: 54,
+        functions: 59,
+        lines: 66,
       },
     },
   },

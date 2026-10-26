@@ -15,3 +15,4 @@ project.inlang/README.md
 dist/
 test-results/
 playwright-report/
+audit-*.md

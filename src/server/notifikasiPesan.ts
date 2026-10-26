@@ -1,17 +1,10 @@
 import { prisma } from '#/db'
+import type { PesanNotifikasi } from '#/types/notifikasi'
 
 // Notifikasi antar pengguna (kasir ↔ owner) disimpan di DB supaya pengajuan
 // tidak hilang saat perangkat kasir berganti. Isi `judul`/`pesan` memakai
 // bahasa Indonesia (bahasa kerja operasional) sementara label UI diterjemahkan
 // lewat `messages/*.json`.
-export type TipeNotifikasi = 'PENGAJUAN' | 'SETUJUI' | 'TOLAK' | 'INFO'
-
-export type PesanNotifikasi = {
-  tipe: TipeNotifikasi
-  judul: string
-  pesan: string
-  entitasId?: string | null
-}
 
 // Simpan satu notifikasi untuk satu pengguna.
 export async function kirimNotifikasi(
@@ -54,16 +47,6 @@ export async function notifikasiTersimpan(userId: string) {
     where: { userId },
     orderBy: { createdAt: 'desc' },
     take: 50,
-  })
-}
-
-// Tandai notifikasi sudah dibaca (dipanggil saat pengguna menandainya di UI).
-export async function tandaiNotifikasiDibaca(ids: string[]): Promise<void> {
-  const unik = [...new Set(ids.filter(Boolean))]
-  if (unik.length === 0) return
-  await prisma.notifikasi.updateMany({
-    where: { id: { in: unik } },
-    data: { dibaca: true },
   })
 }
 

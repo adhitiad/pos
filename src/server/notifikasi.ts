@@ -1,14 +1,17 @@
 import { prisma } from '#/db'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
-import type { Role } from '#/generated/prisma/enums.js'
 import type {
   Notifikasi,
   NotifikasiPendapatan,
   NotifikasiPengajuan,
   NotifikasiPesanan,
+  OpsiNotifikasi,
+  PeriodeNotifikasi,
   PeriodePendapatan,
 } from '#/types/notifikasi'
 import { notifikasiTersimpan } from './notifikasiPesan.js'
+
+export type { OpsiNotifikasi } from '#/types/notifikasi'
 
 const duaDigit = (n: number) => String(n).padStart(2, '0')
 
@@ -36,13 +39,6 @@ const awalMinggu = (d: Date) => {
 const namaPelangganDariCatatan = (catatan: string | null) => {
   const cocok = catatan?.match(/(?:^|\n)Pelanggan:\s*(.+)$/im)
   return cocok?.[1]?.trim() || null
-}
-
-export interface PeriodeNotifikasi {
-  awal: Date
-  akhir: Date
-  labelDari: string
-  labelSampai: string
 }
 
 export function periodeNotifikasi(sekarang = new Date()) {
@@ -265,14 +261,6 @@ async function notifikasiMember(email: string): Promise<Notifikasi[]> {
   return [...notifikasiTransaksi, ...notifikasiPesanan].sort((a, b) =>
     b.tanggal.localeCompare(a.tanggal),
   )
-}
-
-export interface OpsiNotifikasi {
-  role: Role
-  email: string
-  // Wajib untuk notifikasi antar pengguna (pengajuan); bila kosong, notifikasi
-  // DB dilewati (mis. pemanggilan tanpa sesi pengguna).
-  userId?: string
 }
 
 // Kategori notifikasi antar pengguna; nilai di luar daftar ini di Fallback ke

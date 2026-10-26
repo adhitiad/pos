@@ -19,6 +19,7 @@
     "test:vitest": "dotenv run -f .env.local -- vitest run tests/vitest",
     "test:coverage": "dotenv run -f .env.local -- vitest run tests/vitest --coverage",
     "test:e2e": "playwright test tests/e2e",
+    "test:load": "bun scripts/uji-beban.ts",
     "ci": "bun run typecheck && bun run lint && bun run check && bun run docs:check && bun run test:coverage && bun --bun run build && bun run perf:budget",
     "format": "prettier --write . && eslint --fix",
     "check": "prettier --check .",
@@ -38,6 +39,8 @@
     "db:reset": "bun run db:seed"
   },
   "dependencies": {
+    "@fontsource/fraunces": "^5",
+    "@fontsource/manrope": "^5",
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
     "@react-pdf/renderer": "^4.9.0",
@@ -61,6 +64,7 @@
     "nitro": "3.0.260903-beta",
     "pino": "^10.4.0",
     "prisma": "^7.4.2",
+    "qrcode": "^1.5.4",
     "radix-ui": "^1.8.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -71,16 +75,17 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@better-auth/core": "^1.7.10",
     "@inlang/paraglide-js": "^2.13.1",
     "@playwright/test": "^1.64.1",
     "@rolldown/plugin-babel": "^0.2.3",
-    "@tailwindcss/typography": "^0.5.16",
     "@tanstack/devtools-vite": "0.8.5",
     "@tanstack/eslint-config": "0.4.0",
     "@tanstack/form-core": "^1.33.5",
     "@tanstack/router-cli": "^1.132.0",
     "@types/node": "^22.10.2",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@types/w3c-web-serial": "^1.0.8",
@@ -101,5 +106,8 @@
     "lightningcss",
     "@prisma/engines",
     "prisma"
-  ]
+  ],
+  "overrides": {
+    "fast-uri": "^3.1.9"
+  }
 }

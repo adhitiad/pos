@@ -13,6 +13,8 @@ export function ringkasHasil(hasil: HasilTransaksiRingkas) {
     pajak: hasil.transaksi.pajak.toNumber(),
     pajakJenis: hasil.transaksi.pajakJenis,
     ongkir: hasil.transaksi.ongkir.toNumber(),
+    alamat: hasil.transaksi.alamat,
+    deliveryId: hasil.transaksi.deliveryId,
     total: hasil.transaksi.total.toNumber(),
     metodeBayar: hasil.transaksi.metodeBayar,
     mejaId: hasil.transaksi.mejaId,

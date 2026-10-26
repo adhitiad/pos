@@ -13,6 +13,7 @@ import { logger } from '#/lib/logger'
 import { ORIGIN_TEPERCAYA } from '#/lib/origin'
 import { peranDariEmail as peranDariEnv } from '#/lib/peran-email'
 import { klienNativeId } from '#/server/auth-native'
+import { batasi } from '#/server/rateLimit'
 
 // Peran dari daftar env: email di OWNER_EMAILS → OWNER, di KASIR_EMAILS → KASIR.
 // Satu sumber kebenaran untuk pembuatan akun & sinkronisasi saat login.
@@ -84,9 +85,29 @@ export const auth = betterAuth({
     enabled: true,
     window: 10,
     max: 50,
+    // Storage default Better Auth adalah memory per-proses: di serverless,
+    // setiap instance punya hitungan sendiri sehingga brute force tetap lolos.
+    // Pakai token bucket Postgres yang sama dengan endpoint lain agar kuota
+    // berlaku lintas instance (tanpa Redis tambahan).
+    customStorage: {
+      consume: async (key, rule) => {
+        const hasil = await batasi(`auth:${key}`, rule.max, rule.window * 1_000)
+        return {
+          allowed: hasil.boleh,
+          retryAfter: hasil.boleh ? null : hasil.retryAfter,
+        }
+      },
+    },
+    // Path Better Auth sudah tanpa prefix /api/auth. `*` cocok untuk sub-path
+    // (mis. /sign-in/social, /callback/google); entri tanpa `*` menjaga
+    // kompatibilitas bila path persis dipakai.
     customRules: {
-      '/api/auth/sign-in': { window: 60, max: 5 },
-      '/api/auth/sign-up': { window: 60, max: 3 },
+      '/sign-in': { window: 60, max: 5 },
+      '/sign-in/*': { window: 60, max: 5 },
+      '/sign-up': { window: 60, max: 3 },
+      '/sign-up/*': { window: 60, max: 3 },
+      '/callback': { window: 60, max: 20 },
+      '/callback/*': { window: 60, max: 20 },
     },
   },
   // Origin tepercaya selalu terdefinisi: origin sendiri + daftar dari env.

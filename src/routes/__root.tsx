@@ -10,6 +10,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { ThemeProvider } from 'next-themes'
 
 import IdentitasSinkron from '#/components/IdentitasSinkron'
+import DaftarServiceWorker from '#/components/DaftarServiceWorker'
 import PemindaiPrinterOtomatis from '#/components/PemindaiPrinterOtomatis'
 import {
   HalamanError,
@@ -167,6 +168,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <PemindaiPrinterOtomatis />
           {children}
           <Toaster position="top-center" />
+          <DaftarServiceWorker />
           {import.meta.env.DEV && (
             <TanStackDevtools
               config={{

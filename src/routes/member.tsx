@@ -1,5 +1,10 @@
-import { useMemo, useState } from 'react'
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react'
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
 
@@ -14,6 +19,8 @@ import {
   updateMemberFn,
 } from '#/server/memberFn'
 import { produkTerpopulerFn } from '#/server/produkFn'
+import { MemberQuerySchema } from '#/validations/member'
+import type { MemberQueryInput } from '#/validations/member'
 
 import { Button } from '#/components/ui/button'
 import DashboardLayout from '#/components/DashboardLayout'
@@ -21,11 +28,7 @@ import HapusDialog from '#/components/HapusDialog'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '#/components/ui/card'
-import {
-  HeaderUrutTabel,
-  PaginasiTabel,
-  useKontrolTabel,
-} from '#/components/ui/table-controls'
+import { HeaderUrutTabel, PaginasiTabel } from '#/hooks/table-controls'
 import {
   Table,
   TableBody,
@@ -46,15 +49,17 @@ const inisial = (nama: string) =>
     .join('')
 
 export const Route = createFileRoute('/member')({
+  validateSearch: (search) => MemberQuerySchema.parse(search),
   beforeLoad: async () => {
     const user = await getSessionFn()
     if (!user) throw redirect({ to: '/login' })
     if (!punyaAkses(user.role, 'manajerial'))
       throw redirect({ to: user.role === 'KASIR' ? '/kasir' : '/' })
   },
-  loader: async () => {
+  loaderDeps: ({ search }) => search,
+  loader: async ({ deps }) => {
     const [member, populer] = await Promise.all([
-      memberDataFn(),
+      memberDataFn({ data: deps }),
       produkTerpopulerFn({ data: {} }),
     ])
     return { member, populer }
@@ -66,34 +71,83 @@ const formKosong = { nama: '', telepon: '', email: '', alamat: '' }
 
 function Member() {
   const { member, populer } = Route.useLoaderData()
+  const search = Route.useSearch()
+  const navigate = useNavigate()
   const router = useRouter()
-  const [cari, setCari] = useState('')
+  const [cari, setCari] = useState(search.q ?? '')
   const [panel, setPanel] = useState<null | { id: string | null }>(null)
   const [hapusId, setHapusId] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
-  const baris = useMemo(() => {
-    const q = cari.trim().toLowerCase()
-    if (!q) return member
-    return member.filter(
-      (mm) =>
-        mm.nama.toLowerCase().includes(q) ||
-        (mm.telepon ?? '').toLowerCase().includes(q),
-    )
-  }, [member, cari])
-  const kontrol = useKontrolTabel(
-    baris,
-    (mm) => `${mm.nama} ${mm.telepon ?? ''} ${mm.email ?? ''}`,
-    {
-      nama: (mm) => mm.nama,
-      telepon: (mm) => mm.telepon ?? '',
-      poin: (mm) => mm.poin,
-      transaksi: (mm) => mm.jumlahTransaksi,
-    },
-  )
+  const data = member.baris
+
+  // Search terkini untuk timer debounce (hindari menimpa navigasi lain).
+  const searchRef = useRef(search)
+  useEffect(() => {
+    searchRef.current = search
+  })
+  // Id timer debounce; dikirim ulang/batalkan oleh kontrol tabel.
+  const timerRef: { current: ReturnType<typeof setTimeout> | null } =
+    useRef(null)
+
+  // Pencarian diketik lokal lalu dikirim ke server setelah jeda singkat.
+  useEffect(() => {
+    const teks = cari.trim()
+    if (teks === (search.q ?? '')) return
+    const timer = setTimeout(() => {
+      const terkini = searchRef.current
+      // Navigasi lain (urut/halaman) bisa terjadi saat menunggu; jika teks
+      // telah terkirim olehnya, timer ini tidak perlu menulis lagi.
+      if (teks === (terkini.q ?? '')) return
+      void navigate({
+        to: '/member',
+        search: { ...terkini, q: teks || undefined, skip: 0 },
+        replace: true,
+      })
+    }, 300)
+    timerRef.current = timer
+    return () => {
+      clearTimeout(timer)
+      timerRef.current = null
+    }
+  }, [cari, search.q, navigate])
+
+  // Seluruh kontrol tabel ikut membawa teks pencarian terbaru agar navigasi
+  // yang berlangsung sebelum debounce tidak membuang teks yang baru diketik.
+  const kirim = (
+    patch: Partial<{
+      q?: string
+      skip: number
+      take: number
+      sort: MemberQueryInput['sort']
+      arah: 'asc' | 'desc'
+    }>,
+  ) => {
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+    void navigate({
+      to: '/member',
+      search: {
+        ...searchRef.current,
+        q: cari || undefined,
+        ...patch,
+      },
+    })
+  }
 
   const muatUlang = async () => {
     await router.invalidate()
+  }
+
+  const urutkan = (kunci: string) => {
+    const sort = kunci as 'nama' | 'telepon' | 'poin' | 'transaksi'
+    kirim({
+      sort,
+      arah: search.sort === sort && search.arah === 'asc' ? 'desc' : 'asc',
+      skip: 0,
+    })
   }
 
   const gagal = (e: unknown) => {
@@ -282,7 +336,7 @@ function Member() {
       <HapusDialog
         terbuka={hapusId !== null}
         judul={m.hapus_judul()}
-        deskripsi={`${m.hapus_deskripsi()} (${baris.find((x) => x.id === hapusId)?.nama ?? ''})`}
+        deskripsi={`${m.hapus_deskripsi()} (${data.find((x) => x.id === hapusId)?.nama ?? ''})`}
         batal={m.member_batal()}
         ya={m.member_hapus()}
         onBatal={() => {
@@ -307,34 +361,34 @@ function Member() {
             <TableRow>
               <HeaderUrutTabel
                 kunci="nama"
-                aktif={kontrol.kunciUrut === 'nama'}
-                arah={kontrol.arahUrut}
-                onUrut={kontrol.toggleUrut}
+                aktif={search.sort === 'nama'}
+                arah={search.arah}
+                onUrut={urutkan}
               >
                 {m.member_nama()}
               </HeaderUrutTabel>
               <HeaderUrutTabel
                 kunci="telepon"
-                aktif={kontrol.kunciUrut === 'telepon'}
-                arah={kontrol.arahUrut}
-                onUrut={kontrol.toggleUrut}
+                aktif={search.sort === 'telepon'}
+                arah={search.arah}
+                onUrut={urutkan}
               >
                 {m.member_telepon()}
               </HeaderUrutTabel>
               <HeaderUrutTabel
                 kunci="poin"
-                aktif={kontrol.kunciUrut === 'poin'}
-                arah={kontrol.arahUrut}
-                onUrut={kontrol.toggleUrut}
+                aktif={search.sort === 'poin'}
+                arah={search.arah}
+                onUrut={urutkan}
                 className="text-right"
               >
                 {m.member_poin()}
               </HeaderUrutTabel>
               <HeaderUrutTabel
                 kunci="transaksi"
-                aktif={kontrol.kunciUrut === 'transaksi'}
-                arah={kontrol.arahUrut}
-                onUrut={kontrol.toggleUrut}
+                aktif={search.sort === 'transaksi'}
+                arah={search.arah}
+                onUrut={urutkan}
                 className="text-right"
               >
                 {m.member_trx()}
@@ -343,7 +397,7 @@ function Member() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {kontrol.baris.map((mm) => (
+            {data.map((mm) => (
               <TableRow key={mm.id}>
                 <TableCell>
                   <p className="font-medium">{mm.nama}</p>
@@ -388,7 +442,7 @@ function Member() {
             ))}
           </TableBody>
         </Table>
-        {kontrol.jumlahBaris === 0 && (
+        {member.total === 0 && (
           <>
             <p className="py-4 text-sm text-neutral-500">{m.member_kosong()}</p>
             <p className="py-1 text-sm text-neutral-400">
@@ -397,12 +451,16 @@ function Member() {
           </>
         )}
         <PaginasiTabel
-          halamanAktif={kontrol.halamanAktif}
-          jumlahHalaman={kontrol.jumlahHalaman}
-          jumlahBaris={kontrol.jumlahBaris}
-          ukuranHalaman={kontrol.ukuranHalaman}
-          onHalaman={kontrol.setHalaman}
-          onUkuranHalaman={kontrol.setUkuranHalaman}
+          halamanAktif={Math.floor(search.skip / search.take)}
+          jumlahHalaman={Math.max(1, Math.ceil(member.total / search.take))}
+          jumlahBaris={member.total}
+          ukuranHalaman={search.take}
+          onHalaman={(halaman) => {
+            kirim({ skip: halaman * search.take })
+          }}
+          onUkuranHalaman={(ukuran) => {
+            kirim({ take: ukuran, skip: 0 })
+          }}
         />
       </div>
     </DashboardLayout>

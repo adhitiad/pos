@@ -25,3 +25,21 @@ export interface AuditLogHasil {
   rows: AuditLogRow[]
   total: number
 }
+
+/** Input pencatatan audit; dipakai `catatAudit` di server. */
+export interface CatatAuditInput {
+  /** Id user pelaku; null/kosong = aksi sistem (tanpa login). */
+  aktorId?: string | null
+  /** Kode aksi, mis. "produk.ubah", "user.role.ubah", "produk.hapus". */
+  aksi: string
+  /** Nama entitas yang diubah, mis. "Produk", "Pengaturan". */
+  entitas: string
+  /** Id entitas bila ada. */
+  entitasId?: string | null
+  /** Alasan tindakan (mis. alasan retur, catatan koreksi stok). */
+  catatan?: string | null
+  /** Cuplikan state sebelum perubahan (hanya field yang berubah). */
+  sebelum?: Record<string, unknown> | null
+  /** Cuplikan state sesudah perubahan (hanya field yang berubah). */
+  sesudah?: Record<string, unknown> | null
+}

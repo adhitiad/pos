@@ -21,7 +21,12 @@ export function getRouter() {
     routeTree,
     scrollRestoration: true,
     defaultPreload: 'intent',
-    defaultPreloadStaleTime: 0,
+    // Data loader dipakai ulang 30 detik saat navigasi/preload. Tanpa ini,
+    // setiap pindah halaman memicu fetch ulang penuh (katalog, laporan, dsb).
+    // Halaman yang butuh data segar tetap memanggil router.invalidate()
+    // secara terarah (mis. KDS /dapur).
+    defaultPreloadStaleTime: 30_000,
+    defaultStaleTime: 30_000,
     defaultPendingComponent: HalamanLoading,
     defaultPendingMs: 150,
     defaultPendingMinMs: 300,

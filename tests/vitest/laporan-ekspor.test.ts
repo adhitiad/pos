@@ -9,6 +9,7 @@ const laporan: LaporanPenjualan = {
   grup: 'harian',
   ringkasan: {
     jumlahTransaksi: 2,
+    qtyTerjual: 3,
     subtotal: 100,
     diskon: 10,
     pajak: 5,
@@ -17,6 +18,8 @@ const laporan: LaporanPenjualan = {
     omzet: 90,
     hpp: 40,
     labaKotor: 50,
+    poinTerpakai: 0,
+    poinDapat: 0,
   },
   rekap: [
     {

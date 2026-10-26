@@ -3,6 +3,11 @@ import type {
   FormAsyncValidateOrFn,
   FormValidateOrFn,
 } from '@tanstack/form-core'
+import type {
+  OnChangeFn,
+  PaginationState,
+  SortingState,
+} from '@tanstack/react-table'
 import type { produkData } from '#/server/produk'
 import type { helper } from '#/components/produk/ProdukTabel'
 
@@ -73,4 +78,18 @@ export type ProdukRow = Awaited<ReturnType<typeof produkData>>['produk'][number]
 export interface ProdukTabelProps {
   baris: ProdukRow[]
   columns: ReturnType<typeof helper.columns>
+  total?: number
+  pagination?: PaginationState
+  onPaginationChange?: OnChangeFn<PaginationState>
+  sorting?: SortingState
+  onSortingChange?: OnChangeFn<SortingState>
+}
+
+/** Kartu produk untuk carousel halaman member. */
+export type ProdukKartu = {
+  produkId: string
+  nama: string
+  harga: number
+  gambar: string | null
+  terjual: number
 }

@@ -6,7 +6,7 @@ import {
   PaginasiTabel,
   PencarianTabel,
   useKontrolTabel,
-} from '#/components/ui/table-controls'
+} from '#/hooks/table-controls'
 import { Card, CardContent, CardHeader, CardTitle } from '#/components/ui/card'
 import {
   Table,

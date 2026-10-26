@@ -150,6 +150,19 @@ Aturan implementasi:
   `TRUST_PROXY_HOPS` (Vercel = 1); jangan memakai entri paling kiri yang bisa
   dipalsukan klien. Jangan mengklaim kapasitas 1.000 pengguna tanpa hasil uji
   beban yang tercatat.
+- Rate limit Better Auth wajib memakai bucket Postgres yang sama
+  (`customStorage` → `batasi`), bukan storage memory per-proses: `/sign-in*`
+  5/menit, `/sign-up*` 3/menit, `/callback*` 20/menit. `TRUST_PROXY` otomatis
+  aktif bila `VERCEL=1`; jangan mengembalikan default mati tanpa alasan.
+- Dine-in publik **hanya** menerima `mejaToken` QR bertanda tangan; `mejaId`
+  mentah tidak boleh masuk schema publik. Pengecualian satu-satunya adalah
+  finalisasi draft oleh staf (`/api/v1/pesan-dinein/{id}/finalisasi`) yang
+  boleh mengirim `mejaId` opsional untuk meja tanpa QR, dengan verifikasi meja
+  aktif di server dan guard `OWNER`/`KASIR`.
+- Upload Cloudinary: `max_file_size` dan folder wajib ikut ditandatangani
+  server; klien tidak boleh menentukan batas ukuran sendiri.
+- Route cron (`/api/cron/*`) wajib membandingkan `CRON_SECRET` dengan
+  `timingSafeEqual` dan membalas 503 bila secret kosong.
 - Perubahan peran mencabut seluruh sesi user dalam transaksi yang sama;
   sinkronisasi peran saat login mencabut sesi lama tetapi mempertahankan sesi
   baru. Owner dapat mencabut semua sesi dari `/user`. Token yang dicabut harus
@@ -240,12 +253,12 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 
 > **Snapshot otomatis.** Dihasilkan oleh `bun run docs:sync`; jangan edit manual.
 
-- **Item selesai:** 271/277 (98%)
-- **Item terbuka:** 6
+- **Item selesai:** 389/401 (97%)
+- **Item terbuka:** 12
 - **Terblokir / sebagian:** 3 / 1
-- **Cakupan:** 29 rute · 54 file route REST · 39 model · 18 migrasi
-- **Test:** 52 file unit · 6 file e2e
-- **Dokumen / aturan:** 18 / 16
+- **Cakupan:** 31 rute · 64 file route REST · 42 model · 27 migrasi
+- **Test:** 55 file unit · 8 file e2e
+- **Dokumen / aturan:** 19 / 16
 
 ### Rute halaman terdeteksi
 
@@ -269,10 +282,12 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 - `/pengaturan`
 - `/percetakan`
 - `/pesanan`
+- `/pesanan-review`
 - `/printer`
 - `/privasi`
 - `/produk`
 - `/retur`
+- `/review-transaksi`
 - `/shift`
 - `/supplier`
 - `/tentang`
@@ -287,5 +302,11 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 - `CICD-15` · terblokir
 - `CICD-17`
 - `CICD-25` · terblokir
+- `MFA untuk OWNER belum ada. **Blocker:** butuh keputusan prod`
+- `MFA OWNER`
+- `Sisa 9 file > 397 baris`
+- `Uji beban di staging/produksi`
+- `PITR/uptime/error monitoring`
+- `bun run test:load — k6 belum terpasang di mesin pengembangan`
 
 <!-- AUTO:PRD-AI:END -->

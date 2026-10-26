@@ -22,7 +22,7 @@ import {
   PaginasiTabel,
   PencarianTabel,
   useKontrolTabel,
-} from '#/components/ui/table-controls'
+} from '#/hooks/table-controls'
 import {
   ChevronDown,
   ChevronUp,
@@ -51,7 +51,7 @@ export const Route = createFileRoute('/dashboard')({
 
 function Dashboard() {
   const { data, user } = Route.useLoaderData()
-  const stokMenipis = data.produk.filter((p) => p.stok <= 0).length
+  const stokMenipis = data.stokMenipis
 
   const [urutan, setUrutan] = useState<'baru' | 'lama' | 'besar' | 'kecil'>(
     'baru',
@@ -149,7 +149,7 @@ function Dashboard() {
           </CardHeader>
           <CardContent className="pt-0">
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold">{data.produk.length}</span>
+              <span className="text-2xl font-bold">{data.jumlahProduk}</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               {m.dashboard_produk_aktif_desc()}
@@ -168,7 +168,7 @@ function Dashboard() {
           </CardHeader>
           <CardContent className="pt-0">
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold">{data.member.length}</span>
+              <span className="text-2xl font-bold">{data.jumlahMember}</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               {m.dashboard_member_desc()}
@@ -216,7 +216,14 @@ function Dashboard() {
             </div>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="overflow-x-auto border-b border-border pb-4">
+            <div
+              className="overflow-x-auto border-b border-border pb-4"
+              // Region yang bisa digeser horizontal wajib bisa difokuskan agar
+              // pengguna keyboard dapat menggulirnya tanpa mouse (axe).
+              tabIndex={0}
+              role="group"
+              aria-label={m.dashboard_chart()}
+            >
               <div className="flex items-end justify-between gap-1 h-32 min-w-[600px]">
                 {transaksiPerJam.map((jumlah, jam) => {
                   const tinggi = ((jumlah / maxJam) * 100).toFixed(0) + '%'

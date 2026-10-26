@@ -7,42 +7,106 @@ import {
   HapusBahanSchema,
   UpdateBahanSchema,
 } from '#/validations/bahan'
-import type { BahanInput, UpdateBahanInput } from '#/validations/bahan'
+import type {
+  BahanInput,
+  BahanQueryInput,
+  UpdateBahanInput,
+} from '#/validations/bahan'
 
-// Helper to get all bahan raw data with include (no pagination)
-function getAllBahanRaw() {
-  return prisma.bahan.findMany({
-    orderBy: { nama: 'asc' },
-    include: {
-      _count: { select: { resep: true } },
-      resep: { include: { produk: { select: { nama: true } } }, take: 5 },
-    },
-  })
+const pilihBahan = {
+  id: true,
+  nama: true,
+  satuan: true,
+  jenis: true,
+  stok: true,
+  stokMinimum: true,
+  hargaSatuan: true,
+  resep: {
+    include: { produk: { select: { nama: true } } },
+    take: 5,
+  },
+  _count: { select: { resep: true } },
+} satisfies Prisma.BahanSelect
+
+const bentukBahan = (
+  b: Prisma.BahanGetPayload<{ select: typeof pilihBahan }>,
+) => ({
+  id: b.id,
+  nama: b.nama,
+  satuan: b.satuan,
+  jenis: b.jenis,
+  stok: b.stok.toNumber(),
+  stokMinimum: b.stokMinimum.toNumber(),
+  hargaSatuan: b.hargaSatuan.toNumber(),
+  menipis: b.stok.lte(b.stokMinimum),
+  dipakaiProduk: b._count.resep,
+  contohProduk: b.resep.map((r) => r.produk.nama),
+})
+
+// Paginasi + pencarian + filter di database, bukan di memori.
+export async function bahanPage(query: BahanQueryInput) {
+  const q = query.q?.trim()
+  const cari: Prisma.BahanWhereInput = q
+    ? {
+        OR: [
+          { nama: { contains: q, mode: 'insensitive' } },
+          { satuan: { contains: q, mode: 'insensitive' } },
+          { jenis: { contains: q, mode: 'insensitive' } },
+        ],
+      }
+    : {}
+
+  // Perbandingan antar-kolom (stok <= stokMinimum) memakai field reference.
+  const menipis: Prisma.BahanWhereInput = {
+    stok: { lte: prisma.bahan.fields.stokMinimum },
+  }
+  const where: Prisma.BahanWhereInput =
+    query.filter === 'menipis' ? { AND: [cari, menipis] } : cari
+
+  const urut: Prisma.BahanOrderByWithRelationInput =
+    query.sort === 'satuan'
+      ? { satuan: query.arah }
+      : query.sort === 'stok'
+        ? { stok: query.arah }
+        : query.sort === 'minimum'
+          ? { stokMinimum: query.arah }
+          : { nama: query.arah }
+
+  const [total, jumlahMenipis, raw] = await Promise.all([
+    prisma.bahan.count({ where }),
+    prisma.bahan.count({ where: { AND: [cari, menipis] } }),
+    prisma.bahan.findMany({
+      where,
+      orderBy: urut,
+      skip: query.skip,
+      take: query.take,
+      select: pilihBahan,
+    }),
+  ])
+
+  return {
+    baris: raw.map(bentukBahan),
+    total,
+    menipis: jumlahMenipis,
+  }
 }
 
-export async function bahanData(opts?: { take?: number; skip?: number }) {
-  // Ambil semua bahan dari DB, lalu paginasi.
-  const rawBahan = await getAllBahanRaw()
-
-  const take = opts?.take ?? rawBahan.length
-  const skip = opts?.skip ?? 0
-  const sliced = rawBahan.slice(skip, skip + take)
-
-  // Bentuk keluaran untuk UI.
-  return sliced.map((b) => ({
-    id: b.id,
-    nama: b.nama,
-    satuan: b.satuan,
-    jenis: b.jenis,
-    stok: b.stok.toNumber(),
-    stokMinimum: b.stokMinimum.toNumber(),
-    hargaSatuan: b.hargaSatuan.toNumber(),
-    menipis: b.stok.toNumber() <= b.stokMinimum.toNumber(),
-    dipakaiProduk: b._count.resep,
-    contohProduk: b.resep.map(
-      (r: { produk: { nama: string } }) => r.produk.nama,
-    ),
-  }))
+// Kompatibilitas untuk pemakai lama (test/internal): array tanpa metadata.
+export async function bahanData(opts?: {
+  take?: number
+  skip?: number
+  q?: string
+  filter?: 'semua' | 'menipis'
+}) {
+  const hasil = await bahanPage({
+    take: opts?.take ?? 10_000,
+    skip: opts?.skip ?? 0,
+    q: opts?.q,
+    filter: opts?.filter ?? 'semua',
+    sort: 'nama',
+    arah: 'asc',
+  })
+  return hasil.baris
 }
 
 export async function createBahan(input: BahanInput) {

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 
 import { authClient } from '#/lib/auth-client'
-import { useIdentitasApp } from '#/lib/identitas'
-import { useLogoUrl } from '#/lib/logo'
+import { useIdentitasApp } from '#/hooks/identitas'
+import { useLogoUrl } from '#/hooks/logo'
 import { m } from '#/paraglide/messages'
 import { getPenggunaFn } from '#/server/authFn'
 
@@ -56,6 +56,7 @@ export default function Footer() {
           {tampilkanPesanan && (
             <Link
               to="/pesanan"
+              search={{ meja: undefined }}
               className="chrome-link inline-flex min-h-11 items-center"
             >
               {m.pesan_judul()}

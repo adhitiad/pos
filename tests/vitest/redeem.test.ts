@@ -39,12 +39,18 @@ describe('hitungRedeem', () => {
 
 describe('PostingTransaksiSchema', () => {
   it('menolak keranjang kosong', () => {
-    expect(() => PostingTransaksiSchema.parse({ items: [] })).toThrow()
+    expect(() =>
+      PostingTransaksiSchema.parse({
+        items: [],
+      }),
+    ).toThrow()
   })
 
   it('menolak qty nol/negatif dan diskon negatif', () => {
     expect(() =>
-      PostingTransaksiSchema.parse({ items: [{ produkId: 'x', qty: 0 }] }),
+      PostingTransaksiSchema.parse({
+        items: [{ produkId: 'x', qty: 0 }],
+      }),
     ).toThrow()
     expect(() =>
       PostingTransaksiSchema.parse({

@@ -31,7 +31,7 @@ import {
   HeaderUrutTabel,
   PaginasiTabel,
   useKontrolTabel,
-} from '#/components/ui/table-controls'
+} from '#/hooks/table-controls'
 
 const TIER_LABEL: Record<string, string> = {
   BRONZE: 'Bronze',
@@ -57,7 +57,11 @@ export const Route = createFileRoute('/member/$id')({
       throw redirect({ to: user.role === 'KASIR' ? '/kasir' : '/' })
   },
   loader: async ({ params }) => {
-    if (!params.id) throw redirect({ to: '/member' })
+    if (!params.id)
+      throw redirect({
+        to: '/member',
+        search: { sort: 'nama', arah: 'asc', take: 10, skip: 0 },
+      })
     return memberRiwayatFn({ data: { id: params.id } })
   },
   component: MemberDetail,
@@ -129,7 +133,12 @@ function MemberDetail() {
       judul={member.nama}
       aksi={
         <Button asChild className="h-11">
-          <Link to="/member">{m.member_kembali()}</Link>
+          <Link
+            to="/member"
+            search={{ sort: 'nama', arah: 'asc', take: 10, skip: 0 }}
+          >
+            {m.member_kembali()}
+          </Link>
         </Button>
       }
     >

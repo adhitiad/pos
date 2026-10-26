@@ -9,16 +9,31 @@ import {
 } from '../../src/server/laporanPenjualan.js'
 import type { BarisTransaksi } from '#/types/laporan-penjualan'
 
-const baris = (over: Partial<BarisTransaksi> = {}): BarisTransaksi => ({
-  tanggal: new Date('2025-01-15T10:00:00'),
-  subtotal: 10000,
-  diskon: 0,
-  pajak: 0,
-  ongkir: 0,
-  total: 10000,
-  hpp: 4000,
-  ...over,
-})
+const baris = (over: Partial<BarisTransaksi> = {}): BarisTransaksi => {
+  const b: BarisTransaksi = {
+    tanggal: new Date('2025-01-15T10:00:00'),
+    subtotal: 10000,
+    diskon: 0,
+    pajak: 0,
+    ongkir: 0,
+    total: 10000,
+    hpp: 4000,
+    qtyTerjual: 1,
+    kategoriId: null,
+    kategoriNama: null,
+    kasirId: null,
+    shiftId: null,
+    memberId: null,
+    metodeBayar: 'TUNAI',
+    mejaId: null,
+    deliveryId: null,
+    sumber: 'POS',
+    statusPesanan: 'SELESAI',
+    pajakJenis: null,
+    ...over,
+  }
+  return b
+}
 
 describe('kunciPeriode', () => {
   it('harian = YYYY-MM-DD', () => {

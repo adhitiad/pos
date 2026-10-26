@@ -1,21 +1,9 @@
 import { prisma } from '#/db'
 import { logger } from '#/lib/logger'
 import type { Prisma } from '#/generated/prisma/client.js'
+import type { CatatAuditInput } from '#/types/audit'
 
-export interface CatatAuditInput {
-  /** Id user pelaku; null/kosong = aksi sistem (tanpa login). */
-  aktorId?: string | null
-  /** Kode aksi, mis. "produk.ubah", "user.role.ubah", "produk.hapus". */
-  aksi: string
-  /** Nama entitas yang diubah, mis. "Produk", "Pengaturan". */
-  entitas: string
-  /** Id entitas bila ada. */
-  entitasId?: string | null
-  /** Cuplikan state sebelum perubahan (hanya field yang berubah). */
-  sebelum?: Record<string, unknown> | null
-  /** Cuplikan state sesudah perubahan (hanya field yang berubah). */
-  sesudah?: Record<string, unknown> | null
-}
+export type { CatatAuditInput } from '#/types/audit'
 
 // Ubah nilai non-JSON (Decimal Prisma, Date, bigint) menjadi bentuk JSON
 // sederhana supaya aman disimpan pada kolom `before`/`after`.
@@ -81,6 +69,7 @@ export async function catatAudit(input: CatatAuditInput): Promise<void> {
         action: input.aksi,
         entity: input.entitas,
         entityId: input.entitasId ?? null,
+        catatan: input.catatan ?? null,
         before: sebelum,
         after: sesudah,
       },

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { createFileRoute } from '@tanstack/react-router'
 
-import { useIdentitasApp } from '#/lib/identitas'
+import { useIdentitasApp } from '#/hooks/identitas'
 
 import Footer from '#/components/Footer'
 import Header from '#/components/Header'

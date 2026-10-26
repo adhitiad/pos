@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useRouterState } from '@tanstack/react-router'
 
 import { m } from '#/paraglide/messages'
-import { urlIkonPng, useIdentitasApp } from '#/lib/identitas'
+import { urlIkonPng, useIdentitasApp } from '#/hooks/identitas'
 
 function pasangTautan(
   rel: string,

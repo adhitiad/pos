@@ -208,6 +208,21 @@ export type AuditLog = Prisma.AuditLogModel
  */
 export type PengajuanPengeluaran = Prisma.PengajuanPengeluaranModel
 /**
+ * Model DraftTransaksi
+ * 
+ */
+export type DraftTransaksi = Prisma.DraftTransaksiModel
+/**
+ * Model TransaksiReviewAudit
+ * 
+ */
+export type TransaksiReviewAudit = Prisma.TransaksiReviewAuditModel
+/**
+ * Model PesananDraf
+ * 
+ */
+export type PesananDraf = Prisma.PesananDrafModel
+/**
  * Model Notifikasi
  * 
  */

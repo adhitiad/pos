@@ -34,7 +34,7 @@ function ProdukCard({ produk }: { produk: ProdukKartu }) {
   return (
     <Link
       to="/pesanan"
-      aria-label={`${m.home_populer_cta()}: ${produk.nama}`}
+      search={{ meja: undefined }}
       className="group block h-full rounded-xl outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
     >
       <Card className="h-full gap-0 overflow-hidden p-0 border-border transition-colors group-hover:border-brand/35">
@@ -133,7 +133,7 @@ function BarisProduk({
         </div>
         {utama && (
           <Button asChild variant="outline" className="h-11 w-full sm:w-auto">
-            <Link to="/pesanan">
+            <Link to="/pesanan" search={{ meja: undefined }}>
               {m.pesan_judul()}
               <ArrowRight />
             </Link>

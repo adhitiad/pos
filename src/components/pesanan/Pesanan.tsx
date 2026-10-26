@@ -1,12 +1,9 @@
 import { ArrowLeft, ShoppingCart } from 'lucide-react'
 
 import { Link } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
 
+import { usePesanan } from '#/hooks/usePesanan'
 import { m } from '#/paraglide/messages'
-import { authClient } from '#/lib/auth-client'
-import { segarkanNotifikasi } from '#/lib/notifikasi'
 
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
@@ -19,236 +16,57 @@ import {
 } from '#/components/ui/dialog'
 
 import ModifierPicker from '#/components/kasir/ModifierPicker'
-import NotificationBell from '#/components/NotificationBell'
+import NotificationBellLazy from '#/components/NotificationBellLazy'
 import Keranjang from '#/components/pesanan/Keranjang'
 import Checkout from '#/components/pesanan/Checkout'
 import ProdukItem from '#/components/pesanan/ProdukItem'
-import type {
-  Meja,
-  ModePesanan,
-  MetodeBayarOnline,
-  PesananItem,
-  PesananModifierPilihan,
-  PesananProduk,
-} from '#/types/pesanan'
-
-type MemberSaya = {
-  id: string
-  nama: string
-  poin: number
-  diskonPersen: number | null
-}
+import type { PesananItem, PesananOpsi, PesananProduk } from '#/types/pesanan'
 
 const rupiah = (n: number) =>
   new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(n)
 
-export default function Pesanan() {
-  const { data: session, isPending } = authClient.useSession()
-  const [produk, setProduk] = useState<PesananProduk[]>([])
-  const [cari, setCari] = useState('')
-  const [meja, setMeja] = useState<Meja[]>([])
-  const [loaded, setLoaded] = useState(false)
-
-  useEffect(() => {
-    let abort = false
-    fetch('/api/v1/pesan')
-      .then((res) => {
-        if (!res.ok) throw new Error('Gagal memuat menu')
-        return res.json()
-      })
-      .then((data) => {
-        if (abort) return
-        setProduk(data.data.produk ?? [])
-        setMeja(data.data.meja ?? [])
-        setLoaded(true)
-      })
-      .catch(() => {
-        if (abort) return
-        setLoaded(true)
-      })
-    return () => {
-      abort = true
-    }
-  }, [])
-
-  const [cart, setCart] = useState<Record<string, PesananItem>>({})
-  const [modalProduk, setModalProduk] = useState<{
-    produk: PesananProduk
-    modifiers: PesananModifierPilihan[]
-  } | null>(null)
-  const [mode, setMode] = useState<ModePesanan>('TAKE_AWAY')
-  const [mejaId, setMejaId] = useState('')
-  const [namaPelanggan, setNamaPelanggan] = useState('')
-  const [pembayaran, setPembayaran] = useState<MetodeBayarOnline>('QRIS')
-  const [pending, setPending] = useState(false)
-  const [member, setMember] = useState<MemberSaya | null>(null)
-  const [memuatMember, setMemuatMember] = useState(false)
-  const [pesanan, setPesanan] = useState<{
-    nomor: string
-    total: number
-    tanggal: string
-  } | null>(null)
-
-  useEffect(() => {
-    const userId = session?.user.id
-    if (!userId) {
-      setMember(null)
-      setMemuatMember(false)
-      return
-    }
-    let abort = false
-    setMemuatMember(true)
-    fetch('/api/v1/saya')
-      .then((res) => {
-        if (!res.ok) throw new Error('Gagal memuat member')
-        return res.json()
-      })
-      .then((body) => {
-        if (abort) return
-        const data = body.data?.member ?? null
-        setMember(data)
-        if (data) {
-          setNamaPelanggan((sebelumnya) => sebelumnya || data.nama)
-        }
-      })
-      .catch(() => {
-        if (!abort) setMember(null)
-      })
-      .finally(() => {
-        if (!abort) setMemuatMember(false)
-      })
-    return () => {
-      abort = true
-    }
-  }, [session?.user.id])
-
-  const items = Object.values(cart)
-  const total = items.reduce((s, i) => s + i.harga * i.qty, 0)
-  const isDineIn = mode === 'DINE_IN'
-  const produkTampil = cari
-    ? produk.filter((p) => p.nama.toLowerCase().includes(cari.toLowerCase()))
-    : produk
-
-  const hitungModifier = (
-    pilihan: PesananModifierPilihan[],
-  ): { modifierId: string; qty: number; catatan: string }[] =>
-    pilihan.map((p) => ({
-      modifierId: p.modifierId,
-      qty: p.qty,
-      catatan: p.catatan,
-    }))
-
-  const tambahProduk = (p: PesananProduk) => {
-    if (p.modifierGrup.length > 0) {
-      setModalProduk({ produk: p, modifiers: [] })
-      return
-    }
-    tambahKeCart(p.id, [])
-  }
-
-  const tambahKeCart = (
-    produkId: string,
-    modifiers: PesananModifierPilihan[],
-  ) => {
-    const ada = cart[produkId]
-    if (produkId in cart) {
-      setCart({
-        ...cart,
-        [produkId]: { ...ada, qty: ada.qty + 1 },
-      })
-    } else {
-      const p = produk.find((x: PesananProduk) => x.id === produkId)!
-      setCart({
-        ...cart,
-        [produkId]: {
-          produkId,
-          nama: p.nama,
-          harga: p.harga,
-          qty: 1,
-          modifiers: hitungModifier(modifiers),
-        },
-      })
-    }
-    toast(m.pesan_ditambahkan(), { duration: 800 })
-  }
-
-  const kurangProduk = (produkId: string) => {
-    if (!(produkId in cart)) return
-    const ada = cart[produkId]
-    if (ada.qty <= 1) {
-      const next = { ...cart }
-      delete next[produkId]
-      setCart(next)
-    } else {
-      setCart({ ...cart, [produkId]: { ...ada, qty: ada.qty - 1 } })
-    }
-  }
-
-  const hapusProduk = (produkId: string) => {
-    const next = { ...cart }
-    delete next[produkId]
-    setCart(next)
-  }
-
-  const konfirmasiModifier = (
-    modifiers: { modifierId: string; qty: number; catatan: string }[],
-  ) => {
-    if (!modalProduk) return
-    tambahKeCart(modalProduk.produk.id, modifiers)
-    setModalProduk(null)
-  }
-
-  const ajukanPesanan = async () => {
-    if (items.length === 0) return
-    if (isDineIn && !mejaId) {
-      toast.error(m.pesan_pilih_meja())
-      return
-    }
-    setPending(true)
-    try {
-      const res = await fetch('/api/v1/pesan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: items.map((i) => ({
-            produkId: i.produkId,
-            qty: i.qty,
-            modifiers: i.modifiers.map((mod) => ({
-              modifierId: mod.modifierId,
-              qty: mod.qty,
-              catatan: mod.catatan,
-            })),
-          })),
-          mejaId: isDineIn ? mejaId : undefined,
-          metodeBayar: pembayaran,
-          catatan:
-            namaPelanggan.trim() !== ''
-              ? `Pelanggan: ${namaPelanggan.trim()}`
-              : undefined,
-        }),
-      })
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error?.message || 'Gagal membuat pesanan')
-      }
-      const body = await res.json()
-      setPesanan({
-        nomor: body.data.nomor,
-        total: body.data.total,
-        tanggal: body.data.tanggal,
-      })
-      setCart({})
-      setMejaId('')
-      setNamaPelanggan('')
-      setPembayaran('QRIS')
-      segarkanNotifikasi()
-      toast.success(m.pesan_sukses())
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : m.pesan_gagal())
-    } finally {
-      setPending(false)
-    }
-  }
+export default function Pesanan(props: PesananOpsi) {
+  const tokoBuka = props.tokoBuka ?? true
+  const tokoAlasan = props.tokoAlasan
+  const {
+    session,
+    isPending,
+    produk,
+    cari,
+    setCari,
+    delivery,
+    loaded,
+    modalProduk,
+    setModalProduk,
+    mode,
+    mejaNomor,
+    deliveryId,
+    setDeliveryId,
+    alamat,
+    setAlamat,
+    namaPelanggan,
+    setNamaPelanggan,
+    pembayaran,
+    setPembayaran,
+    pending,
+    member,
+    memuatMember,
+    pesanan,
+    setPesanan,
+    cart,
+    items,
+    subtotal,
+    ongkir,
+    total,
+    produkTampil,
+    tambahProduk,
+    tambahKeCart,
+    kurangProduk,
+    hapusProduk,
+    konfirmasiModifier,
+    ubahMode,
+    ajukanPesanan,
+  } = usePesanan(props)
 
   if (pesanan) {
     return (
@@ -262,7 +80,7 @@ export default function Pesanan() {
             >
               <ArrowLeft className="size-4" /> {m.home_kembali()}
             </Link>
-            {session?.user && <NotificationBell />}
+            {session?.user && <NotificationBellLazy />}
           </div>
         </header>
         <main className="flex-1 mx-auto max-w-md w-full px-4 py-10 text-center">
@@ -310,7 +128,7 @@ export default function Pesanan() {
             <div className="flex items-center gap-2">
               <ShoppingCart className="size-4" /> {m.pesan_judul()}
             </div>
-            {session?.user && <NotificationBell />}
+            {session?.user && <NotificationBellLazy />}
           </div>
         </div>
       </header>
@@ -342,6 +160,12 @@ export default function Pesanan() {
             <Link to="/login" className="font-medium underline">
               {m.nav_login()}
             </Link>
+          </div>
+        )}
+        {!tokoBuka && (
+          <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-100">
+            {m.pesan_toko_tutup()}
+            {tokoAlasan && ` (${tokoAlasan})`}
           </div>
         )}
         <Input
@@ -389,16 +213,21 @@ export default function Pesanan() {
             <div className="lg:col-span-4 lg:sticky lg:top-24">
               <Checkout
                 mode={mode}
-                mejaId={mejaId}
+                mejaNomor={mejaNomor}
                 namaPelanggan={namaPelanggan}
                 pembayaran={pembayaran}
-                daftarMeja={meja}
+                deliveryId={deliveryId}
+                daftarDelivery={delivery}
+                alamat={alamat}
+                subtotal={subtotal}
+                ongkir={ongkir}
                 total={total}
                 pending={pending}
-                onModeChange={setMode}
-                onMejaChange={setMejaId}
+                onModeChange={ubahMode}
                 onNamaChange={setNamaPelanggan}
                 onPembayaranChange={setPembayaran}
+                onDeliveryChange={setDeliveryId}
+                onAlamatChange={setAlamat}
                 onCheckout={ajukanPesanan}
               />
             </div>

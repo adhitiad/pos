@@ -1,10 +1,12 @@
 import { describe, expect, it, afterAll, beforeAll, beforeEach } from 'vitest'
 
 import { prisma } from '../../src/db.js'
+import { bacaTokenMeja } from '../../src/server/mejaToken.js'
 import {
   createMeja,
   hapusMeja,
   mejaData,
+  qrMeja,
   toggleMeja,
   updateMeja,
 } from '../../src/server/meja.js'
@@ -69,5 +71,40 @@ describe('meja', () => {
     await expect(createMeja({ nomor: 'Z1', aktif: true })).rejects.toThrow(
       /sudah terpakai/,
     )
+  })
+
+  it('generate QR meja dan decode token-nya', async () => {
+    const dibuat = await createMeja({
+      nomor: 'Q1',
+      nama: 'Meja QR',
+      aktif: true,
+    })
+
+    const qr = await qrMeja({ id: dibuat.id })
+
+    expect(qr.mejaId).toBe(dibuat.id)
+    expect(qr.nomor).toBe('Q1')
+    expect(qr.qrDataUrl.startsWith('data:image/svg+xml;base64,')).toBe(true)
+    expect(new URL(qr.url).pathname).toBe('/pesanan')
+    expect(new URL(qr.url).searchParams.get('meja')).toBe(qr.token)
+    expect(new Date(qr.berlakuSampai).getTime()).toBeGreaterThan(Date.now())
+
+    const baca = bacaTokenMeja(qr.token)
+    expect(baca.mejaId).toBe(dibuat.id)
+  })
+
+  it('QR meja meja tidak ditemukan', async () => {
+    await expect(qrMeja({ id: 'tidak-ada-id' })).rejects.toThrow(
+      'Meja tidak ditemukan',
+    )
+  })
+
+  it('QR meja meja nonaktif', async () => {
+    const dibuat = await createMeja({
+      nomor: 'Q2',
+      nama: 'Meja Mati',
+      aktif: false,
+    })
+    await expect(qrMeja({ id: dibuat.id })).rejects.toThrow('Meja tidak aktif')
   })
 })

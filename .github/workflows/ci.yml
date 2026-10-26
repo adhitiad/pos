@@ -172,7 +172,7 @@ jobs:
       - name: Install Playwright browser
         run: |
           for attempt in 1 2 3; do
-            bunx playwright install --with-deps chromium && exit 0
+            bunx playwright install --with-deps chromium webkit && exit 0
             echo "Playwright install failed (attempt ${attempt}), retrying..."
             sleep 10
           done

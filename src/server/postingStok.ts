@@ -1,13 +1,9 @@
 import { Prisma } from '#/generated/prisma/client.js'
+import type { KebutuhanStok } from '#/types/transaksi'
 import type { Tx } from '#/types/prisma'
 import { GalatDomain } from './galat.js'
 
-// Kebutuhan stok gabungan untuk satu transaksi. Map mencegah item yang sama
-// dihitung dua kali saat diproses dalam satu query.
-export type KebutuhanStok = {
-  qtyProduk: Map<string, number>
-  qtyBahan: Map<string, number>
-}
+export type { KebutuhanStok } from '#/types/transaksi'
 
 export function kebutuhanDariBaris(
   baris: {

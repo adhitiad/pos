@@ -11,7 +11,6 @@ import {
   daftarkanPrinterPerangkat,
   gagalPrintJob,
   hapusPrinter,
-  printerDefault,
   selesaiPrintJob,
   setDefaultPrinterPerangkat,
   updatePrinter,
@@ -31,13 +30,6 @@ export const daftarPrinterFn = createServerFn({ method: 'GET' }).handler(
   async () => {
     await requireOwner()
     return daftarPrinter()
-  },
-)
-
-export const printerDefaultFn = createServerFn({ method: 'GET' }).handler(
-  async () => {
-    const pengguna = await requireOwner()
-    return printerDefault(pengguna.id)
   },
 )
 

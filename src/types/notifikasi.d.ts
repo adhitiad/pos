@@ -1,3 +1,15 @@
+import type { Role } from '#/generated/prisma/enums.js'
+
+export type TipeNotifikasi = 'PENGAJUAN' | 'SETUJUI' | 'TOLAK' | 'INFO'
+
+/** Pesan notifikasi antar pengguna sebelum disimpan ke DB. */
+export type PesanNotifikasi = {
+  tipe: TipeNotifikasi
+  judul: string
+  pesan: string
+  entitasId?: string | null
+}
+
 export type NotifikasiStok = {
   id: string
   tipe: 'stok'
@@ -51,7 +63,7 @@ export type NotifikasiPesanan = {
 export type NotifikasiPengajuan = {
   id: string
   tipe: 'pengajuan'
-  kategori: 'PENGAJUAN' | 'SETUJUI' | 'TOLAK' | 'INFO'
+  kategori: TipeNotifikasi
   judul: string
   pesan: string
   entitasId: string | null
@@ -64,3 +76,18 @@ export type Notifikasi =
   | NotifikasiTransaksi
   | NotifikasiPesanan
   | NotifikasiPengajuan
+
+export interface PeriodeNotifikasi {
+  awal: Date
+  akhir: Date
+  labelDari: string
+  labelSampai: string
+}
+
+export interface OpsiNotifikasi {
+  role: Role
+  email: string
+  // Wajib untuk notifikasi antar pengguna (pengajuan); bila kosong, notifikasi
+  // DB dilewati (mis. pemanggilan tanpa sesi pengguna).
+  userId?: string
+}

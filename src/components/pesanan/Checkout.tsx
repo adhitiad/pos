@@ -26,19 +26,24 @@ const PAY: { id: MetodeBayarOnline; label: () => string }[] = [
 
 export default function Checkout({
   mode,
-  mejaId,
+  mejaNomor,
   namaPelanggan,
   pembayaran,
-  daftarMeja,
+  deliveryId,
+  daftarDelivery,
+  alamat,
+  subtotal,
+  ongkir,
   total,
   pending,
   onModeChange,
-  onMejaChange,
   onNamaChange,
   onPembayaranChange,
+  onDeliveryChange,
+  onAlamatChange,
   onCheckout,
 }: CheckoutProps) {
-  const mejaPilihan = daftarMeja.find((mja) => mja.id === mejaId)
+  const deliveryPilihan = daftarDelivery.find((d) => d.id === deliveryId)
 
   return (
     <Card className="space-y-3">
@@ -46,7 +51,7 @@ export default function Checkout({
         <CardTitle>{m.pesan_konfirmasi()}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="grid w-full grid-cols-2">
+        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3">
           <Button
             variant={mode === 'DINE_IN' ? 'default' : 'outline'}
             className="w-full"
@@ -61,33 +66,69 @@ export default function Checkout({
           >
             {m.pesan_bawa_pulang()}
           </Button>
+          <Button
+            variant={mode === 'DELIVERY' ? 'default' : 'outline'}
+            className="w-full"
+            onClick={() => onModeChange('DELIVERY')}
+            disabled={daftarDelivery.length === 0}
+          >
+            {m.pesan_delivery()}
+          </Button>
         </div>
         {mode === 'DINE_IN' && (
           <div className="space-y-1 pt-2">
             <Label>{m.pesan_meja()}</Label>
-            <Select value={mejaId} onValueChange={onMejaChange}>
-              <SelectTrigger>
-                <SelectValue
-                  placeholder={
-                    mejaPilihan ? `${mejaPilihan.nomor}` : m.pesan_pilih_meja()
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {daftarMeja.map((mja) => (
-                  <SelectItem key={mja.id} value={mja.id}>
-                    {mja.nomor}
-                    {mja.nama ? ` - ${mja.nama}` : ''}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {mejaNomor ? (
+              <p className="text-sm font-medium">{mejaNomor}</p>
+            ) : (
+              <p className="text-xs text-neutral-500">
+                {m.pesan_dinein_perlu_qr()}
+              </p>
+            )}
           </div>
         )}
         {mode === 'TAKE_AWAY' && (
           <p className="pt-2 text-xs text-neutral-500">
             {m.pesan_bawa_pulang_desc()}
           </p>
+        )}
+        {mode === 'DELIVERY' && (
+          <div className="space-y-3 pt-2">
+            <div className="space-y-1">
+              <Label>{m.pesan_delivery()}</Label>
+              <Select value={deliveryId} onValueChange={onDeliveryChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder={m.pesan_pilih_delivery()} />
+                </SelectTrigger>
+                <SelectContent>
+                  {daftarDelivery.map((d) => (
+                    <SelectItem key={d.id} value={d.id}>
+                      {d.nama} · Rp{rupiah(d.tarif)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {deliveryPilihan?.estimasi && (
+                <p className="text-xs text-neutral-500">
+                  {m.pesan_delivery_estimasi({
+                    estimasi: deliveryPilihan.estimasi,
+                  })}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="pesan-alamat">{m.pesan_alamat()}</Label>
+              <Input
+                id="pesan-alamat"
+                placeholder={m.pesan_alamat_hint()}
+                value={alamat}
+                onChange={(e) => onAlamatChange(e.target.value)}
+              />
+              <p className="text-xs text-neutral-500">
+                {m.pesan_alamat_hint()}
+              </p>
+            </div>
+          </div>
         )}
 
         <Separator />
@@ -126,9 +167,21 @@ export default function Checkout({
           />
         </div>
 
-        <div className="flex items-baseline gap-2 pt-1">
-          <span className="text-neutral-500">{m.pesan_total()}</span>
-          <span className="font-bold text-lg">Rp{rupiah(total)}</span>
+        <div className="space-y-1 pt-1 text-sm">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-neutral-500">{m.pesan_subtotal()}</span>
+            <span>Rp{rupiah(subtotal)}</span>
+          </div>
+          {ongkir > 0 && (
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-neutral-500">{m.pesan_ongkir()}</span>
+              <span>Rp{rupiah(ongkir)}</span>
+            </div>
+          )}
+          <div className="flex items-baseline justify-between gap-2 pt-1">
+            <span className="font-medium">{m.pesan_total()}</span>
+            <span className="font-bold text-lg">Rp{rupiah(total)}</span>
+          </div>
         </div>
 
         <Button

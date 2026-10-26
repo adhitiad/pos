@@ -75,3 +75,9 @@ export interface StrukPayload {
   memberNama: string | null
   catatan: string | null
 }
+
+/** Hasil penyimpanan perangkat hasil pindai ke server. */
+export interface HasilSimpanPerangkat {
+  berhasil: number
+  gagal: number
+}

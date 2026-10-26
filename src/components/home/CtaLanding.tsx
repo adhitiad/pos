@@ -38,7 +38,9 @@ export default function CtaLanding() {
                 variant="outline"
                 className="h-12 border-brand-foreground/30 bg-transparent px-6 text-base text-brand-foreground hover:bg-brand-foreground/10 hover:text-brand-foreground"
               >
-                <Link to="/pesanan">{m.home_akhir_etalase()}</Link>
+                <Link to="/pesanan" search={{ meja: undefined }}>
+                  {m.home_akhir_etalase()}
+                </Link>
               </Button>
             </div>
           </div>

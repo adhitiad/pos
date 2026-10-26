@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
+import { QrCode } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { m } from '#/paraglide/messages'
@@ -10,16 +11,25 @@ import {
   createMejaFn,
   hapusMejaFn,
   mejaDataFn,
+  qrMejaFn,
   toggleMejaFn,
   updateMejaFn,
 } from '#/server/mejaFn'
 
+import MejaGrid from '#/components/meja/MejaGrid'
 import { Button } from '#/components/ui/button'
 import DashboardLayout from '#/components/DashboardLayout'
 import HapusDialog from '#/components/HapusDialog'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '#/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '#/components/ui/dialog'
 import {
   Table,
   TableBody,
@@ -34,7 +44,7 @@ import {
   PaginasiTabel,
   PencarianTabel,
   useKontrolTabel,
-} from '#/components/ui/table-controls'
+} from '#/hooks/table-controls'
 import {
   Select,
   SelectContent,
@@ -54,6 +64,16 @@ export const Route = createFileRoute('/meja')({
   component: Meja,
 })
 
+type QrMeja = {
+  mejaId: string
+  nomor: string
+  nama: string | null
+  token: string
+  url: string
+  berlakuSampai: string
+  qrDataUrl: string
+}
+
 function Meja() {
   const data = Route.useLoaderData()
   const router = useRouter()
@@ -61,6 +81,8 @@ function Meja() {
   const [hapusId, setHapusId] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
   const [filterStatus, setFilterStatus] = useState('SEMUA')
+  const [qr, setQr] = useState<QrMeja | null>(null)
+  const [pendingQr, setPendingQr] = useState<string | null>(null)
 
   const baris = data
   const barisTerfilter = baris.filter(
@@ -86,6 +108,23 @@ function Meja() {
 
   const gagal = (e: unknown) => {
     toast.error(e instanceof Error ? e.message : 'Operasi gagal')
+  }
+
+  const bukaQr = (id: string) => {
+    setPendingQr(id)
+    qrMejaFn({ data: { id } })
+      .then((hasil) => setQr(hasil))
+      .catch(gagal)
+      .finally(() => setPendingQr(null))
+  }
+
+  const salinTautan = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url)
+      toast.success(m.meja_qr_disalin())
+    } catch {
+      toast.error(m.meja_qr_salin_gagal())
+    }
   }
 
   const form = useForm({
@@ -129,6 +168,7 @@ function Meja() {
         </Button>
       }
     >
+      <MejaGrid data={baris} />
       {panel && (
         <Card>
           <CardHeader>
@@ -204,6 +244,53 @@ function Meja() {
         }}
       />
 
+      <Dialog
+        open={qr !== null}
+        onOpenChange={(terbuka) => !terbuka && setQr(null)}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {m.meja_qr_judul({ nomor: qr?.nomor ?? '' })}
+            </DialogTitle>
+            <DialogDescription>{m.meja_qr_desc()}</DialogDescription>
+          </DialogHeader>
+          {qr && (
+            <div className="space-y-3 text-center">
+              <img
+                src={qr.qrDataUrl}
+                alt={m.meja_qr_judul({ nomor: qr.nomor })}
+                className="mx-auto size-64 rounded-md bg-white p-2"
+              />
+              <p className="text-xs text-neutral-500">
+                {m.meja_qr_berlaku({
+                  tanggal: new Date(qr.berlakuSampai).toLocaleDateString(
+                    'id-ID',
+                    { dateStyle: 'medium' },
+                  ),
+                })}
+              </p>
+              <p className="break-all text-xs text-neutral-500">{qr.url}</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    void salinTautan(qr.url)
+                  }}
+                >
+                  {m.meja_qr_salin()}
+                </Button>
+                <Button asChild variant="outline">
+                  <a href={qr.qrDataUrl} download={`qr-meja-${qr.nomor}.svg`}>
+                    {m.meja_qr_unduh()}
+                  </a>
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <div className="-mx-2 overflow-x-auto">
         <div className="mb-3 flex flex-wrap items-center gap-3">
           <PencarianTabel value={kontrol.cari} onChange={kontrol.setCari} />
@@ -275,7 +362,15 @@ function Meja() {
                   {mm.jumlahTransaksi}
                 </TableCell>
                 <TableCell>
-                  <div className="flex gap-1">
+                  <div className="flex flex-wrap gap-1">
+                    <Button
+                      variant="outline"
+                      onClick={() => bukaQr(mm.id)}
+                      disabled={!mm.aktif || pendingQr === mm.id}
+                    >
+                      <QrCode className="size-4" />
+                      {m.meja_qr()}
+                    </Button>
                     <Button
                       variant="outline"
                       onClick={() => {

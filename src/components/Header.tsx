@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 
 import { authClient } from '#/lib/auth-client'
-import { useIdentitasApp } from '#/lib/identitas'
-import { useLogoUrl } from '#/lib/logo'
+import { useIdentitasApp } from '#/hooks/identitas'
+import { useLogoUrl } from '#/hooks/logo'
 import { getPenggunaFn } from '#/server/authFn'
 import { m } from '#/paraglide/messages'
 
@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '#/components/ui/dropdown-menu'
 import ParaglideLocaleSwitcher from './LocaleSwitcher'
-import NotificationBell from './NotificationBell'
+import NotificationBellLazy from './NotificationBellLazy'
 import ThemeToggle from './ThemeToggle'
 
 export default function Header() {
@@ -69,7 +69,11 @@ export default function Header() {
         </div>
         <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
           {tampilkanPesanan && (
-            <Link to="/pesanan" className="chrome-link">
+            <Link
+              to="/pesanan"
+              search={{ meja: undefined }}
+              className="chrome-link"
+            >
               {m.pesan_judul()}
             </Link>
           )}
@@ -86,7 +90,7 @@ export default function Header() {
         </nav>
         <div className="flex shrink-0 items-center gap-2">
           {isKasir && <PrinterQuickScan />}
-          {peran && <NotificationBell />}
+          {peran && <NotificationBellLazy />}
           <ThemeToggle />
           <ParaglideLocaleSwitcher />
           {isPending ? (

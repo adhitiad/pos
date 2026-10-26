@@ -1,8 +1,6 @@
-export interface UkuranKertasTermal {
-  id: string
-  lebarMm: number
-  tinggiMm: number
-}
+import type { IdUkuranKertasTermal, UkuranKertasTermal } from '#/types/printer'
+
+export type { IdUkuranKertasTermal, UkuranKertasTermal } from '#/types/printer'
 
 // Semua varian fisik yang diminta dipisah agar lebar/tinggi tidak ambigu.
 export const UKURAN_KERTAS_TERMAL = [
@@ -19,8 +17,6 @@ export const UKURAN_KERTAS_TERMAL = [
   { id: '80x70', lebarMm: 80, tinggiMm: 70 },
   { id: '80x80', lebarMm: 80, tinggiMm: 80 },
 ] as const satisfies readonly UkuranKertasTermal[]
-
-export type IdUkuranKertasTermal = (typeof UKURAN_KERTAS_TERMAL)[number]['id']
 
 export const ID_UKURAN_KERTAS_TERMAL = UKURAN_KERTAS_TERMAL.map(
   (u) => u.id,

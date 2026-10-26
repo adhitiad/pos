@@ -191,6 +191,7 @@ export type MejaWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Meja"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Meja"> | Date | string
   transaksi?: Prisma.TransaksiListRelationFilter
+  pesananDraf?: Prisma.PesananDrafListRelationFilter
 }
 
 export type MejaOrderByWithRelationInput = {
@@ -201,6 +202,7 @@ export type MejaOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   transaksi?: Prisma.TransaksiOrderByRelationAggregateInput
+  pesananDraf?: Prisma.PesananDrafOrderByRelationAggregateInput
 }
 
 export type MejaWhereUniqueInput = Prisma.AtLeast<{
@@ -214,6 +216,7 @@ export type MejaWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Meja"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Meja"> | Date | string
   transaksi?: Prisma.TransaksiListRelationFilter
+  pesananDraf?: Prisma.PesananDrafListRelationFilter
 }, "id" | "nomor">
 
 export type MejaOrderByWithAggregationInput = {
@@ -248,6 +251,7 @@ export type MejaCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transaksi?: Prisma.TransaksiCreateNestedManyWithoutMejaInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedManyWithoutMejaInput
 }
 
 export type MejaUncheckedCreateInput = {
@@ -258,6 +262,7 @@ export type MejaUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transaksi?: Prisma.TransaksiUncheckedCreateNestedManyWithoutMejaInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedManyWithoutMejaInput
 }
 
 export type MejaUpdateInput = {
@@ -268,6 +273,7 @@ export type MejaUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transaksi?: Prisma.TransaksiUpdateManyWithoutMejaNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateManyWithoutMejaNestedInput
 }
 
 export type MejaUncheckedUpdateInput = {
@@ -278,6 +284,7 @@ export type MejaUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transaksi?: Prisma.TransaksiUncheckedUpdateManyWithoutMejaNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateManyWithoutMejaNestedInput
 }
 
 export type MejaCreateManyInput = {
@@ -355,6 +362,22 @@ export type MejaUpdateOneWithoutTransaksiNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MejaUpdateToOneWithWhereWithoutTransaksiInput, Prisma.MejaUpdateWithoutTransaksiInput>, Prisma.MejaUncheckedUpdateWithoutTransaksiInput>
 }
 
+export type MejaCreateNestedOneWithoutPesananDrafInput = {
+  create?: Prisma.XOR<Prisma.MejaCreateWithoutPesananDrafInput, Prisma.MejaUncheckedCreateWithoutPesananDrafInput>
+  connectOrCreate?: Prisma.MejaCreateOrConnectWithoutPesananDrafInput
+  connect?: Prisma.MejaWhereUniqueInput
+}
+
+export type MejaUpdateOneWithoutPesananDrafNestedInput = {
+  create?: Prisma.XOR<Prisma.MejaCreateWithoutPesananDrafInput, Prisma.MejaUncheckedCreateWithoutPesananDrafInput>
+  connectOrCreate?: Prisma.MejaCreateOrConnectWithoutPesananDrafInput
+  upsert?: Prisma.MejaUpsertWithoutPesananDrafInput
+  disconnect?: Prisma.MejaWhereInput | boolean
+  delete?: Prisma.MejaWhereInput | boolean
+  connect?: Prisma.MejaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MejaUpdateToOneWithWhereWithoutPesananDrafInput, Prisma.MejaUpdateWithoutPesananDrafInput>, Prisma.MejaUncheckedUpdateWithoutPesananDrafInput>
+}
+
 export type MejaCreateWithoutTransaksiInput = {
   id?: string
   nomor: string
@@ -362,6 +385,7 @@ export type MejaCreateWithoutTransaksiInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  pesananDraf?: Prisma.PesananDrafCreateNestedManyWithoutMejaInput
 }
 
 export type MejaUncheckedCreateWithoutTransaksiInput = {
@@ -371,6 +395,7 @@ export type MejaUncheckedCreateWithoutTransaksiInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedManyWithoutMejaInput
 }
 
 export type MejaCreateOrConnectWithoutTransaksiInput = {
@@ -396,6 +421,7 @@ export type MejaUpdateWithoutTransaksiInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pesananDraf?: Prisma.PesananDrafUpdateManyWithoutMejaNestedInput
 }
 
 export type MejaUncheckedUpdateWithoutTransaksiInput = {
@@ -405,6 +431,63 @@ export type MejaUncheckedUpdateWithoutTransaksiInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateManyWithoutMejaNestedInput
+}
+
+export type MejaCreateWithoutPesananDrafInput = {
+  id?: string
+  nomor: string
+  nama?: string | null
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transaksi?: Prisma.TransaksiCreateNestedManyWithoutMejaInput
+}
+
+export type MejaUncheckedCreateWithoutPesananDrafInput = {
+  id?: string
+  nomor: string
+  nama?: string | null
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transaksi?: Prisma.TransaksiUncheckedCreateNestedManyWithoutMejaInput
+}
+
+export type MejaCreateOrConnectWithoutPesananDrafInput = {
+  where: Prisma.MejaWhereUniqueInput
+  create: Prisma.XOR<Prisma.MejaCreateWithoutPesananDrafInput, Prisma.MejaUncheckedCreateWithoutPesananDrafInput>
+}
+
+export type MejaUpsertWithoutPesananDrafInput = {
+  update: Prisma.XOR<Prisma.MejaUpdateWithoutPesananDrafInput, Prisma.MejaUncheckedUpdateWithoutPesananDrafInput>
+  create: Prisma.XOR<Prisma.MejaCreateWithoutPesananDrafInput, Prisma.MejaUncheckedCreateWithoutPesananDrafInput>
+  where?: Prisma.MejaWhereInput
+}
+
+export type MejaUpdateToOneWithWhereWithoutPesananDrafInput = {
+  where?: Prisma.MejaWhereInput
+  data: Prisma.XOR<Prisma.MejaUpdateWithoutPesananDrafInput, Prisma.MejaUncheckedUpdateWithoutPesananDrafInput>
+}
+
+export type MejaUpdateWithoutPesananDrafInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nomor?: Prisma.StringFieldUpdateOperationsInput | string
+  nama?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transaksi?: Prisma.TransaksiUpdateManyWithoutMejaNestedInput
+}
+
+export type MejaUncheckedUpdateWithoutPesananDrafInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nomor?: Prisma.StringFieldUpdateOperationsInput | string
+  nama?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transaksi?: Prisma.TransaksiUncheckedUpdateManyWithoutMejaNestedInput
 }
 
 
@@ -414,10 +497,12 @@ export type MejaUncheckedUpdateWithoutTransaksiInput = {
 
 export type MejaCountOutputType = {
   transaksi: number
+  pesananDraf: number
 }
 
 export type MejaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaksi?: boolean | MejaCountOutputTypeCountTransaksiArgs
+  pesananDraf?: boolean | MejaCountOutputTypeCountPesananDrafArgs
 }
 
 /**
@@ -437,6 +522,13 @@ export type MejaCountOutputTypeCountTransaksiArgs<ExtArgs extends runtime.Types.
   where?: Prisma.TransaksiWhereInput
 }
 
+/**
+ * MejaCountOutputType without action
+ */
+export type MejaCountOutputTypeCountPesananDrafArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PesananDrafWhereInput
+}
+
 
 export type MejaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -446,6 +538,7 @@ export type MejaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   transaksi?: boolean | Prisma.Meja$transaksiArgs<ExtArgs>
+  pesananDraf?: boolean | Prisma.Meja$pesananDrafArgs<ExtArgs>
   _count?: boolean | Prisma.MejaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["meja"]>
 
@@ -479,6 +572,7 @@ export type MejaSelectScalar = {
 export type MejaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "nama" | "aktif" | "createdAt" | "updatedAt", ExtArgs["result"]["meja"]>
 export type MejaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaksi?: boolean | Prisma.Meja$transaksiArgs<ExtArgs>
+  pesananDraf?: boolean | Prisma.Meja$pesananDrafArgs<ExtArgs>
   _count?: boolean | Prisma.MejaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MejaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -488,6 +582,7 @@ export type $MejaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Meja"
   objects: {
     transaksi: Prisma.$TransaksiPayload<ExtArgs>[]
+    pesananDraf: Prisma.$PesananDrafPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -891,6 +986,7 @@ readonly fields: MejaFieldRefs;
 export interface Prisma__MejaClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   transaksi<T extends Prisma.Meja$transaksiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meja$transaksiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pesananDraf<T extends Prisma.Meja$pesananDrafArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Meja$pesananDrafArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PesananDrafPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1340,6 +1436,30 @@ export type Meja$transaksiArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.TransaksiScalarFieldEnum | Prisma.TransaksiScalarFieldEnum[]
+}
+
+/**
+ * Meja.pesananDraf
+ */
+export type Meja$pesananDrafArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PesananDraf
+   */
+  select?: Prisma.PesananDrafSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PesananDraf
+   */
+  omit?: Prisma.PesananDrafOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PesananDrafInclude<ExtArgs> | null
+  where?: Prisma.PesananDrafWhereInput
+  orderBy?: Prisma.PesananDrafOrderByWithRelationInput | Prisma.PesananDrafOrderByWithRelationInput[]
+  cursor?: Prisma.PesananDrafWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PesananDrafScalarFieldEnum | Prisma.PesananDrafScalarFieldEnum[]
 }
 
 /**

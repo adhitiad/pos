@@ -6,9 +6,13 @@ import { AKSES } from './peran.js'
 import type { Role } from '#/generated/prisma/enums.js'
 import type { Pengguna } from '#/types/auth'
 
-// Sesi Google saat ini, atau null bila belum login
-export async function getPengguna(): Promise<Pengguna | null> {
-  const session = await auth.api.getSession({ headers: getRequestHeaders() })
+// Cache sesi per request: loader + beberapa server function dalam satu
+// navigasi memakai objek Headers yang sama, jadi sesi + role hanya dibaca
+// sekali dari Better Auth/DB. WeakMap tidak menahan request lama di memori.
+const cacheSesi = new WeakMap<Headers, Promise<Pengguna | null>>()
+
+async function muatPengguna(headers: Headers): Promise<Pengguna | null> {
+  const session = await auth.api.getSession({ headers })
   if (!session?.user) return null
   // Sumber kebenaran role: baca langsung dari DB (role bisa diubah setelah pembuatan akun)
   const dbUser = await prisma.user.findUnique({
@@ -23,6 +27,16 @@ export async function getPengguna(): Promise<Pengguna | null> {
     image: session.user.image,
     role,
   }
+}
+
+// Sesi Google saat ini, atau null bila belum login
+export function getPengguna(): Promise<Pengguna | null> {
+  const headers = getRequestHeaders()
+  const tersimpan = cacheSesi.get(headers)
+  if (tersimpan) return tersimpan
+  const hasil = muatPengguna(headers)
+  cacheSesi.set(headers, hasil)
+  return hasil
 }
 
 // Satu peran tertentu

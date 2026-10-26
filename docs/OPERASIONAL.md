@@ -18,11 +18,17 @@
 - [ ] Environment Vercel Production: `DATABASE_URL` (pooled, runtime),
       `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `GOOGLE_CLIENT_ID/SECRET`,
       `GOOGLE_NATIVE_CLIENT_ID` (opsional, untuk login Expo native),
-      `OWNER_EMAILS`, `TRUSTED_ORIGINS`, `TRUST_PROXY=true`,
-      `TRUST_PROXY_HOPS=1`. Secret migrasi
+      `OWNER_EMAILS`, `TRUSTED_ORIGINS`. `TRUST_PROXY` otomatis `true` bila
+      `VERCEL=1` (set `TRUST_PROXY=false` hanya untuk mematikan IP tracking
+      eksplisit); `TRUST_PROXY_HOPS=1` sesuai satu lapis proxy Vercel. Secret
+      migrasi
       `DATABASE_URL_UNPOOLED` disimpan di GitHub environment `production`.
       `PAYMENT_WEBHOOK_SECRET` (min. 16 karakter) wajib diisi hanya bila webhook
       payment gateway diaktifkan; bila kosong endpoint webhook membalas 503.
+      `CRON_SECRET` (min. 16 karakter, acak) wajib diisi agar Vercel Cron
+      mengirim `Authorization: Bearer <CRON_SECRET>` ke route cron; bila kosong
+      route membalas 503. `FRAUD_WEBHOOK_URL` opsional untuk meneruskan alert
+      fraud ke Slack/Discord/kanal lain.
 - Skema produksi **hanya** lewat migration (`bun run db:migrate:deploy`), bukan `db:push`.
 - Auto-deploy `main` Vercel dimatikan (`vercel.json` →
   `git.deploymentEnabled.main = false`). Workflow menjalankan migrasi lebih dulu,
@@ -33,7 +39,18 @@
   `https://<domain>/api/auth/callback/google`.
 - Preview PR memakai Vercel Preview environment dan database terpisah; jangan pakai
   database produksi.
-- Tidak ada cron karena notifikasi dihitung per request.
+- **Cron**: `vercel.json` menjadwalkan
+  `GET /api/cron/pembayaran-kadaluarsa` tiap 15 menit untuk membatalkan pesanan
+  online yang belum dibayar >45 menit (membebaskan meja). Plan Vercel Hobby
+  membatasi frekuensi/kuota cron; bila jadwal ditolak, pakai Plan Pro atau
+  pemanggil eksternal dengan header Bearer yang sama. Notifikasi lain tetap
+  dihitung per request.
+- **Service worker**: hanya aktif di build produksi. `sw.js` + `/sw-manifest.js`
+  (dihasilkan plugin Vite) mem-precache aset ber-hash dan halaman publik
+  (`/`, `/pesanan`, `/login`); respons `/api/**` tidak pernah di-cache. Setelah
+  deploy, lakukan hard reload sekali untuk memastikan SW versi baru mengambil
+  alih; rollback aplikasi tetap aman karena aset ber-hash dan HTML bersifat
+  network-first.
 
 ### Recovery saat migrasi gagal di tengah jalan
 
@@ -49,8 +66,22 @@ database produksi berisi data):
 4. Jalankan ulang `bun run db:migrate:deploy` dari kondisi bersih.
 
 Kasus di repo ini: `20261022161956_add_pengajuan_dan_notifikasi` (tabel
-`PengajuanPengeluaran` + `Notifikasi` + enum `StatusPengajuan`) dan
-`20261022094437_add_nominal_disetujui` (kolom `nominalDisetujui`).
+`pengajuan_pengeluaran` + `notifikasi` + enum `StatusPengajuan`),
+`20261022094437_add_nominal_disetujui` (kolom `nominalDisetujui`), dan
+`20261026090000_add_indexes_part2` (nama tabel `notifikasi`/`pesanan_draf`
+sempat salah huruf besar; `CREATE INDEX IF NOT EXISTS` membuat sebagian index
+sudah terpasang sebelum gagal — perbaiki SQL, `migrate resolve --rolled-back`,
+lalu deploy ulang; index yang sudah ada dilewati).
+
+Drift nama tabel (bukan migrasi gagal): `20261023160000` membuat
+`"DraftTransaksi"`/`"TransaksiReviewAudit"`, sedangkan schema memakai
+`draft_transaksi`/`transaksi_review_audit`. Migrasi
+`20261026100000_fix_draft_review_table_names` memperbaikinya secara aditif —
+rename bila versi snake_case belum ada, hapus versi PascalCase hanya bila
+kosong, dan berhenti dengan `RAISE EXCEPTION` bila kedua versi berisi data
+(gabungkan manual, jangan reset DB). Setelah menambah/mengubah migrasi, cek
+`prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma
+--script --exit-code`; hasil harus `-- This is an empty migration.`
 
 ## 2. Uptime monitor
 
@@ -69,6 +100,13 @@ Kasus di repo ini: `20261022161956_add_pengajuan_dan_notifikasi` (tabel
       akan dideploy; over budget berarti perbaiki dulu.
 - [ ] Pantau cold start Vercel dan query lambat di log; catat perubahan baseline
       bila memang disengaja.
+- [ ] Uji beban checkout sebelum rilis besar: `bun run test:load` (butuh
+      [k6](https://k6.io/docs/get-started/installation/) dan dev/staging server
+      hidup). Wrapper membuat sesi KASIR sementara, menjalankan
+      `tests/load/checkout.js` (default 10 VU × 5 iterasi), lalu menghapus sesi.
+      Sesuaikan `VUS`/`ITERASI`/`STOK_MIN`/`BASE_URL`; ambang lalai
+      `http_req_failed < 1%`, p95 < 1,5 s, p99 < 3 s. Jalankan pada data uji,
+      bukan produksi.
 
 ## 3. Error monitoring (OBS-02)
 
@@ -86,6 +124,13 @@ Kasus di repo ini: `20261022161956_add_pengajuan_dan_notifikasi` (tabel
   (setujui environment bila reviewer aktif). Workflow menjalankan `db:migrate:deploy` →
   `db:migrate:status` → deploy Vercel → smoke test. Jangan deploy lewat push `main`.
 - Jangan pernah menjalankan `db:seed` di produksi.
+- Rate limit login sudah lintas instance: Better Auth memakai token bucket
+  PostgreSQL yang sama dengan endpoint lain (`/sign-in*` 5/menit, `/sign-up*`
+  3/menit, `/callback*` 20/menit). Tidak perlu Redis; cukup pastikan
+  `TRUST_PROXY`/`TRUST_PROXY_HOPS` benar agar kuncinya per IP nyata.
+- Dine-in publik hanya menerima `mejaToken` QR. Bila ada meja tanpa QR, kasir
+  memilihkan meja saat finalisasi draft (`POST /api/v1/pesan-dinein/{id}/finalisasi`
+  dengan body `{ mejaId }`); meja harus aktif.
 - Smoke test manual: `bash scripts/smoke-deploy.sh https://<domain-produksi>`.
 - Rollback aplikasi: promote deployment Vercel sebelumnya. Rollback DB: pola
   expand/contract atau restore PITR Neon — lihat [`docs/DEPLOY.md`](DEPLOY.md).

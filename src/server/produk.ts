@@ -1,56 +1,55 @@
 import { prisma } from '#/db'
+import type { Prisma } from '#/generated/prisma/client.js'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
+import type { ProdukKartu } from '#/types/produk'
+import type { ProdukQueryInput } from '#/validations/produk'
+
+export type { ProdukKartu } from '#/types/produk'
 
 // ─── Kueri master produk ───
 
-// Helper to get all produk with mapping (no pagination)
-async function getAllProduk() {
-  const raw = await prisma.produk.findMany({
-    orderBy: { nama: 'asc' },
+const pilihProduk = {
+  id: true,
+  nama: true,
+  sku: true,
+  barcode: true,
+  gambar: true,
+  harga: true,
+  stok: true,
+  aktif: true,
+  kategoriId: true,
+  kategori: { select: { nama: true } },
+  resep: {
     select: {
-      id: true,
-      nama: true,
-      sku: true,
-      barcode: true,
-      gambar: true,
-      harga: true,
-      stok: true,
-      aktif: true,
-      kategoriId: true,
-      kategori: { select: { nama: true } },
-      resep: {
-        select: {
-          bahanId: true,
-          jumlah: true,
-          bahan: { select: { nama: true, satuan: true } },
-        },
-      },
-      _count: { select: { item: true } },
+      bahanId: true,
+      jumlah: true,
+      bahan: { select: { nama: true, satuan: true } },
     },
-  })
+  },
+  _count: { select: { item: true } },
+} satisfies Prisma.ProdukSelect
 
-  const mapped = raw.map((p) => ({
-    id: p.id,
-    nama: p.nama,
-    sku: p.sku,
-    barcode: p.barcode,
-    gambar: p.gambar,
-    harga: p.harga.toNumber(),
-    stok: p.stok,
-    aktif: p.aktif,
-    kategoriId: p.kategoriId,
-    kategoriNama: p.kategori?.nama ?? null,
-    terjual: p._count.item,
-    resep: p.resep.map((r) => ({
-      bahanId: r.bahanId,
-      namaBahan: r.bahan.nama,
-      satuan: r.bahan.satuan,
-      jumlah: r.jumlah.toNumber(),
-    })),
-  }))
-
-  return mapped
-}
+const bentukProduk = (
+  p: Prisma.ProdukGetPayload<{ select: typeof pilihProduk }>,
+) => ({
+  id: p.id,
+  nama: p.nama,
+  sku: p.sku,
+  barcode: p.barcode,
+  gambar: p.gambar,
+  harga: p.harga.toNumber(),
+  stok: p.stok,
+  aktif: p.aktif,
+  kategoriId: p.kategoriId,
+  kategoriNama: p.kategori?.nama ?? null,
+  terjual: p._count.item,
+  resep: p.resep.map((r) => ({
+    bahanId: r.bahanId,
+    namaBahan: r.bahan.nama,
+    satuan: r.bahan.satuan,
+    jumlah: r.jumlah.toNumber(),
+  })),
+})
 
 // Helper to get all kategori with mapping (no pagination)
 async function getAllKategori() {
@@ -98,22 +97,72 @@ async function getAllBahan() {
   return mapped
 }
 
-// produkData menerapkan paginasi pada data master.
-export async function produkData(opts?: { take?: number; skip?: number }) {
-  const [produk, kategori, bahan] = await Promise.all([
-    getAllProduk(),
+// Paginasi + pencarian + filter produk di database. Kategori & bahan tetap
+// dimuat penuh karena hanya dipakai sebagai opsi form (bukan tabel besar).
+export async function produkPage(query: ProdukQueryInput) {
+  const q = query.q?.trim()
+  const where: Prisma.ProdukWhereInput = {
+    ...(q
+      ? {
+          OR: [
+            { nama: { contains: q, mode: 'insensitive' } },
+            { sku: { contains: q, mode: 'insensitive' } },
+            { barcode: { contains: q, mode: 'insensitive' } },
+            { kategori: { nama: { contains: q, mode: 'insensitive' } } },
+          ],
+        }
+      : {}),
+    ...(query.status === 'aktif'
+      ? { aktif: true }
+      : query.status === 'nonaktif'
+        ? { aktif: false }
+        : {}),
+    ...(query.kategoriId ? { kategoriId: query.kategoriId } : {}),
+  }
+
+  const urut: Prisma.ProdukOrderByWithRelationInput =
+    query.sort === 'sku'
+      ? { sku: query.arah }
+      : query.sort === 'harga'
+        ? { harga: query.arah }
+        : query.sort === 'stok'
+          ? { stok: query.arah }
+          : query.sort === 'aktif'
+            ? { aktif: query.arah }
+            : query.sort === 'kategori'
+              ? { kategori: { nama: query.arah } }
+              : { nama: query.arah }
+
+  const [total, raw, kategori, bahan] = await Promise.all([
+    prisma.produk.count({ where }),
+    prisma.produk.findMany({
+      where,
+      orderBy: urut,
+      skip: query.skip,
+      take: query.take,
+      select: pilihProduk,
+    }),
     getAllKategori(),
     getAllBahan(),
   ])
 
-  const take = opts?.take ?? produk.length
-  const skip = opts?.skip ?? 0
-
   return {
-    produk: produk.slice(skip, skip + take),
+    produk: raw.map(bentukProduk),
+    total,
     kategori,
     bahan,
   }
+}
+
+// Kompatibilitas: sebagian pemakai lama masih meminta seluruh produk.
+export async function produkData(opts?: { take?: number; skip?: number }) {
+  return produkPage({
+    take: opts?.take ?? 10_000,
+    skip: opts?.skip ?? 0,
+    sort: 'nama',
+    arah: 'asc',
+    status: 'semua',
+  })
 }
 
 // Daftar kategori ringkas untuk endpoint `/api/v1/kategori` (tanpa produk/bahan).
@@ -122,14 +171,6 @@ export async function kategoriData() {
 }
 
 // ─── Produk terpopuler (untuk carousel halaman member) ───
-
-export type ProdukKartu = {
-  produkId: string
-  nama: string
-  harga: number
-  gambar: string | null
-  terjual: number
-}
 
 const BATAS_PRODUK_LANDING = 8
 const MIN_PRODUK_BARIS = 4

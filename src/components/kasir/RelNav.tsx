@@ -4,6 +4,7 @@ import {
   Bell,
   Boxes,
   ClipboardCheck,
+  ClipboardList,
   Home,
   Layout,
   Monitor,
@@ -23,8 +24,8 @@ import { useEffect, useState } from 'react'
 
 import { pengaturanDataFn } from '#/server/pengaturanFn'
 import { AKSES } from '#/server/peran'
-import { useIdentitasApp } from '#/lib/identitas'
-import { useLogoUrl } from '#/lib/logo'
+import { useIdentitasApp } from '#/hooks/identitas'
+import { useLogoUrl } from '#/hooks/logo'
 import { m } from '#/paraglide/messages'
 
 import {
@@ -60,6 +61,12 @@ const TAUTAN_DASAR = [
     ikon: ShoppingCart,
     label: m.nav_pos(),
     peran: AKSES.operasional,
+  },
+  {
+    ke: '/review-transaksi',
+    ikon: ClipboardList,
+    label: m.nav_review(),
+    peran: AKSES.manajerial,
   },
   {
     ke: '/shift',

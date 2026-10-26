@@ -3,10 +3,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { m } from '#/paraglide/messages'
-import { useIdentitasApp } from '#/lib/identitas'
+import { useIdentitasApp } from '#/hooks/identitas'
 import { dukunganSerial, cetakEscpos } from '#/lib/printer'
-import { useLogoUrl } from '#/lib/logo'
-import { segarkanNotifikasi } from '#/lib/notifikasi'
+import { useLogoUrl } from '#/hooks/logo'
+import { segarkanNotifikasi } from '#/hooks/notifikasi'
 import {
   UKURAN_KERTAS_DEFAULT,
   lebarKolomEscPos,
@@ -14,7 +14,7 @@ import {
 } from '#/lib/ukuran-kertas'
 import { pengaturanDataFn } from '#/server/pengaturanFn'
 import type { Struk } from '#/types/kasir'
-import type { IdUkuranKertasTermal } from '#/lib/ukuran-kertas'
+import type { IdUkuranKertasTermal } from '#/types/printer'
 import type { StrukOtomatis } from '#/validations/pengaturan'
 
 import { Button } from '#/components/ui/button'

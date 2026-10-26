@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 
 import { m } from '#/paraglide/messages'
-import { useNotifikasiDibaca } from '#/lib/notifikasi'
+import { useNotifikasiDibaca } from '#/hooks/notifikasi'
 import { getSessionFn } from '#/server/authFn'
 import { notifikasiFn } from '#/server/notifikasiFn'
 import type {

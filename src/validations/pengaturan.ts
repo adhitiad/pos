@@ -19,6 +19,10 @@ const KUNCI_PENGATURAN = [
   'pajak_retail_persen',
   'diskon_kasir_maks_persen',
   'stok_dikurangi_saat',
+  'toko_aktif',
+  'jam_buka',
+  'jam_tutup',
+  'review_transaksi_mode',
 ] as const
 
 export const STRUK_OTOMATIS = ['nonaktif', 'cetak', 'pdf'] as const
@@ -31,6 +35,12 @@ export const KUNCI_PAJAK = [
 ] as const
 export const MODE_FNB = ['true', 'false'] as const
 export const STOK_DIKURANGI_SAAT = ['order', 'payment'] as const
+export const MODE_REVIEW_TRANSAKSI = ['kasir', 'owner'] as const
+
+// Payload pemilihan kebijakan review oleh owner.
+export const SetModeReviewSchema = z.object({
+  mode: z.enum(MODE_REVIEW_TRANSAKSI),
+})
 
 export const SetPengaturanSchema = z
   .object({
@@ -75,13 +85,37 @@ export const SetPengaturanSchema = z
     { message: 'URL aset harus dari Cloudinary', path: ['nilai'] },
   )
   .refine(
-    (v) => {
-      if (v.kunci !== 'diskon_kasir_maks_persen') return true
-      if (v.nilai === '') return false
-      const n = Number(v.nilai)
-      return Number.isFinite(n) && n >= 0 && n <= 100
-    },
+    (v) =>
+      v.kunci !== 'diskon_kasir_maks_persen' ||
+      (() => {
+        if (v.nilai === '') return false
+        const n = Number(v.nilai)
+        return Number.isFinite(n) && n >= 0 && n <= 100
+      })(),
     { message: 'Batas diskon kasir harus angka 0–100', path: ['nilai'] },
+  )
+  .refine(
+    (v) =>
+      v.kunci !== 'toko_aktif' ||
+      (MODE_FNB as readonly string[]).includes(v.nilai),
+    { message: 'Toko aktif harus true atau false', path: ['nilai'] },
+  )
+  .refine(
+    (v) =>
+      v.kunci !== 'review_transaksi_mode' ||
+      (MODE_REVIEW_TRANSAKSI as readonly string[]).includes(v.nilai),
+    { message: 'Mode review harus kasir atau owner', path: ['nilai'] },
+  )
+  .refine(
+    (v) => {
+      if (v.kunci !== 'jam_buka' && v.kunci !== 'jam_tutup') return true
+      if (v.nilai === '') return true // kosong diizinkan (tidak dibatasi jam)
+      return /^\d{2}:\d{2}$/.test(v.nilai)
+    },
+    {
+      message: 'Jam buka/tutup harus format HH:MM (contoh 08:00)',
+      path: ['nilai'],
+    },
   )
 
 export type SetPengaturanInput = z.infer<typeof SetPengaturanSchema>

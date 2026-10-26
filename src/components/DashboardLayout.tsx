@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import type { ReactNode } from 'react'
 
-import { useIdentitasApp } from '#/lib/identitas'
+import { useIdentitasApp } from '#/hooks/identitas'
 
 import Header from '#/components/Header'
 import NavigasiRemah from '#/components/NavigasiRemah'

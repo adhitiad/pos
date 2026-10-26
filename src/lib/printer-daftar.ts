@@ -1,5 +1,8 @@
 import { daftarkanPrinterPerangkatFn } from '#/server/percetakanFn'
+import type { HasilSimpanPerangkat } from '#/types/percetakan'
 import type { JalurPrinter, PrinterPerangkat } from '#/types/printer'
+
+export type { HasilSimpanPerangkat } from '#/types/percetakan'
 
 const KONEKSI: Record<JalurPrinter, 'USB' | 'BLUETOOTH' | 'WIFI' | 'SERIAL'> = {
   usb: 'USB',
@@ -23,11 +26,6 @@ function keInput(printer: PrinterPerangkat) {
     productName: printer.productName,
     aktif: true,
   }
-}
-
-export interface HasilSimpanPerangkat {
-  berhasil: number
-  gagal: number
 }
 
 function statusGalat(e: unknown): number | null {

@@ -30,10 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from '#/components/ui/table'
-import {
-  PaginasiTabel,
-  UKURAN_HALAMAN_TABEL,
-} from '#/components/ui/table-controls'
+import { PaginasiTabel, UKURAN_HALAMAN_TABEL } from '#/hooks/table-controls'
 
 const SEMUA = 'semua'
 const UKURAN_HALAMAN = 10

@@ -21,7 +21,7 @@ import {
   PaginasiTabel,
   PencarianTabel,
   useKontrolTabel,
-} from '#/components/ui/table-controls'
+} from '#/hooks/table-controls'
 
 import DashboardLayout from '#/components/DashboardLayout'
 import FilterLaporan from '#/components/laporan/FilterLaporan'

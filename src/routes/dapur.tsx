@@ -35,7 +35,7 @@ import {
   PaginasiTabel,
   PencarianTabel,
   useKontrolTabel,
-} from '#/components/ui/table-controls'
+} from '#/hooks/table-controls'
 
 const STATUS_LABEL: Record<string, string> = {
   MENUNGGU: 'Menunggu',
@@ -102,7 +102,10 @@ function Dapur() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState !== 'visible') return
-      void router.invalidate()
+      // Hanya muat ulang data halaman dapur, bukan seluruh match/router.
+      void router.invalidate({
+        filter: (match) => match.routeId === '/dapur',
+      })
     }, 20_000)
     return () => clearInterval(interval)
   }, [router])

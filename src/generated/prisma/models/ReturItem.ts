@@ -41,6 +41,7 @@ export type ReturItemSumAggregateOutputType = {
 export type ReturItemMinAggregateOutputType = {
   id: string | null
   returId: string | null
+  transaksiItemId: string | null
   produkId: string | null
   namaProduk: string | null
   qty: number | null
@@ -51,6 +52,7 @@ export type ReturItemMinAggregateOutputType = {
 export type ReturItemMaxAggregateOutputType = {
   id: string | null
   returId: string | null
+  transaksiItemId: string | null
   produkId: string | null
   namaProduk: string | null
   qty: number | null
@@ -61,6 +63,7 @@ export type ReturItemMaxAggregateOutputType = {
 export type ReturItemCountAggregateOutputType = {
   id: number
   returId: number
+  transaksiItemId: number
   produkId: number
   namaProduk: number
   qty: number
@@ -85,6 +88,7 @@ export type ReturItemSumAggregateInputType = {
 export type ReturItemMinAggregateInputType = {
   id?: true
   returId?: true
+  transaksiItemId?: true
   produkId?: true
   namaProduk?: true
   qty?: true
@@ -95,6 +99,7 @@ export type ReturItemMinAggregateInputType = {
 export type ReturItemMaxAggregateInputType = {
   id?: true
   returId?: true
+  transaksiItemId?: true
   produkId?: true
   namaProduk?: true
   qty?: true
@@ -105,6 +110,7 @@ export type ReturItemMaxAggregateInputType = {
 export type ReturItemCountAggregateInputType = {
   id?: true
   returId?: true
+  transaksiItemId?: true
   produkId?: true
   namaProduk?: true
   qty?: true
@@ -202,6 +208,7 @@ export type ReturItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type ReturItemGroupByOutputType = {
   id: string
   returId: string
+  transaksiItemId: string | null
   produkId: string | null
   namaProduk: string
   qty: number
@@ -235,24 +242,28 @@ export type ReturItemWhereInput = {
   NOT?: Prisma.ReturItemWhereInput | Prisma.ReturItemWhereInput[]
   id?: Prisma.StringFilter<"ReturItem"> | string
   returId?: Prisma.StringFilter<"ReturItem"> | string
+  transaksiItemId?: Prisma.StringNullableFilter<"ReturItem"> | string | null
   produkId?: Prisma.StringNullableFilter<"ReturItem"> | string | null
   namaProduk?: Prisma.StringFilter<"ReturItem"> | string
   qty?: Prisma.IntFilter<"ReturItem"> | number
   hargaSatuan?: Prisma.DecimalFilter<"ReturItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFilter<"ReturItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   retur?: Prisma.XOR<Prisma.ReturScalarRelationFilter, Prisma.ReturWhereInput>
+  transaksiItem?: Prisma.XOR<Prisma.TransaksiItemNullableScalarRelationFilter, Prisma.TransaksiItemWhereInput> | null
   produk?: Prisma.XOR<Prisma.ProdukNullableScalarRelationFilter, Prisma.ProdukWhereInput> | null
 }
 
 export type ReturItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   returId?: Prisma.SortOrder
+  transaksiItemId?: Prisma.SortOrderInput | Prisma.SortOrder
   produkId?: Prisma.SortOrderInput | Prisma.SortOrder
   namaProduk?: Prisma.SortOrder
   qty?: Prisma.SortOrder
   hargaSatuan?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   retur?: Prisma.ReturOrderByWithRelationInput
+  transaksiItem?: Prisma.TransaksiItemOrderByWithRelationInput
   produk?: Prisma.ProdukOrderByWithRelationInput
 }
 
@@ -262,18 +273,21 @@ export type ReturItemWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ReturItemWhereInput[]
   NOT?: Prisma.ReturItemWhereInput | Prisma.ReturItemWhereInput[]
   returId?: Prisma.StringFilter<"ReturItem"> | string
+  transaksiItemId?: Prisma.StringNullableFilter<"ReturItem"> | string | null
   produkId?: Prisma.StringNullableFilter<"ReturItem"> | string | null
   namaProduk?: Prisma.StringFilter<"ReturItem"> | string
   qty?: Prisma.IntFilter<"ReturItem"> | number
   hargaSatuan?: Prisma.DecimalFilter<"ReturItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFilter<"ReturItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   retur?: Prisma.XOR<Prisma.ReturScalarRelationFilter, Prisma.ReturWhereInput>
+  transaksiItem?: Prisma.XOR<Prisma.TransaksiItemNullableScalarRelationFilter, Prisma.TransaksiItemWhereInput> | null
   produk?: Prisma.XOR<Prisma.ProdukNullableScalarRelationFilter, Prisma.ProdukWhereInput> | null
 }, "id">
 
 export type ReturItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   returId?: Prisma.SortOrder
+  transaksiItemId?: Prisma.SortOrderInput | Prisma.SortOrder
   produkId?: Prisma.SortOrderInput | Prisma.SortOrder
   namaProduk?: Prisma.SortOrder
   qty?: Prisma.SortOrder
@@ -292,6 +306,7 @@ export type ReturItemScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ReturItemScalarWhereWithAggregatesInput | Prisma.ReturItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ReturItem"> | string
   returId?: Prisma.StringWithAggregatesFilter<"ReturItem"> | string
+  transaksiItemId?: Prisma.StringNullableWithAggregatesFilter<"ReturItem"> | string | null
   produkId?: Prisma.StringNullableWithAggregatesFilter<"ReturItem"> | string | null
   namaProduk?: Prisma.StringWithAggregatesFilter<"ReturItem"> | string
   qty?: Prisma.IntWithAggregatesFilter<"ReturItem"> | number
@@ -306,12 +321,14 @@ export type ReturItemCreateInput = {
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   retur: Prisma.ReturCreateNestedOneWithoutItemsInput
+  transaksiItem?: Prisma.TransaksiItemCreateNestedOneWithoutReturItemsInput
   produk?: Prisma.ProdukCreateNestedOneWithoutReturItemsInput
 }
 
 export type ReturItemUncheckedCreateInput = {
   id?: string
   returId: string
+  transaksiItemId?: string | null
   produkId?: string | null
   namaProduk: string
   qty: number
@@ -326,12 +343,14 @@ export type ReturItemUpdateInput = {
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   retur?: Prisma.ReturUpdateOneRequiredWithoutItemsNestedInput
+  transaksiItem?: Prisma.TransaksiItemUpdateOneWithoutReturItemsNestedInput
   produk?: Prisma.ProdukUpdateOneWithoutReturItemsNestedInput
 }
 
 export type ReturItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   returId?: Prisma.StringFieldUpdateOperationsInput | string
+  transaksiItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   produkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
@@ -342,6 +361,7 @@ export type ReturItemUncheckedUpdateInput = {
 export type ReturItemCreateManyInput = {
   id?: string
   returId: string
+  transaksiItemId?: string | null
   produkId?: string | null
   namaProduk: string
   qty: number
@@ -360,6 +380,7 @@ export type ReturItemUpdateManyMutationInput = {
 export type ReturItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   returId?: Prisma.StringFieldUpdateOperationsInput | string
+  transaksiItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   produkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
@@ -380,6 +401,7 @@ export type ReturItemOrderByRelationAggregateInput = {
 export type ReturItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   returId?: Prisma.SortOrder
+  transaksiItemId?: Prisma.SortOrder
   produkId?: Prisma.SortOrder
   namaProduk?: Prisma.SortOrder
   qty?: Prisma.SortOrder
@@ -396,6 +418,7 @@ export type ReturItemAvgOrderByAggregateInput = {
 export type ReturItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   returId?: Prisma.SortOrder
+  transaksiItemId?: Prisma.SortOrder
   produkId?: Prisma.SortOrder
   namaProduk?: Prisma.SortOrder
   qty?: Prisma.SortOrder
@@ -406,6 +429,7 @@ export type ReturItemMaxOrderByAggregateInput = {
 export type ReturItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   returId?: Prisma.SortOrder
+  transaksiItemId?: Prisma.SortOrder
   produkId?: Prisma.SortOrder
   namaProduk?: Prisma.SortOrder
   qty?: Prisma.SortOrder
@@ -461,6 +485,48 @@ export type ReturItemUncheckedUpdateManyWithoutProdukNestedInput = {
   deleteMany?: Prisma.ReturItemScalarWhereInput | Prisma.ReturItemScalarWhereInput[]
 }
 
+export type ReturItemCreateNestedManyWithoutTransaksiItemInput = {
+  create?: Prisma.XOR<Prisma.ReturItemCreateWithoutTransaksiItemInput, Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput> | Prisma.ReturItemCreateWithoutTransaksiItemInput[] | Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput[]
+  connectOrCreate?: Prisma.ReturItemCreateOrConnectWithoutTransaksiItemInput | Prisma.ReturItemCreateOrConnectWithoutTransaksiItemInput[]
+  createMany?: Prisma.ReturItemCreateManyTransaksiItemInputEnvelope
+  connect?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+}
+
+export type ReturItemUncheckedCreateNestedManyWithoutTransaksiItemInput = {
+  create?: Prisma.XOR<Prisma.ReturItemCreateWithoutTransaksiItemInput, Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput> | Prisma.ReturItemCreateWithoutTransaksiItemInput[] | Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput[]
+  connectOrCreate?: Prisma.ReturItemCreateOrConnectWithoutTransaksiItemInput | Prisma.ReturItemCreateOrConnectWithoutTransaksiItemInput[]
+  createMany?: Prisma.ReturItemCreateManyTransaksiItemInputEnvelope
+  connect?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+}
+
+export type ReturItemUpdateManyWithoutTransaksiItemNestedInput = {
+  create?: Prisma.XOR<Prisma.ReturItemCreateWithoutTransaksiItemInput, Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput> | Prisma.ReturItemCreateWithoutTransaksiItemInput[] | Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput[]
+  connectOrCreate?: Prisma.ReturItemCreateOrConnectWithoutTransaksiItemInput | Prisma.ReturItemCreateOrConnectWithoutTransaksiItemInput[]
+  upsert?: Prisma.ReturItemUpsertWithWhereUniqueWithoutTransaksiItemInput | Prisma.ReturItemUpsertWithWhereUniqueWithoutTransaksiItemInput[]
+  createMany?: Prisma.ReturItemCreateManyTransaksiItemInputEnvelope
+  set?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+  disconnect?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+  delete?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+  connect?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+  update?: Prisma.ReturItemUpdateWithWhereUniqueWithoutTransaksiItemInput | Prisma.ReturItemUpdateWithWhereUniqueWithoutTransaksiItemInput[]
+  updateMany?: Prisma.ReturItemUpdateManyWithWhereWithoutTransaksiItemInput | Prisma.ReturItemUpdateManyWithWhereWithoutTransaksiItemInput[]
+  deleteMany?: Prisma.ReturItemScalarWhereInput | Prisma.ReturItemScalarWhereInput[]
+}
+
+export type ReturItemUncheckedUpdateManyWithoutTransaksiItemNestedInput = {
+  create?: Prisma.XOR<Prisma.ReturItemCreateWithoutTransaksiItemInput, Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput> | Prisma.ReturItemCreateWithoutTransaksiItemInput[] | Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput[]
+  connectOrCreate?: Prisma.ReturItemCreateOrConnectWithoutTransaksiItemInput | Prisma.ReturItemCreateOrConnectWithoutTransaksiItemInput[]
+  upsert?: Prisma.ReturItemUpsertWithWhereUniqueWithoutTransaksiItemInput | Prisma.ReturItemUpsertWithWhereUniqueWithoutTransaksiItemInput[]
+  createMany?: Prisma.ReturItemCreateManyTransaksiItemInputEnvelope
+  set?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+  disconnect?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+  delete?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+  connect?: Prisma.ReturItemWhereUniqueInput | Prisma.ReturItemWhereUniqueInput[]
+  update?: Prisma.ReturItemUpdateWithWhereUniqueWithoutTransaksiItemInput | Prisma.ReturItemUpdateWithWhereUniqueWithoutTransaksiItemInput[]
+  updateMany?: Prisma.ReturItemUpdateManyWithWhereWithoutTransaksiItemInput | Prisma.ReturItemUpdateManyWithWhereWithoutTransaksiItemInput[]
+  deleteMany?: Prisma.ReturItemScalarWhereInput | Prisma.ReturItemScalarWhereInput[]
+}
+
 export type ReturItemCreateNestedManyWithoutReturInput = {
   create?: Prisma.XOR<Prisma.ReturItemCreateWithoutReturInput, Prisma.ReturItemUncheckedCreateWithoutReturInput> | Prisma.ReturItemCreateWithoutReturInput[] | Prisma.ReturItemUncheckedCreateWithoutReturInput[]
   connectOrCreate?: Prisma.ReturItemCreateOrConnectWithoutReturInput | Prisma.ReturItemCreateOrConnectWithoutReturInput[]
@@ -510,11 +576,13 @@ export type ReturItemCreateWithoutProdukInput = {
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   retur: Prisma.ReturCreateNestedOneWithoutItemsInput
+  transaksiItem?: Prisma.TransaksiItemCreateNestedOneWithoutReturItemsInput
 }
 
 export type ReturItemUncheckedCreateWithoutProdukInput = {
   id?: string
   returId: string
+  transaksiItemId?: string | null
   namaProduk: string
   qty: number
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -553,11 +621,58 @@ export type ReturItemScalarWhereInput = {
   NOT?: Prisma.ReturItemScalarWhereInput | Prisma.ReturItemScalarWhereInput[]
   id?: Prisma.StringFilter<"ReturItem"> | string
   returId?: Prisma.StringFilter<"ReturItem"> | string
+  transaksiItemId?: Prisma.StringNullableFilter<"ReturItem"> | string | null
   produkId?: Prisma.StringNullableFilter<"ReturItem"> | string | null
   namaProduk?: Prisma.StringFilter<"ReturItem"> | string
   qty?: Prisma.IntFilter<"ReturItem"> | number
   hargaSatuan?: Prisma.DecimalFilter<"ReturItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFilter<"ReturItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type ReturItemCreateWithoutTransaksiItemInput = {
+  id?: string
+  namaProduk: string
+  qty: number
+  hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  retur: Prisma.ReturCreateNestedOneWithoutItemsInput
+  produk?: Prisma.ProdukCreateNestedOneWithoutReturItemsInput
+}
+
+export type ReturItemUncheckedCreateWithoutTransaksiItemInput = {
+  id?: string
+  returId: string
+  produkId?: string | null
+  namaProduk: string
+  qty: number
+  hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type ReturItemCreateOrConnectWithoutTransaksiItemInput = {
+  where: Prisma.ReturItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ReturItemCreateWithoutTransaksiItemInput, Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput>
+}
+
+export type ReturItemCreateManyTransaksiItemInputEnvelope = {
+  data: Prisma.ReturItemCreateManyTransaksiItemInput | Prisma.ReturItemCreateManyTransaksiItemInput[]
+  skipDuplicates?: boolean
+}
+
+export type ReturItemUpsertWithWhereUniqueWithoutTransaksiItemInput = {
+  where: Prisma.ReturItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.ReturItemUpdateWithoutTransaksiItemInput, Prisma.ReturItemUncheckedUpdateWithoutTransaksiItemInput>
+  create: Prisma.XOR<Prisma.ReturItemCreateWithoutTransaksiItemInput, Prisma.ReturItemUncheckedCreateWithoutTransaksiItemInput>
+}
+
+export type ReturItemUpdateWithWhereUniqueWithoutTransaksiItemInput = {
+  where: Prisma.ReturItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.ReturItemUpdateWithoutTransaksiItemInput, Prisma.ReturItemUncheckedUpdateWithoutTransaksiItemInput>
+}
+
+export type ReturItemUpdateManyWithWhereWithoutTransaksiItemInput = {
+  where: Prisma.ReturItemScalarWhereInput
+  data: Prisma.XOR<Prisma.ReturItemUpdateManyMutationInput, Prisma.ReturItemUncheckedUpdateManyWithoutTransaksiItemInput>
 }
 
 export type ReturItemCreateWithoutReturInput = {
@@ -566,11 +681,13 @@ export type ReturItemCreateWithoutReturInput = {
   qty: number
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  transaksiItem?: Prisma.TransaksiItemCreateNestedOneWithoutReturItemsInput
   produk?: Prisma.ProdukCreateNestedOneWithoutReturItemsInput
 }
 
 export type ReturItemUncheckedCreateWithoutReturInput = {
   id?: string
+  transaksiItemId?: string | null
   produkId?: string | null
   namaProduk: string
   qty: number
@@ -607,6 +724,7 @@ export type ReturItemUpdateManyWithWhereWithoutReturInput = {
 export type ReturItemCreateManyProdukInput = {
   id?: string
   returId: string
+  transaksiItemId?: string | null
   namaProduk: string
   qty: number
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -620,11 +738,13 @@ export type ReturItemUpdateWithoutProdukInput = {
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   retur?: Prisma.ReturUpdateOneRequiredWithoutItemsNestedInput
+  transaksiItem?: Prisma.TransaksiItemUpdateOneWithoutReturItemsNestedInput
 }
 
 export type ReturItemUncheckedUpdateWithoutProdukInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   returId?: Prisma.StringFieldUpdateOperationsInput | string
+  transaksiItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -634,6 +754,47 @@ export type ReturItemUncheckedUpdateWithoutProdukInput = {
 export type ReturItemUncheckedUpdateManyWithoutProdukInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   returId?: Prisma.StringFieldUpdateOperationsInput | string
+  transaksiItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
+  qty?: Prisma.IntFieldUpdateOperationsInput | number
+  hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type ReturItemCreateManyTransaksiItemInput = {
+  id?: string
+  returId: string
+  produkId?: string | null
+  namaProduk: string
+  qty: number
+  hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type ReturItemUpdateWithoutTransaksiItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
+  qty?: Prisma.IntFieldUpdateOperationsInput | number
+  hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  retur?: Prisma.ReturUpdateOneRequiredWithoutItemsNestedInput
+  produk?: Prisma.ProdukUpdateOneWithoutReturItemsNestedInput
+}
+
+export type ReturItemUncheckedUpdateWithoutTransaksiItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  returId?: Prisma.StringFieldUpdateOperationsInput | string
+  produkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
+  qty?: Prisma.IntFieldUpdateOperationsInput | number
+  hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type ReturItemUncheckedUpdateManyWithoutTransaksiItemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  returId?: Prisma.StringFieldUpdateOperationsInput | string
+  produkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -642,6 +803,7 @@ export type ReturItemUncheckedUpdateManyWithoutProdukInput = {
 
 export type ReturItemCreateManyReturInput = {
   id?: string
+  transaksiItemId?: string | null
   produkId?: string | null
   namaProduk: string
   qty: number
@@ -655,11 +817,13 @@ export type ReturItemUpdateWithoutReturInput = {
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  transaksiItem?: Prisma.TransaksiItemUpdateOneWithoutReturItemsNestedInput
   produk?: Prisma.ProdukUpdateOneWithoutReturItemsNestedInput
 }
 
 export type ReturItemUncheckedUpdateWithoutReturInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  transaksiItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   produkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
@@ -669,6 +833,7 @@ export type ReturItemUncheckedUpdateWithoutReturInput = {
 
 export type ReturItemUncheckedUpdateManyWithoutReturInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  transaksiItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   produkId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   namaProduk?: Prisma.StringFieldUpdateOperationsInput | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
@@ -681,42 +846,49 @@ export type ReturItemUncheckedUpdateManyWithoutReturInput = {
 export type ReturItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   returId?: boolean
+  transaksiItemId?: boolean
   produkId?: boolean
   namaProduk?: boolean
   qty?: boolean
   hargaSatuan?: boolean
   subtotal?: boolean
   retur?: boolean | Prisma.ReturDefaultArgs<ExtArgs>
+  transaksiItem?: boolean | Prisma.ReturItem$transaksiItemArgs<ExtArgs>
   produk?: boolean | Prisma.ReturItem$produkArgs<ExtArgs>
 }, ExtArgs["result"]["returItem"]>
 
 export type ReturItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   returId?: boolean
+  transaksiItemId?: boolean
   produkId?: boolean
   namaProduk?: boolean
   qty?: boolean
   hargaSatuan?: boolean
   subtotal?: boolean
   retur?: boolean | Prisma.ReturDefaultArgs<ExtArgs>
+  transaksiItem?: boolean | Prisma.ReturItem$transaksiItemArgs<ExtArgs>
   produk?: boolean | Prisma.ReturItem$produkArgs<ExtArgs>
 }, ExtArgs["result"]["returItem"]>
 
 export type ReturItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   returId?: boolean
+  transaksiItemId?: boolean
   produkId?: boolean
   namaProduk?: boolean
   qty?: boolean
   hargaSatuan?: boolean
   subtotal?: boolean
   retur?: boolean | Prisma.ReturDefaultArgs<ExtArgs>
+  transaksiItem?: boolean | Prisma.ReturItem$transaksiItemArgs<ExtArgs>
   produk?: boolean | Prisma.ReturItem$produkArgs<ExtArgs>
 }, ExtArgs["result"]["returItem"]>
 
 export type ReturItemSelectScalar = {
   id?: boolean
   returId?: boolean
+  transaksiItemId?: boolean
   produkId?: boolean
   namaProduk?: boolean
   qty?: boolean
@@ -724,17 +896,20 @@ export type ReturItemSelectScalar = {
   subtotal?: boolean
 }
 
-export type ReturItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "returId" | "produkId" | "namaProduk" | "qty" | "hargaSatuan" | "subtotal", ExtArgs["result"]["returItem"]>
+export type ReturItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "returId" | "transaksiItemId" | "produkId" | "namaProduk" | "qty" | "hargaSatuan" | "subtotal", ExtArgs["result"]["returItem"]>
 export type ReturItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   retur?: boolean | Prisma.ReturDefaultArgs<ExtArgs>
+  transaksiItem?: boolean | Prisma.ReturItem$transaksiItemArgs<ExtArgs>
   produk?: boolean | Prisma.ReturItem$produkArgs<ExtArgs>
 }
 export type ReturItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   retur?: boolean | Prisma.ReturDefaultArgs<ExtArgs>
+  transaksiItem?: boolean | Prisma.ReturItem$transaksiItemArgs<ExtArgs>
   produk?: boolean | Prisma.ReturItem$produkArgs<ExtArgs>
 }
 export type ReturItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   retur?: boolean | Prisma.ReturDefaultArgs<ExtArgs>
+  transaksiItem?: boolean | Prisma.ReturItem$transaksiItemArgs<ExtArgs>
   produk?: boolean | Prisma.ReturItem$produkArgs<ExtArgs>
 }
 
@@ -742,11 +917,13 @@ export type $ReturItemPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "ReturItem"
   objects: {
     retur: Prisma.$ReturPayload<ExtArgs>
+    transaksiItem: Prisma.$TransaksiItemPayload<ExtArgs> | null
     produk: Prisma.$ProdukPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     returId: string
+    transaksiItemId: string | null
     produkId: string | null
     namaProduk: string
     qty: number
@@ -1147,6 +1324,7 @@ readonly fields: ReturItemFieldRefs;
 export interface Prisma__ReturItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   retur<T extends Prisma.ReturDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReturDefaultArgs<ExtArgs>>): Prisma.Prisma__ReturClient<runtime.Types.Result.GetResult<Prisma.$ReturPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  transaksiItem<T extends Prisma.ReturItem$transaksiItemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReturItem$transaksiItemArgs<ExtArgs>>): Prisma.Prisma__TransaksiItemClient<runtime.Types.Result.GetResult<Prisma.$TransaksiItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   produk<T extends Prisma.ReturItem$produkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReturItem$produkArgs<ExtArgs>>): Prisma.Prisma__ProdukClient<runtime.Types.Result.GetResult<Prisma.$ProdukPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1179,6 +1357,7 @@ export interface Prisma__ReturItemClient<T, Null = never, ExtArgs extends runtim
 export interface ReturItemFieldRefs {
   readonly id: Prisma.FieldRef<"ReturItem", 'String'>
   readonly returId: Prisma.FieldRef<"ReturItem", 'String'>
+  readonly transaksiItemId: Prisma.FieldRef<"ReturItem", 'String'>
   readonly produkId: Prisma.FieldRef<"ReturItem", 'String'>
   readonly namaProduk: Prisma.FieldRef<"ReturItem", 'String'>
   readonly qty: Prisma.FieldRef<"ReturItem", 'Int'>
@@ -1582,6 +1761,25 @@ export type ReturItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many ReturItems to delete.
    */
   limit?: number
+}
+
+/**
+ * ReturItem.transaksiItem
+ */
+export type ReturItem$transaksiItemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TransaksiItem
+   */
+  select?: Prisma.TransaksiItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TransaksiItem
+   */
+  omit?: Prisma.TransaksiItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TransaksiItemInclude<ExtArgs> | null
+  where?: Prisma.TransaksiItemWhereInput
 }
 
 /**

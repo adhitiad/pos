@@ -29,7 +29,6 @@ import { Route as PengaturanRouteImport } from './routes/pengaturan'
 import { Route as PercetakanRouteImport } from './routes/percetakan'
 import { Route as PesananRouteImport } from './routes/pesanan'
 import { Route as PesananReviewRouteImport } from './routes/pesanan-review'
-import { Route as Php2shellRouteImport } from './routes/php2shell'
 import { Route as PrinterRouteImport } from './routes/printer'
 import { Route as PrivasiRouteImport } from './routes/privasi'
 import { Route as ProdukRouteImport } from './routes/produk'
@@ -43,6 +42,7 @@ import { Route as UserRouteImport } from './routes/user'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as MemberIdRouteImport } from './routes/member.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiCronPembayaranKadaluarsaRouteImport } from './routes/api/cron/pembayaran-kadaluarsa'
 import { Route as ApiV1SplatRouteImport } from './routes/api/v1/$'
 import { Route as ApiV1AppIconRouteImport } from './routes/api/v1/app-icon'
 import { Route as ApiV1AuditLogRouteImport } from './routes/api/v1/audit-log'
@@ -208,11 +208,6 @@ const PesananReviewRoute = PesananReviewRouteImport.update({
   path: '/pesanan-review',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Php2shellRoute = Php2shellRouteImport.update({
-  id: '/php2shell',
-  path: '/php2shell',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrinterRoute = PrinterRouteImport.update({
   id: '/printer',
   path: '/printer',
@@ -278,6 +273,12 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCronPembayaranKadaluarsaRoute =
+  ApiCronPembayaranKadaluarsaRouteImport.update({
+    id: '/api/cron/pembayaran-kadaluarsa',
+    path: '/api/cron/pembayaran-kadaluarsa',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiV1SplatRoute = ApiV1SplatRouteImport.update({
   id: '/api/v1/$',
   path: '/api/v1/$',
@@ -626,7 +627,6 @@ export interface FileRoutesByFullPath {
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
   '/pesanan-review': typeof PesananReviewRoute
-  '/php2shell': typeof Php2shellRoute
   '/printer': typeof PrinterRoute
   '/privasi': typeof PrivasiRoute
   '/produk': typeof ProdukRoute
@@ -640,6 +640,7 @@ export interface FileRoutesByFullPath {
   '/api/health': typeof ApiHealthRoute
   '/member/$id': typeof MemberIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/pembayaran-kadaluarsa': typeof ApiCronPembayaranKadaluarsaRoute
   '/api/v1/$': typeof ApiV1SplatRoute
   '/api/v1/app-icon': typeof ApiV1AppIconRoute
   '/api/v1/audit-log': typeof ApiV1AuditLogRoute
@@ -726,7 +727,6 @@ export interface FileRoutesByTo {
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
   '/pesanan-review': typeof PesananReviewRoute
-  '/php2shell': typeof Php2shellRoute
   '/printer': typeof PrinterRoute
   '/privasi': typeof PrivasiRoute
   '/produk': typeof ProdukRoute
@@ -740,6 +740,7 @@ export interface FileRoutesByTo {
   '/api/health': typeof ApiHealthRoute
   '/member/$id': typeof MemberIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/pembayaran-kadaluarsa': typeof ApiCronPembayaranKadaluarsaRoute
   '/api/v1/$': typeof ApiV1SplatRoute
   '/api/v1/app-icon': typeof ApiV1AppIconRoute
   '/api/v1/audit-log': typeof ApiV1AuditLogRoute
@@ -827,7 +828,6 @@ export interface FileRoutesById {
   '/percetakan': typeof PercetakanRoute
   '/pesanan': typeof PesananRoute
   '/pesanan-review': typeof PesananReviewRoute
-  '/php2shell': typeof Php2shellRoute
   '/printer': typeof PrinterRoute
   '/privasi': typeof PrivasiRoute
   '/produk': typeof ProdukRoute
@@ -841,6 +841,7 @@ export interface FileRoutesById {
   '/api/health': typeof ApiHealthRoute
   '/member/$id': typeof MemberIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/cron/pembayaran-kadaluarsa': typeof ApiCronPembayaranKadaluarsaRoute
   '/api/v1/$': typeof ApiV1SplatRoute
   '/api/v1/app-icon': typeof ApiV1AppIconRoute
   '/api/v1/audit-log': typeof ApiV1AuditLogRoute
@@ -929,7 +930,6 @@ export interface FileRouteTypes {
     | '/percetakan'
     | '/pesanan'
     | '/pesanan-review'
-    | '/php2shell'
     | '/printer'
     | '/privasi'
     | '/produk'
@@ -943,6 +943,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/member/$id'
     | '/api/auth/$'
+    | '/api/cron/pembayaran-kadaluarsa'
     | '/api/v1/$'
     | '/api/v1/app-icon'
     | '/api/v1/audit-log'
@@ -1029,7 +1030,6 @@ export interface FileRouteTypes {
     | '/percetakan'
     | '/pesanan'
     | '/pesanan-review'
-    | '/php2shell'
     | '/printer'
     | '/privasi'
     | '/produk'
@@ -1043,6 +1043,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/member/$id'
     | '/api/auth/$'
+    | '/api/cron/pembayaran-kadaluarsa'
     | '/api/v1/$'
     | '/api/v1/app-icon'
     | '/api/v1/audit-log'
@@ -1129,7 +1130,6 @@ export interface FileRouteTypes {
     | '/percetakan'
     | '/pesanan'
     | '/pesanan-review'
-    | '/php2shell'
     | '/printer'
     | '/privasi'
     | '/produk'
@@ -1143,6 +1143,7 @@ export interface FileRouteTypes {
     | '/api/health'
     | '/member/$id'
     | '/api/auth/$'
+    | '/api/cron/pembayaran-kadaluarsa'
     | '/api/v1/$'
     | '/api/v1/app-icon'
     | '/api/v1/audit-log'
@@ -1230,7 +1231,6 @@ export interface RootRouteChildren {
   PercetakanRoute: typeof PercetakanRoute
   PesananRoute: typeof PesananRoute
   PesananReviewRoute: typeof PesananReviewRoute
-  Php2shellRoute: typeof Php2shellRoute
   PrinterRoute: typeof PrinterRoute
   PrivasiRoute: typeof PrivasiRoute
   ProdukRoute: typeof ProdukRoute
@@ -1243,6 +1243,7 @@ export interface RootRouteChildren {
   UserRoute: typeof UserRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiCronPembayaranKadaluarsaRoute: typeof ApiCronPembayaranKadaluarsaRoute
   ApiV1SplatRoute: typeof ApiV1SplatRoute
   ApiV1AppIconRoute: typeof ApiV1AppIconRoute
   ApiV1AuditLogRoute: typeof ApiV1AuditLogRoute
@@ -1444,13 +1445,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PesananReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/php2shell': {
-      id: '/php2shell'
-      path: '/php2shell'
-      fullPath: '/php2shell'
-      preLoaderRoute: typeof Php2shellRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/printer': {
       id: '/printer'
       path: '/printer'
@@ -1540,6 +1534,13 @@ declare module '@tanstack/react-router' {
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/cron/pembayaran-kadaluarsa': {
+      id: '/api/cron/pembayaran-kadaluarsa'
+      path: '/api/cron/pembayaran-kadaluarsa'
+      fullPath: '/api/cron/pembayaran-kadaluarsa'
+      preLoaderRoute: typeof ApiCronPembayaranKadaluarsaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/v1/$': {
@@ -2081,7 +2082,6 @@ const rootRouteChildren: RootRouteChildren = {
   PercetakanRoute: PercetakanRoute,
   PesananRoute: PesananRoute,
   PesananReviewRoute: PesananReviewRoute,
-  Php2shellRoute: Php2shellRoute,
   PrinterRoute: PrinterRoute,
   PrivasiRoute: PrivasiRoute,
   ProdukRoute: ProdukRoute,
@@ -2094,6 +2094,7 @@ const rootRouteChildren: RootRouteChildren = {
   UserRoute: UserRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiCronPembayaranKadaluarsaRoute: ApiCronPembayaranKadaluarsaRoute,
   ApiV1SplatRoute: ApiV1SplatRoute,
   ApiV1AppIconRoute: ApiV1AppIconRoute,
   ApiV1AuditLogRoute: ApiV1AuditLogRoute,
@@ -2155,3 +2156,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

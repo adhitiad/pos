@@ -5,6 +5,9 @@ function Table({ className, ...props }: React.ComponentProps<'table'>) {
   return (
     <div
       data-slot="table-container"
+      // Wadah gulir horizontal: fokus keyboard diperlukan agar tabel lebar
+      // tetap bisa digeser tanpa mouse (WCAG 2.1.1 / axe scrollable-region).
+      tabIndex={0}
       className="relative w-full overflow-x-auto"
     >
       <table

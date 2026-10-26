@@ -1,9 +1,13 @@
+import { toString as qrToString } from 'qrcode'
+
 import { prisma } from '#/db'
 import { Prisma } from '#/generated/prisma/client.js'
 import { GalatDomain } from './galat.js'
+import { buatTokenMeja, urlPesananMeja } from './mejaToken.js'
 import {
   HapusMejaSchema,
   MejaInputSchema,
+  QrMejaSchema,
   ToggleMejaSchema,
   UpdateMejaSchema,
 } from '#/validations/meja'
@@ -129,4 +133,35 @@ export async function toggleMeja(input: { id: string; aktif: boolean }) {
     data: { aktif: data.aktif },
   })
   return { id: data.id, aktif: data.aktif }
+}
+
+// QR meja dibuat saat owner meminta (bukan disimpan di DB): token stateless
+// bertanda tangan, URL publik, dan gambar SVG siap tempel/cetak.
+export async function qrMeja(input: { id: string }) {
+  const data = QrMejaSchema.parse(input)
+  const meja = await prisma.meja.findUnique({
+    where: { id: data.id },
+    select: { id: true, nomor: true, nama: true, aktif: true },
+  })
+  if (!meja) throw new GalatDomain('Meja tidak ditemukan')
+  if (!meja.aktif) throw new GalatDomain('Meja tidak aktif')
+
+  const { token, berlakuSampai } = buatTokenMeja(meja.id)
+  const url = urlPesananMeja(token)
+  const svg = await qrToString(url, {
+    type: 'svg',
+    margin: 1,
+    width: 256,
+    errorCorrectionLevel: 'M',
+  })
+
+  return {
+    mejaId: meja.id,
+    nomor: meja.nomor,
+    nama: meja.nama,
+    token,
+    url,
+    berlakuSampai,
+    qrDataUrl: `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`,
+  }
 }

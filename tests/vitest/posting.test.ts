@@ -8,7 +8,9 @@ import {
   postingTransaksi,
   ringkasHasil,
 } from '#/server/transaksi'
+import { updateStatusPesanan } from '#/server/dapur'
 import { PostingTransaksiSchema } from '#/validations/transaksi'
+import { setPengaturan } from '#/server/pengaturan'
 
 async function buatBahan(nama: string, stok: number, hargaSatuan: number) {
   return prisma.bahan.create({
@@ -641,12 +643,18 @@ describe('postingTransaksi', () => {
 
   describe('schema validasi', () => {
     it('menolak keranjang kosong', () => {
-      expect(() => PostingTransaksiSchema.parse({ items: [] })).toThrow()
+      expect(() =>
+        PostingTransaksiSchema.parse({
+          items: [],
+        }),
+      ).toThrow()
     })
 
     it('menolak qty nol', () => {
       expect(() =>
-        PostingTransaksiSchema.parse({ items: [{ produkId: 'x', qty: 0 }] }),
+        PostingTransaksiSchema.parse({
+          items: [{ produkId: 'x', qty: 0 }],
+        }),
       ).toThrow()
     })
 
@@ -666,5 +674,68 @@ describe('RUPIAH_PER_POIN & POIN_NILAI_RUPIAH', () => {
   it('konstanta benar', () => {
     expect(RUPIAH_PER_POIN).toBe(10_000)
     expect(POIN_NILAI_RUPIAH).toBe(100)
+  })
+})
+
+describe('postingTransaksi — kebijakan review owner', () => {
+  beforeAll(async () => {
+    await bersihkan()
+  })
+  beforeEach(async () => {
+    await bersihkan()
+  })
+  afterAll(async () => {
+    await setPengaturan({ kunci: 'review_transaksi_mode', nilai: 'kasir' })
+    await bersihkan()
+  })
+
+  it('menolak posting langsung kasir saat mode owner', async () => {
+    const produk = await buatProduk(
+      'Produk Review Owner',
+      'TEST-REVIEW',
+      10000,
+      10,
+      [],
+    )
+    await setPengaturan({ kunci: 'review_transaksi_mode', nilai: 'owner' })
+    try {
+      await expect(
+        postingTransaksi(
+          {
+            items: [{ produkId: produk.id, qty: 1 }],
+            metodeBayar: 'TUNAI',
+          },
+          undefined,
+          { aktor: { peran: 'KASIR' } },
+        ),
+      ).rejects.toThrow('Mode review owner')
+    } finally {
+      await setPengaturan({ kunci: 'review_transaksi_mode', nilai: 'kasir' })
+    }
+  })
+
+  it('menolak pembatalan status transaksi POS', async () => {
+    const produk = await buatProduk(
+      'Produk Tanpa Batal',
+      'TEST-BATAL',
+      10000,
+      10,
+      [],
+    )
+    const hasil = await postingTransaksi(
+      {
+        items: [{ produkId: produk.id, qty: 1 }],
+        metodeBayar: 'TUNAI',
+      },
+      undefined,
+      { aktor: { peran: 'OWNER' } },
+    )
+
+    await expect(
+      updateStatusPesanan({
+        id: hasil.transaksi.id,
+        statusPesanan: 'DIBATALKAN',
+      }),
+    ).rejects.toThrow('tidak dapat dibatalkan')
   })
 })

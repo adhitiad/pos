@@ -24,6 +24,8 @@ export const Route = createFileRoute('/api/v1/pengaturan')({
           return ok(
             await setPengaturan(
               SetPengaturanSchema.parse(await request.json()),
+              pengguna.id,
+              pengguna.role,
             ),
           )
         } catch (e) {

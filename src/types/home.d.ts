@@ -1,8 +1,8 @@
 import type { ElementType } from 'react'
 
-import type { produkLanding, produkTerpopuler } from '#/server/produk'
+import type { produkLanding } from '#/server/produk'
 
-export type ProdukKartu = Awaited<ReturnType<typeof produkTerpopuler>>[number]
+export type { ProdukKartu } from '#/types/produk'
 
 export type ProdukLanding = Awaited<ReturnType<typeof produkLanding>>
 

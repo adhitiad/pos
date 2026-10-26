@@ -4,6 +4,7 @@ import { UKURAN_KERTAS_DEFAULT, ukuranKertasDari } from '#/lib/ukuran-kertas'
 import { catatAudit } from './audit.js'
 import { hapusAset } from './cloudinary.js'
 import { normalisasiBatasDiskon } from './diskon.js'
+import { kirimAlertFraud } from './fraudAlert.js'
 import {
   KUNCI_PAJAK_RETAIL,
   KUNCI_PAJAK_RESTO,
@@ -11,6 +12,7 @@ import {
   pilihNilaiPajak,
 } from './pajak.js'
 import { SetPengaturanSchema } from '#/validations/pengaturan'
+import type { Role } from '#/generated/prisma/enums.js'
 import type { IdentitasApp } from '#/types/pengaturan'
 import type {
   SetPengaturanInput,
@@ -19,6 +21,14 @@ import type {
 
 const strukOtomatisDari = (nilai: string | undefined): StrukOtomatis =>
   nilai === 'cetak' || nilai === 'pdf' ? nilai : 'nonaktif'
+
+// Kunci operasional harian yang boleh diubah kasir. Semua kunci lain
+// (pajak, diskon, identitas, mode review, dsb.) hanya owner.
+export const KUNCI_PENGATURAN_OPERASIONAL = [
+  'toko_aktif',
+  'jam_buka',
+  'jam_tutup',
+] as const
 
 // Ambil seluruh pengaturan sebagai map + nilai yang sudah dipakai UI.
 export async function pengaturanData() {
@@ -50,8 +60,25 @@ export async function pengaturanData() {
     diskonKasirMaksPersen: normalisasiBatasDiskon(
       peta.diskon_kasir_maks_persen,
     ),
+    // Jam buka/tutup toko (HH:MM). Kosong = tidak dibatasi jam.
+    // `toko_aktif` = false menutup toko sepenuhnya untuk pemesanan.
+    jamBuka: peta.jam_buka ?? null,
+    jamTutup: peta.jam_tutup ?? null,
+    tokoAktif: peta.toko_aktif !== 'false',
+    // Kebijakan review transaksi: `kasir` (self-approve) atau `owner`.
+    reviewTransaksiMode:
+      peta.review_transaksi_mode === 'owner' ? 'owner' : 'kasir',
     semua: peta,
   }
+}
+
+// Kebijakan review transaksi saat ini (dipakai guard `reviewTransaksi`).
+export async function modeReviewTransaksi(): Promise<'kasir' | 'owner'> {
+  const row = await prisma.pengaturan.findUnique({
+    where: { kunci: 'review_transaksi_mode' },
+    select: { nilai: true },
+  })
+  return row?.nilai === 'owner' ? 'owner' : 'kasir'
 }
 
 // Logo aplikasi bersifat publik (dipakai header, footer, landing, struk).
@@ -91,8 +118,16 @@ export async function identitasApp(): Promise<IdentitasApp> {
 export async function setPengaturan(
   input: SetPengaturanInput,
   aktorId?: string,
+  aktorPeran?: Role,
 ) {
   const data = SetPengaturanSchema.parse(input)
+  if (
+    aktorPeran !== undefined &&
+    aktorPeran !== 'OWNER' &&
+    !(KUNCI_PENGATURAN_OPERASIONAL as readonly string[]).includes(data.kunci)
+  ) {
+    throw new Error('FORBIDDEN')
+  }
   const lama = await prisma.pengaturan.findUnique({
     where: { kunci: data.kunci },
     select: { nilai: true },
@@ -123,6 +158,85 @@ export async function setPengaturan(
       sebelum: { kunci: data.kunci, nilai: lama?.nilai ?? null },
       sesudah: { kunci: data.kunci, nilai: data.nilai },
     })
+    // Pajak/diskon/mode review/status toko mengubah perhitungan uang atau
+    // alur persetujuan → kirim alert fraud (log + webhook opsional).
+    if (
+      data.kunci.startsWith('pajak_') ||
+      data.kunci.startsWith('diskon_') ||
+      data.kunci === 'review_transaksi_mode' ||
+      data.kunci === 'toko_aktif'
+    ) {
+      void kirimAlertFraud({
+        jenis: 'pengaturan.sensitif',
+        pesan: `Pengaturan sensitif "${data.kunci}" diubah`,
+        aktorId,
+        entitasId: data.kunci,
+        detail: { sebelum: lama?.nilai ?? null, sesudah: data.nilai },
+      })
+    }
   }
   return { kunci: data.kunci, nilai: data.nilai }
+}
+
+// ─── Cek status buka/tutup toko ───
+// Mengambil pengaturan jam buka/tutup dan mengecek apakah waktu sekarang
+// berada dalam rentang buka. `toko_aktif = false` selalu menutup.
+// Jika jam_buka/jam_tutup kosong, toko selalu buat (asalkan toko_aktif).
+export const cekTokoBuka = async (): Promise<{
+  buka: boolean
+  alasan?: string
+  jamBuka?: string | null
+  jamTutup?: string | null
+}> => {
+  const rows = await prisma.pengaturan.findMany({
+    where: { kunci: { in: ['toko_aktif', 'jam_buka', 'jam_tutup'] } },
+    select: { kunci: true, nilai: true },
+  })
+  const peta: Record<string, string | undefined> = {}
+  for (const r of rows) peta[r.kunci] = r.nilai
+
+  const aktif = peta.toko_aktif !== 'false'
+  const jamBuka = peta.jam_buka ?? null
+  const jamTutup = peta.jam_tutup ?? null
+
+  if (!aktif) {
+    return { buka: false, alasan: 'Toko tutup', jamBuka, jamTutup }
+  }
+
+  if (!jamBuka && !jamTutup) {
+    return { buka: true, jamBuka: null, jamTutup: null }
+  }
+
+  const sekarang = new Date()
+  const sekarangMenit = sekarang.getHours() * 60 + sekarang.getMinutes()
+
+  const parseJam = (jam: string | null): number | null => {
+    if (!jam) return null
+    const [h, m] = jam.split(':').map(Number)
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return null
+    return h * 60 + m
+  }
+
+  const bukaMenit = parseJam(jamBuka)
+  const tutupMenit = parseJam(jamTutup)
+
+  if (bukaMenit === null || tutupMenit === null) {
+    return { buka: true, jamBuka, jamTutup }
+  }
+
+  // Jika tutup < buka (mis. 22:00 buka, 02:00 tutup) artinya melewati malam.
+  let buka: boolean
+  if (tutupMenit <= bukaMenit) {
+    // Melewati tengah malam: buka dari jamBuka hingga 23:59, dan 00:00 hingga jamTutup
+    buka = sekarangMenit >= bukaMenit || sekarangMenit < tutupMenit
+  } else {
+    buka = sekarangMenit >= bukaMenit && sekarangMenit < tutupMenit
+  }
+
+  return {
+    buka,
+    alasan: buka ? undefined : 'Di luar jam buka toko',
+    jamBuka,
+    jamTutup,
+  }
 }

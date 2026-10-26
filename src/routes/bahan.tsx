@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react'
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 import { m } from '#/paraglide/messages'
@@ -19,6 +24,8 @@ import { supplierOpsiFn } from '#/server/supplierFn'
 import type { BahanRow, MuatanBahan, NilaiFormBahan } from '#/types/bahan'
 import type { PembelianBahanRow } from '#/types/pembelian-bahan'
 import type { SumberBelanja } from '#/validations/pembelian-bahan'
+import { BahanQuerySchema } from '#/validations/bahan'
+import type { BahanQueryInput } from '#/validations/bahan'
 
 import DaftarPembelian from '#/components/bahan/DaftarPembelian'
 import FormBahan from '#/components/bahan/FormBahan'
@@ -32,15 +39,17 @@ import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
 
 export const Route = createFileRoute('/bahan')({
+  validateSearch: (search) => BahanQuerySchema.parse(search),
   beforeLoad: async () => {
     const user = await getSessionFn()
     if (!user) throw redirect({ to: '/login' })
     if (!punyaAkses(user.role, 'manajerial'))
       throw redirect({ to: user.role === 'KASIR' ? '/kasir' : '/' })
   },
-  loader: async () => {
+  loaderDeps: ({ search }) => search,
+  loader: async ({ deps }) => {
     const [bahan, supplier] = await Promise.all([
-      bahanDataFn(),
+      bahanDataFn({ data: deps }),
       supplierOpsiFn(),
     ])
     return { bahan, supplier }
@@ -67,10 +76,11 @@ const awalDari = (b: BahanRow): NilaiFormBahan => ({
 })
 
 function Bahan() {
-  const { bahan: data, supplier } = Route.useLoaderData()
+  const { bahan, supplier } = Route.useLoaderData()
+  const search = Route.useSearch()
+  const navigate = useNavigate()
   const router = useRouter()
-  const [cari, setCari] = useState('')
-  const [hanyaMenipis, setHanyaMenipis] = useState(false)
+  const [cari, setCari] = useState(search.q ?? '')
   const [panel, setPanel] = useState<null | { id: string | null }>(null)
   const [hapusId, setHapusId] = useState<string | null>(null)
   const [pembelianPanel, setPembelianPanel] = useState<string | null>(null)
@@ -78,22 +88,60 @@ function Bahan() {
     [],
   )
 
-  const jumlahMenipis = data.filter((b) => b.menipis).length
+  const data = bahan.baris
+  const jumlahMenipis = bahan.menipis
 
   useEffect(() => {
     void muatUlangPembelian()
   }, [])
 
-  const baris = useMemo(() => {
-    const q = cari.trim().toLowerCase()
-    return data.filter(
-      (b) =>
-        (!hanyaMenipis || b.menipis) &&
-        (!q ||
-          b.nama.toLowerCase().includes(q) ||
-          b.satuan.toLowerCase().includes(q)),
-    )
-  }, [data, cari, hanyaMenipis])
+  // Search terkini untuk timer debounce (hindari menimpa navigasi lain).
+  const searchRef = useRef(search)
+  useEffect(() => {
+    searchRef.current = search
+  })
+  // Id timer debounce; dikirim ulang/batalkan oleh kontrol tabel.
+  const timerRef: { current: ReturnType<typeof setTimeout> | null } =
+    useRef(null)
+
+  // Pencarian diketik lokal lalu dikirim ke server setelah jeda singkat.
+  useEffect(() => {
+    const teks = cari.trim()
+    if (teks === (search.q ?? '')) return
+    const timer = setTimeout(() => {
+      const terkini = searchRef.current
+      // Navigasi lain (urut/halaman) bisa terjadi saat menunggu; jika teks
+      // telah terkirim olehnya, timer ini tidak perlu menulis lagi.
+      if (teks === (terkini.q ?? '')) return
+      void navigate({
+        to: '/bahan',
+        search: { ...terkini, q: teks || undefined, skip: 0 },
+        replace: true,
+      })
+    }, 300)
+    timerRef.current = timer
+    return () => {
+      clearTimeout(timer)
+      timerRef.current = null
+    }
+  }, [cari, search.q, navigate])
+
+  // Seluruh kontrol tabel ikut membawa teks pencarian terbaru agar navigasi
+  // yang berlangsung sebelum debounce tidak membuang teks yang baru diketik.
+  const kirim = (patch: Partial<BahanQueryInput>) => {
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+    void navigate({
+      to: '/bahan',
+      search: {
+        ...searchRef.current,
+        q: cari || undefined,
+        ...patch,
+      },
+    })
+  }
 
   const muatUlang = async () => {
     await router.invalidate()
@@ -158,7 +206,7 @@ function Bahan() {
   }
 
   const bahanEdit = panel?.id
-    ? (baris.find((x) => x.id === panel.id) ?? null)
+    ? (data.find((x) => x.id === panel.id) ?? null)
     : null
 
   return (
@@ -194,9 +242,12 @@ function Bahan() {
         />
         <label className="flex cursor-pointer items-center gap-2 text-sm">
           <Checkbox
-            checked={hanyaMenipis}
+            checked={search.filter === 'menipis'}
             onCheckedChange={(v) => {
-              setHanyaMenipis(v === true)
+              kirim({
+                filter: v === true ? 'menipis' : 'semua',
+                skip: 0,
+              })
             }}
           />
           {m.bahan_hanya_menipis()}
@@ -228,7 +279,7 @@ function Bahan() {
       <HapusDialog
         terbuka={hapusId !== null}
         judul={m.hapus_judul()}
-        deskripsi={`${m.hapus_deskripsi()} (${baris.find((x) => x.id === hapusId)?.nama ?? ''})`}
+        deskripsi={`${m.hapus_deskripsi()} (${data.find((x) => x.id === hapusId)?.nama ?? ''})`}
         batal={m.bahan_batal()}
         ya={m.bahan_hapus()}
         onBatal={() => {
@@ -248,7 +299,27 @@ function Bahan() {
       />
 
       <TabelBahan
-        baris={baris}
+        baris={data}
+        sort={search.sort}
+        arah={search.arah}
+        total={bahan.total}
+        take={search.take}
+        skip={search.skip}
+        onUrut={(kunci) => {
+          const sort = kunci as 'nama' | 'satuan' | 'stok' | 'minimum'
+          kirim({
+            sort,
+            arah:
+              search.sort === sort && search.arah === 'asc' ? 'desc' : 'asc',
+            skip: 0,
+          })
+        }}
+        onHalaman={(halaman) => {
+          kirim({ skip: halaman * search.take })
+        }}
+        onUkuranHalaman={(ukuran) => {
+          kirim({ take: ukuran, skip: 0 })
+        }}
         onTambahStok={setPembelianPanel}
         onEdit={(b) => {
           setPanel({ id: b.id })

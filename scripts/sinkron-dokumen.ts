@@ -40,7 +40,9 @@ function bacaTugas(): Tugas[] {
     const cocok = isi.match(/^- \[([ x])\] (.*)$/)
     if (cocok) {
       const teks = cocok[2]
-      const id = teks.match(/^\*\*([^*]+)\*\*/)?.[1] ?? teks.slice(0, 60)
+      const id =
+        teks.match(/^\*\*([^*]+)\*\*/)?.[1] ??
+        teks.replace(/`/g, '').slice(0, 60)
       aktif = {
         id,
         selesai: cocok[1] === 'x',

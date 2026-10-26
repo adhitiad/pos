@@ -9,7 +9,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import type { PaginationState } from '@tanstack/react-table'
+import type { PaginationState, SortingState } from '@tanstack/react-table'
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -76,18 +76,39 @@ const kelasTombolHalaman = (aktif: boolean) =>
     aktif && 'bg-primary text-primary-foreground hover:bg-primary/90',
   )
 
-export function ProdukTabel({ baris, columns }: ProdukTabelProps) {
-  const [pagination, setPagination] = useState<PaginationState>({
+export function ProdukTabel({
+  baris,
+  columns,
+  total,
+  pagination: paginationServer,
+  onPaginationChange,
+  sorting: sortingServer,
+  onSortingChange,
+}: ProdukTabelProps) {
+  const [paginationLokal, setPaginationLokal] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
+  const [sortingLokal, setSortingLokal] = useState<SortingState>([])
+  const server = total !== undefined && paginationServer !== undefined
+  const pagination = paginationServer ?? paginationLokal
+  const sorting = sortingServer ?? sortingLokal
+  const jumlahHalaman =
+    total === undefined
+      ? undefined
+      : Math.max(1, Math.ceil(total / pagination.pageSize))
+
   const table = useTable({
     features,
     columns,
     data: baris,
-    state: { pagination },
-    onPaginationChange: setPagination,
-    autoResetPageIndex: true,
+    state: { pagination, sorting },
+    onPaginationChange: onPaginationChange ?? setPaginationLokal,
+    onSortingChange: onSortingChange ?? setSortingLokal,
+    manualPagination: server,
+    manualSorting: server,
+    pageCount: jumlahHalaman,
+    autoResetPageIndex: !server,
   })
 
   const totalHalaman = Math.max(1, table.getPageCount())

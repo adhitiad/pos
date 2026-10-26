@@ -7,26 +7,27 @@
 
 ## 1. Ringkas: apa yang sudah siap
 
-| Kebutuhan mobile                                   | Status          | Endpoint / cara                                                         |
-| -------------------------------------------------- | --------------- | ----------------------------------------------------------------------- |
-| Login Google native                                | ✅ siap         | `POST /api/v1/auth-native` → `session.token` (aud client native)        |
-| Sesi tanpa cookie jar                              | ✅ siap         | `Authorization: Bearer <token>` (plugin `bearer` aktif)                 |
-| Master kasir (kategori/produk/member/delivery)     | ✅ siap         | `GET /api/v1/kasir-data`                                                |
-| Transaksi POS (member, poin, split, F&B, modifier) | ✅ siap         | `POST /api/v1/transaksi`                                                |
-| Detail & cetak struk                               | ✅ siap         | `GET /api/v1/transaksi`?id= …, `POST /api/v1/transaksi/cetak/$id`       |
-| Master produk/kategori/bahan/supplier              | ✅ siap         | `/api/v1/produk`, `/kategori`, `/bahan`, `/supplier`                    |
-| Member + riwayat member                            | ✅ siap         | `/api/v1/member`, `/api/v1/member/riwayat?id=`                          |
-| Meja & modifier (mode F&B)                         | ✅ siap         | `/api/v1/meja`, `/api/v1/modifier*`                                     |
-| Shift kasir                                        | ✅ siap         | `/api/v1/shift`                                                         |
-| Retur & stok opname                                | ✅ siap         | `/api/v1/retur*`, `/api/v1/opname*`                                     |
-| Laporan + ekspor                                   | ✅ siap         | `/api/v1/laporan*`, `/laporan-belanja`, `/laporan-pajak`                |
-| Upload foto produk                                 | ✅ siap         | `POST /api/v1/unggah` (tanda tangan) → unggah langsung ke Cloudinary    |
-| Profil member mandiri                              | ✅ siap         | `GET /api/v1/saya` (semua peran login)                                  |
-| Pesanan online publik                              | ✅ siap         | `GET/POST /api/v1/pesan`                                                |
-| Log audit (owner)                                  | ✅ siap         | `GET /api/v1/audit-log`                                                 |
-| Antrean offline (idempoten)                        | ✅ siap         | `POST /api/v1/transaksi` + `idempotencyKey`                             |
-| Printer perangkat (Bluetooth/Wi-Fi)                | ✅ kontrak siap | `/api/v1/printer`, `/api/v1/percetakan`                                 |
-| Judul & ikon aplikasi dari owner                   | ✅ siap         | `GET /api/v1/identitas`, `GET /api/v1/app-icon`, `GET /api/v1/manifest` |
+| Kebutuhan mobile                                   | Status          | Endpoint / cara                                                                           |
+| -------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------- |
+| Login Google native                                | ✅ siap         | `POST /api/v1/auth-native` → `session.token` (aud client native)                          |
+| Sesi tanpa cookie jar                              | ✅ siap         | `Authorization: Bearer <token>` (plugin `bearer` aktif)                                   |
+| Master kasir (kategori/produk/member/delivery)     | ✅ siap         | `GET /api/v1/kasir-data`                                                                  |
+| Transaksi POS (member, poin, split, F&B, modifier) | ✅ siap         | `POST /api/v1/transaksi`                                                                  |
+| Detail & cetak struk                               | ✅ siap         | `GET /api/v1/transaksi`?id= …, `POST /api/v1/transaksi/cetak/$id`                         |
+| Master produk/kategori/bahan/supplier              | ✅ siap         | `/api/v1/produk`, `/kategori`, `/bahan`, `/supplier`                                      |
+| Member + riwayat member                            | ✅ siap         | `/api/v1/member`, `/api/v1/member/riwayat?id=`                                            |
+| Meja & modifier (mode F&B)                         | ✅ siap         | `/api/v1/meja`, `/api/v1/modifier*`                                                       |
+| Shift kasir                                        | ✅ siap         | `/api/v1/shift`                                                                           |
+| Retur & stok opname                                | ✅ siap         | `/api/v1/retur*`, `/api/v1/opname*`                                                       |
+| Laporan + ekspor                                   | ✅ siap         | `/api/v1/laporan*`, `/laporan-belanja`, `/laporan-pajak`                                  |
+| Upload foto produk                                 | ✅ siap         | `POST /api/v1/unggah` (tanda tangan) → unggah langsung ke Cloudinary                      |
+| Profil member mandiri                              | ✅ siap         | `GET /api/v1/saya` (semua peran login)                                                    |
+| Pesanan online publik (dine-in/take-away/antar)    | ✅ siap         | `GET/POST /api/v1/pesan` — `deliveryId`/`mejaToken`/`alamat`; ongkir dari master Delivery |
+| QR meja (owner)                                    | ✅ siap         | `GET /api/v1/meja-qr?id=` → QR SVG data URL + tautan `/pesanan?meja=<token>`              |
+| Log audit (owner)                                  | ✅ siap         | `GET /api/v1/audit-log`                                                                   |
+| Antrean offline (idempoten)                        | ✅ siap         | `POST /api/v1/transaksi` + `idempotencyKey`                                               |
+| Printer perangkat (Bluetooth/Wi-Fi)                | ✅ kontrak siap | `/api/v1/printer`, `/api/v1/percetakan`                                                   |
+| Judul & ikon aplikasi dari owner                   | ✅ siap         | `GET /api/v1/identitas`, `GET /api/v1/app-icon`, `GET /api/v1/manifest`                   |
 
 Belum tersedia (lihat §6): sinkron offline ( sisi mobile), printer Bluetooth ESC/POS
 (sisi mobile), notifikasi push, endpoint khusus member untuk mutasi profil.

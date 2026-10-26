@@ -273,6 +273,7 @@ export type MemberWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   transaksi?: Prisma.TransaksiListRelationFilter
+  pesananDraf?: Prisma.PesananDrafListRelationFilter
 }
 
 export type MemberOrderByWithRelationInput = {
@@ -288,6 +289,7 @@ export type MemberOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   transaksi?: Prisma.TransaksiOrderByRelationAggregateInput
+  pesananDraf?: Prisma.PesananDrafOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -306,6 +308,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Member"> | Date | string
   transaksi?: Prisma.TransaksiListRelationFilter
+  pesananDraf?: Prisma.PesananDrafListRelationFilter
 }, "id" | "telepon">
 
 export type MemberOrderByWithAggregationInput = {
@@ -357,6 +360,7 @@ export type MemberCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transaksi?: Prisma.TransaksiCreateNestedManyWithoutMemberInput
+  pesananDraf?: Prisma.PesananDrafCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateInput = {
@@ -372,6 +376,7 @@ export type MemberUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   transaksi?: Prisma.TransaksiUncheckedCreateNestedManyWithoutMemberInput
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUpdateInput = {
@@ -387,6 +392,7 @@ export type MemberUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transaksi?: Prisma.TransaksiUpdateManyWithoutMemberNestedInput
+  pesananDraf?: Prisma.PesananDrafUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
@@ -402,6 +408,7 @@ export type MemberUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transaksi?: Prisma.TransaksiUncheckedUpdateManyWithoutMemberNestedInput
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateManyInput = {
@@ -533,6 +540,22 @@ export type MemberUpdateOneWithoutTransaksiNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutTransaksiInput, Prisma.MemberUpdateWithoutTransaksiInput>, Prisma.MemberUncheckedUpdateWithoutTransaksiInput>
 }
 
+export type MemberCreateNestedOneWithoutPesananDrafInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutPesananDrafInput, Prisma.MemberUncheckedCreateWithoutPesananDrafInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutPesananDrafInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneWithoutPesananDrafNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutPesananDrafInput, Prisma.MemberUncheckedCreateWithoutPesananDrafInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutPesananDrafInput
+  upsert?: Prisma.MemberUpsertWithoutPesananDrafInput
+  disconnect?: Prisma.MemberWhereInput | boolean
+  delete?: Prisma.MemberWhereInput | boolean
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutPesananDrafInput, Prisma.MemberUpdateWithoutPesananDrafInput>, Prisma.MemberUncheckedUpdateWithoutPesananDrafInput>
+}
+
 export type MemberCreateWithoutTransaksiInput = {
   id?: string
   nama: string
@@ -545,6 +568,7 @@ export type MemberCreateWithoutTransaksiInput = {
   tier?: $Enums.TierMember
   createdAt?: Date | string
   updatedAt?: Date | string
+  pesananDraf?: Prisma.PesananDrafCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutTransaksiInput = {
@@ -559,6 +583,7 @@ export type MemberUncheckedCreateWithoutTransaksiInput = {
   tier?: $Enums.TierMember
   createdAt?: Date | string
   updatedAt?: Date | string
+  pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutTransaksiInput = {
@@ -589,6 +614,7 @@ export type MemberUpdateWithoutTransaksiInput = {
   tier?: Prisma.EnumTierMemberFieldUpdateOperationsInput | $Enums.TierMember
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pesananDraf?: Prisma.PesananDrafUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutTransaksiInput = {
@@ -603,6 +629,83 @@ export type MemberUncheckedUpdateWithoutTransaksiInput = {
   tier?: Prisma.EnumTierMemberFieldUpdateOperationsInput | $Enums.TierMember
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pesananDraf?: Prisma.PesananDrafUncheckedUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberCreateWithoutPesananDrafInput = {
+  id?: string
+  nama: string
+  telepon?: string | null
+  email?: string | null
+  alamat?: string | null
+  poin?: number
+  totalBelanja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonPersen?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  tier?: $Enums.TierMember
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transaksi?: Prisma.TransaksiCreateNestedManyWithoutMemberInput
+}
+
+export type MemberUncheckedCreateWithoutPesananDrafInput = {
+  id?: string
+  nama: string
+  telepon?: string | null
+  email?: string | null
+  alamat?: string | null
+  poin?: number
+  totalBelanja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonPersen?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  tier?: $Enums.TierMember
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  transaksi?: Prisma.TransaksiUncheckedCreateNestedManyWithoutMemberInput
+}
+
+export type MemberCreateOrConnectWithoutPesananDrafInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutPesananDrafInput, Prisma.MemberUncheckedCreateWithoutPesananDrafInput>
+}
+
+export type MemberUpsertWithoutPesananDrafInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutPesananDrafInput, Prisma.MemberUncheckedUpdateWithoutPesananDrafInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutPesananDrafInput, Prisma.MemberUncheckedCreateWithoutPesananDrafInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutPesananDrafInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutPesananDrafInput, Prisma.MemberUncheckedUpdateWithoutPesananDrafInput>
+}
+
+export type MemberUpdateWithoutPesananDrafInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nama?: Prisma.StringFieldUpdateOperationsInput | string
+  telepon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  poin?: Prisma.IntFieldUpdateOperationsInput | number
+  totalBelanja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonPersen?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  tier?: Prisma.EnumTierMemberFieldUpdateOperationsInput | $Enums.TierMember
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transaksi?: Prisma.TransaksiUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutPesananDrafInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nama?: Prisma.StringFieldUpdateOperationsInput | string
+  telepon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  poin?: Prisma.IntFieldUpdateOperationsInput | number
+  totalBelanja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  diskonPersen?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  tier?: Prisma.EnumTierMemberFieldUpdateOperationsInput | $Enums.TierMember
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  transaksi?: Prisma.TransaksiUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 
@@ -612,10 +715,12 @@ export type MemberUncheckedUpdateWithoutTransaksiInput = {
 
 export type MemberCountOutputType = {
   transaksi: number
+  pesananDraf: number
 }
 
 export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaksi?: boolean | MemberCountOutputTypeCountTransaksiArgs
+  pesananDraf?: boolean | MemberCountOutputTypeCountPesananDrafArgs
 }
 
 /**
@@ -635,6 +740,13 @@ export type MemberCountOutputTypeCountTransaksiArgs<ExtArgs extends runtime.Type
   where?: Prisma.TransaksiWhereInput
 }
 
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountPesananDrafArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PesananDrafWhereInput
+}
+
 
 export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -649,6 +761,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   transaksi?: boolean | Prisma.Member$transaksiArgs<ExtArgs>
+  pesananDraf?: boolean | Prisma.Member$pesananDrafArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -697,6 +810,7 @@ export type MemberSelectScalar = {
 export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "telepon" | "email" | "alamat" | "poin" | "totalBelanja" | "diskonPersen" | "tier" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaksi?: boolean | Prisma.Member$transaksiArgs<ExtArgs>
+  pesananDraf?: boolean | Prisma.Member$pesananDrafArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -706,6 +820,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Member"
   objects: {
     transaksi: Prisma.$TransaksiPayload<ExtArgs>[]
+    pesananDraf: Prisma.$PesananDrafPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1114,6 +1229,7 @@ readonly fields: MemberFieldRefs;
 export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   transaksi<T extends Prisma.Member$transaksiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$transaksiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pesananDraf<T extends Prisma.Member$pesananDrafArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$pesananDrafArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PesananDrafPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1568,6 +1684,30 @@ export type Member$transaksiArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.TransaksiScalarFieldEnum | Prisma.TransaksiScalarFieldEnum[]
+}
+
+/**
+ * Member.pesananDraf
+ */
+export type Member$pesananDrafArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PesananDraf
+   */
+  select?: Prisma.PesananDrafSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PesananDraf
+   */
+  omit?: Prisma.PesananDrafOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PesananDrafInclude<ExtArgs> | null
+  where?: Prisma.PesananDrafWhereInput
+  orderBy?: Prisma.PesananDrafOrderByWithRelationInput | Prisma.PesananDrafOrderByWithRelationInput[]
+  cursor?: Prisma.PesananDrafWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PesananDrafScalarFieldEnum | Prisma.PesananDrafScalarFieldEnum[]
 }
 
 /**

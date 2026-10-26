@@ -23,7 +23,7 @@ import {
   PaginasiTabel,
   PencarianTabel,
   useKontrolTabel,
-} from '#/components/ui/table-controls'
+} from '#/hooks/table-controls'
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/retur')({

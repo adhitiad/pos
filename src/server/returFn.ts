@@ -1,14 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
-import { z } from 'zod'
 
 import { requireKasir } from './auth.js'
-import {
-  buatRetur,
-  dataRetur,
-  daftarProdukAktif,
-  detailTransaksi,
-} from './retur.js'
-import { BuatReturSchema, DataReturSchema } from '#/validations/retur'
+import { buatRetur, detailTransaksi } from './retur.js'
+import { BuatReturSchema, DetailTransaksiSchema } from '#/validations/retur'
 
 // ─── Server function Retur (kasir + owner) ───
 
@@ -19,25 +13,9 @@ export const buatReturFn = createServerFn({ method: 'POST' })
     return buatRetur(pengguna.id, data)
   })
 
-export const produkAktifFn = createServerFn({ method: 'GET' }).handler(
-  async () => {
-    await requireKasir()
-    return daftarProdukAktif()
-  },
-)
-
 export const detailTransaksiFn = createServerFn({ method: 'GET' })
-  .validator((input: unknown) =>
-    z.object({ id: z.string().min(1) }).parse(input),
-  )
+  .validator((input: unknown) => DetailTransaksiSchema.parse(input))
   .handler(async ({ data }) => {
     await requireKasir()
     return detailTransaksi(data.id)
-  })
-
-export const dataReturFn = createServerFn({ method: 'GET' })
-  .validator((input: unknown) => DataReturSchema.parse(input))
-  .handler(async ({ data }) => {
-    await requireKasir()
-    return dataRetur(data)
   })

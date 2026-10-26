@@ -1,9 +1,33 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": ["src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}", "prisma/**/*.ts"],
-  "project": ["src/**/*.{ts,tsx}", "tests/**/*.{ts,tsx}", "prisma/**/*.ts"],
+  "entry": [
+    "src/routeTree.gen.ts",
+    "src/router.tsx",
+    "src/start.ts",
+    "scripts/**/*.ts",
+    "tests/**/*.{ts,tsx}",
+    "prisma/**/*.ts",
+    "mcp-expo.ts",
+    "mcp-server.ts",
+    "prisma.config.ts",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "scripts/**/*.ts",
+    "tests/**/*.{ts,tsx}",
+    "prisma/**/*.ts",
+    "mcp-expo.ts",
+    "mcp-server.ts"
+  ],
+  "ignoreIssues": {
+    "src/components/ui/**": ["exports"],
+    "src/generated/**": ["files", "exports", "types"],
+    "src/paraglide/**": ["files", "exports"]
+  },
   "ignoreDependencies": [
-    "pino-pretty",
     "tailwindcss",
     "tw-animate-css",
     "@tailwindcss/typography"
