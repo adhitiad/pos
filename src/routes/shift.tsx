@@ -51,12 +51,19 @@ export const Route = createFileRoute('/shift')({
     if (!user) throw redirect({ to: '/login' })
     if (!punyaAkses(user.role, 'operasional')) throw redirect({ to: '/' })
   },
-  loader: async () => shiftDataFn({ data: {} }),
+  loader: async () => {
+    const [data, user] = await Promise.all([
+      shiftDataFn({ data: {} }),
+      getSessionFn(),
+    ])
+    if (!user) throw redirect({ to: '/login' })
+    return { ...data, peran: user.role }
+  },
   component: Shift,
 })
 
 function Shift() {
-  const data = Route.useLoaderData()
+  const { peran, ...data } = Route.useLoaderData()
   const router = useRouter()
   const [kasAwal, setKasAwal] = useState('')
   const [kasAkhir, setKasAkhir] = useState('')
@@ -129,7 +136,7 @@ function Shift() {
   const selisihPreview = (Number(kasAkhir) || 0) - (aktif?.seharusnya ?? 0)
 
   return (
-    <DashboardLayout peran={undefined} judul={m.shift_title()}>
+    <DashboardLayout peran={peran} judul={m.shift_title()}>
       {aktif ? (
         <Card>
           <CardHeader>

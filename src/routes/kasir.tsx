@@ -23,6 +23,7 @@ export const Route = createFileRoute('/kasir')({
   },
   loader: async () => {
     const [data, user] = await Promise.all([kasirDataFn(), getSessionFn()])
+    if (!user) throw redirect({ to: '/login' })
     return { data, user }
   },
   component: Kasir,
@@ -37,7 +38,7 @@ function Kasir() {
 
   return (
     <DashboardLayout
-      peran={user?.role}
+      peran={user.role}
       judul={m.kasir_title()}
       aksi={
         <div className="flex flex-wrap items-center gap-2">
@@ -65,7 +66,7 @@ function Kasir() {
             <PanelBayar
               data={data}
               bolehBayar={data.bolehBayar}
-              peran={user?.role === 'OWNER' ? 'OWNER' : 'KASIR'}
+              peran={user.role === 'OWNER' ? 'OWNER' : 'KASIR'}
             />
           </CardContent>
         </Card>

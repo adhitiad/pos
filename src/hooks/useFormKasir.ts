@@ -3,6 +3,7 @@ import { useRouter } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { toast } from 'sonner'
 
+import { cekSiapBayar, idDeliveryDariTipePesanan } from '#/lib/kasir-checkout'
 import { cartClear } from '#/lib/kasir-store'
 import { hitungTotal } from '#/lib/kasir-total'
 import { m } from '#/paraglide/messages'
@@ -74,13 +75,31 @@ export function useFormKasir({
       const bayarSplit = baris
         .filter((b) => (Number(b.jumlah) || 0) > 0)
         .map((b) => ({ metode: b.metode, jumlah: Number(b.jumlah) || 0 }))
-      if (split) {
-        const jumlahBayar = bayarSplit.reduce((s, b) => s + b.jumlah, 0)
-        if (jumlahBayar !== total) {
-          toast.error(m.kasir_payment_mismatch())
-          return
-        }
+      const alasanBelumBayar = cekSiapBayar({
+        jumlahItem: isiCart.length,
+        tipePesanan: value.deliveryId,
+        total,
+        split,
+        metode:
+          split && bayarSplit.length > 0
+            ? bayarSplit[0].metode
+            : value.metodeBayar,
+        uangDiterima,
+        baris,
+      })
+      if (alasanBelumBayar === 'tipe_pesanan') {
+        toast.error(m.kasir_pilih_tipe_pesanan())
+        return
       }
+      if (alasanBelumBayar === 'tunai') {
+        toast.error(m.kasir_uang_kurang())
+        return
+      }
+      if (alasanBelumBayar === 'split') {
+        toast.error(m.kasir_payment_mismatch())
+        return
+      }
+      if (alasanBelumBayar === 'kosong') return
       const payload: PostingTransaksiInput = {
         items: isiCart.map((b) => ({
           produkId: b.produk.id,
@@ -88,7 +107,9 @@ export function useFormKasir({
           modifiers: b.modifiers,
         })),
         memberId: value.memberId || undefined,
-        deliveryId: value.deliveryId || undefined,
+        // `deliveryId` boleh berisi sentinel tipe pesanan (dine-in/pickup);
+        // server hanya menerima id Delivery asli.
+        deliveryId: idDeliveryDariTipePesanan(value.deliveryId),
         diskon: Number(value.diskon) || 0,
         tukarPoin: Number(value.tukarPoin) || 0,
         metodeBayar:
@@ -126,7 +147,16 @@ export function useFormKasir({
       try {
         // A1 two-phase: kasir membuat draft, lalu mereview (self-approve) untuk
         // memposting. Keputusan dicatat ke audit terpisah (TransaksiReviewAudit).
-        const draft = await createDraftTransaksiFn({ data: payload })
+        // `subtotal`/`total` hanya ringkasan daftar antrean; server menghitung
+        // ulang angka final saat review (postingTransaksi).
+        const draft = await createDraftTransaksiFn({
+          data: {
+            ...payload,
+            metodeBayar: payload.metodeBayar ?? value.metodeBayar,
+            subtotal,
+            total,
+          },
+        })
         const reviewed = await reviewTransaksiFn({
           data: {
             draftId: draft.id,
@@ -199,3 +229,7 @@ export function useFormKasir({
     setBaris,
   }
 }
+
+// Tipe instance form checkout, dipakai komponen anak yang merender field
+// (mis. PilihanPesanan) tanpa perlu mengimpor ulang hook-nya.
+export type FormKasir = ReturnType<typeof useFormKasir>['form']

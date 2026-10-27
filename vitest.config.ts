@@ -26,8 +26,8 @@ export default defineConfig({
       include: ['src/server/**/*.ts', 'src/validations/**/*.ts'],
       exclude: ['src/server/**/*Fn.ts'],
       reporter: ['text', 'json-summary', 'json', 'html'],
-      // Baseline nyata 2026-10-26 (tanpa wrapper Fn): stmts 65.04,
-      // branch 55.57, fn 60.96, lines 67.56. Ambang diberi margin ~1 poin dan
+      // Baseline nyata 2026-10-26 (tanpa wrapper Fn): stmts 65.62,
+      // branch 55.83, fn 61.96, lines 68.17. Ambang diberi margin ~1 poin dan
       // harus dinaikkan saat tes bertambah — jangan diturunkan tanpa catatan.
       thresholds: {
         statements: 64,

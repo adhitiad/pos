@@ -164,7 +164,7 @@ const TAUTAN_FNB = [
   },
 ] as const
 
-export default function RelNav({ peran }: { peran?: string }) {
+export default function RelNav({ peran }: { peran: string }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const logoUrl = useLogoUrl()
   const identitas = useIdentitasApp()
@@ -188,7 +188,7 @@ export default function RelNav({ peran }: { peran?: string }) {
 
   const tautan = modeFnb ? [...TAUTAN_DASAR, ...TAUTAN_FNB] : TAUTAN_DASAR
   const tampil = tautan.filter((t) =>
-    !peran ? true : (t.peran as readonly string[]).includes(peran),
+    (t.peran as readonly string[]).includes(peran),
   )
 
   return (

@@ -321,6 +321,94 @@ test.describe('halaman owner (dengan sesi)', () => {
     ).toHaveCount(0)
   })
 
+  test('kasir: menu shift hanya menampilkan tautan operasional', async ({
+    page,
+    context,
+  }) => {
+    await context.addCookies([
+      {
+        name: 'better-auth.session_token',
+        value: cookieSesi(sesiKasir.token),
+        domain: 'localhost',
+        path: '/',
+      },
+    ])
+    await page.goto('/shift', { waitUntil: 'networkidle' })
+
+    // Regresi: halaman shift dulu mengirim peran `undefined` ke layout,
+    // sehingga filter navigasi dimatikan dan semua menu owner ikut tampil.
+    await expect(page.locator('a[href="/kasir"]').first()).toBeVisible()
+    await expect(page.locator('a[href="/shift"]').first()).toBeVisible()
+    for (const rute of ['/produk', '/member', '/laporan', '/pengaturan']) {
+      await expect(page.locator(`a[href="${rute}"]`)).toHaveCount(0)
+    }
+  })
+
+  test('kasir: bayar menunggu tipe pesanan & uang tunai', async ({
+    page,
+    context,
+  }) => {
+    const unik = Date.now()
+    const produk = await prisma.produk.create({
+      data: {
+        nama: `Produk E2E Kasir ${unik}`,
+        sku: `E2E-KASIR-${unik}`,
+        harga: 15000,
+        stok: 10,
+        aktif: true,
+      },
+    })
+    const shift = await prisma.shift.create({
+      data: { kasirId: sesiKasir.userId, kasAwal: 0 },
+    })
+    await context.addCookies([
+      {
+        name: 'better-auth.session_token',
+        value: cookieSesi(sesiKasir.token),
+        domain: 'localhost',
+        path: '/',
+      },
+    ])
+
+    try {
+      await page.goto('/kasir', { waitUntil: 'networkidle' })
+      // Judul di-set `useEffect` DashboardLayout — penanda hidrasi selesai.
+      // Tanpa ini, klik pertama bisa jatuh sebelum React memasang handler.
+      await expect(page).toHaveTitle(/^Kasir · /)
+      const bayar = page.getByRole('button', { name: /^Bayar ·/ })
+      await expect(bayar).toBeDisabled()
+
+      await page.getByPlaceholder('Cari produk...').fill(produk.nama)
+      await expect(
+        page.getByRole('button', { name: 'Tambah', exact: true }),
+      ).toHaveCount(1)
+      await page
+        .getByRole('button', { name: 'Tambah', exact: true })
+        .first()
+        .click()
+      await expect(
+        page.getByRole('heading', { name: 'Draft (1)' }),
+      ).toBeVisible()
+      await expect(bayar).toBeDisabled()
+
+      await page.getByRole('combobox', { name: 'Tipe Pesanan' }).click()
+      await page.getByRole('option', { name: 'Dine in - Gratis' }).click()
+      await expect(bayar).toBeDisabled()
+
+      await page.getByRole('button', { name: 'Uang pas' }).click()
+      await expect(bayar).toBeEnabled()
+
+      await page.getByRole('combobox', { name: 'Tipe Pesanan' }).click()
+      await page
+        .getByRole('option', { name: 'Pickup sendiri - Gratis' })
+        .click()
+      await expect(bayar).toBeEnabled()
+    } finally {
+      await prisma.shift.delete({ where: { id: shift.id } })
+      await prisma.produk.delete({ where: { id: produk.id } })
+    }
+  })
+
   test('kasir: antrean cetak dapat dibuka', async ({ page, context }) => {
     await context.addCookies([
       {

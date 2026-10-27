@@ -33,11 +33,13 @@ export const Route = createFileRoute('/opname')({
     if (!punyaAkses(user.role, 'operasional')) throw redirect({ to: '/' })
   },
   loader: async () => {
-    const [produk, bahan] = await Promise.all([
+    const [produk, bahan, user] = await Promise.all([
       masterAktifFn({ data: { jenis: 'PRODUK' } }),
       masterAktifFn({ data: { jenis: 'BAHAN' } }),
+      getSessionFn(),
     ])
-    return { produk, bahan }
+    if (!user) throw redirect({ to: '/login' })
+    return { produk, bahan, peran: user.role }
   },
   component: Opname,
 })
@@ -58,6 +60,7 @@ interface OpnameItemForm {
 }
 
 function Opname() {
+  const { peran } = Route.useLoaderData()
   const router = useRouter()
   const [jenis, setJenis] = useState<'PRODUK' | 'BAHAN'>('PRODUK')
   const [items, setItems] = useState<OpnameItemForm[]>([])
@@ -108,7 +111,7 @@ function Opname() {
   }
 
   return (
-    <DashboardLayout peran={undefined} judul={m.opname_title()}>
+    <DashboardLayout peran={peran} judul={m.opname_title()}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="rounded-lg border border-border p-4">

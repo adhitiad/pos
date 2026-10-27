@@ -3,6 +3,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { requireKasir } from './auth.js'
 import { buatDraftTransaksi } from './draftTransaksi.js'
 import { BuatDraftTransaksiSchema } from '#/validations/draft-transaksi'
+import type { BuatDraftTransaksiInput } from '#/validations/draft-transaksi'
 
 const rapihkanDraft = (d: {
   id: string
@@ -27,7 +28,9 @@ const rapihkanDraft = (d: {
 })
 
 export const createDraftTransaksiFn = createServerFn({ method: 'POST' })
-  .validator((input: unknown) => BuatDraftTransaksiSchema.parse(input))
+  .validator((input: BuatDraftTransaksiInput) =>
+    BuatDraftTransaksiSchema.parse(input),
+  )
   .handler(async ({ data }) => {
     const pengguna = await requireKasir()
     const draft = await buatDraftTransaksi(data, pengguna.id)

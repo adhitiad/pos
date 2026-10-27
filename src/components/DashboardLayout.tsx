@@ -14,7 +14,7 @@ export default function DashboardLayout({
   aksi,
   children,
 }: {
-  peran?: string
+  peran: string
   judul: string
   aksi?: ReactNode
   children: ReactNode

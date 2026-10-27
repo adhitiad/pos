@@ -289,4 +289,38 @@ test.describe('review transaksi owner', () => {
     expect(setelah?.status).toBe('MENUNGGU')
     expect(setelah?.transaksiId).toBeNull()
   })
+
+  // Regresi: `useFormKasir` mengirim payload POS + ringkasan subtotal/total;
+  // tanpa ringkasan, schema menolak dengan "expected number, received undefined"
+  // dan tombol bayar gagal sebelum draft dibuat.
+  test('kasir membuat draft lewat API dengan ringkasan subtotal/total', async ({
+    page,
+  }) => {
+    await pasangSesi(page, sesiKasir.token)
+    const res = await page.request.post('/api/v1/transaksi-draft', {
+      data: {
+        items: [{ produkId: produk.id, qty: 1 }],
+        diskon: 0,
+        tukarPoin: 0,
+        metodeBayar: 'TUNAI',
+        subtotal: 15000,
+        total: 15000,
+      },
+    })
+    expect(res.status()).toBe(201)
+    const body = (await res.json()) as {
+      ok: boolean
+      data: { id: string; status: string }
+    }
+    expect(body.ok).toBe(true)
+    expect(body.data.status).toBe('MENUNGGU')
+
+    const tersimpan = await prisma.draftTransaksi.findUnique({
+      where: { id: body.data.id },
+      select: { subtotal: true, total: true, kasirId: true },
+    })
+    expect(tersimpan?.kasirId).toBe(sesiKasir.userId)
+    expect(tersimpan?.subtotal.toNumber()).toBe(15000)
+    expect(tersimpan?.total.toNumber()).toBe(15000)
+  })
 })

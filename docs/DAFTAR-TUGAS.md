@@ -1733,21 +1733,46 @@ diff --from-config-datasource` kosong (tidak ada drift).
 - [ ] **PITR/uptime/error monitoring** — masih butuh konsol/akun eksternal
       (Neon, UptimeRobot, GlitchTip/Sentry).
 
+## Perbaikan alur kasir (2026-10-26)
+
+- [x] **Menu bocor saat buka Shift.** `src/routes/shift.tsx` mengirim
+      `peran={undefined}` ke `DashboardLayout`, dan `RelNav` memperlakukan
+      `undefined` sebagai "tanpa filter" — semua menu manajerial ikut tampil
+      untuk KASIR. Route `shift`, `dapur`, `opname`, dan `retur` sekarang
+      mengambil peran dari sesi loader; prop `peran` di `DashboardLayout` dan
+      `RelNav` dijadikan wajib agar tidak terulang.
+- [x] **Tipe pesanan eksplisit.** Select pengiriman kini selalu memuat opsi
+      `Dine in - Gratis` dan `Pickup sendiri - Gratis` (plus layanan antar dari
+      master bila ada). Nilai sentinel `DINE_IN`/`PICKUP` hanya nilai form dan
+      dikonversi menjadi `deliveryId: undefined` sebelum payload dikirim.
+- [x] **Tombol Bayar valid.** `src/lib/kasir-checkout.ts` menjadi satu sumber
+      aturan: keranjang terisi, tipe pesanan dipilih, shift terbuka, tunai
+      ≥ total, atau split yang jumlahnya pas. `PanelBayar` menonaktifkan tombol
+      dan menampilkan alasan; `useFormKasir` menolak submit Enter dengan aturan
+      yang sama.
+- [x] Unit test `tests/vitest/kasir-checkout.test.ts`; e2e
+      `tests/e2e/auth.spec.ts` memverifikasi menu KASIR di `/shift` tidak
+      memuat tautan manajerial.
+
 ### Gate penuh (2026-10-26, setelah perubahan)
 
 - [x] `bunx tsc --noEmit` — bersih.
 - [x] `bun run lint` — 0 temuan.
 - [x] `bun run check` — Prettier bersih.
 - [x] `bun run docs:check` — snapshot PRD sinkron.
-- [x] `bun run test:vitest` — **359/359** (55 file).
-- [x] `bun run test:coverage` — ambang lulus; 65,04% statements / 55,57%
-      branch / 60,96% functions / 67,56% lines.
-- [x] `bun run test:e2e` — **158 lulus**, 2 flaky WebKit yang lolos saat retry
-      (`/pengaturan` console error sementara dan form produk), 0 gagal keras.
+- [x] `bun run test:vitest` — **372/372** (57 file).
+- [x] `bun run test:coverage` — ambang lulus; 65,62% statements / 55,83%
+      branch / 61,96% functions / 68,17% lines.
+- [x] `bun run test:e2e` — **165 lulus**, 1 flaky WebKit yang lolos saat retry
+      (`/pengaturan` console error sementara atau form produk), 0 gagal keras.
+      Regresi draft→bayar: `tests/e2e/review-transaksi.spec.ts` **8/8**
+      (Chromium + WebKit mobile), termasuk pembuatan draft lewat API dengan
+      ringkasan `subtotal`/`total`. Kasir: menu shift tersaring per peran dan
+      tombol Bayar menunggu tipe pesanan + uang tunai (`auth.spec.ts`).
 - [x] `tests/e2e/a11y.spec.ts` — 9/9 Chromium dan 9/9 WebKit mobile.
 - [x] `bun --bun run build` — exit 0 (hanya peringatan `use client` dari
       dependensi).
-- [x] `bun run perf:budget` — 100 file; gzip 532,8/600 KB; aset terbesar
+- [x] `bun run perf:budget` — 99 file; gzip 533,2/600 KB; aset terbesar
       102,7/160 KB; CSS 37,4/50 KB.
 - [x] `bun run db:seed` — 47 produk, 24 bahan, 3 member, 8 transaksi,
       7 jurnal berimbang, 4 user, 5 shift.

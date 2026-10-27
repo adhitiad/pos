@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useStore } from '@tanstack/react-store'
 
+import { cekSiapBayar } from '#/lib/kasir-checkout'
+import type { AlasanBelumSiapBayar } from '#/lib/kasir-checkout'
 import { cartStore } from '#/lib/kasir-store'
 import { hitungTotal } from '#/lib/kasir-total'
 import { m } from '#/paraglide/messages'
@@ -29,6 +31,7 @@ import AntreanPanel from './AntreanPanel'
 import DaftarDraft from './DaftarDraft'
 import DiskonField from './DiskonField'
 import PembayaranPanel from './PembayaranPanel'
+import PilihanPesanan from './PilihanPesanan'
 import RingkasanBayar from './RingkasanBayar'
 import Struk from './Struk'
 
@@ -110,11 +113,22 @@ export default function PanelBayar({
     memberPoin: memberAktif?.poin ?? 0,
     tarif: kurirAktif?.tarif ?? 0,
   })
-  const dibayarSplit = pembayaran.baris.reduce(
-    (s, b) => s + (Number(b.jumlah) || 0),
-    0,
-  )
-  const splitCocok = !split || dibayarSplit === total
+  const alasanBelumBayar = cekSiapBayar({
+    jumlahItem: isiCart.length,
+    tipePesanan: nilai.deliveryId,
+    total,
+    split,
+    metode: nilai.metodeBayar,
+    uangDiterima: pembayaran.uangDiterima,
+    baris: pembayaran.baris,
+  })
+  const siapBayar = bolehBayar && !pending && alasanBelumBayar === null
+  const alasanPesan: Record<AlasanBelumSiapBayar, string> = {
+    kosong: m.kasir_empty(),
+    tipe_pesanan: m.kasir_pilih_tipe_pesanan(),
+    tunai: m.kasir_uang_kurang(),
+    split: m.kasir_payment_mismatch(),
+  }
 
   return (
     <div className="min-w-0 space-y-3">
@@ -260,28 +274,11 @@ export default function PanelBayar({
           )}
         </div>
 
-        <form.Field name="deliveryId">
-          {(field) => (
-            <div className="space-y-1">
-              <Label>{m.kasir_delivery()}</Label>
-              <Select
-                value={field.state.value}
-                onValueChange={field.handleChange}
-              >
-                <SelectTrigger aria-label={m.kasir_delivery()}>
-                  <SelectValue placeholder={m.kasir_no_delivery()} />
-                </SelectTrigger>
-                <SelectContent>
-                  {data.delivery.map((d) => (
-                    <SelectItem key={d.id} value={d.id}>
-                      {d.nama} — Rp{rupiah(d.tarif)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-        </form.Field>
+        <PilihanPesanan
+          form={form}
+          delivery={data.delivery}
+          daftarMeja={daftarMeja}
+        />
 
         <div className="grid grid-cols-2 gap-2">
           <form.Field name="diskon">
@@ -319,32 +316,6 @@ export default function PanelBayar({
             }}
           </form.Field>
         </div>
-
-        {daftarMeja.length > 0 && (
-          <form.Field name="mejaId">
-            {(field) => (
-              <div className="space-y-1">
-                <Label>{m.kasir_meja()}</Label>
-                <Select
-                  value={field.state.value}
-                  onValueChange={field.handleChange}
-                >
-                  <SelectTrigger aria-label={m.kasir_meja()}>
-                    <SelectValue placeholder={m.kasir_pilih_meja()} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {daftarMeja.map((meja) => (
-                      <SelectItem key={meja.id} value={meja.id}>
-                        {meja.nomor}
-                        {meja.nama ? ` - ${meja.nama}` : ''}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </form.Field>
-        )}
 
         <PembayaranPanel
           total={total}
@@ -385,10 +356,16 @@ export default function PanelBayar({
           pajakJenis={data.pajakJenis}
         />
 
+        {!siapBayar && bolehBayar && !pending && alasanBelumBayar && (
+          <p className="text-xs text-amber-600" role="status">
+            {alasanPesan[alasanBelumBayar]}
+          </p>
+        )}
+
         <Button
           type="submit"
           className="h-12 w-full text-base"
-          disabled={pending || isiCart.length === 0 || !splitCocok}
+          disabled={!siapBayar}
         >
           {m.kasir_pay()} · Rp{rupiah(total)}
         </Button>

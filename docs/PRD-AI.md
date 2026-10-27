@@ -69,6 +69,13 @@ Perintah wajib `bun`/`bunx`; jangan memakai npm/npx/pnpm.
 - **Peran:** gunakan `src/server/peran.ts` dan guard `requireOwner`/
   `requireKasir`; REST memakai guard yang sama. Jangan membuat matriks peran
   baru di route.
+- **Navigasi per peran:** `DashboardLayout`/`RelNav` wajib menerima `peran`
+  konkret. Jangan mengirim `undefined`; filter navigasi mati dan menu manajerial
+  bocor ke KASIR.
+- **Checkout kasir:** tombol Bayar hanya aktif bila keranjang terisi, tipe
+  pesanan dipilih, shift terbuka, dan pembayaran lengkap (tunai ≥ total atau
+  split pas). Sentinel tipe pesanan `DINE_IN`/`PICKUP` hanya nilai form dan
+  tidak boleh dikirim sebagai `deliveryId` ke server.
 - **Auth web vs native:** web hanya memakai cookie httpOnly; body respons web
   tidak boleh memuat bearer token. Token bearer hanya dari
   `/api/v1/auth-native`, setelah `aud` Google ID token cocok dengan
@@ -253,11 +260,11 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 
 > **Snapshot otomatis.** Dihasilkan oleh `bun run docs:sync`; jangan edit manual.
 
-- **Item selesai:** 389/401 (97%)
+- **Item selesai:** 393/405 (97%)
 - **Item terbuka:** 12
 - **Terblokir / sebagian:** 3 / 1
 - **Cakupan:** 31 rute · 64 file route REST · 42 model · 27 migrasi
-- **Test:** 55 file unit · 8 file e2e
+- **Test:** 57 file unit · 8 file e2e
 - **Dokumen / aturan:** 19 / 16
 
 ### Rute halaman terdeteksi

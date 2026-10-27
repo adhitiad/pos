@@ -32,6 +32,11 @@ export const Route = createFileRoute('/retur')({
     if (!user) throw redirect({ to: '/login' })
     if (!punyaAkses(user.role, 'operasional')) throw redirect({ to: '/' })
   },
+  loader: async () => {
+    const user = await getSessionFn()
+    if (!user) throw redirect({ to: '/login' })
+    return { peran: user.role }
+  },
   component: Retur,
 })
 
@@ -55,6 +60,7 @@ interface TransaksiDetail {
 }
 
 function Retur() {
+  const { peran } = Route.useLoaderData()
   const router = useRouter()
   const [transaksiId, setTransaksiId] = useState('')
   const [detail, setDetail] = useState<TransaksiDetail | null>(null)
@@ -119,7 +125,7 @@ function Retur() {
   }
 
   return (
-    <DashboardLayout peran={undefined} judul={m.retur_title()}>
+    <DashboardLayout peran={peran} judul={m.retur_title()}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="rounded-lg border border-border p-4">

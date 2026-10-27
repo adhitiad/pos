@@ -80,10 +80,13 @@ ruang lingkup, bukan mencentang pekerjaan.
 ### Alur utama
 
 1. **Buka toko:** OWNER/KASIR login, membuka shift, memilih printer default.
-2. **Transaksi:** kasir memilih produk/modifier, mengatur qty, diskon, poin,
-   metode bayar, lalu memposting transaksi. Diskon manual KASIR dibatasi
-   persentase yang diatur OWNER (default 10%); diskon di atas ambang hanya bisa
-   diposting OWNER dan selalu masuk audit log.
+2. **Transaksi:** kasir memilih produk/modifier, mengatur qty, tipe pesanan
+   (dine in, pickup sendiri, atau layanan antar), diskon, poin, dan metode
+   bayar. Tombol **Bayar** baru aktif setelah keranjang terisi, tipe pesanan
+   dipilih, shift sudah dibuka, serta pembayaran lengkap (tunai ≥ total, atau
+   split yang jumlahnya pas). Diskon manual KASIR dibatasi persentase yang
+   diatur OWNER (default 10%); diskon di atas ambang hanya bisa diposting OWNER
+   dan selalu masuk audit log.
 3. **Posting atomik:** untuk transaksi POS, stok produk/bahan berkurang, jurnal
    dibuat seimbang, nomor struk harian dialokasikan, dan audit dicatat. Pesanan
    online hanya mencatat pesanan; stok, poin, jurnal, dan baris pembayaran
@@ -215,11 +218,11 @@ Aturan sinkronisasi:
 
 > **Snapshot otomatis.** Dihasilkan oleh `bun run docs:sync`; jangan edit manual.
 
-- **Item selesai:** 389/401 (97%)
+- **Item selesai:** 393/405 (97%)
 - **Item terbuka:** 12
 - **Terblokir / sebagian:** 3 / 1
 - **Cakupan:** 31 rute · 64 file route REST · 42 model · 27 migrasi
-- **Test:** 55 file unit · 8 file e2e
+- **Test:** 57 file unit · 8 file e2e
 - **Dokumen / aturan:** 19 / 16
 
 **Item yang perlu perhatian:**

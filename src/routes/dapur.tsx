@@ -70,21 +70,25 @@ export const Route = createFileRoute('/dapur')({
     if (!user) throw redirect({ to: '/login' })
     if (!punyaAkses(user.role, 'operasional')) throw redirect({ to: '/' })
   },
-  loader: async () => dapurDataFn(),
+  loader: async () => {
+    const [daftar, user] = await Promise.all([dapurDataFn(), getSessionFn()])
+    if (!user) throw redirect({ to: '/login' })
+    return { daftar, peran: user.role }
+  },
   component: Dapur,
 })
 
 function Dapur() {
-  const data = Route.useLoaderData()
+  const { daftar, peran } = Route.useLoaderData()
   const router = useRouter()
   const [pending, setPending] = useState<Record<string, boolean>>({})
   const [filterStatus, setFilterStatus] = useState('SEMUA')
   const daftarTerfilter = useMemo(
     () =>
-      data.filter(
+      daftar.filter(
         (t) => filterStatus === 'SEMUA' || t.statusPesanan === filterStatus,
       ),
-    [data, filterStatus],
+    [daftar, filterStatus],
   )
   const kontrol = useKontrolTabel(
     daftarTerfilter,
@@ -151,7 +155,7 @@ function Dapur() {
   }
 
   return (
-    <DashboardLayout peran={undefined} judul={m.dapur_title()}>
+    <DashboardLayout peran={peran} judul={m.dapur_title()}>
       <div className="flex flex-wrap items-center gap-3">
         <PencarianTabel value={kontrol.cari} onChange={kontrol.setCari} />
         <Select value={filterStatus} onValueChange={setFilterStatus}>
