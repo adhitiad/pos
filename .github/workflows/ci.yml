@@ -162,6 +162,10 @@ jobs:
         run: bun run db:migrate:deploy
       - name: Seed data
         run: bun run db:seed
+      # `src/paraglide` di-gitignore dan tidak ikut checkout; dev server (webServer
+      # Playwright) mem-import `#/paraglide/messages`, jadi harus dikompilasi dulu.
+      - name: Generate Paraglide
+        run: bun run i18n:compile
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:

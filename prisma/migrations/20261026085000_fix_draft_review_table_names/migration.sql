@@ -1,8 +1,11 @@
--- Perbaikan drift nama tabel draft/review (ditemukan 2026-10-26).
--- Migrasi 20261023160000 membuat tabel PascalCase ("DraftTransaksi",
--- "TransaksiReviewAudit"), sedangkan schema.prisma memetakannya ke
--- draft_transaksi/transaksi_review_audit. Deploy baru dari migrasi karena itu
--- tidak memiliki tabel yang dipakai aplikasi.
+-- Perbaikan drift nama tabel draft/review/pesanan (ditemukan 2026-10-26).
+-- Migrasi 20261023140000 & 20261023160000 membuat tabel PascalCase
+-- ("PesananDraf", "DraftTransaksi", "TransaksiReviewAudit"), sedangkan
+-- schema.prisma memetakannya ke pesanan_draf/draft_transaksi/
+-- transaksi_review_audit. Deploy baru dari migrasi karena itu tidak memiliki
+-- tabel yang dipakai aplikasi, dan index pesanan_draf di
+-- 20261026090000_add_indexes_part2 gagal bila tabel belum diberi nama baru.
+-- Karena itu migrasi ini WAJIB berjalan sebelum 20261026090000.
 --
 -- Aturan (aditif, tidak menghapus data):
 -- 1. Tabel PascalCase tanpa pasangan snake_case -> rename, data ikut pindah.
@@ -27,7 +30,8 @@ BEGIN
   FOR pasangan IN
     SELECT * FROM (VALUES
       ('TransaksiReviewAudit', 'transaksi_review_audit'),
-      ('DraftTransaksi', 'draft_transaksi')
+      ('DraftTransaksi', 'draft_transaksi'),
+      ('PesananDraf', 'pesanan_draf')
     ) AS v(pascal, snake)
   LOOP
     SELECT EXISTS (

@@ -263,9 +263,9 @@ Angka pasti ada di snapshot. Risiko yang harus dibaca sebelum mengambil tugas:
 - **Item selesai:** 393/405 (97%)
 - **Item terbuka:** 12
 - **Terblokir / sebagian:** 3 / 1
-- **Cakupan:** 31 rute · 64 file route REST · 42 model · 27 migrasi
+- **Cakupan:** 31 rute · 64 file route REST · 42 model · 28 migrasi
 - **Test:** 57 file unit · 8 file e2e
-- **Dokumen / aturan:** 19 / 16
+- **Dokumen**: 19 berkas di `docs/`
 
 ### Rute halaman terdeteksi
 

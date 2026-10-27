@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 type Tugas = {
@@ -16,6 +16,10 @@ function hitungBerkas(
   direktori: string,
   cocok: (nama: string) => boolean,
 ): number {
+  // Direktori opsional (mis. `.agents/rules` hanya ada di mesin pengembang dan
+  // tidak di-commit) dihitung 0 agar docs:check tetap jalan di checkout bersih
+  // seperti CI. Isi snapshot juga tidak boleh bergantung direktori tak ter-commit.
+  if (!existsSync(direktori)) return 0
   let jumlah = 0
   for (const entri of readdirSync(direktori, { withFileTypes: true })) {
     const jalur = resolve(direktori, entri.name)
@@ -126,9 +130,6 @@ const e2e = hitungBerkas(resolve(AKAR, 'tests/e2e'), (nama) =>
   nama.endsWith('.spec.ts'),
 )
 const docs = hitungBerkas(resolve(AKAR, 'docs'), (nama) => nama.endsWith('.md'))
-const aturan = hitungBerkas(resolve(AKAR, '.agents/rules'), (nama) =>
-  nama.endsWith('.md'),
-)
 const endpoint = hitungBerkas(resolve(AKAR, 'src/routes/api/v1'), (nama) =>
   nama.endsWith('.ts'),
 )
@@ -143,7 +144,7 @@ const snapshotManusia = [
   `- **Terblokir / sebagian:** ${terblokir.length} / ${sebagian.length}`,
   `- **Cakupan:** ${halaman.length} rute · ${endpoint} file route REST · ${model} model · ${migrasi} migrasi`,
   `- **Test:** ${unit} file unit · ${e2e} file e2e`,
-  `- **Dokumen / aturan:** ${docs} / ${aturan}`,
+  '- **Dokumen**: ' + docs + ' berkas di `docs/`',
   '',
   ...(terblokir.length + sebagian.length === 0
     ? ['Tidak ada item terblokir atau sebagian.']
@@ -167,7 +168,7 @@ const snapshotAgen = [
   `- **Terblokir / sebagian:** ${terblokir.length} / ${sebagian.length}`,
   `- **Cakupan:** ${halaman.length} rute · ${endpoint} file route REST · ${model} model · ${migrasi} migrasi`,
   `- **Test:** ${unit} file unit · ${e2e} file e2e`,
-  `- **Dokumen / aturan:** ${docs} / ${aturan}`,
+  '- **Dokumen**: ' + docs + ' berkas di `docs/`',
   '',
   '### Rute halaman terdeteksi',
   '',
