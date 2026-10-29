@@ -5,6 +5,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useIdentitasApp } from '#/hooks/identitas'
 
 import Footer from '#/components/Footer'
+import { SidebarProvider } from '#/components/ui/sidebar'
 import Header from '#/components/Header'
 import CtaLanding from '#/components/home/CtaLanding'
 import FiturLanding from '#/components/home/FiturLanding'
@@ -45,7 +46,9 @@ function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
+      <SidebarProvider>
+        <Header />
+      </SidebarProvider>
       <main className="flex-1">
         <HeroLanding peran={peran} />
         <ProdukLanding produk={produkLanding} />

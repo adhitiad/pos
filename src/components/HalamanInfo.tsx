@@ -6,6 +6,7 @@ import type { ReactNode } from 'react'
 import { m } from '#/paraglide/messages'
 
 import Footer from '#/components/Footer'
+import { SidebarProvider } from '#/components/ui/sidebar'
 import Header from '#/components/Header'
 import { Button } from '#/components/ui/button'
 
@@ -20,7 +21,9 @@ export default function HalamanInfo({
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
+      <SidebarProvider>
+        <Header />
+      </SidebarProvider>
       <main className="flex-1">
         <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
           <Button
