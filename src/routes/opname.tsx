@@ -126,6 +126,7 @@ function Opname() {
                       setJenis('PRODUK')
                       void muatMaster()
                     }}
+                    className="min-h-[44px]"
                   >
                     {m.opname_jenis_produk()}
                   </Button>
@@ -135,6 +136,7 @@ function Opname() {
                       setJenis('BAHAN')
                       void muatMaster()
                     }}
+                    className="min-h-[44px]"
                   >
                     {m.opname_jenis_bahan()}
                   </Button>
@@ -217,7 +219,11 @@ function Opname() {
                 onHalaman={kontrol.setHalaman}
                 onUkuranHalaman={kontrol.setUkuranHalaman}
               />
-              <Button disabled={pending} onClick={() => void simpan()}>
+              <Button
+                disabled={pending}
+                onClick={() => void simpan()}
+                className="min-h-[44px] w-full"
+              >
                 {m.opname_simpan()}
               </Button>
             </div>

@@ -181,11 +181,20 @@ export default function FormPrinter({
               )}
             </form.Field>
           </div>
-          <div className="flex gap-2">
-            <Button type="submit" disabled={pending} className="h-11">
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <Button
+              type="submit"
+              disabled={pending}
+              className="h-11 w-full sm:w-auto min-h-[44px]"
+            >
               {m.printer_simpan()}
             </Button>
-            <Button type="button" variant="outline" onClick={onBatal}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onBatal}
+              className="w-full sm:w-auto min-h-[44px]"
+            >
               {m.printer_batal()}
             </Button>
           </div>

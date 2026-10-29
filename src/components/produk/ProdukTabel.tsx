@@ -179,7 +179,7 @@ export function ProdukTabel({
             >
               <SelectTrigger
                 size="sm"
-                className="w-[74px]"
+                className="w-full sm:w-[74px]"
                 aria-label={m.produk_baris_per_halaman()}
               >
                 <SelectValue />

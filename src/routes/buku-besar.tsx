@@ -265,7 +265,7 @@ function BukuBesar() {
         <div className="space-y-1">
           <Label>{m.ledger_account()}</Label>
           <Select value={akunId} onValueChange={setAkunId}>
-            <SelectTrigger className="w-56">
+            <SelectTrigger className="w-full sm:w-56">
               <SelectValue placeholder={m.ledger_all()} />
             </SelectTrigger>
             <SelectContent>

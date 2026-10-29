@@ -139,7 +139,11 @@ function Retur() {
                   placeholder="ID transaksi (mis. cmb_xxx)"
                   onChange={(e) => setTransaksiId(e.target.value)}
                 />
-                <Button size="sm" onClick={() => void muatDetail()}>
+                <Button
+                  size="sm"
+                  onClick={() => void muatDetail()}
+                  className="min-h-[44px]"
+                >
                   Muat
                 </Button>
               </div>
@@ -238,6 +242,7 @@ function Retur() {
                         pending || hitungTotalRetur() === 0 || !alasan.trim()
                       }
                       onClick={() => void buat()}
+                      className="min-h-[44px] w-full"
                     >
                       {m.retur_buat()}
                     </Button>

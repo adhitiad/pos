@@ -73,7 +73,7 @@ export default function ProdukGrid({
       <div className="flex gap-2 overflow-x-auto pb-1">
         <Button
           variant={katId === '' ? 'default' : 'outline'}
-          className="h-9 shrink-0 rounded-full"
+          className="h-9 shrink-0 rounded-full min-h-[44px] min-w-[44px] whitespace-nowrap"
           onClick={() => {
             setKatId('')
           }}
@@ -84,7 +84,7 @@ export default function ProdukGrid({
           <Button
             key={k.id}
             variant={katId === k.id ? 'default' : 'outline'}
-            className="h-9 shrink-0 rounded-full"
+            className="h-9 shrink-0 rounded-full min-h-[44px] min-w-[44px] whitespace-nowrap"
             onClick={() => {
               setKatId(katId === k.id ? '' : k.id)
             }}
@@ -143,7 +143,7 @@ export default function ProdukGrid({
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-8 w-8 shrink-0"
+                        className="h-8 w-8 shrink-0 min-h-[44px] min-w-[44px]"
                         onClick={() => {
                           cartSetQty(p.id, qty - 1)
                           if (qty - 1 <= 0) {
@@ -161,7 +161,7 @@ export default function ProdukGrid({
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-8 w-8 shrink-0"
+                        className="h-8 w-8 shrink-0 min-h-[44px] min-w-[44px]"
                         onClick={() => {
                           cartSetQty(p.id, qty + 1)
                           toast(m.kasir_added(), { duration: 800 })
@@ -177,7 +177,7 @@ export default function ProdukGrid({
                     <Button
                       variant="default"
                       size="sm"
-                      className="h-8 w-full text-xs"
+                      className="h-8 w-full text-xs min-h-[44px]"
                       onClick={() => {
                         tambahKeKeranjang(p)
                       }}

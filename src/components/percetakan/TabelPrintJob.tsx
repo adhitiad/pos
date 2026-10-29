@@ -214,6 +214,7 @@ export default function TabelPrintJob({
                   <div className="flex flex-wrap gap-1">
                     <Button
                       variant="outline"
+                      className="min-h-[44px]"
                       onClick={() => {
                         onLihat(job)
                       }}
@@ -223,6 +224,7 @@ export default function TabelPrintJob({
                     {job.status === 'MENUNGGU' && (
                       <Button
                         variant="outline"
+                        className="min-h-[44px]"
                         onClick={() => {
                           onAmbil(job)
                         }}
@@ -233,6 +235,7 @@ export default function TabelPrintJob({
                     {job.status === 'DIPROSES' && (
                       <Button
                         variant="outline"
+                        className="min-h-[44px]"
                         onClick={() => {
                           onSelesai(job)
                         }}
@@ -246,6 +249,7 @@ export default function TabelPrintJob({
                       (peran === 'OWNER' || job.cetakKasir < 3) && (
                         <Button
                           variant="outline"
+                          className="min-h-[44px]"
                           onClick={() => {
                             onCetakUlang(job)
                           }}

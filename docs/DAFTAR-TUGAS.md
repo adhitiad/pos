@@ -1804,3 +1804,22 @@ diff --from-config-datasource` kosong (tidak ada drift).
       7 jurnal berimbang, 4 user, 5 shift.
 - [ ] `bun run test:load` — k6 belum terpasang di mesin pengembangan ini;
       skrip + wrapper siap dijalankan di staging/CI (lihat `docs/PERFORMA.md`).
+
+## Ringkasan seed lengkap (2026-10-29)
+
+- [x] `prisma/seed/verifikasi.ts` — `console.table` ringkasan memuat seluruh
+      tabel hasil seed (kategori, bahan, produkBahan, meja, modifierGrup,
+      modifier, supplier, printer, akun, member, delivery, pengaturan,
+      pengguna, shift, transaksi, item transaksi, pembayaran, jurnal, detail
+      jurnal, pembelian, hutang, retur, opname, printJob, auditLog, kunjungan
+      halaman/perangkat), bukan 15 baris pilihan.
+- [x] `bun run db:seed` — 47 produk (47 aktif), 2 kategori (Makanan 36 /
+      Minuman 11), 184 baris resep, 24 bahan, 12 akun, 8 transaksi,
+      7 jurnal berimbang, 13 pengaturan.
+- [x] Gate: `tsc`, `lint`, `check`, `docs:check`, `test:vitest` **383/383**,
+      `build`, `perf:budget` (538,4/600 KB) hijau.
+- [x] Akar masalah "produk tidak ditemukan" di klien: `test:vitest`/`test:e2e`
+      memakai database dev yang sama dan beberapa suite memanggil
+      `deleteMany()` pada `produk`/`kategori`, jadi katalog kosong sampai
+      `db:seed` dijalankan lagi (aturan baru di `.agents/rules/12-testing.md`
+      dan AGENTS.md).

@@ -62,7 +62,7 @@ export default function KartuDiskonKasir({ nilaiAwal }: { nilaiAwal: number }) {
             max={100}
             value={nilai}
             onChange={(e) => setNilai(e.target.value)}
-            className="max-w-sm"
+            className="w-full max-w-sm sm:max-w-md"
           />
         </div>
         <Button type="button" onClick={simpanNilai} disabled={simpan}>

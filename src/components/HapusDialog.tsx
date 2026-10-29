@@ -38,11 +38,19 @@ export default function HapusDialog({
           <DialogTitle>{judul}</DialogTitle>
           <DialogDescription>{deskripsi}</DialogDescription>
         </DialogHeader>
-        <DialogFooter>
-          <Button variant="outline" onClick={onBatal}>
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 w-full">
+          <Button
+            variant="outline"
+            onClick={onBatal}
+            className="w-full sm:w-auto min-h-[44px]"
+          >
             {batal}
           </Button>
-          <Button variant="destructive" onClick={onYa}>
+          <Button
+            variant="destructive"
+            onClick={onYa}
+            className="w-full sm:w-auto min-h-[44px]"
+          >
             {ya}
           </Button>
         </DialogFooter>

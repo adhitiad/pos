@@ -73,25 +73,27 @@ export default function AntreanDraft({ daftar, onPutuskan }: Props) {
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-end gap-2">
-                      <Button
-                        type="button"
-                        size="sm"
-                        className="h-9"
-                        onClick={() => onPutuskan(d, 'DISETUJUI')}
-                      >
-                        <Check className="size-4" />
-                        {m.review_setujui()}
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="destructive"
-                        className="h-9"
-                        onClick={() => onPutuskan(d, 'DITOLAK')}
-                      >
-                        <X className="size-4" />
-                        {m.review_tolak()}
-                      </Button>
+                      <div className="flex flex-col sm:flex-row gap-2 w-full">
+                        <Button
+                          type="button"
+                          size="sm"
+                          className="w-full sm:w-auto min-h-[44px]"
+                          onClick={() => onPutuskan(d, 'DISETUJUI')}
+                        >
+                          <Check className="size-4" />
+                          {m.review_setujui()}
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="destructive"
+                          className="w-full sm:w-auto min-h-[44px]"
+                          onClick={() => onPutuskan(d, 'DITOLAK')}
+                        >
+                          <X className="size-4" />
+                          {m.review_tolak()}
+                        </Button>
+                      </div>
                     </div>
                   </TableCell>
                 </TableRow>

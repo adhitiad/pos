@@ -147,7 +147,7 @@ function Printer() {
         onChange={(e) => {
           setCari(e.target.value)
         }}
-        className="max-w-sm"
+        className="w-full max-w-sm sm:max-w-md"
       />
 
       {panel && (

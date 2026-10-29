@@ -215,7 +215,7 @@ function Shift() {
             <CardTitle>{m.shift_buka()}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="max-w-xs space-y-1">
+            <div className="w-full max-w-xs sm:max-w-sm space-y-1">
               <Label>{m.shift_kas_awal()}</Label>
               <Input
                 type="number"
@@ -242,7 +242,10 @@ function Shift() {
           <div className="mb-3 flex flex-wrap items-center gap-3">
             <PencarianTabel value={kontrol.cari} onChange={kontrol.setCari} />
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-44" aria-label={m.shift_riwayat()}>
+              <SelectTrigger
+                className="w-full sm:w-44"
+                aria-label={m.shift_riwayat()}
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

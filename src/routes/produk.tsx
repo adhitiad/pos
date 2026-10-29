@@ -271,8 +271,12 @@ function Produk() {
           cell: ({ row }) => {
             const p = row.original
             return (
-              <div className="flex gap-1">
-                <Button variant="outline" onClick={() => bukaUbah(p)}>
+              <div className="flex flex-col sm:flex-row gap-2 w-full">
+                <Button
+                  variant="outline"
+                  onClick={() => bukaUbah(p)}
+                  className="w-full sm:w-auto min-h-[44px]"
+                >
                   {m.produk_edit()}
                 </Button>
                 <Button
@@ -282,6 +286,7 @@ function Produk() {
                       .then(() => muatUlang())
                       .catch(gagal)
                   }}
+                  className="w-full sm:w-auto min-h-[44px]"
                 >
                   {p.aktif ? m.produk_toggle_off() : m.produk_toggle_on()}
                 </Button>
@@ -290,6 +295,7 @@ function Produk() {
                   onClick={() => {
                     setHapusId(p.id)
                   }}
+                  className="w-full sm:w-auto min-h-[44px] text-destructive"
                 >
                   {m.produk_hapus()}
                 </Button>
@@ -317,7 +323,7 @@ function Produk() {
           aria-label={m.produk_cari()}
           value={cari}
           onChange={(e) => setCari(e.target.value)}
-          className="max-w-sm"
+          className="w-full max-w-sm sm:max-w-md"
         />
         <Select
           value={search.status}
@@ -329,7 +335,7 @@ function Produk() {
           }}
         >
           <SelectTrigger
-            className="w-[160px]"
+            className="w-full sm:w-[160px]"
             aria-label={m.produk_filter_status()}
           >
             <SelectValue />
@@ -350,7 +356,7 @@ function Produk() {
           }}
         >
           <SelectTrigger
-            className="w-[180px]"
+            className="w-full sm:w-[180px]"
             aria-label={m.produk_filter_kategori()}
           >
             <SelectValue />

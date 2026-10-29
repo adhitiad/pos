@@ -93,7 +93,7 @@ export function GenerateMejaDialog({
         onClick={() =>
           setForm({ dari: '1', sampai: '10', aktif: true, cetakA4: false })
         }
-        className="h-10 rounded-lg border-[#002037] bg-[#002037]/5 px-3 text-xs font-medium text-[#002037] hover:bg-[#002037]/10 dark:text-[#e8dccb] dark:bg-[#e8dccb]/10"
+        className="min-h-[44px] min-w-[44px] rounded-lg border-[#002037] bg-[#002037]/5 px-3 text-xs font-medium text-[#002037] hover:bg-[#002037]/10 dark:text-[#e8dccb] dark:bg-[#e8dccb]/10"
       >
         <Plus className="mr-1.5 size-3.5" />
         {m.meja_generate()}
@@ -115,7 +115,7 @@ export function GenerateMejaDialog({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 p-1.5 text-neutral-500 hover:text-[#002037] dark:text-neutral-400 dark:hover:text-[#e8dccb]"
+                  className="min-h-[44px] min-w-[44px] h-8 p-1.5 text-neutral-500 hover:text-[#002037] dark:text-neutral-400 dark:hover:text-[#e8dccb]"
                   onClick={onTutup}
                 >
                   <X className="size-4" />
@@ -138,7 +138,7 @@ export function GenerateMejaDialog({
                           setForm({ ...form, dari: e.target.value })
                         }
                         placeholder="1"
-                        className="h-10"
+                        className="h-11"
                       />
                     </div>
                     <div className="space-y-2">
@@ -151,7 +151,7 @@ export function GenerateMejaDialog({
                           setForm({ ...form, sampai: e.target.value })
                         }
                         placeholder="10"
-                        className="h-10"
+                        className="h-11"
                       />
                     </div>
                   </div>
@@ -219,7 +219,7 @@ export function GenerateMejaDialog({
                     variant="outline"
                     size="sm"
                     onClick={cetak}
-                    className="h-9 px-3 text-xs font-medium border-[#002037] text-[#002037] dark:border-[#e8dccb] dark:text-[#e8dccb] hover:bg-[#002037]/10 dark:hover:bg-[#e8dccb]/10"
+                    className="min-h-[44px] min-w-[44px] h-9 px-3 text-xs font-medium border-[#002037] text-[#002037] dark:border-[#e8dccb] dark:text-[#e8dccb] hover:bg-[#002037]/10 dark:hover:bg-[#e8dccb]/10"
                   >
                     <LayoutGrid className="mr-1.5 size-3.5" />
                     {m.meja_print_cetak()}

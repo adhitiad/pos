@@ -9,6 +9,7 @@ import { pengaturanDataFn } from '#/server/pengaturanFn'
 import DashboardLayout from '#/components/DashboardLayout'
 import BagianIdentitas from '#/components/pengaturan/BagianIdentitas'
 import BagianOperasional from '#/components/pengaturan/BagianOperasional'
+import { TombolResetDatabase } from '#/components/pengaturan/TombolResetDatabase'
 import { Button } from '#/components/ui/button'
 
 export const Route = createFileRoute('/pengaturan')({
@@ -30,6 +31,8 @@ function Pengaturan() {
     <DashboardLayout peran="OWNER" judul={m.pengaturan_title()}>
       <BagianIdentitas form={form} />
       <BagianOperasional form={form} />
+
+      <TombolResetDatabase namaProyek="POS Berkah" />
 
       <div className="flex justify-end">
         <Button onClick={() => void form.onSubmit()} disabled={form.simpan}>

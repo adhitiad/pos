@@ -183,6 +183,7 @@ export default function Struk({
             <Button
               variant="outline"
               size="sm"
+              className="min-h-[44px] min-w-[44px]"
               onClick={() => {
                 navigator.clipboard.writeText(struk.nomor)
                 toast.success(m.kasir_receipt_no(), {
@@ -196,13 +197,19 @@ export default function Struk({
             <Button
               variant="outline"
               size="sm"
+              className="min-h-[44px] min-w-[44px]"
               onClick={() => {
                 window.print()
               }}
             >
               {m.struk_cetak()}
             </Button>
-            <Button variant="outline" size="sm" onClick={() => void unduhPdf()}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="min-h-[44px] min-w-[44px]"
+              onClick={() => void unduhPdf()}
+            >
               <Download className="size-3 mr-1" />
               {m.struk_unduh_pdf()}
             </Button>
@@ -210,6 +217,7 @@ export default function Struk({
               <Button
                 variant="outline"
                 size="sm"
+                className="min-h-[44px] min-w-[44px]"
                 disabled={cetakPending}
                 onClick={cetakEscposStruk}
               >
@@ -218,7 +226,12 @@ export default function Struk({
                   : m.struk_cetak_escpos()}
               </Button>
             )}
-            <Button variant="outline" size="sm" onClick={onBaru}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="min-h-[44px] min-w-[44px]"
+              onClick={onBaru}
+            >
               {m.kasir_new_sale()}
             </Button>
           </div>

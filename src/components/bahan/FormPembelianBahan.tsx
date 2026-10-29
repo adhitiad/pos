@@ -102,7 +102,7 @@ export default function FormPembelianBahan({
                 type="number"
                 min="0"
                 step="any"
-                className="max-w-sm"
+                className="w-full max-w-sm sm:max-w-md"
               />
             </div>
             <div className="space-y-1">
@@ -112,7 +112,7 @@ export default function FormPembelianBahan({
                 type="number"
                 min="0"
                 step="any"
-                className="max-w-sm"
+                className="w-full max-w-sm sm:max-w-md"
               />
             </div>
             <div className="space-y-1">
@@ -124,7 +124,7 @@ export default function FormPembelianBahan({
                   if (v === TANPA_SUPPLIER) setHutang(false)
                 }}
               >
-                <SelectTrigger className="max-w-sm">
+                <SelectTrigger className="w-full max-w-sm sm:max-w-md">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -149,7 +149,7 @@ export default function FormPembelianBahan({
                       setSumberBelanja(v as SumberBelanja)
                     }}
                   >
-                    <SelectTrigger className="max-w-sm">
+                    <SelectTrigger className="w-full max-w-sm sm:max-w-md">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -171,14 +171,17 @@ export default function FormPembelianBahan({
                     onChange={(e) => {
                       setTempatBelanja(e.target.value)
                     }}
-                    className="max-w-sm"
+                    className="w-full max-w-sm sm:max-w-md"
                   />
                 </div>
               </>
             )}
             <div className="space-y-1 sm:col-span-2">
               <Label>{m.bahan_catatan_pembelian()}</Label>
-              <Input id="pembelian-catatan" className="max-w-sm" />
+              <Input
+                id="pembelian-catatan"
+                className="w-full max-w-sm sm:max-w-md"
+              />
             </div>
           </div>
           <label className="flex cursor-pointer items-center gap-2 text-sm">

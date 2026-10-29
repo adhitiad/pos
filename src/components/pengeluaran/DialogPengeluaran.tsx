@@ -159,7 +159,7 @@ export default function DialogPengeluaran({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="h-11 min-h-11"
+                  className="h-11 min-h-11 min-h-[44px] min-w-[44px]"
                   onClick={() => setNominal(String(nilai))}
                 >
                   {rupiah(nilai)}

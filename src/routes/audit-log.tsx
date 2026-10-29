@@ -107,7 +107,7 @@ function AuditLog() {
         <div className="space-y-1">
           <Label>{m.audit_entitas()}</Label>
           <Select value={entitas} onValueChange={setEntitas}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -123,7 +123,7 @@ function AuditLog() {
         <div className="space-y-1">
           <Label>{m.audit_aksi()}</Label>
           <Select value={aksi} onValueChange={setAksi}>
-            <SelectTrigger className="w-56">
+            <SelectTrigger className="w-full sm:w-56">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

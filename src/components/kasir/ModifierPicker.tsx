@@ -134,13 +134,16 @@ export default function ModifierPicker({
             <p className="text-xs text-amber-600">{m.kasir_modifier_wajib()}</p>
           )}
         </div>
-        <DialogFooter>
-          <Button onClick={onCancel}>{m.kasir_batal()}</Button>
+        <DialogFooter className="mt-5 flex flex-col sm:flex-row gap-2 w-full">
+          <Button onClick={onCancel} className="w-full sm:w-auto min-h-[44px]">
+            {m.kasir_batal()}
+          </Button>
           <Button
             onClick={() => {
               onConfirm(pilihan.filter((p) => p.qty > 0))
             }}
             disabled={!valid}
+            className="w-full sm:w-auto min-h-[44px]"
           >
             {m.kasir_tambah_modifier()}
           </Button>

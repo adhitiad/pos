@@ -57,7 +57,7 @@ export default function FilterLaporan({
         <div className="space-y-1">
           <Label>{m.laporan_grup()}</Label>
           <Select value={nilai.grup} onValueChange={onGrup}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -70,7 +70,7 @@ export default function FilterLaporan({
         <div className="space-y-1">
           <Label>{m.kunjungan_user_type()}</Label>
           <Select value={nilai.userType} onValueChange={onUserType}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -88,13 +88,28 @@ export default function FilterLaporan({
       </form>
 
       <div className="flex flex-wrap gap-2">
-        <Button asChild variant="outline" size="sm">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="min-h-[44px] min-w-[44px]"
+        >
           <a href={unduh('csv')}>{m.laporan_unduh_csv()}</a>
         </Button>
-        <Button asChild variant="outline" size="sm">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="min-h-[44px] min-w-[44px]"
+        >
           <a href={unduh('xlsx')}>{m.laporan_unduh_xlsx()}</a>
         </Button>
-        <Button asChild variant="outline" size="sm">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="min-h-[44px] min-w-[44px]"
+        >
           <a href={unduh('pdf')}>{m.laporan_unduh_pdf()}</a>
         </Button>
       </div>

@@ -179,14 +179,14 @@ export function ProdukForm({
           <div className="space-y-2">
             <Label>{m.produk_resep()}</Label>
             {resep.map((r, i) => (
-              <div key={i} className="flex gap-2">
+              <div key={i} className="flex flex-col sm:flex-row gap-2 w-full">
                 <Select
                   value={r.bahanId}
                   onValueChange={(v) => {
                     onUbahBahan(i, { ...r, bahanId: v })
                   }}
                 >
-                  <SelectTrigger className="flex-1">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="—" />
                   </SelectTrigger>
                   <SelectContent>
@@ -206,7 +206,7 @@ export function ProdukForm({
                 <Input
                   type="number"
                   min={0}
-                  className="w-28"
+                  className="w-full sm:w-28"
                   value={r.jumlah}
                   onChange={(e) => {
                     const jumlah = Number(e.target.value)
@@ -216,6 +216,7 @@ export function ProdukForm({
                 <Button
                   type="button"
                   variant="outline"
+                  className="min-h-[44px] min-w-[44px]"
                   onClick={() => onHapusBahan(i)}
                 >
                   ×
@@ -226,17 +227,27 @@ export function ProdukForm({
               type="button"
               variant="outline"
               disabled={resep.length >= data.bahan.length}
+              className="min-h-[44px]"
               onClick={onTambahBahan}
             >
               {m.produk_tambah_bahan()}
             </Button>
           </div>
 
-          <div className="flex gap-2">
-            <Button type="submit" disabled={pending} className="h-11">
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <Button
+              type="submit"
+              disabled={pending}
+              className="h-11 w-full sm:w-auto min-h-[44px]"
+            >
               {m.produk_simpan()}
             </Button>
-            <Button type="button" variant="outline" onClick={onBatal}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onBatal}
+              className="w-full sm:w-auto min-h-[44px]"
+            >
               {m.produk_batal()}
             </Button>
           </div>

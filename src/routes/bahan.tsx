@@ -238,7 +238,7 @@ function Bahan() {
           onChange={(e) => {
             setCari(e.target.value)
           }}
-          className="max-w-sm"
+          className="w-full max-w-sm sm:max-w-md"
         />
         <label className="flex cursor-pointer items-center gap-2 text-sm">
           <Checkbox

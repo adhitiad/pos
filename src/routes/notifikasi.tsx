@@ -144,6 +144,7 @@ function Notifikasi() {
             size="sm"
             disabled={belumDibaca.length === 0}
             onClick={() => tandai(data.map((n) => n.id))}
+            className="min-h-[44px]"
           >
             <CheckCheck className="mr-1 size-4" />
             {m.notif_tandai_semua()}
@@ -344,7 +345,12 @@ function Notifikasi() {
                   )}
 
                   <div className="flex flex-wrap gap-2">
-                    <Button asChild variant="outline" size="sm">
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="min-h-[44px] min-w-[44px]"
+                    >
                       <Link
                         to={
                           notif.tipe === 'stok'
@@ -376,6 +382,7 @@ function Notifikasi() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        className="min-h-[44px] min-w-[44px]"
                         onClick={() => tandai([notif.id])}
                       >
                         <CheckCheck className="mr-1 size-3.5" />

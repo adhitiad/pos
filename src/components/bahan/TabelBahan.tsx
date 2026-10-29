@@ -109,12 +109,13 @@ export default function TabelBahan({
               <TableCell className="text-right">{b.stok}</TableCell>
               <TableCell className="text-right">{b.stokMinimum}</TableCell>
               <TableCell>
-                <div className="flex gap-1">
+                <div className="flex flex-col sm:flex-row gap-2 w-full">
                   <Button
                     variant="outline"
                     onClick={() => {
                       onTambahStok(b.id)
                     }}
+                    className="w-full sm:w-auto min-h-[44px]"
                   >
                     {m.bahan_tambah_stok()}
                   </Button>
@@ -123,6 +124,7 @@ export default function TabelBahan({
                     onClick={() => {
                       onEdit(b)
                     }}
+                    className="w-full sm:w-auto min-h-[44px]"
                   >
                     {m.bahan_edit()}
                   </Button>
@@ -131,6 +133,7 @@ export default function TabelBahan({
                     onClick={() => {
                       onHapus(b.id)
                     }}
+                    className="w-full sm:w-auto min-h-[44px] text-destructive"
                   >
                     {m.bahan_hapus()}
                   </Button>

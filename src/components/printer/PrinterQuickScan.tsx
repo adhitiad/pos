@@ -149,7 +149,7 @@ export default function PrinterQuickScan() {
         <Button
           variant="outline"
           size="sm"
-          className="h-11 gap-2"
+          className="min-h-[44px] h-11 gap-2"
           aria-label={m.printer_scan_dialog()}
           title={m.printer_scan_dialog()}
         >

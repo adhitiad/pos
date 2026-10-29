@@ -52,36 +52,38 @@ export default function DaftarDraft({ items }: { items: BarisKeranjang[] }) {
               >
                 <span className="min-w-0 flex-1 truncate">{b.produk.nama}</span>
                 <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0"
-                    onClick={() => {
-                      cartSetQty(b.produk.id, qty - 1)
-                      if (qty - 1 <= 0) {
-                        toast(m.kasir_removed(), { duration: 1200 })
-                      }
-                    }}
-                    aria-label={m.kasir_remove()}
-                  >
-                    <Minus className="size-3" />
-                  </Button>
-                  <span className="text-xs font-medium w-5 text-center">
-                    {qty}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0"
-                    onClick={() => {
-                      cartSetQty(b.produk.id, qty + 1)
-                      toast(m.kasir_added(), { duration: 800 })
-                    }}
-                    disabled={b.produk.stok <= qty}
-                    aria-label={m.kasir_added()}
-                  >
-                    <Plus className="size-3" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 min-h-[44px] min-w-[44px]"
+                      onClick={() => {
+                        cartSetQty(b.produk.id, qty - 1)
+                        if (qty - 1 <= 0) {
+                          toast(m.kasir_removed(), { duration: 1200 })
+                        }
+                      }}
+                      aria-label={m.kasir_remove()}
+                    >
+                      <Minus className="size-3" />
+                    </Button>
+                    <span className="text-xs font-medium w-5 text-center">
+                      {qty}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 min-h-[44px] min-w-[44px]"
+                      onClick={() => {
+                        cartSetQty(b.produk.id, qty + 1)
+                        toast(m.kasir_added(), { duration: 800 })
+                      }}
+                      disabled={b.produk.stok <= qty}
+                      aria-label={m.kasir_added()}
+                    >
+                      <Plus className="size-3" />
+                    </Button>
+                  </div>
                 </div>
                 <span className="shrink-0 w-20 text-right">
                   Rp{rupiah(b.produk.harga * b.qty)}

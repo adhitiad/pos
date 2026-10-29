@@ -186,11 +186,19 @@ export default function IkonCropDialog({
           />
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" className="h-11" onClick={onBatal}>
+        <DialogFooter className="mt-5 flex flex-col sm:flex-row gap-2 w-full">
+          <Button
+            variant="outline"
+            className="w-full sm:w-auto min-h-[44px]"
+            onClick={onBatal}
+          >
             {m.pengaturan_ikon_crop_batal()}
           </Button>
-          <Button className="h-11" onClick={simpan} disabled={!gambar}>
+          <Button
+            className="w-full sm:w-auto min-h-[44px]"
+            onClick={simpan}
+            disabled={!gambar}
+          >
             {m.pengaturan_ikon_crop_simpan()}
           </Button>
         </DialogFooter>

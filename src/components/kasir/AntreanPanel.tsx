@@ -27,6 +27,7 @@ export default function AntreanPanel({
         <Button
           variant="outline"
           disabled={sinkron || !daring}
+          className="min-h-[44px]"
           onClick={onKirim}
         >
           {m.kasir_kirim_ulang()}
@@ -42,7 +43,11 @@ export default function AntreanPanel({
             {a.dibuat.slice(0, 16).replace('T', ' ')}
             {a.galat && <span className="text-red-600"> — {a.galat}</span>}
           </span>
-          <Button variant="outline" onClick={() => onHapus(a.id)}>
+          <Button
+            variant="outline"
+            className="min-h-[44px]"
+            onClick={() => onHapus(a.id)}
+          >
             {m.kasir_hapus_antrean()}
           </Button>
         </div>

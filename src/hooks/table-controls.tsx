@@ -150,7 +150,7 @@ export function PencarianTabel({
       value={value}
       placeholder={placeholder ?? m.tabel_cari()}
       onChange={(event) => onChange(event.target.value)}
-      className={cn('max-w-sm', className)}
+      className={cn('w-full max-w-sm sm:max-w-md', className)}
       aria-label={placeholder ?? m.tabel_cari()}
     />
   )
@@ -228,7 +228,7 @@ export function PaginasiTabel({
         >
           <SelectTrigger
             size="sm"
-            className="w-[74px]"
+            className="w-full sm:w-[74px]"
             aria-label={m.tabel_baris_per_halaman()}
           >
             <SelectValue />

@@ -20,7 +20,7 @@ export function ProdukKategori({
           placeholder={m.produk_kat_nama()}
           value={katNama}
           onChange={(e) => setKatNama(e.target.value)}
-          className="max-w-sm"
+          className="w-full max-w-sm sm:max-w-md"
         />
         <Button onClick={onTambah}>{m.produk_kat_tambah()}</Button>
       </div>

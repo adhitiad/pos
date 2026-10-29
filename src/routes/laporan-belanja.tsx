@@ -155,7 +155,7 @@ function LaporanBelanja() {
         <div className="space-y-1">
           <Label>{m.laporan_belanja_supplier()}</Label>
           <Select value={supplierId} onValueChange={setSupplierId}>
-            <SelectTrigger className="w-56">
+            <SelectTrigger className="w-full sm:w-56">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -178,7 +178,7 @@ function LaporanBelanja() {
               setSumberBelanja(v as SumberBelanja | typeof SEMUA_SUMBER)
             }}
           >
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-full sm:w-44">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

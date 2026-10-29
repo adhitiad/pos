@@ -117,11 +117,20 @@ export default function FormSupplier({
               </div>
             )}
           </form.Field>
-          <div className="flex gap-2">
-            <Button type="submit" disabled={pending} className="h-11">
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <Button
+              type="submit"
+              disabled={pending}
+              className="h-11 w-full sm:w-auto min-h-[44px]"
+            >
               {m.supplier_simpan()}
             </Button>
-            <Button type="button" variant="outline" onClick={onBatal}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onBatal}
+              className="w-full sm:w-auto min-h-[44px]"
+            >
               {m.supplier_batal()}
             </Button>
           </div>

@@ -106,7 +106,7 @@ export default function PembayaranPanel({
                 type="button"
                 variant="outline"
                 size="sm"
-                className="h-9"
+                className="min-h-[44px] min-w-[44px]"
                 onClick={() => {
                   onUangDiterimaChange(total)
                 }}
@@ -177,6 +177,7 @@ export default function PembayaranPanel({
             type="button"
             variant="outline"
             size="sm"
+            className="min-h-[44px] min-w-[44px]"
             onClick={() => {
               onBarisChange([
                 ...baris,

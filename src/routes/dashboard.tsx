@@ -232,7 +232,7 @@ function Dashboard() {
               role="group"
               aria-label={m.dashboard_chart()}
             >
-              <div className="flex items-end justify-between gap-1 h-32 min-w-[600px]">
+              <div className="flex items-end justify-between gap-1 h-32 min-w-[320px] overflow-x-auto">
                 {transaksiPerJam.map((jumlah, jam) => {
                   const tinggi = ((jumlah / maxJam) * 100).toFixed(0) + '%'
                   return (

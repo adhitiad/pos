@@ -30,7 +30,9 @@ opencode mcp list           # status MCP; pos-expo & pos-backend wajib "connecte
 
 Setiap perubahan kode WAJIB lolos: `tsc --noEmit`, `lint`, `check`,
 `docs:check`, `test:vitest`, `test:e2e` (bila route/guard/endpoint berubah),
-`build`, dan `perf:budget` setelah build.
+`build`, dan `perf:budget` setelah build. Setelah suite DB dijalankan, `bun run
+db:seed` wajib dieksekusi lagi sebelum uji manual — tes integrasi memakai
+database dev yang sama dan menghapus master produk/kategori.
 Uji DB manual pakai skrip sekali-pakai di `C:\Users\humas\AppData\Local\Temp\opencode\`,
 impor absolut (`E:/code/pos/src/...`), jalankan via
 `bunx dotenv run -f .env.local -- bun <skrip>` — lalu `db:seed` untuk reset.

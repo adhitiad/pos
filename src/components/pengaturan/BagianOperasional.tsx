@@ -44,7 +44,7 @@ export default function BagianOperasional({ form }: { form: PengaturanForm }) {
               max={100}
               value={form.pajakRestoPersen}
               onChange={(e) => form.setPajakRestoPersen(e.target.value)}
-              className="max-w-sm"
+              className="w-full max-w-sm sm:max-w-md"
             />
           </div>
           <div className="space-y-2">
@@ -57,7 +57,7 @@ export default function BagianOperasional({ form }: { form: PengaturanForm }) {
               max={100}
               value={form.pajakRetailPersen}
               onChange={(e) => form.setPajakRetailPersen(e.target.value)}
-              className="max-w-sm"
+              className="w-full max-w-sm sm:max-w-md"
             />
           </div>
         </CardContent>
@@ -143,7 +143,10 @@ export default function BagianOperasional({ form }: { form: PengaturanForm }) {
               form.setUkuranKertas(v as IdUkuranKertasTermal)
             }
           >
-            <SelectTrigger id="ukuran-kertas" className="max-w-sm">
+            <SelectTrigger
+              id="ukuran-kertas"
+              className="w-full max-w-sm sm:max-w-md"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -175,7 +178,10 @@ export default function BagianOperasional({ form }: { form: PengaturanForm }) {
             value={form.strukOtomatis}
             onValueChange={(v) => form.setStrukOtomatis(v as StrukOtomatis)}
           >
-            <SelectTrigger id="struk-otomatis" className="max-w-sm">
+            <SelectTrigger
+              id="struk-otomatis"
+              className="w-full max-w-sm sm:max-w-md"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -233,7 +239,7 @@ export default function BagianOperasional({ form }: { form: PengaturanForm }) {
                 type="time"
                 value={form.jamBuka}
                 onChange={(e) => form.setJamBuka(e.target.value)}
-                className="max-w-sm"
+                className="w-full max-w-sm sm:max-w-md"
               />
             </div>
             <div className="space-y-2">
@@ -243,7 +249,7 @@ export default function BagianOperasional({ form }: { form: PengaturanForm }) {
                 type="time"
                 value={form.jamTutup}
                 onChange={(e) => form.setJamTutup(e.target.value)}
-                className="max-w-sm"
+                className="w-full max-w-sm sm:max-w-md"
               />
             </div>
           </div>

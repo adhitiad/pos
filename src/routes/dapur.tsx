@@ -159,7 +159,10 @@ function Dapur() {
       <div className="flex flex-wrap items-center gap-3">
         <PencarianTabel value={kontrol.cari} onChange={kontrol.setCari} />
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-48" aria-label={m.dapur_status()}>
+          <SelectTrigger
+            className="w-full sm:w-48"
+            aria-label={m.dapur_status()}
+          >
             <SelectValue placeholder={m.dapur_status()} />
           </SelectTrigger>
           <SelectContent>
@@ -172,7 +175,7 @@ function Dapur() {
           </SelectContent>
         </Select>
       </div>
-      <div className="-mx-2 hidden overflow-x-auto md:block">
+      <div className="-mx-2 overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -265,6 +268,7 @@ function Dapur() {
                           variant="outline"
                           size="sm"
                           disabled={pending[t.id]}
+                          className="min-h-[44px]"
                           onClick={() => void ubahStatus(t.id, 'DIPROSES')}
                         >
                           {m.dapur_mulai()}
@@ -275,6 +279,7 @@ function Dapur() {
                           variant="outline"
                           size="sm"
                           disabled={pending[t.id]}
+                          className="min-h-[44px]"
                           onClick={() => void ubahStatus(t.id, 'SELESAI')}
                         >
                           {m.dapur_selesai()}
@@ -284,6 +289,7 @@ function Dapur() {
                         <Button
                           size="sm"
                           disabled={pending[t.id]}
+                          className="min-h-[44px]"
                           onClick={() => void tandaiLunas(t.id)}
                         >
                           {m.dapur_tandai_lunas()}
@@ -294,6 +300,7 @@ function Dapur() {
                           variant="outline"
                           size="sm"
                           disabled={pending[t.id]}
+                          className="min-h-[44px]"
                           onClick={() => void ubahStatus(t.id, 'DIBATALKAN')}
                         >
                           {m.dapur_batalkan()}

@@ -31,7 +31,7 @@ export default function BagianIdentitas({ form }: { form: PengaturanForm }) {
             value={form.namaToko}
             maxLength={60}
             onChange={(e) => form.setNamaToko(e.target.value)}
-            className="max-w-sm"
+            className="w-full max-w-sm sm:max-w-md"
           />
         </CardContent>
       </Card>
@@ -48,7 +48,7 @@ export default function BagianIdentitas({ form }: { form: PengaturanForm }) {
             value={form.judulApp}
             maxLength={80}
             onChange={(e) => form.setJudulApp(e.target.value)}
-            className="max-w-sm"
+            className="w-full max-w-sm sm:max-w-md"
           />
         </CardContent>
       </Card>
@@ -78,7 +78,7 @@ export default function BagianIdentitas({ form }: { form: PengaturanForm }) {
               type="file"
               accept="image/jpeg,image/png,image/webp"
               onChange={(e) => form.setFileLogo(e.target.files?.[0] ?? null)}
-              className="max-w-sm"
+              className="w-full max-w-sm sm:max-w-md"
             />
           </div>
         </CardContent>
@@ -117,7 +117,7 @@ export default function BagianIdentitas({ form }: { form: PengaturanForm }) {
                   form.setIkonDireset(false)
                   form.setCropTerbuka(true)
                 }}
-                className="max-w-sm"
+                className="w-full max-w-sm sm:max-w-md"
               />
               <p className="text-xs text-muted-foreground">
                 {m.pengaturan_ikon_app_hint()}
@@ -174,7 +174,7 @@ export default function BagianIdentitas({ form }: { form: PengaturanForm }) {
             value={form.deskripsiApp}
             maxLength={200}
             onChange={(e) => form.setDeskripsiApp(e.target.value)}
-            className="max-w-sm"
+            className="w-full max-w-sm sm:max-w-md"
           />
         </CardContent>
       </Card>

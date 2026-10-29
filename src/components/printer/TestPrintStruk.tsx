@@ -170,7 +170,7 @@ export function TestPrintStruk({
 
       <div className="flex flex-col gap-2 sm:flex-row">
         <Button
-          className="h-11 sm:flex-1"
+          className="min-h-[44px] h-11 sm:flex-1"
           onClick={() => void cetakOtomatis()}
           disabled={sibuk || !adaSerial || !printer}
         >
@@ -179,7 +179,7 @@ export function TestPrintStruk({
         </Button>
         <Button
           variant="outline"
-          className="h-11 sm:flex-1"
+          className="min-h-[44px] h-11 sm:flex-1"
           onClick={cetakLewatBrowser}
         >
           {m.printer_test_manual()}
@@ -188,12 +188,20 @@ export function TestPrintStruk({
 
       <DialogFooter className="flex-col gap-2 sm:flex-row sm:justify-between">
         <div className="flex gap-2">
-          <Button variant="ghost" className="h-11" onClick={onLewati}>
+          <Button
+            variant="ghost"
+            className="min-h-[44px] h-11"
+            onClick={onLewati}
+          >
             <SkipForward className="size-4" />
             {m.printer_test_lewati()}
           </Button>
           {onKembali && (
-            <Button variant="ghost" className="h-11" onClick={onKembali}>
+            <Button
+              variant="ghost"
+              className="min-h-[44px] h-11"
+              onClick={onKembali}
+            >
               {m.printer_test_kembali()}
             </Button>
           )}
@@ -210,7 +218,7 @@ export function DialogTestPrint({ trigger }: { trigger?: ReactNode }) {
     <Dialog open={terbuka} onOpenChange={setTerbuka}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button variant="outline" className="h-11">
+          <Button variant="outline" className="min-h-[44px] h-11">
             <Printer className="size-4" />
             {m.printer_test_buka()}
           </Button>

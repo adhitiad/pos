@@ -63,7 +63,7 @@ export default function Keranjang({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-6 w-6 p-0"
+                    className="h-6 w-6 p-0 min-h-[44px] min-w-[44px]"
                     onClick={() => onKurang(i.produkId)}
                     aria-label={m.kasir_remove()}
                   >
@@ -79,7 +79,7 @@ export default function Keranjang({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-6 w-6 p-0"
+                    className="h-6 w-6 p-0 min-h-[44px] min-w-[44px]"
                     onClick={() => onTambah(i.produkId)}
                   >
                     <Plus className="size-2.5" />
@@ -87,7 +87,7 @@ export default function Keranjang({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="h-6 w-6 p-0 text-neutral-500 hover:text-destructive"
+                    className="h-6 w-6 p-0 min-h-[44px] min-w-[44px] text-neutral-500 hover:text-destructive"
                     onClick={() => onHapus(i.produkId)}
                     aria-label="Hapus"
                   >

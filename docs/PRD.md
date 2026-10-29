@@ -218,7 +218,7 @@ Aturan sinkronisasi:
 
 > **Snapshot otomatis.** Dihasilkan oleh `bun run docs:sync`; jangan edit manual.
 
-- **Item selesai:** 400/412 (97%)
+- **Item selesai:** 404/416 (97%)
 - **Item terbuka:** 12
 - **Terblokir / sebagian:** 3 / 1
 - **Cakupan:** 31 rute · 67 file route REST · 42 model · 29 migrasi

@@ -14,6 +14,7 @@ import PrinterQuickScan from '#/components/printer/PrinterQuickScan'
 
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar'
 import { Button } from '#/components/ui/button'
+import { SidebarTrigger } from '#/components/ui/sidebar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -62,6 +63,11 @@ export default function Header() {
     <header className="chrome-surface sticky top-0 z-40 border-b">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-2.5">
+          <SidebarTrigger
+            size="icon"
+            variant="ghost"
+            className="md:hidden shrink-0 min-h-[44px] min-w-[44px]"
+          />
           <img src={logoUrl} alt="" className="h-8 w-8 shrink-0" />
           <span className="chrome-title truncate text-lg font-semibold">
             {identitas.judul}

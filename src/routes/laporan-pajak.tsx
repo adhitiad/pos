@@ -132,7 +132,7 @@ function LaporanPajak() {
         <div className="space-y-1">
           <Label>{m.laporan_pajak_grup()}</Label>
           <Select value={grup} onValueChange={handleGrupChange}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

@@ -202,7 +202,7 @@ function Member() {
         onChange={(e) => {
           setCari(e.target.value)
         }}
-        className="max-w-sm"
+        className="w-full max-w-sm sm:max-w-md"
       />
 
       {populer.length > 0 && (
@@ -314,8 +314,12 @@ function Member() {
                   )}
                 </form.Field>
               </div>
-              <div className="flex gap-2">
-                <Button type="submit" disabled={pending} className="h-11">
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <Button
+                  type="submit"
+                  disabled={pending}
+                  className="h-11 w-full sm:w-auto min-h-[44px]"
+                >
                   {m.member_simpan()}
                 </Button>
                 <Button
@@ -324,6 +328,7 @@ function Member() {
                   onClick={() => {
                     setPanel(null)
                   }}
+                  className="w-full sm:w-auto min-h-[44px]"
                 >
                   {m.member_batal()}
                 </Button>
@@ -413,7 +418,7 @@ function Member() {
                   {mm.jumlahTransaksi}
                 </TableCell>
                 <TableCell>
-                  <div className="flex gap-1">
+                  <div className="flex flex-col sm:flex-row gap-2 w-full">
                     <Button
                       variant="outline"
                       onClick={() => {
@@ -425,6 +430,7 @@ function Member() {
                         })
                         setPanel({ id: mm.id })
                       }}
+                      className="w-full sm:w-auto min-h-[44px]"
                     >
                       {m.member_edit()}
                     </Button>
@@ -433,6 +439,7 @@ function Member() {
                       onClick={() => {
                         setHapusId(mm.id)
                       }}
+                      className="w-full sm:w-auto min-h-[44px] text-destructive"
                     >
                       {m.member_hapus()}
                     </Button>

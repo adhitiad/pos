@@ -107,11 +107,11 @@ export default function DialogReview({
           </p>
         )}
 
-        <DialogFooter className="mt-5">
+        <DialogFooter className="mt-5 flex flex-col sm:flex-row gap-2 w-full">
           <Button
             type="button"
             variant="outline"
-            className="h-12"
+            className="h-12 w-full sm:w-auto min-h-[44px]"
             onClick={onTutup}
             disabled={proses}
           >
@@ -119,7 +119,7 @@ export default function DialogReview({
           </Button>
           <Button
             type="button"
-            className="h-12"
+            className="h-12 w-full sm:w-auto min-h-[44px]"
             variant={tolak ? 'destructive' : 'default'}
             onClick={() => void simpan()}
             disabled={proses}
