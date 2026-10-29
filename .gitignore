@@ -51,6 +51,8 @@ todos.json
 opencode.json
 # Aturan/skill agen tetap lokal; jangan unggah ke repo/GitHub.
 .agents/
+.kilicode/
+.agemts/
 # MCP server lokal: hanya untuk mesin developer, DILARANG di-commit.
 /mcp/
 # Tes MCP bergantung pada ./mcp sehingga ikut lokal (dev-only).

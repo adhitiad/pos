@@ -14,7 +14,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '#/components/ui/dialog'
 import { Divider } from '#/components/ui/divider'
 
@@ -97,17 +96,16 @@ export function TombolResetDatabase({ namaProyek }: { namaProyek: string }) {
 
   return (
     <>
-      <DialogTrigger asChild>
-        <Button
-          variant="destructive"
-          size="default"
-          className="min-h-[44px]"
-          disabled={memproses || tahap === 'proses'}
-        >
-          <Database className="mr-2 size-4" />
-          {m.pengaturan_reset_database()}
-        </Button>
-      </DialogTrigger>
+      <Button
+        variant="destructive"
+        size="default"
+        className="min-h-[44px]"
+        disabled={memproses || tahap === 'proses'}
+        onClick={() => setBukaDialog(true)}
+      >
+        <Database className="mr-2 size-4" />
+        {m.pengaturan_reset_database()}
+      </Button>
 
       <Dialog open={bukaDialog} onOpenChange={setBukaDialog}>
         {tahap === 'awal' && (
@@ -130,14 +128,13 @@ export function TombolResetDatabase({ namaProyek }: { namaProyek: string }) {
               >
                 {m.pengaturan_reset_database_awal_batal()}
               </Button>
-              <DialogTrigger asChild>
-                <Button
-                  variant="destructive"
-                  className="min-h-[44px] w-full sm:w-auto"
-                >
-                  {m.pengaturan_reset_database_awal_lanjut()}
-                </Button>
-              </DialogTrigger>
+              <Button
+                variant="destructive"
+                className="min-h-[44px] w-full sm:w-auto"
+                onClick={() => setTahap('konfirmasi')}
+              >
+                {m.pengaturan_reset_database_awal_lanjut()}
+              </Button>
             </DialogFooter>
           </DialogContent>
         )}

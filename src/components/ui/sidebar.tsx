@@ -257,7 +257,12 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  // Defensive: SidebarTrigger may be rendered by <Header /> on pages that do
+  // not provide a SidebarProvider (e.g. the landing page). On those pages
+  // there is no sidebar to toggle, so render nothing instead of throwing
+  // "useSidebar must be used within a SidebarProvider."
+  const sidebar = React.useContext(SidebarContext)
+  if (!sidebar) return null
 
   return (
     <Button
@@ -268,7 +273,7 @@ function SidebarTrigger({
       className={cn('size-7', className)}
       onClick={(event) => {
         onClick?.(event)
-        toggleSidebar()
+        sidebar.toggleSidebar()
       }}
       {...props}
     >

@@ -11,8 +11,27 @@ test.use({
 
 async function tanpaScrollX(page: Page, url: string) {
   await page.goto(url)
-  // Tunggu render selesai (loader + hidrasi)
+  // Tunggu render selesai + semua aset (font, gambar) agar tidak ada layout shift
   await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('load')
+  await page.evaluate(() => document.fonts.ready).catch(() => {})
+  await page
+    .locator('img')
+    .evaluateAll((imgs: Element[]) =>
+      Promise.all(
+        imgs.map(
+          (img) =>
+            new Promise<void>((r) => {
+              const i = img as HTMLImageElement
+              if (i.complete) r()
+              else {
+                i.onload = () => r()
+              }
+            }),
+        ),
+      ),
+    )
+    .catch(() => {})
   const bocor = await page.evaluate(
     () => document.documentElement.scrollWidth - window.innerWidth,
   )
