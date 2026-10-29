@@ -7,13 +7,14 @@
 
 ## 1. Konfigurasi Klien OpenCode (MCP)
 
-Dua server MCP lokal membaca repo ini langsung, sehingga pengembang
-`pos_mobile` tidak perlu menebak path dokumen atau kode backend:
+Tiga server MCP lokal membaca kedua repo langsung, sehingga pengembang
+`pos_mobile` tidak perlu menebak path dokumen atau kode:
 
-| Server        | Isi                                                                                       |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `pos-backend` | `docs/**`, `src/**` (khususnya `src/server/**`), skema Prisma, daftar endpoint            |
-| `pos-expo`    | Dokumen kontrak + barriers Expo, DAN tool baca repo yang sama (`docs/**`, `src/**`, dll.) |
+| Server        | Isi                                                                                                |
+| ------------- | -------------------------------------------------------------------------------------------------- |
+| `pos-mobile`  | Repo aplikasi Expo: `docs/**`, `src/**`, `tests/`, `scripts/`, `.agents/`, `AGENTS.md`, `app.json` |
+| `pos-backend` | `docs/**`, `src/**` (khususnya `src/server/**`), skema Prisma, daftar endpoint                     |
+| `pos-expo`    | Dokumen kontrak + barriers Expo, DAN tool baca repo backend (`docs/**`, `src/**`, dll.)            |
 
 ### Bentuk konfigurasi yang benar (OpenCode V2)
 
@@ -33,11 +34,20 @@ dan server dilewati dengan peringatan `skipped malformed recognized value`.
       "pos-backend": {
         "type": "local",
         "command": ["bun", "run", "E:/code/pos/mcp/server-backend.ts"]
+      },
+      "pos-mobile": {
+        "type": "local",
+        "command": ["bun", "run", "E:/code/pos/mcp/server-mobile.ts"]
       }
     }
   }
 }
 ```
+
+Server `pos-mobile` mencari repo mobile di `E:/code/pos_mobile` (bersebelahan
+dengan repo backend). Bila letaknya lain, set env `POS_MOBILE_ROOT` sebelum
+OpenCode dijalankan; server tetap hidup dan tool-nya memberi pesan jelas bila
+folder tidak ditemukan.
 
 Konfigurasi yang sama ada di:
 
@@ -46,10 +56,17 @@ Konfigurasi yang sama ada di:
 - `C:\Users\humas\.config\opencode\opencode.json` (global, untuk proyek lain)
 
 Kode MCP ada di `E:\code\pos\mcp\` (`stdio.ts` = transport, `repo.ts` = tool
-berkas, `server-backend.ts`, `server-expo.ts`). Direktori `mcp/` beserta
-`tests/vitest/mcp.test.ts` **tidak di-commit** (`.gitignore`) — keduanya
-khusus dev. API key remote (`firecrawl`, `tavily`, `exa`) dibaca dari berkas
-terpisah di `~/.config/opencode/secrets/` lewat substitusi `{file:...}`.
+berkas, `server-backend.ts`, `server-expo.ts`, `server-mobile.ts`). Direktori
+`mcp/` beserta `tests/vitest/mcp.test.ts` **tidak di-commit** (`.gitignore`) —
+keduanya khusus dev. API key remote (`firecrawl`, `tavily`, `exa`) dibaca dari
+berkas terpisah di `~/.config/opencode/secrets/` lewat substitusi `{file:...}`.
+
+`E:\code\pos_mobile\opencode.json` hanya berisi 5 server yang memang dipakai:
+`pos-mobile`, `pos-backend`, `pos-expo`, `sequential-thinking`, `playwright`.
+Entri lama yang selalu gagal sudah dihapus: `better-auth` (paket
+`better-auth-mcp` bukan server stdio — `@better-auth/mcp` adalah plugin
+library), `codegraph` (tidak punya subcommand `mcp`), dan `dart-mcp-server`
+(butuh `pubspec.yaml`, proyek ini Expo/TypeScript).
 
 ### Tool yang tersedia
 
@@ -73,12 +90,40 @@ Tool baca repo (tersedia di `pos-expo` dan `pos-backend`):
 | `repo_read_file`  | Baca satu berkas relatif akar repo, mis. `src/server/kasir.ts`                             |
 | `repo_search`     | Cari teks (case-insensitive) dan kembalikan `path:baris`                                   |
 
+Tool baca repo mobile (`pos-mobile`) — cakupan `docs/`, `src/`, `tests/`,
+`scripts/`, `.agents/`, plus berkas akar (`AGENTS.md`, `README.md`,
+`DaftarTugas.md`, `sistem-komunikasi.md`, `opencode.json`, `package.json`,
+`app.json`, `eas.json`, `tsconfig.json`, `metro.config.js`, `babel.config.js`,
+`expo-env.d.ts`, `skills-lock.json`, `.env.example`):
+
+| Tool                | Fungsi                                                      |
+| ------------------- | ----------------------------------------------------------- |
+| `mobile_list_files` | Daftar berkas repo pos_mobile (opsional dibatasi `dir`)     |
+| `mobile_read_file`  | Baca satu berkas mobile, mis. `src/app/keranjang/index.tsx` |
+| `mobile_search`     | Cari teks di kode mobile dan kembalikan `path:baris`        |
+
+Nama tool sengaja berbeda (`mobile_*` vs `repo_*`) agar tidak ambigu saat
+beberapa server aktif bersamaan; tiap server membatasi baca ke akar repo-nya
+sendiri, jadi `mobile_read_file` tidak bisa membaca `prisma/schema.prisma`
+backend dan `repo_read_file` tidak bisa membaca kode mobile.
+
 Tool dokumen/skema backend (`pos-backend`): `pos_schema`, `pos_schema_summary`,
 `pos_api_docs`, `pos_server_files`, `pos_server_file`, `pos_env`,
 `pos_project_info`.
 
 Batas keamanan tool repo: path absolut, `..`, symlink, dan berkas `.env*`
 (di luar `.env.example`) ditolak; berkas > 512 KB dipotong.
+
+### Alur kerja developer `pos_mobile`
+
+1. `expo_barriers` + `expo_api_docs` (`pos-expo`) — aturan wajib & kontrak REST.
+2. `mobile_read_file "AGENTS.md"` lalu `mobile_list_files { "dir": ".agents/rules" }`
+   — konvensi repo mobile (Expo/Android, bun, verifikasi).
+3. `mobile_search` / `mobile_list_files` — temukan hook/komponen yang akan diubah.
+4. `repo_search` / `repo_read_file` (`pos-backend`) — pastikan handler & skema
+   backend bila kontrak perlu dipastikan.
+5. Gate mobile: `bunx tsc --noEmit`, `bun run lint`, `bunx expo-doctor` (bila
+   dependency berubah).
 
 ### Verifikasi dan troubleshooting
 
@@ -103,6 +148,10 @@ Penyebab kegagalan yang sudah diperbaiki (MCP-03):
 4. **Nama paket salah** — `sequential-thinking` memakai
    `@anthropic/sequential-thinking-mcp` (404 di npm); diganti
    `@modelcontextprotocol/server-sequential-thinking`.
+5. **Server yang memang tidak bisa dipakai** (dihapus, MCP-04):
+   `better-auth` (`better-auth-mcp` tanpa executable; `@better-auth/mcp`
+   adalah plugin Better Auth, bukan server stdio), `codegraph` (CLI tanpa
+   subcommand `mcp`), `dart-mcp-server` (butuh `pubspec.yaml` Flutter/Dart).
 
 ---
 

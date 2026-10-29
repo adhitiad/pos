@@ -80,7 +80,11 @@ AGENTS.md → docs/DAFTAR-TUGAS.md → .agents/rules/** → docs/PRD.md
 
 `pos-expo` + `pos-backend` (`mcp/server-expo.ts`, `mcp/server-backend.ts`, transport di
 `mcp/stdio.ts`, tool berkas di `mcp/repo.ts`) memberi agen akses baca
-`docs/**` + `src/**` saat mengembangkan `E:/code/pos_mobile`. Transport wajib
+`docs/**` + `src/**` saat mengembangkan `E:/code/pos_mobile`. Server ketiga,
+`pos-mobile` (`mcp/server-mobile.ts`), membaca repo mobile itu sendiri
+(`docs/**`, `src/**`, `tests/`, `.agents/`, `AGENTS.md`, `app.json`) lewat tool
+`mobile_list_files` / `mobile_read_file` / `mobile_search`; akarnya bisa
+diganti dengan env `POS_MOBILE_ROOT`. Transport wajib
 satu pesan JSON per baris (standar MCP stdio) — jangan menambahkan header
 `Content-Length`; regresi: `bunx vitest run tests/vitest/mcp.test.ts`.
 Direktori `./mcp/` dan tes MCP-nya **tidak di-commit** (`.gitignore`) — hanya

@@ -877,6 +877,16 @@ setengah-setengah.
       connected. Semua kode MCP dikonsolidasi ke `mcp/**`, dan `mcp/` + tes MCP
       di-`.gitignore` (dev-only, dilarang commit). API key remote dipindah ke
       `~/.config/opencode/secrets/` via substitusi `{file:...}`.
+- [x] **MCP-04** Server MCP `pos-mobile` — `mcp/server-mobile.ts` + `repo.ts`
+      digeneralisasi (`direktori`, `berkasAkar`, `prefiks`, `contohBerkas`) sehingga
+      repo mobile dibaca dengan tool `mobile_list_files`, `mobile_read_file`,
+      `mobile_search` (cakupan `docs/`, `src/`, `tests/`, `scripts/`, `.agents/` +
+      berkas akar `AGENTS.md`, `app.json`, `package.json`, dll.; akar bisa diganti
+      lewat env `POS_MOBILE_ROOT`). `pos_mobile/opencode.json` dirapikan: tambah
+      `pos-mobile`, hapus 3 server yang selalu gagal (`better-auth`,
+      `codegraph`, `dart-mcp-server`), instruksi alur kerja diperbarui; regresi
+      `tests/vitest/mcp.test.ts` (11 kasus); `opencode mcp list` pos_mobile:
+      10/10 connected.
 - [x] **MOBIL-04 / SEC-28** Perbaiki autentikasi klien Expo — ganti
       `POST /api/v1/auth-social` → `POST /api/v1/auth-native`, ganti cookie header →
       `Authorization: Bearer <token>`, hapus `x-client: expo` (bukan security boundary),
