@@ -9,7 +9,7 @@
       "main": false
     }
   },
-  "cron": [
+  "crons": [
     {
       "path": "/api/cron/pembayaran-kadaluarsa",
       "schedule": "*/15 * * * *"
