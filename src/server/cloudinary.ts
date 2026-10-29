@@ -1,4 +1,5 @@
 import { env } from '#/env'
+import { dapatkanSirkuit } from '#/lib/circuit-breaker'
 import type { TandaTanganUnggah } from '#/types/cloudinary'
 import { GalatDomain } from './galat.js'
 import {
@@ -65,38 +66,49 @@ export function tandaTanganUnggah(
   }
 }
 
+// Sirpi untuk panggilan API Cloudinary: tunggu 30 detik sebelum mencoba
+// kembali bila 5 error berturut-turut.
+const sirkuitCloudinary = dapatkanSirkuit('cloudinary', {
+  ambangKegagalan: 5,
+  jedaPemulihanMs: 30_000,
+})
+
 // Hapus aset Cloudinary milik kita (publicId diturunkan dari secure_url & wajib
 // berada di dalam folder POS → tak bisa menghapus aset sembarangan).
 export async function hapusAset(url: string): Promise<{ hasil: string }> {
-  const { cloud, apiKey, apiSecret, folder } = konfigurasi()
-  const publicId = publicIdDariUrl(url, cloud, folder)
-  if (!publicId) throw new GalatDomain('Aset tidak dikenali')
-  const sekarang = Math.floor(Date.now() / 1000)
-  const params = { public_id: publicId, timestamp: String(sekarang) }
-  const body = new URLSearchParams({
-    ...params,
-    api_key: apiKey,
-    signature: tandaTangan(params, apiSecret),
+  return sirkuitCloudinary.jalankan(async () => {
+    const { cloud, apiKey, apiSecret, folder } = konfigurasi()
+    const publicId = publicIdDariUrl(url, cloud, folder)
+    if (!publicId) throw new GalatDomain('Aset tidak dikenali')
+    const sekarang = Math.floor(Date.now() / 1000)
+    const params = { public_id: publicId, timestamp: String(sekarang) }
+    const body = new URLSearchParams({
+      ...params,
+      api_key: apiKey,
+      signature: tandaTangan(params, apiSecret),
+    })
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloud}/image/destroy`,
+      { method: 'POST', body },
+    )
+    if (!res.ok) throw new GalatDomain('Gagal menghapus aset')
+    const json = (await res.json().catch(() => null)) as {
+      result?: string
+    } | null
+    if (json?.result !== 'ok' && json?.result !== 'not found') {
+      throw new GalatDomain('Gagal menghapus aset')
+    }
+    return { hasil: json.result ?? 'ok' }
   })
-  const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${cloud}/image/destroy`,
-    { method: 'POST', body },
-  )
-  if (!res.ok) throw new GalatDomain('Gagal menghapus aset')
-  const json = (await res.json().catch(() => null)) as {
-    result?: string
-  } | null
-  if (json?.result !== 'ok' && json?.result !== 'not found') {
-    throw new GalatDomain('Gagal menghapus aset')
-  }
-  return { hasil: json.result ?? 'ok' }
 }
 
 // Ambil aset dari Cloudinary di sisi server (unduh tidak lagi dari browser).
 export async function ambilAsetUnduh(url: string): Promise<Response> {
-  const { cloud } = konfigurasi()
-  if (!urlUnduhAman(url, cloud)) throw new GalatDomain('URL tidak diizinkan')
-  const res = await fetch(url)
-  if (!res.ok) throw new GalatDomain('Gagal mengunduh aset')
-  return res
+  return sirkuitCloudinary.jalankan(async () => {
+    const { cloud } = konfigurasi()
+    if (!urlUnduhAman(url, cloud)) throw new GalatDomain('URL tidak diizinkan')
+    const res = await fetch(url)
+    if (!res.ok) throw new GalatDomain('Gagal mengunduh aset')
+    return res
+  })
 }

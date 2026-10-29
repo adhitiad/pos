@@ -13,6 +13,10 @@
     {
       "path": "/api/cron/pembayaran-kadaluarsa",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/bersihkan-data",
+      "schedule": "0 3 * * *"
     }
   ]
 }

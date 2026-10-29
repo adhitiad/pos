@@ -2,7 +2,7 @@
 
 > Target kode: `E:\code\pos_mobile/src/services/pos/`
 > Kontrak backend: `E:\code/pos/docs/API.md` + `docs/EXPO.md`
-> Guardrails: `mcp-expo.ts` (`expo_barriers`) — baca sebelum ubah kode mobile.
+> Guardrails: `mcp/server-expo.ts` (`expo_barriers`) — baca sebelum ubah kode mobile.
 >
 > Format standar service: `requestPosApi<T>(path, { method, body, requiresSession })`.
 > Semua request butuh `Authorization: Bearer <token>` (lihat §1 perbaikan auth).

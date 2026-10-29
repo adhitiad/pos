@@ -4,6 +4,7 @@ import type { BuatReturInput, DataReturInput } from '#/validations/retur'
 import { BuatReturSchema, DataReturSchema } from '#/validations/retur'
 import { kirimAlertFraud } from './fraudAlert.js'
 import { GalatDomain } from './galat.js'
+import { nonHapus } from './nonHapus.js'
 import { kodeHarian, nomorBerikut } from './penomoran.js'
 import { AKUN } from './postingHitung.js'
 
@@ -190,7 +191,7 @@ export async function buatRetur(kasirId: string, input: BuatReturInput) {
 // Ambil detail transaksi untuk form retur (produk + qty yang dibeli).
 export async function detailTransaksi(transaksiId: string) {
   const t = await prisma.transaksi.findUnique({
-    where: { id: transaksiId },
+    where: { id: transaksiId, deletedAt: null },
     include: {
       items: {
         select: {
@@ -221,7 +222,7 @@ export async function detailTransaksi(transaksiId: string) {
 
 export async function daftarProdukAktif() {
   const rows = await prisma.produk.findMany({
-    where: { aktif: true },
+    where: nonHapus({ aktif: true }),
     orderBy: { nama: 'asc' },
     select: { id: true, nama: true, harga: true, stok: true },
   })

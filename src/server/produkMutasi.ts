@@ -124,7 +124,7 @@ export async function updateProduk(input: UpdateProdukInput, aktorId?: string) {
   try {
     await prisma.$transaction([
       prisma.produk.update({
-        where: { id: data.id },
+        where: { id: data.id, deletedAt: null },
         data: {
           nama: data.nama,
           sku: kosongKeNull(data.sku),
@@ -164,7 +164,7 @@ export async function toggleProduk(
   const lama = await prisma.produk.findUnique({ where: { id: data.id } })
   if (!lama) throw new GalatDomain('Produk tidak ditemukan')
   await prisma.produk.update({
-    where: { id: data.id },
+    where: { id: data.id, deletedAt: null },
     data: { aktif: data.aktif },
   })
   if (lama.aktif !== data.aktif) {
@@ -221,7 +221,7 @@ export async function createKategori(input: KategoriInput) {
 export async function hapusKategori(input: { id: string }, aktorId?: string) {
   const data = HapusKategoriSchema.parse(input)
   const lama = await prisma.kategori.findUnique({
-    where: { id: data.id },
+    where: { id: data.id, deletedAt: null },
     include: { _count: { select: { produk: true } } },
   })
   if (!lama) throw new GalatDomain('Kategori tidak ditemukan')

@@ -15,7 +15,7 @@ export const Route = createFileRoute('/login')({
   beforeLoad: async () => {
     const user = await getSessionFn()
     if (user?.role === 'OWNER' || user?.role === 'KASIR')
-      throw redirect({ to: '/kasir' })
+      throw redirect({ to: '/dashboard' })
     if (user) throw redirect({ to: '/' })
   },
   component: Login,
@@ -23,7 +23,10 @@ export const Route = createFileRoute('/login')({
 
 function Login() {
   const masuk = () => {
-    void authClient.signIn.social({ provider: 'google', callbackURL: '/kasir' })
+    void authClient.signIn.social({
+      provider: 'google',
+      callbackURL: '/dashboard',
+    })
   }
   const { isPending } = authClient.useSession()
 

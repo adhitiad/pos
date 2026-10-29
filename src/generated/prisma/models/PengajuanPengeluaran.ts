@@ -41,7 +41,6 @@ export type PengajuanPengeluaranMinAggregateOutputType = {
   kasirId: string | null
   ownerId: string | null
   nominal: runtime.Decimal | null
-  nominalDisetujui: runtime.Decimal | null
   jenis: $Enums.JenisPengeluaran | null
   keterangan: string | null
   status: $Enums.StatusPengajuan | null
@@ -51,6 +50,7 @@ export type PengajuanPengeluaranMinAggregateOutputType = {
   ditolakPada: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  nominalDisetujui: runtime.Decimal | null
 }
 
 export type PengajuanPengeluaranMaxAggregateOutputType = {
@@ -58,7 +58,6 @@ export type PengajuanPengeluaranMaxAggregateOutputType = {
   kasirId: string | null
   ownerId: string | null
   nominal: runtime.Decimal | null
-  nominalDisetujui: runtime.Decimal | null
   jenis: $Enums.JenisPengeluaran | null
   keterangan: string | null
   status: $Enums.StatusPengajuan | null
@@ -68,6 +67,7 @@ export type PengajuanPengeluaranMaxAggregateOutputType = {
   ditolakPada: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  nominalDisetujui: runtime.Decimal | null
 }
 
 export type PengajuanPengeluaranCountAggregateOutputType = {
@@ -75,7 +75,6 @@ export type PengajuanPengeluaranCountAggregateOutputType = {
   kasirId: number
   ownerId: number
   nominal: number
-  nominalDisetujui: number
   jenis: number
   keterangan: number
   status: number
@@ -85,6 +84,7 @@ export type PengajuanPengeluaranCountAggregateOutputType = {
   ditolakPada: number
   createdAt: number
   updatedAt: number
+  nominalDisetujui: number
   _all: number
 }
 
@@ -104,7 +104,6 @@ export type PengajuanPengeluaranMinAggregateInputType = {
   kasirId?: true
   ownerId?: true
   nominal?: true
-  nominalDisetujui?: true
   jenis?: true
   keterangan?: true
   status?: true
@@ -114,6 +113,7 @@ export type PengajuanPengeluaranMinAggregateInputType = {
   ditolakPada?: true
   createdAt?: true
   updatedAt?: true
+  nominalDisetujui?: true
 }
 
 export type PengajuanPengeluaranMaxAggregateInputType = {
@@ -121,7 +121,6 @@ export type PengajuanPengeluaranMaxAggregateInputType = {
   kasirId?: true
   ownerId?: true
   nominal?: true
-  nominalDisetujui?: true
   jenis?: true
   keterangan?: true
   status?: true
@@ -131,6 +130,7 @@ export type PengajuanPengeluaranMaxAggregateInputType = {
   ditolakPada?: true
   createdAt?: true
   updatedAt?: true
+  nominalDisetujui?: true
 }
 
 export type PengajuanPengeluaranCountAggregateInputType = {
@@ -138,7 +138,6 @@ export type PengajuanPengeluaranCountAggregateInputType = {
   kasirId?: true
   ownerId?: true
   nominal?: true
-  nominalDisetujui?: true
   jenis?: true
   keterangan?: true
   status?: true
@@ -148,6 +147,7 @@ export type PengajuanPengeluaranCountAggregateInputType = {
   ditolakPada?: true
   createdAt?: true
   updatedAt?: true
+  nominalDisetujui?: true
   _all?: true
 }
 
@@ -242,7 +242,6 @@ export type PengajuanPengeluaranGroupByOutputType = {
   kasirId: string
   ownerId: string | null
   nominal: runtime.Decimal
-  nominalDisetujui: runtime.Decimal | null
   jenis: $Enums.JenisPengeluaran
   keterangan: string | null
   status: $Enums.StatusPengajuan
@@ -252,6 +251,7 @@ export type PengajuanPengeluaranGroupByOutputType = {
   ditolakPada: Date | null
   createdAt: Date
   updatedAt: Date
+  nominalDisetujui: runtime.Decimal | null
   _count: PengajuanPengeluaranCountAggregateOutputType | null
   _avg: PengajuanPengeluaranAvgAggregateOutputType | null
   _sum: PengajuanPengeluaranSumAggregateOutputType | null
@@ -282,7 +282,6 @@ export type PengajuanPengeluaranWhereInput = {
   kasirId?: Prisma.StringFilter<"PengajuanPengeluaran"> | string
   ownerId?: Prisma.StringNullableFilter<"PengajuanPengeluaran"> | string | null
   nominal?: Prisma.DecimalFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.DecimalNullableFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFilter<"PengajuanPengeluaran"> | $Enums.JenisPengeluaran
   keterangan?: Prisma.StringNullableFilter<"PengajuanPengeluaran"> | string | null
   status?: Prisma.EnumStatusPengajuanFilter<"PengajuanPengeluaran"> | $Enums.StatusPengajuan
@@ -292,9 +291,10 @@ export type PengajuanPengeluaranWhereInput = {
   ditolakPada?: Prisma.DateTimeNullableFilter<"PengajuanPengeluaran"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PengajuanPengeluaran"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PengajuanPengeluaran"> | Date | string
+  nominalDisetujui?: Prisma.DecimalNullableFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  jurnal?: Prisma.XOR<Prisma.JurnalNullableScalarRelationFilter, Prisma.JurnalWhereInput> | null
   kasir?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  jurnal?: Prisma.XOR<Prisma.JurnalNullableScalarRelationFilter, Prisma.JurnalWhereInput> | null
 }
 
 export type PengajuanPengeluaranOrderByWithRelationInput = {
@@ -302,7 +302,6 @@ export type PengajuanPengeluaranOrderByWithRelationInput = {
   kasirId?: Prisma.SortOrder
   ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   nominal?: Prisma.SortOrder
-  nominalDisetujui?: Prisma.SortOrderInput | Prisma.SortOrder
   jenis?: Prisma.SortOrder
   keterangan?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -312,9 +311,10 @@ export type PengajuanPengeluaranOrderByWithRelationInput = {
   ditolakPada?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nominalDisetujui?: Prisma.SortOrderInput | Prisma.SortOrder
+  jurnal?: Prisma.JurnalOrderByWithRelationInput
   kasir?: Prisma.UserOrderByWithRelationInput
   owner?: Prisma.UserOrderByWithRelationInput
-  jurnal?: Prisma.JurnalOrderByWithRelationInput
 }
 
 export type PengajuanPengeluaranWhereUniqueInput = Prisma.AtLeast<{
@@ -325,7 +325,6 @@ export type PengajuanPengeluaranWhereUniqueInput = Prisma.AtLeast<{
   kasirId?: Prisma.StringFilter<"PengajuanPengeluaran"> | string
   ownerId?: Prisma.StringNullableFilter<"PengajuanPengeluaran"> | string | null
   nominal?: Prisma.DecimalFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.DecimalNullableFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFilter<"PengajuanPengeluaran"> | $Enums.JenisPengeluaran
   keterangan?: Prisma.StringNullableFilter<"PengajuanPengeluaran"> | string | null
   status?: Prisma.EnumStatusPengajuanFilter<"PengajuanPengeluaran"> | $Enums.StatusPengajuan
@@ -335,9 +334,10 @@ export type PengajuanPengeluaranWhereUniqueInput = Prisma.AtLeast<{
   ditolakPada?: Prisma.DateTimeNullableFilter<"PengajuanPengeluaran"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PengajuanPengeluaran"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PengajuanPengeluaran"> | Date | string
+  nominalDisetujui?: Prisma.DecimalNullableFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  jurnal?: Prisma.XOR<Prisma.JurnalNullableScalarRelationFilter, Prisma.JurnalWhereInput> | null
   kasir?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-  jurnal?: Prisma.XOR<Prisma.JurnalNullableScalarRelationFilter, Prisma.JurnalWhereInput> | null
 }, "id">
 
 export type PengajuanPengeluaranOrderByWithAggregationInput = {
@@ -345,7 +345,6 @@ export type PengajuanPengeluaranOrderByWithAggregationInput = {
   kasirId?: Prisma.SortOrder
   ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   nominal?: Prisma.SortOrder
-  nominalDisetujui?: Prisma.SortOrderInput | Prisma.SortOrder
   jenis?: Prisma.SortOrder
   keterangan?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -355,6 +354,7 @@ export type PengajuanPengeluaranOrderByWithAggregationInput = {
   ditolakPada?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nominalDisetujui?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PengajuanPengeluaranCountOrderByAggregateInput
   _avg?: Prisma.PengajuanPengeluaranAvgOrderByAggregateInput
   _max?: Prisma.PengajuanPengeluaranMaxOrderByAggregateInput
@@ -370,7 +370,6 @@ export type PengajuanPengeluaranScalarWhereWithAggregatesInput = {
   kasirId?: Prisma.StringWithAggregatesFilter<"PengajuanPengeluaran"> | string
   ownerId?: Prisma.StringNullableWithAggregatesFilter<"PengajuanPengeluaran"> | string | null
   nominal?: Prisma.DecimalWithAggregatesFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.DecimalNullableWithAggregatesFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranWithAggregatesFilter<"PengajuanPengeluaran"> | $Enums.JenisPengeluaran
   keterangan?: Prisma.StringNullableWithAggregatesFilter<"PengajuanPengeluaran"> | string | null
   status?: Prisma.EnumStatusPengajuanWithAggregatesFilter<"PengajuanPengeluaran"> | $Enums.StatusPengajuan
@@ -380,12 +379,12 @@ export type PengajuanPengeluaranScalarWhereWithAggregatesInput = {
   ditolakPada?: Prisma.DateTimeNullableWithAggregatesFilter<"PengajuanPengeluaran"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PengajuanPengeluaran"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PengajuanPengeluaran"> | Date | string
+  nominalDisetujui?: Prisma.DecimalNullableWithAggregatesFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranCreateInput = {
   id?: string
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -394,9 +393,10 @@ export type PengajuanPengeluaranCreateInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  jurnal?: Prisma.JurnalCreateNestedOneWithoutPengajuanPengeluaransInput
   kasir: Prisma.UserCreateNestedOneWithoutPengajuanKasirInput
   owner?: Prisma.UserCreateNestedOneWithoutPengajuanOwnerInput
-  jurnal?: Prisma.JurnalCreateNestedOneWithoutPengajuanPengeluaransInput
 }
 
 export type PengajuanPengeluaranUncheckedCreateInput = {
@@ -404,7 +404,6 @@ export type PengajuanPengeluaranUncheckedCreateInput = {
   kasirId: string
   ownerId?: string | null
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -414,12 +413,12 @@ export type PengajuanPengeluaranUncheckedCreateInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -428,9 +427,10 @@ export type PengajuanPengeluaranUpdateInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  jurnal?: Prisma.JurnalUpdateOneWithoutPengajuanPengeluaransNestedInput
   kasir?: Prisma.UserUpdateOneRequiredWithoutPengajuanKasirNestedInput
   owner?: Prisma.UserUpdateOneWithoutPengajuanOwnerNestedInput
-  jurnal?: Prisma.JurnalUpdateOneWithoutPengajuanPengeluaransNestedInput
 }
 
 export type PengajuanPengeluaranUncheckedUpdateInput = {
@@ -438,7 +438,6 @@ export type PengajuanPengeluaranUncheckedUpdateInput = {
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -448,6 +447,7 @@ export type PengajuanPengeluaranUncheckedUpdateInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranCreateManyInput = {
@@ -455,7 +455,6 @@ export type PengajuanPengeluaranCreateManyInput = {
   kasirId: string
   ownerId?: string | null
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -465,12 +464,12 @@ export type PengajuanPengeluaranCreateManyInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -479,6 +478,7 @@ export type PengajuanPengeluaranUpdateManyMutationInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUncheckedUpdateManyInput = {
@@ -486,7 +486,6 @@ export type PengajuanPengeluaranUncheckedUpdateManyInput = {
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -496,6 +495,7 @@ export type PengajuanPengeluaranUncheckedUpdateManyInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranListRelationFilter = {
@@ -513,7 +513,6 @@ export type PengajuanPengeluaranCountOrderByAggregateInput = {
   kasirId?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nominal?: Prisma.SortOrder
-  nominalDisetujui?: Prisma.SortOrder
   jenis?: Prisma.SortOrder
   keterangan?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -523,6 +522,7 @@ export type PengajuanPengeluaranCountOrderByAggregateInput = {
   ditolakPada?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nominalDisetujui?: Prisma.SortOrder
 }
 
 export type PengajuanPengeluaranAvgOrderByAggregateInput = {
@@ -535,7 +535,6 @@ export type PengajuanPengeluaranMaxOrderByAggregateInput = {
   kasirId?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nominal?: Prisma.SortOrder
-  nominalDisetujui?: Prisma.SortOrder
   jenis?: Prisma.SortOrder
   keterangan?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -545,6 +544,7 @@ export type PengajuanPengeluaranMaxOrderByAggregateInput = {
   ditolakPada?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nominalDisetujui?: Prisma.SortOrder
 }
 
 export type PengajuanPengeluaranMinOrderByAggregateInput = {
@@ -552,7 +552,6 @@ export type PengajuanPengeluaranMinOrderByAggregateInput = {
   kasirId?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nominal?: Prisma.SortOrder
-  nominalDisetujui?: Prisma.SortOrder
   jenis?: Prisma.SortOrder
   keterangan?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -562,6 +561,7 @@ export type PengajuanPengeluaranMinOrderByAggregateInput = {
   ditolakPada?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  nominalDisetujui?: Prisma.SortOrder
 }
 
 export type PengajuanPengeluaranSumOrderByAggregateInput = {
@@ -706,7 +706,6 @@ export type EnumStatusPengajuanFieldUpdateOperationsInput = {
 export type PengajuanPengeluaranCreateWithoutKasirInput = {
   id?: string
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -715,15 +714,15 @@ export type PengajuanPengeluaranCreateWithoutKasirInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  owner?: Prisma.UserCreateNestedOneWithoutPengajuanOwnerInput
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jurnal?: Prisma.JurnalCreateNestedOneWithoutPengajuanPengeluaransInput
+  owner?: Prisma.UserCreateNestedOneWithoutPengajuanOwnerInput
 }
 
 export type PengajuanPengeluaranUncheckedCreateWithoutKasirInput = {
   id?: string
   ownerId?: string | null
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -733,6 +732,7 @@ export type PengajuanPengeluaranUncheckedCreateWithoutKasirInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranCreateOrConnectWithoutKasirInput = {
@@ -748,7 +748,6 @@ export type PengajuanPengeluaranCreateManyKasirInputEnvelope = {
 export type PengajuanPengeluaranCreateWithoutOwnerInput = {
   id?: string
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -757,15 +756,15 @@ export type PengajuanPengeluaranCreateWithoutOwnerInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  kasir: Prisma.UserCreateNestedOneWithoutPengajuanKasirInput
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jurnal?: Prisma.JurnalCreateNestedOneWithoutPengajuanPengeluaransInput
+  kasir: Prisma.UserCreateNestedOneWithoutPengajuanKasirInput
 }
 
 export type PengajuanPengeluaranUncheckedCreateWithoutOwnerInput = {
   id?: string
   kasirId: string
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -775,6 +774,7 @@ export type PengajuanPengeluaranUncheckedCreateWithoutOwnerInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranCreateOrConnectWithoutOwnerInput = {
@@ -811,7 +811,6 @@ export type PengajuanPengeluaranScalarWhereInput = {
   kasirId?: Prisma.StringFilter<"PengajuanPengeluaran"> | string
   ownerId?: Prisma.StringNullableFilter<"PengajuanPengeluaran"> | string | null
   nominal?: Prisma.DecimalFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.DecimalNullableFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFilter<"PengajuanPengeluaran"> | $Enums.JenisPengeluaran
   keterangan?: Prisma.StringNullableFilter<"PengajuanPengeluaran"> | string | null
   status?: Prisma.EnumStatusPengajuanFilter<"PengajuanPengeluaran"> | $Enums.StatusPengajuan
@@ -821,6 +820,7 @@ export type PengajuanPengeluaranScalarWhereInput = {
   ditolakPada?: Prisma.DateTimeNullableFilter<"PengajuanPengeluaran"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PengajuanPengeluaran"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PengajuanPengeluaran"> | Date | string
+  nominalDisetujui?: Prisma.DecimalNullableFilter<"PengajuanPengeluaran"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUpsertWithWhereUniqueWithoutOwnerInput = {
@@ -842,7 +842,6 @@ export type PengajuanPengeluaranUpdateManyWithWhereWithoutOwnerInput = {
 export type PengajuanPengeluaranCreateWithoutJurnalInput = {
   id?: string
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -851,6 +850,7 @@ export type PengajuanPengeluaranCreateWithoutJurnalInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kasir: Prisma.UserCreateNestedOneWithoutPengajuanKasirInput
   owner?: Prisma.UserCreateNestedOneWithoutPengajuanOwnerInput
 }
@@ -860,7 +860,6 @@ export type PengajuanPengeluaranUncheckedCreateWithoutJurnalInput = {
   kasirId: string
   ownerId?: string | null
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -869,6 +868,7 @@ export type PengajuanPengeluaranUncheckedCreateWithoutJurnalInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranCreateOrConnectWithoutJurnalInput = {
@@ -901,7 +901,6 @@ export type PengajuanPengeluaranCreateManyKasirInput = {
   id?: string
   ownerId?: string | null
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -911,13 +910,13 @@ export type PengajuanPengeluaranCreateManyKasirInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranCreateManyOwnerInput = {
   id?: string
   kasirId: string
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -927,12 +926,12 @@ export type PengajuanPengeluaranCreateManyOwnerInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUpdateWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -941,15 +940,15 @@ export type PengajuanPengeluaranUpdateWithoutKasirInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneWithoutPengajuanOwnerNestedInput
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jurnal?: Prisma.JurnalUpdateOneWithoutPengajuanPengeluaransNestedInput
+  owner?: Prisma.UserUpdateOneWithoutPengajuanOwnerNestedInput
 }
 
 export type PengajuanPengeluaranUncheckedUpdateWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -959,13 +958,13 @@ export type PengajuanPengeluaranUncheckedUpdateWithoutKasirInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUncheckedUpdateManyWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -975,12 +974,12 @@ export type PengajuanPengeluaranUncheckedUpdateManyWithoutKasirInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUpdateWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -989,15 +988,15 @@ export type PengajuanPengeluaranUpdateWithoutOwnerInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  kasir?: Prisma.UserUpdateOneRequiredWithoutPengajuanKasirNestedInput
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jurnal?: Prisma.JurnalUpdateOneWithoutPengajuanPengeluaransNestedInput
+  kasir?: Prisma.UserUpdateOneRequiredWithoutPengajuanKasirNestedInput
 }
 
 export type PengajuanPengeluaranUncheckedUpdateWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -1007,13 +1006,13 @@ export type PengajuanPengeluaranUncheckedUpdateWithoutOwnerInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -1023,6 +1022,7 @@ export type PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranCreateManyJurnalInput = {
@@ -1030,7 +1030,6 @@ export type PengajuanPengeluaranCreateManyJurnalInput = {
   kasirId: string
   ownerId?: string | null
   nominal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis: $Enums.JenisPengeluaran
   keterangan?: string | null
   status?: $Enums.StatusPengajuan
@@ -1039,12 +1038,12 @@ export type PengajuanPengeluaranCreateManyJurnalInput = {
   ditolakPada?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  nominalDisetujui?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUpdateWithoutJurnalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -1053,6 +1052,7 @@ export type PengajuanPengeluaranUpdateWithoutJurnalInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kasir?: Prisma.UserUpdateOneRequiredWithoutPengajuanKasirNestedInput
   owner?: Prisma.UserUpdateOneWithoutPengajuanOwnerNestedInput
 }
@@ -1062,7 +1062,6 @@ export type PengajuanPengeluaranUncheckedUpdateWithoutJurnalInput = {
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -1071,6 +1070,7 @@ export type PengajuanPengeluaranUncheckedUpdateWithoutJurnalInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type PengajuanPengeluaranUncheckedUpdateManyWithoutJurnalInput = {
@@ -1078,7 +1078,6 @@ export type PengajuanPengeluaranUncheckedUpdateManyWithoutJurnalInput = {
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nominal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   jenis?: Prisma.EnumJenisPengeluaranFieldUpdateOperationsInput | $Enums.JenisPengeluaran
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStatusPengajuanFieldUpdateOperationsInput | $Enums.StatusPengajuan
@@ -1087,6 +1086,7 @@ export type PengajuanPengeluaranUncheckedUpdateManyWithoutJurnalInput = {
   ditolakPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nominalDisetujui?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 
@@ -1096,7 +1096,6 @@ export type PengajuanPengeluaranSelect<ExtArgs extends runtime.Types.Extensions.
   kasirId?: boolean
   ownerId?: boolean
   nominal?: boolean
-  nominalDisetujui?: boolean
   jenis?: boolean
   keterangan?: boolean
   status?: boolean
@@ -1106,9 +1105,10 @@ export type PengajuanPengeluaranSelect<ExtArgs extends runtime.Types.Extensions.
   ditolakPada?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nominalDisetujui?: boolean
+  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.PengajuanPengeluaran$ownerArgs<ExtArgs>
-  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
 }, ExtArgs["result"]["pengajuanPengeluaran"]>
 
 export type PengajuanPengeluaranSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1116,7 +1116,6 @@ export type PengajuanPengeluaranSelectCreateManyAndReturn<ExtArgs extends runtim
   kasirId?: boolean
   ownerId?: boolean
   nominal?: boolean
-  nominalDisetujui?: boolean
   jenis?: boolean
   keterangan?: boolean
   status?: boolean
@@ -1126,9 +1125,10 @@ export type PengajuanPengeluaranSelectCreateManyAndReturn<ExtArgs extends runtim
   ditolakPada?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nominalDisetujui?: boolean
+  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.PengajuanPengeluaran$ownerArgs<ExtArgs>
-  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
 }, ExtArgs["result"]["pengajuanPengeluaran"]>
 
 export type PengajuanPengeluaranSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1136,7 +1136,6 @@ export type PengajuanPengeluaranSelectUpdateManyAndReturn<ExtArgs extends runtim
   kasirId?: boolean
   ownerId?: boolean
   nominal?: boolean
-  nominalDisetujui?: boolean
   jenis?: boolean
   keterangan?: boolean
   status?: boolean
@@ -1146,9 +1145,10 @@ export type PengajuanPengeluaranSelectUpdateManyAndReturn<ExtArgs extends runtim
   ditolakPada?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nominalDisetujui?: boolean
+  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.PengajuanPengeluaran$ownerArgs<ExtArgs>
-  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
 }, ExtArgs["result"]["pengajuanPengeluaran"]>
 
 export type PengajuanPengeluaranSelectScalar = {
@@ -1156,7 +1156,6 @@ export type PengajuanPengeluaranSelectScalar = {
   kasirId?: boolean
   ownerId?: boolean
   nominal?: boolean
-  nominalDisetujui?: boolean
   jenis?: boolean
   keterangan?: boolean
   status?: boolean
@@ -1166,38 +1165,38 @@ export type PengajuanPengeluaranSelectScalar = {
   ditolakPada?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  nominalDisetujui?: boolean
 }
 
-export type PengajuanPengeluaranOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "kasirId" | "ownerId" | "nominal" | "nominalDisetujui" | "jenis" | "keterangan" | "status" | "alasanPenolakan" | "jurnalId" | "disetujuiPada" | "ditolakPada" | "createdAt" | "updatedAt", ExtArgs["result"]["pengajuanPengeluaran"]>
+export type PengajuanPengeluaranOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "kasirId" | "ownerId" | "nominal" | "jenis" | "keterangan" | "status" | "alasanPenolakan" | "jurnalId" | "disetujuiPada" | "ditolakPada" | "createdAt" | "updatedAt" | "nominalDisetujui", ExtArgs["result"]["pengajuanPengeluaran"]>
 export type PengajuanPengeluaranInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.PengajuanPengeluaran$ownerArgs<ExtArgs>
-  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
 }
 export type PengajuanPengeluaranIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.PengajuanPengeluaran$ownerArgs<ExtArgs>
-  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
 }
 export type PengajuanPengeluaranIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.PengajuanPengeluaran$ownerArgs<ExtArgs>
-  jurnal?: boolean | Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>
 }
 
 export type $PengajuanPengeluaranPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PengajuanPengeluaran"
   objects: {
+    jurnal: Prisma.$JurnalPayload<ExtArgs> | null
     kasir: Prisma.$UserPayload<ExtArgs>
     owner: Prisma.$UserPayload<ExtArgs> | null
-    jurnal: Prisma.$JurnalPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     kasirId: string
     ownerId: string | null
     nominal: runtime.Decimal
-    nominalDisetujui: runtime.Decimal | null
     jenis: $Enums.JenisPengeluaran
     keterangan: string | null
     status: $Enums.StatusPengajuan
@@ -1207,6 +1206,7 @@ export type $PengajuanPengeluaranPayload<ExtArgs extends runtime.Types.Extension
     ditolakPada: Date | null
     createdAt: Date
     updatedAt: Date
+    nominalDisetujui: runtime.Decimal | null
   }, ExtArgs["result"]["pengajuanPengeluaran"]>
   composites: {}
 }
@@ -1601,9 +1601,9 @@ readonly fields: PengajuanPengeluaranFieldRefs;
  */
 export interface Prisma__PengajuanPengeluaranClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  jurnal<T extends Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>>): Prisma.Prisma__JurnalClient<runtime.Types.Result.GetResult<Prisma.$JurnalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   kasir<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   owner<T extends Prisma.PengajuanPengeluaran$ownerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PengajuanPengeluaran$ownerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  jurnal<T extends Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PengajuanPengeluaran$jurnalArgs<ExtArgs>>): Prisma.Prisma__JurnalClient<runtime.Types.Result.GetResult<Prisma.$JurnalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1637,7 +1637,6 @@ export interface PengajuanPengeluaranFieldRefs {
   readonly kasirId: Prisma.FieldRef<"PengajuanPengeluaran", 'String'>
   readonly ownerId: Prisma.FieldRef<"PengajuanPengeluaran", 'String'>
   readonly nominal: Prisma.FieldRef<"PengajuanPengeluaran", 'Decimal'>
-  readonly nominalDisetujui: Prisma.FieldRef<"PengajuanPengeluaran", 'Decimal'>
   readonly jenis: Prisma.FieldRef<"PengajuanPengeluaran", 'JenisPengeluaran'>
   readonly keterangan: Prisma.FieldRef<"PengajuanPengeluaran", 'String'>
   readonly status: Prisma.FieldRef<"PengajuanPengeluaran", 'StatusPengajuan'>
@@ -1647,6 +1646,7 @@ export interface PengajuanPengeluaranFieldRefs {
   readonly ditolakPada: Prisma.FieldRef<"PengajuanPengeluaran", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"PengajuanPengeluaran", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PengajuanPengeluaran", 'DateTime'>
+  readonly nominalDisetujui: Prisma.FieldRef<"PengajuanPengeluaran", 'Decimal'>
 }
     
 
@@ -2048,25 +2048,6 @@ export type PengajuanPengeluaranDeleteManyArgs<ExtArgs extends runtime.Types.Ext
 }
 
 /**
- * PengajuanPengeluaran.owner
- */
-export type PengajuanPengeluaran$ownerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the User
-   */
-  select?: Prisma.UserSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the User
-   */
-  omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
-}
-
-/**
  * PengajuanPengeluaran.jurnal
  */
 export type PengajuanPengeluaran$jurnalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2083,6 +2064,25 @@ export type PengajuanPengeluaran$jurnalArgs<ExtArgs extends runtime.Types.Extens
    */
   include?: Prisma.JurnalInclude<ExtArgs> | null
   where?: Prisma.JurnalWhereInput
+}
+
+/**
+ * PengajuanPengeluaran.owner
+ */
+export type PengajuanPengeluaran$ownerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

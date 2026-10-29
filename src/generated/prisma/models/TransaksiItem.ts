@@ -240,8 +240,8 @@ export type TransaksiItemWhereInput = {
   harga?: Prisma.DecimalFilter<"TransaksiItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   qty?: Prisma.IntFilter<"TransaksiItem"> | number
   subtotal?: Prisma.DecimalFilter<"TransaksiItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   produk?: Prisma.XOR<Prisma.ProdukNullableScalarRelationFilter, Prisma.ProdukWhereInput> | null
+  transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   modifiers?: Prisma.TransaksiItemModifierListRelationFilter
   returItems?: Prisma.ReturItemListRelationFilter
 }
@@ -254,8 +254,8 @@ export type TransaksiItemOrderByWithRelationInput = {
   harga?: Prisma.SortOrder
   qty?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
-  transaksi?: Prisma.TransaksiOrderByWithRelationInput
   produk?: Prisma.ProdukOrderByWithRelationInput
+  transaksi?: Prisma.TransaksiOrderByWithRelationInput
   modifiers?: Prisma.TransaksiItemModifierOrderByRelationAggregateInput
   returItems?: Prisma.ReturItemOrderByRelationAggregateInput
 }
@@ -271,8 +271,8 @@ export type TransaksiItemWhereUniqueInput = Prisma.AtLeast<{
   harga?: Prisma.DecimalFilter<"TransaksiItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   qty?: Prisma.IntFilter<"TransaksiItem"> | number
   subtotal?: Prisma.DecimalFilter<"TransaksiItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   produk?: Prisma.XOR<Prisma.ProdukNullableScalarRelationFilter, Prisma.ProdukWhereInput> | null
+  transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   modifiers?: Prisma.TransaksiItemModifierListRelationFilter
   returItems?: Prisma.ReturItemListRelationFilter
 }, "id">
@@ -311,8 +311,8 @@ export type TransaksiItemCreateInput = {
   harga: runtime.Decimal | runtime.DecimalJsLike | number | string
   qty: number
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   produk?: Prisma.ProdukCreateNestedOneWithoutItemInput
+  transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   modifiers?: Prisma.TransaksiItemModifierCreateNestedManyWithoutTransaksiItemInput
   returItems?: Prisma.ReturItemCreateNestedManyWithoutTransaksiItemInput
 }
@@ -335,8 +335,8 @@ export type TransaksiItemUpdateInput = {
   harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   produk?: Prisma.ProdukUpdateOneWithoutItemNestedInput
+  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   modifiers?: Prisma.TransaksiItemModifierUpdateManyWithoutTransaksiItemNestedInput
   returItems?: Prisma.ReturItemUpdateManyWithoutTransaksiItemNestedInput
 }
@@ -672,8 +672,8 @@ export type TransaksiItemCreateWithoutModifiersInput = {
   harga: runtime.Decimal | runtime.DecimalJsLike | number | string
   qty: number
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   produk?: Prisma.ProdukCreateNestedOneWithoutItemInput
+  transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   returItems?: Prisma.ReturItemCreateNestedManyWithoutTransaksiItemInput
 }
 
@@ -710,8 +710,8 @@ export type TransaksiItemUpdateWithoutModifiersInput = {
   harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   produk?: Prisma.ProdukUpdateOneWithoutItemNestedInput
+  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   returItems?: Prisma.ReturItemUpdateManyWithoutTransaksiItemNestedInput
 }
 
@@ -732,8 +732,8 @@ export type TransaksiItemCreateWithoutReturItemsInput = {
   harga: runtime.Decimal | runtime.DecimalJsLike | number | string
   qty: number
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   produk?: Prisma.ProdukCreateNestedOneWithoutItemInput
+  transaksi: Prisma.TransaksiCreateNestedOneWithoutItemsInput
   modifiers?: Prisma.TransaksiItemModifierCreateNestedManyWithoutTransaksiItemInput
 }
 
@@ -770,8 +770,8 @@ export type TransaksiItemUpdateWithoutReturItemsInput = {
   harga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   qty?: Prisma.IntFieldUpdateOperationsInput | number
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   produk?: Prisma.ProdukUpdateOneWithoutItemNestedInput
+  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutItemsNestedInput
   modifiers?: Prisma.TransaksiItemModifierUpdateManyWithoutTransaksiItemNestedInput
 }
 
@@ -914,8 +914,8 @@ export type TransaksiItemSelect<ExtArgs extends runtime.Types.Extensions.Interna
   harga?: boolean
   qty?: boolean
   subtotal?: boolean
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.TransaksiItem$produkArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   modifiers?: boolean | Prisma.TransaksiItem$modifiersArgs<ExtArgs>
   returItems?: boolean | Prisma.TransaksiItem$returItemsArgs<ExtArgs>
   _count?: boolean | Prisma.TransaksiItemCountOutputTypeDefaultArgs<ExtArgs>
@@ -929,8 +929,8 @@ export type TransaksiItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   harga?: boolean
   qty?: boolean
   subtotal?: boolean
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.TransaksiItem$produkArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["transaksiItem"]>
 
 export type TransaksiItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -941,8 +941,8 @@ export type TransaksiItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   harga?: boolean
   qty?: boolean
   subtotal?: boolean
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.TransaksiItem$produkArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["transaksiItem"]>
 
 export type TransaksiItemSelectScalar = {
@@ -957,26 +957,26 @@ export type TransaksiItemSelectScalar = {
 
 export type TransaksiItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transaksiId" | "produkId" | "namaProduk" | "harga" | "qty" | "subtotal", ExtArgs["result"]["transaksiItem"]>
 export type TransaksiItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.TransaksiItem$produkArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   modifiers?: boolean | Prisma.TransaksiItem$modifiersArgs<ExtArgs>
   returItems?: boolean | Prisma.TransaksiItem$returItemsArgs<ExtArgs>
   _count?: boolean | Prisma.TransaksiItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TransaksiItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.TransaksiItem$produkArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
 }
 export type TransaksiItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.TransaksiItem$produkArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
 }
 
 export type $TransaksiItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TransaksiItem"
   objects: {
-    transaksi: Prisma.$TransaksiPayload<ExtArgs>
     produk: Prisma.$ProdukPayload<ExtArgs> | null
+    transaksi: Prisma.$TransaksiPayload<ExtArgs>
     modifiers: Prisma.$TransaksiItemModifierPayload<ExtArgs>[]
     returItems: Prisma.$ReturItemPayload<ExtArgs>[]
   }
@@ -1382,8 +1382,8 @@ readonly fields: TransaksiItemFieldRefs;
  */
 export interface Prisma__TransaksiItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  transaksi<T extends Prisma.TransaksiDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiDefaultArgs<ExtArgs>>): Prisma.Prisma__TransaksiClient<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   produk<T extends Prisma.TransaksiItem$produkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiItem$produkArgs<ExtArgs>>): Prisma.Prisma__ProdukClient<runtime.Types.Result.GetResult<Prisma.$ProdukPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  transaksi<T extends Prisma.TransaksiDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiDefaultArgs<ExtArgs>>): Prisma.Prisma__TransaksiClient<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   modifiers<T extends Prisma.TransaksiItem$modifiersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiItem$modifiersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiItemModifierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   returItems<T extends Prisma.TransaksiItem$returItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiItem$returItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReturItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**

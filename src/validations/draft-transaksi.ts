@@ -40,10 +40,9 @@ export const BuatDraftTransaksiSchema = z
     path: ['statusPesanan'],
   })
 
-// `Input` = bentuk yang dikirim klien (default boleh tidak diisi);
-// `Output` = hasil parse dengan default terisi, dipakai handler server.
+// `Input` = bentuk yang dikirim klien (default boleh tidak diisi); hasil parse
+// dengan default terisi dipakai handler server.
 export type BuatDraftTransaksiInput = z.input<typeof BuatDraftTransaksiSchema>
-export type BuatDraftTransaksiOutput = z.output<typeof BuatDraftTransaksiSchema>
 
 // ─── Review Draft Transaksi (kasir) ───
 export const DraftIdSchema = z.object({

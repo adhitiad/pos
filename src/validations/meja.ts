@@ -23,5 +23,12 @@ export const QrMejaSchema = z.object({
   id: z.string().min(1).max(64),
 })
 
+export const GenerateMejaSchema = z.object({
+  dari: z.coerce.number().int().min(1).max(9999),
+  sampai: z.coerce.number().int().min(1).max(9999),
+  aktif: z.boolean().default(true),
+})
+
 export type MejaInput = z.infer<typeof MejaInputSchema>
 export type UpdateMejaInput = z.infer<typeof UpdateMejaSchema>
+export type GenerateMejaInput = z.infer<typeof GenerateMejaSchema>

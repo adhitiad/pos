@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { apiError, apiPengguna, ok } from '#/server/api'
+import { apiError, apiPengguna, bacaJsonTerbatas, ok } from '#/server/api'
 import { AKSES } from '#/server/peran'
 import { buatPrintJob, daftarPrintJob } from '#/server/percetakan'
 import { rateLimitPrinter } from '#/server/rateLimit'
@@ -43,7 +43,8 @@ export const Route = createFileRoute('/api/v1/percetakan/')({
             20,
           )
           if (batas) return batas
-          const data = BuatPrintJobSchema.parse(await request.json())
+          const body = await bacaJsonTerbatas(request, 65536)
+          const data = BuatPrintJobSchema.parse(body)
           return ok(
             await buatPrintJob(
               data,

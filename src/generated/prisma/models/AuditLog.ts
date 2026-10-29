@@ -30,8 +30,8 @@ export type AuditLogMinAggregateOutputType = {
   action: string | null
   entity: string | null
   entityId: string | null
-  catatan: string | null
   timestamp: Date | null
+  catatan: string | null
 }
 
 export type AuditLogMaxAggregateOutputType = {
@@ -40,8 +40,8 @@ export type AuditLogMaxAggregateOutputType = {
   action: string | null
   entity: string | null
   entityId: string | null
-  catatan: string | null
   timestamp: Date | null
+  catatan: string | null
 }
 
 export type AuditLogCountAggregateOutputType = {
@@ -52,8 +52,8 @@ export type AuditLogCountAggregateOutputType = {
   entityId: number
   before: number
   after: number
-  catatan: number
   timestamp: number
+  catatan: number
   _all: number
 }
 
@@ -64,8 +64,8 @@ export type AuditLogMinAggregateInputType = {
   action?: true
   entity?: true
   entityId?: true
-  catatan?: true
   timestamp?: true
+  catatan?: true
 }
 
 export type AuditLogMaxAggregateInputType = {
@@ -74,8 +74,8 @@ export type AuditLogMaxAggregateInputType = {
   action?: true
   entity?: true
   entityId?: true
-  catatan?: true
   timestamp?: true
+  catatan?: true
 }
 
 export type AuditLogCountAggregateInputType = {
@@ -86,8 +86,8 @@ export type AuditLogCountAggregateInputType = {
   entityId?: true
   before?: true
   after?: true
-  catatan?: true
   timestamp?: true
+  catatan?: true
   _all?: true
 }
 
@@ -171,8 +171,8 @@ export type AuditLogGroupByOutputType = {
   entityId: string | null
   before: runtime.JsonValue | null
   after: runtime.JsonValue | null
-  catatan: string | null
   timestamp: Date
+  catatan: string | null
   _count: AuditLogCountAggregateOutputType | null
   _min: AuditLogMinAggregateOutputType | null
   _max: AuditLogMaxAggregateOutputType | null
@@ -204,8 +204,8 @@ export type AuditLogWhereInput = {
   entityId?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   before?: Prisma.JsonNullableFilter<"AuditLog">
   after?: Prisma.JsonNullableFilter<"AuditLog">
-  catatan?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   timestamp?: Prisma.DateTimeFilter<"AuditLog"> | Date | string
+  catatan?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -217,8 +217,8 @@ export type AuditLogOrderByWithRelationInput = {
   entityId?: Prisma.SortOrderInput | Prisma.SortOrder
   before?: Prisma.SortOrderInput | Prisma.SortOrder
   after?: Prisma.SortOrderInput | Prisma.SortOrder
-  catatan?: Prisma.SortOrderInput | Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  catatan?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -233,8 +233,8 @@ export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
   entityId?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   before?: Prisma.JsonNullableFilter<"AuditLog">
   after?: Prisma.JsonNullableFilter<"AuditLog">
-  catatan?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   timestamp?: Prisma.DateTimeFilter<"AuditLog"> | Date | string
+  catatan?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
 
@@ -246,8 +246,8 @@ export type AuditLogOrderByWithAggregationInput = {
   entityId?: Prisma.SortOrderInput | Prisma.SortOrder
   before?: Prisma.SortOrderInput | Prisma.SortOrder
   after?: Prisma.SortOrderInput | Prisma.SortOrder
-  catatan?: Prisma.SortOrderInput | Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  catatan?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AuditLogCountOrderByAggregateInput
   _max?: Prisma.AuditLogMaxOrderByAggregateInput
   _min?: Prisma.AuditLogMinOrderByAggregateInput
@@ -264,8 +264,8 @@ export type AuditLogScalarWhereWithAggregatesInput = {
   entityId?: Prisma.StringNullableWithAggregatesFilter<"AuditLog"> | string | null
   before?: Prisma.JsonNullableWithAggregatesFilter<"AuditLog">
   after?: Prisma.JsonNullableWithAggregatesFilter<"AuditLog">
-  catatan?: Prisma.StringNullableWithAggregatesFilter<"AuditLog"> | string | null
   timestamp?: Prisma.DateTimeWithAggregatesFilter<"AuditLog"> | Date | string
+  catatan?: Prisma.StringNullableWithAggregatesFilter<"AuditLog"> | string | null
 }
 
 export type AuditLogCreateInput = {
@@ -275,8 +275,8 @@ export type AuditLogCreateInput = {
   entityId?: string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: string | null
   timestamp?: Date | string
+  catatan?: string | null
   user?: Prisma.UserCreateNestedOneWithoutAuditLogsInput
 }
 
@@ -288,8 +288,8 @@ export type AuditLogUncheckedCreateInput = {
   entityId?: string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: string | null
   timestamp?: Date | string
+  catatan?: string | null
 }
 
 export type AuditLogUpdateInput = {
@@ -299,8 +299,8 @@ export type AuditLogUpdateInput = {
   entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneWithoutAuditLogsNestedInput
 }
 
@@ -312,8 +312,8 @@ export type AuditLogUncheckedUpdateInput = {
   entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogCreateManyInput = {
@@ -324,8 +324,8 @@ export type AuditLogCreateManyInput = {
   entityId?: string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: string | null
   timestamp?: Date | string
+  catatan?: string | null
 }
 
 export type AuditLogUpdateManyMutationInput = {
@@ -335,8 +335,8 @@ export type AuditLogUpdateManyMutationInput = {
   entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogUncheckedUpdateManyInput = {
@@ -347,8 +347,8 @@ export type AuditLogUncheckedUpdateManyInput = {
   entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogListRelationFilter = {
@@ -369,8 +369,8 @@ export type AuditLogCountOrderByAggregateInput = {
   entityId?: Prisma.SortOrder
   before?: Prisma.SortOrder
   after?: Prisma.SortOrder
-  catatan?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  catatan?: Prisma.SortOrder
 }
 
 export type AuditLogMaxOrderByAggregateInput = {
@@ -379,8 +379,8 @@ export type AuditLogMaxOrderByAggregateInput = {
   action?: Prisma.SortOrder
   entity?: Prisma.SortOrder
   entityId?: Prisma.SortOrder
-  catatan?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  catatan?: Prisma.SortOrder
 }
 
 export type AuditLogMinOrderByAggregateInput = {
@@ -389,8 +389,8 @@ export type AuditLogMinOrderByAggregateInput = {
   action?: Prisma.SortOrder
   entity?: Prisma.SortOrder
   entityId?: Prisma.SortOrder
-  catatan?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  catatan?: Prisma.SortOrder
 }
 
 export type AuditLogCreateNestedManyWithoutUserInput = {
@@ -442,8 +442,8 @@ export type AuditLogCreateWithoutUserInput = {
   entityId?: string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: string | null
   timestamp?: Date | string
+  catatan?: string | null
 }
 
 export type AuditLogUncheckedCreateWithoutUserInput = {
@@ -453,8 +453,8 @@ export type AuditLogUncheckedCreateWithoutUserInput = {
   entityId?: string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: string | null
   timestamp?: Date | string
+  catatan?: string | null
 }
 
 export type AuditLogCreateOrConnectWithoutUserInput = {
@@ -494,8 +494,8 @@ export type AuditLogScalarWhereInput = {
   entityId?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   before?: Prisma.JsonNullableFilter<"AuditLog">
   after?: Prisma.JsonNullableFilter<"AuditLog">
-  catatan?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   timestamp?: Prisma.DateTimeFilter<"AuditLog"> | Date | string
+  catatan?: Prisma.StringNullableFilter<"AuditLog"> | string | null
 }
 
 export type AuditLogCreateManyUserInput = {
@@ -505,8 +505,8 @@ export type AuditLogCreateManyUserInput = {
   entityId?: string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: string | null
   timestamp?: Date | string
+  catatan?: string | null
 }
 
 export type AuditLogUpdateWithoutUserInput = {
@@ -516,8 +516,8 @@ export type AuditLogUpdateWithoutUserInput = {
   entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogUncheckedUpdateWithoutUserInput = {
@@ -527,8 +527,8 @@ export type AuditLogUncheckedUpdateWithoutUserInput = {
   entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutUserInput = {
@@ -538,8 +538,8 @@ export type AuditLogUncheckedUpdateManyWithoutUserInput = {
   entityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   before?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   after?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timestamp?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -552,8 +552,8 @@ export type AuditLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   entityId?: boolean
   before?: boolean
   after?: boolean
-  catatan?: boolean
   timestamp?: boolean
+  catatan?: boolean
   user?: boolean | Prisma.AuditLog$userArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
@@ -565,8 +565,8 @@ export type AuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   entityId?: boolean
   before?: boolean
   after?: boolean
-  catatan?: boolean
   timestamp?: boolean
+  catatan?: boolean
   user?: boolean | Prisma.AuditLog$userArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
@@ -578,8 +578,8 @@ export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   entityId?: boolean
   before?: boolean
   after?: boolean
-  catatan?: boolean
   timestamp?: boolean
+  catatan?: boolean
   user?: boolean | Prisma.AuditLog$userArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
@@ -591,11 +591,11 @@ export type AuditLogSelectScalar = {
   entityId?: boolean
   before?: boolean
   after?: boolean
-  catatan?: boolean
   timestamp?: boolean
+  catatan?: boolean
 }
 
-export type AuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "action" | "entity" | "entityId" | "before" | "after" | "catatan" | "timestamp", ExtArgs["result"]["auditLog"]>
+export type AuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "action" | "entity" | "entityId" | "before" | "after" | "timestamp" | "catatan", ExtArgs["result"]["auditLog"]>
 export type AuditLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.AuditLog$userArgs<ExtArgs>
 }
@@ -619,8 +619,8 @@ export type $AuditLogPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     entityId: string | null
     before: runtime.JsonValue | null
     after: runtime.JsonValue | null
-    catatan: string | null
     timestamp: Date
+    catatan: string | null
   }, ExtArgs["result"]["auditLog"]>
   composites: {}
 }
@@ -1052,8 +1052,8 @@ export interface AuditLogFieldRefs {
   readonly entityId: Prisma.FieldRef<"AuditLog", 'String'>
   readonly before: Prisma.FieldRef<"AuditLog", 'Json'>
   readonly after: Prisma.FieldRef<"AuditLog", 'Json'>
-  readonly catatan: Prisma.FieldRef<"AuditLog", 'String'>
   readonly timestamp: Prisma.FieldRef<"AuditLog", 'DateTime'>
+  readonly catatan: Prisma.FieldRef<"AuditLog", 'String'>
 }
     
 

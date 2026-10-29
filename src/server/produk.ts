@@ -1,5 +1,6 @@
 import { prisma } from '#/db'
 import type { Prisma } from '#/generated/prisma/client.js'
+import { nonHapus } from './nonHapus.js'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 import type { ProdukKartu } from '#/types/produk'
 import type { ProdukQueryInput } from '#/validations/produk'
@@ -118,6 +119,7 @@ export async function produkPage(query: ProdukQueryInput) {
         ? { aktif: false }
         : {}),
     ...(query.kategoriId ? { kategoriId: query.kategoriId } : {}),
+    deletedAt: null,
   }
 
   const urut: Prisma.ProdukOrderByWithRelationInput =
@@ -191,7 +193,7 @@ export async function produkTerpopuler(limit = 4): Promise<ProdukKartu[]> {
     .filter((id): id is string => id != null)
   if (ids.length === 0) return []
   const produk = await prisma.produk.findMany({
-    where: { id: { in: ids } },
+    where: nonHapus({ id: { in: ids } }),
     select: { id: true, nama: true, harga: true, gambar: true },
   })
   const peta = new Map(produk.map((p) => [p.id, p]))
@@ -213,7 +215,7 @@ export async function produkTerbaru(
   limit = BATAS_PRODUK_LANDING,
 ): Promise<ProdukKartu[]> {
   const produk = await prisma.produk.findMany({
-    where: { aktif: true },
+    where: nonHapus({ aktif: true }),
     orderBy: { createdAt: 'desc' },
     take: limit,
     select: { id: true, nama: true, harga: true, gambar: true },
@@ -281,7 +283,7 @@ function selangSeling(
 export async function produkLanding(limit = BATAS_PRODUK_LANDING) {
   const batas = Math.min(Math.max(limit, 1), 24)
   const aktif = await prisma.produk.findMany({
-    where: { aktif: true },
+    where: nonHapus({ aktif: true }),
     select: { id: true, nama: true, harga: true, gambar: true },
   })
 

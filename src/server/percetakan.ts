@@ -20,7 +20,6 @@ export {
   buatPrintJob,
   daftarPrintJob,
   gagalPrintJob,
-  muatJob,
   muatPayloadStruk,
   selesaiPrintJob,
 } from './printJob.js'

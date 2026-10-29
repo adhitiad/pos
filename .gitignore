@@ -25,6 +25,8 @@ coverage/
 /audit-*.md
 /audit-report/
 .vitest/
+# Hasil pemindaian keamanan (data, bukan kode).
+strix_runs/
 
 # Env — HANYA template yang di-commit. Jangan pernah commit rahasia.
 # `.env*` mencakup .env, .env.local, .env.production, dan .env.*.local.
@@ -49,3 +51,7 @@ todos.json
 opencode.json
 # Aturan/skill agen tetap lokal; jangan unggah ke repo/GitHub.
 .agents/
+# MCP server lokal: hanya untuk mesin developer, DILARANG di-commit.
+/mcp/
+# Tes MCP bergantung pada ./mcp sehingga ikut lokal (dev-only).
+/tests/vitest/mcp.test.ts

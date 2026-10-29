@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { nonHapus } from './nonHapus.js'
 
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 
@@ -16,12 +17,12 @@ export async function dashboardData() {
   const [agregat, transaksiHariIni, jumlahProduk, stokMenipis, jumlahMember] =
     await Promise.all([
       prisma.transaksi.aggregate({
-        where: whereHariIni,
+        where: nonHapus(whereHariIni),
         _sum: { total: true, subtotal: true, hpp: true },
         _count: { id: true },
       }),
       prisma.transaksi.findMany({
-        where: whereHariIni,
+        where: nonHapus(whereHariIni),
         orderBy: { tanggal: 'desc' },
         take: 50,
         select: {
@@ -42,8 +43,8 @@ export async function dashboardData() {
           },
         },
       }),
-      prisma.produk.count(),
-      prisma.produk.count({ where: { stok: { lte: 0 } } }),
+      prisma.produk.count({ where: nonHapus({}) }),
+      prisma.produk.count({ where: nonHapus({ stok: { lte: 0 } }) }),
       prisma.member.count(),
     ])
 

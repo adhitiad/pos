@@ -31,9 +31,9 @@ export type UserMinAggregateOutputType = {
   emailVerified: boolean | null
   image: string | null
   role: $Enums.Role | null
-  roleManual: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  roleManual: boolean | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -43,9 +43,9 @@ export type UserMaxAggregateOutputType = {
   emailVerified: boolean | null
   image: string | null
   role: $Enums.Role | null
-  roleManual: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  roleManual: boolean | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -55,9 +55,9 @@ export type UserCountAggregateOutputType = {
   emailVerified: number
   image: number
   role: number
-  roleManual: number
   createdAt: number
   updatedAt: number
+  roleManual: number
   _all: number
 }
 
@@ -69,9 +69,9 @@ export type UserMinAggregateInputType = {
   emailVerified?: true
   image?: true
   role?: true
-  roleManual?: true
   createdAt?: true
   updatedAt?: true
+  roleManual?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -81,9 +81,9 @@ export type UserMaxAggregateInputType = {
   emailVerified?: true
   image?: true
   role?: true
-  roleManual?: true
   createdAt?: true
   updatedAt?: true
+  roleManual?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -93,9 +93,9 @@ export type UserCountAggregateInputType = {
   emailVerified?: true
   image?: true
   role?: true
-  roleManual?: true
   createdAt?: true
   updatedAt?: true
+  roleManual?: true
   _all?: true
 }
 
@@ -178,9 +178,9 @@ export type UserGroupByOutputType = {
   emailVerified: boolean
   image: string | null
   role: $Enums.Role
-  roleManual: boolean
   createdAt: Date
   updatedAt: Date
+  roleManual: boolean
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -211,24 +211,24 @@ export type UserWhereInput = {
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  roleManual?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  sessions?: Prisma.SessionListRelationFilter
-  accounts?: Prisma.AccountListRelationFilter
-  transaksiKasir?: Prisma.TransaksiListRelationFilter
-  shifts?: Prisma.ShiftListRelationFilter
-  returs?: Prisma.ReturListRelationFilter
-  stokOprenames?: Prisma.StokOpnameListRelationFilter
-  pageVisits?: Prisma.PageVisitListRelationFilter
+  roleManual?: Prisma.BoolFilter<"User"> | boolean
   deviceVisits?: Prisma.DeviceVisitListRelationFilter
+  pageVisits?: Prisma.PageVisitListRelationFilter
   printers?: Prisma.PrinterListRelationFilter
+  shifts?: Prisma.ShiftListRelationFilter
+  transaksiKasir?: Prisma.TransaksiListRelationFilter
+  accounts?: Prisma.AccountListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-  pengajuanKasir?: Prisma.PengajuanPengeluaranListRelationFilter
-  pengajuanOwner?: Prisma.PengajuanPengeluaranListRelationFilter
-  notifikasi?: Prisma.NotifikasiListRelationFilter
   draftTransaksiKasir?: Prisma.DraftTransaksiListRelationFilter
   draftTransaksiReviewer?: Prisma.DraftTransaksiListRelationFilter
+  notifikasi?: Prisma.NotifikasiListRelationFilter
+  pengajuanKasir?: Prisma.PengajuanPengeluaranListRelationFilter
+  pengajuanOwner?: Prisma.PengajuanPengeluaranListRelationFilter
+  returs?: Prisma.ReturListRelationFilter
+  sessions?: Prisma.SessionListRelationFilter
+  stokOprenames?: Prisma.StokOpnameListRelationFilter
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditListRelationFilter
 }
 
@@ -239,24 +239,24 @@ export type UserOrderByWithRelationInput = {
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  roleManual?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  sessions?: Prisma.SessionOrderByRelationAggregateInput
-  accounts?: Prisma.AccountOrderByRelationAggregateInput
-  transaksiKasir?: Prisma.TransaksiOrderByRelationAggregateInput
-  shifts?: Prisma.ShiftOrderByRelationAggregateInput
-  returs?: Prisma.ReturOrderByRelationAggregateInput
-  stokOprenames?: Prisma.StokOpnameOrderByRelationAggregateInput
-  pageVisits?: Prisma.PageVisitOrderByRelationAggregateInput
+  roleManual?: Prisma.SortOrder
   deviceVisits?: Prisma.DeviceVisitOrderByRelationAggregateInput
+  pageVisits?: Prisma.PageVisitOrderByRelationAggregateInput
   printers?: Prisma.PrinterOrderByRelationAggregateInput
+  shifts?: Prisma.ShiftOrderByRelationAggregateInput
+  transaksiKasir?: Prisma.TransaksiOrderByRelationAggregateInput
+  accounts?: Prisma.AccountOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranOrderByRelationAggregateInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranOrderByRelationAggregateInput
-  notifikasi?: Prisma.NotifikasiOrderByRelationAggregateInput
   draftTransaksiKasir?: Prisma.DraftTransaksiOrderByRelationAggregateInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiOrderByRelationAggregateInput
+  notifikasi?: Prisma.NotifikasiOrderByRelationAggregateInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranOrderByRelationAggregateInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranOrderByRelationAggregateInput
+  returs?: Prisma.ReturOrderByRelationAggregateInput
+  sessions?: Prisma.SessionOrderByRelationAggregateInput
+  stokOprenames?: Prisma.StokOpnameOrderByRelationAggregateInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditOrderByRelationAggregateInput
 }
 
@@ -270,24 +270,24 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  roleManual?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  sessions?: Prisma.SessionListRelationFilter
-  accounts?: Prisma.AccountListRelationFilter
-  transaksiKasir?: Prisma.TransaksiListRelationFilter
-  shifts?: Prisma.ShiftListRelationFilter
-  returs?: Prisma.ReturListRelationFilter
-  stokOprenames?: Prisma.StokOpnameListRelationFilter
-  pageVisits?: Prisma.PageVisitListRelationFilter
+  roleManual?: Prisma.BoolFilter<"User"> | boolean
   deviceVisits?: Prisma.DeviceVisitListRelationFilter
+  pageVisits?: Prisma.PageVisitListRelationFilter
   printers?: Prisma.PrinterListRelationFilter
+  shifts?: Prisma.ShiftListRelationFilter
+  transaksiKasir?: Prisma.TransaksiListRelationFilter
+  accounts?: Prisma.AccountListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-  pengajuanKasir?: Prisma.PengajuanPengeluaranListRelationFilter
-  pengajuanOwner?: Prisma.PengajuanPengeluaranListRelationFilter
-  notifikasi?: Prisma.NotifikasiListRelationFilter
   draftTransaksiKasir?: Prisma.DraftTransaksiListRelationFilter
   draftTransaksiReviewer?: Prisma.DraftTransaksiListRelationFilter
+  notifikasi?: Prisma.NotifikasiListRelationFilter
+  pengajuanKasir?: Prisma.PengajuanPengeluaranListRelationFilter
+  pengajuanOwner?: Prisma.PengajuanPengeluaranListRelationFilter
+  returs?: Prisma.ReturListRelationFilter
+  sessions?: Prisma.SessionListRelationFilter
+  stokOprenames?: Prisma.StokOpnameListRelationFilter
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditListRelationFilter
 }, "id" | "email">
 
@@ -298,9 +298,9 @@ export type UserOrderByWithAggregationInput = {
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
-  roleManual?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  roleManual?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -316,9 +316,9 @@ export type UserScalarWhereWithAggregatesInput = {
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
-  roleManual?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  roleManual?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
 
 export type UserCreateInput = {
@@ -328,24 +328,24 @@ export type UserCreateInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -356,24 +356,24 @@ export type UserUncheckedCreateInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -384,24 +384,24 @@ export type UserUpdateInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -412,24 +412,24 @@ export type UserUncheckedUpdateInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -440,9 +440,9 @@ export type UserCreateManyInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
+  roleManual?: boolean
 }
 
 export type UserUpdateManyMutationInput = {
@@ -452,9 +452,9 @@ export type UserUpdateManyMutationInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -464,9 +464,9 @@ export type UserUncheckedUpdateManyInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -476,9 +476,9 @@ export type UserCountOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  roleManual?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  roleManual?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -488,9 +488,9 @@ export type UserMaxOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  roleManual?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  roleManual?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -500,9 +500,9 @@ export type UserMinOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  roleManual?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  roleManual?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -780,23 +780,23 @@ export type UserCreateWithoutSessionsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -807,23 +807,23 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -850,23 +850,23 @@ export type UserUpdateWithoutSessionsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -877,23 +877,23 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -904,23 +904,23 @@ export type UserCreateWithoutAccountsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -931,23 +931,23 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -974,23 +974,23 @@ export type UserUpdateWithoutAccountsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1001,23 +1001,23 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -1028,23 +1028,23 @@ export type UserCreateWithoutTransaksiKasirInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -1055,23 +1055,23 @@ export type UserUncheckedCreateWithoutTransaksiKasirInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -1098,23 +1098,23 @@ export type UserUpdateWithoutTransaksiKasirInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1125,23 +1125,23 @@ export type UserUncheckedUpdateWithoutTransaksiKasirInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -1152,23 +1152,23 @@ export type UserCreateWithoutShiftsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -1179,23 +1179,23 @@ export type UserUncheckedCreateWithoutShiftsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -1222,23 +1222,23 @@ export type UserUpdateWithoutShiftsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1249,23 +1249,23 @@ export type UserUncheckedUpdateWithoutShiftsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -1276,23 +1276,23 @@ export type UserCreateWithoutPageVisitsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -1303,23 +1303,23 @@ export type UserUncheckedCreateWithoutPageVisitsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -1346,23 +1346,23 @@ export type UserUpdateWithoutPageVisitsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1373,23 +1373,23 @@ export type UserUncheckedUpdateWithoutPageVisitsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -1400,23 +1400,23 @@ export type UserCreateWithoutDeviceVisitsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
+  roleManual?: boolean
   pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -1427,23 +1427,23 @@ export type UserUncheckedCreateWithoutDeviceVisitsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
+  roleManual?: boolean
   pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -1470,23 +1470,23 @@ export type UserUpdateWithoutDeviceVisitsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1497,23 +1497,23 @@ export type UserUncheckedUpdateWithoutDeviceVisitsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -1524,23 +1524,23 @@ export type UserCreateWithoutRetursInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -1551,23 +1551,23 @@ export type UserUncheckedCreateWithoutRetursInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -1594,23 +1594,23 @@ export type UserUpdateWithoutRetursInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1621,23 +1621,23 @@ export type UserUncheckedUpdateWithoutRetursInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -1648,23 +1648,23 @@ export type UserCreateWithoutStokOprenamesInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -1675,23 +1675,23 @@ export type UserUncheckedCreateWithoutStokOprenamesInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -1718,23 +1718,23 @@ export type UserUpdateWithoutStokOprenamesInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1745,23 +1745,23 @@ export type UserUncheckedUpdateWithoutStokOprenamesInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -1772,23 +1772,23 @@ export type UserCreateWithoutPrintersInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -1799,23 +1799,23 @@ export type UserUncheckedCreateWithoutPrintersInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -1842,23 +1842,23 @@ export type UserUpdateWithoutPrintersInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1869,23 +1869,23 @@ export type UserUncheckedUpdateWithoutPrintersInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -1896,23 +1896,23 @@ export type UserCreateWithoutAuditLogsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -1923,23 +1923,23 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -1966,23 +1966,23 @@ export type UserUpdateWithoutAuditLogsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -1993,23 +1993,23 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -2020,23 +2020,23 @@ export type UserCreateWithoutPengajuanKasirInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -2047,23 +2047,23 @@ export type UserUncheckedCreateWithoutPengajuanKasirInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -2079,23 +2079,23 @@ export type UserCreateWithoutPengajuanOwnerInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -2106,23 +2106,23 @@ export type UserUncheckedCreateWithoutPengajuanOwnerInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -2149,23 +2149,23 @@ export type UserUpdateWithoutPengajuanKasirInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -2176,23 +2176,23 @@ export type UserUncheckedUpdateWithoutPengajuanKasirInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -2214,23 +2214,23 @@ export type UserUpdateWithoutPengajuanOwnerInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -2241,23 +2241,23 @@ export type UserUncheckedUpdateWithoutPengajuanOwnerInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -2268,23 +2268,23 @@ export type UserCreateWithoutDraftTransaksiKasirInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
   pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
-  draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -2295,23 +2295,23 @@ export type UserUncheckedCreateWithoutDraftTransaksiKasirInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
   pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
-  draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -2327,23 +2327,23 @@ export type UserCreateWithoutDraftTransaksiReviewerInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
   pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
-  draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -2354,23 +2354,23 @@ export type UserUncheckedCreateWithoutDraftTransaksiReviewerInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
   pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
-  draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -2397,23 +2397,23 @@ export type UserUpdateWithoutDraftTransaksiKasirInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
   pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
-  draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -2424,23 +2424,23 @@ export type UserUncheckedUpdateWithoutDraftTransaksiKasirInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
   pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
-  draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -2462,23 +2462,23 @@ export type UserUpdateWithoutDraftTransaksiReviewerInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
   pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
-  draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -2489,23 +2489,23 @@ export type UserUncheckedUpdateWithoutDraftTransaksiReviewerInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
   pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
-  draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -2516,24 +2516,24 @@ export type UserCreateWithoutTransaksiReviewAuditInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
 }
 
 export type UserUncheckedCreateWithoutTransaksiReviewAuditInput = {
@@ -2543,24 +2543,24 @@ export type UserUncheckedCreateWithoutTransaksiReviewAuditInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
-  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  notifikasi?: Prisma.NotifikasiUncheckedCreateNestedManyWithoutUserInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
 }
 
 export type UserCreateOrConnectWithoutTransaksiReviewAuditInput = {
@@ -2586,24 +2586,24 @@ export type UserUpdateWithoutTransaksiReviewAuditInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransaksiReviewAuditInput = {
@@ -2613,24 +2613,24 @@ export type UserUncheckedUpdateWithoutTransaksiReviewAuditInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
-  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  notifikasi?: Prisma.NotifikasiUncheckedUpdateManyWithoutUserNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
 }
 
 export type UserCreateWithoutNotifikasiInput = {
@@ -2640,23 +2640,23 @@ export type UserCreateWithoutNotifikasiInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
   draftTransaksiKasir?: Prisma.DraftTransaksiCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiCreateNestedManyWithoutReviewedByInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutKasirInput
 }
 
@@ -2667,23 +2667,23 @@ export type UserUncheckedCreateWithoutNotifikasiInput = {
   emailVerified: boolean
   image?: string | null
   role?: $Enums.Role
-  roleManual?: boolean
   createdAt: Date | string
   updatedAt: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
-  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
-  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
-  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
-  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
+  roleManual?: boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedCreateNestedManyWithoutUserInput
+  pageVisits?: Prisma.PageVisitUncheckedCreateNestedManyWithoutUserInput
   printers?: Prisma.PrinterUncheckedCreateNestedManyWithoutUserInput
+  shifts?: Prisma.ShiftUncheckedCreateNestedManyWithoutKasirInput
+  transaksiKasir?: Prisma.TransaksiUncheckedCreateNestedManyWithoutKasirInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutKasirInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedCreateNestedManyWithoutReviewedByInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutKasirInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedCreateNestedManyWithoutOwnerInput
+  returs?: Prisma.ReturUncheckedCreateNestedManyWithoutKasirInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  stokOprenames?: Prisma.StokOpnameUncheckedCreateNestedManyWithoutKasirInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutKasirInput
 }
 
@@ -2710,23 +2710,23 @@ export type UserUpdateWithoutNotifikasiInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUpdateManyWithoutReviewedByNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUpdateManyWithoutKasirNestedInput
 }
 
@@ -2737,23 +2737,23 @@ export type UserUncheckedUpdateWithoutNotifikasiInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
-  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
-  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
-  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
-  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
+  roleManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deviceVisits?: Prisma.DeviceVisitUncheckedUpdateManyWithoutUserNestedInput
+  pageVisits?: Prisma.PageVisitUncheckedUpdateManyWithoutUserNestedInput
   printers?: Prisma.PrinterUncheckedUpdateManyWithoutUserNestedInput
+  shifts?: Prisma.ShiftUncheckedUpdateManyWithoutKasirNestedInput
+  transaksiKasir?: Prisma.TransaksiUncheckedUpdateManyWithoutKasirNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
-  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
   draftTransaksiKasir?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutKasirNestedInput
   draftTransaksiReviewer?: Prisma.DraftTransaksiUncheckedUpdateManyWithoutReviewedByNestedInput
+  pengajuanKasir?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutKasirNestedInput
+  pengajuanOwner?: Prisma.PengajuanPengeluaranUncheckedUpdateManyWithoutOwnerNestedInput
+  returs?: Prisma.ReturUncheckedUpdateManyWithoutKasirNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  stokOprenames?: Prisma.StokOpnameUncheckedUpdateManyWithoutKasirNestedInput
   transaksiReviewAudit?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutKasirNestedInput
 }
 
@@ -2763,40 +2763,40 @@ export type UserUncheckedUpdateWithoutNotifikasiInput = {
  */
 
 export type UserCountOutputType = {
-  sessions: number
-  accounts: number
-  transaksiKasir: number
-  shifts: number
-  returs: number
-  stokOprenames: number
-  pageVisits: number
   deviceVisits: number
+  pageVisits: number
   printers: number
+  shifts: number
+  transaksiKasir: number
+  accounts: number
   auditLogs: number
-  pengajuanKasir: number
-  pengajuanOwner: number
-  notifikasi: number
   draftTransaksiKasir: number
   draftTransaksiReviewer: number
+  notifikasi: number
+  pengajuanKasir: number
+  pengajuanOwner: number
+  returs: number
+  sessions: number
+  stokOprenames: number
   transaksiReviewAudit: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  sessions?: boolean | UserCountOutputTypeCountSessionsArgs
-  accounts?: boolean | UserCountOutputTypeCountAccountsArgs
-  transaksiKasir?: boolean | UserCountOutputTypeCountTransaksiKasirArgs
-  shifts?: boolean | UserCountOutputTypeCountShiftsArgs
-  returs?: boolean | UserCountOutputTypeCountRetursArgs
-  stokOprenames?: boolean | UserCountOutputTypeCountStokOprenamesArgs
-  pageVisits?: boolean | UserCountOutputTypeCountPageVisitsArgs
   deviceVisits?: boolean | UserCountOutputTypeCountDeviceVisitsArgs
+  pageVisits?: boolean | UserCountOutputTypeCountPageVisitsArgs
   printers?: boolean | UserCountOutputTypeCountPrintersArgs
+  shifts?: boolean | UserCountOutputTypeCountShiftsArgs
+  transaksiKasir?: boolean | UserCountOutputTypeCountTransaksiKasirArgs
+  accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
-  pengajuanKasir?: boolean | UserCountOutputTypeCountPengajuanKasirArgs
-  pengajuanOwner?: boolean | UserCountOutputTypeCountPengajuanOwnerArgs
-  notifikasi?: boolean | UserCountOutputTypeCountNotifikasiArgs
   draftTransaksiKasir?: boolean | UserCountOutputTypeCountDraftTransaksiKasirArgs
   draftTransaksiReviewer?: boolean | UserCountOutputTypeCountDraftTransaksiReviewerArgs
+  notifikasi?: boolean | UserCountOutputTypeCountNotifikasiArgs
+  pengajuanKasir?: boolean | UserCountOutputTypeCountPengajuanKasirArgs
+  pengajuanOwner?: boolean | UserCountOutputTypeCountPengajuanOwnerArgs
+  returs?: boolean | UserCountOutputTypeCountRetursArgs
+  sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+  stokOprenames?: boolean | UserCountOutputTypeCountStokOprenamesArgs
   transaksiReviewAudit?: boolean | UserCountOutputTypeCountTransaksiReviewAuditArgs
 }
 
@@ -2813,43 +2813,8 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SessionWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AccountWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountTransaksiKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TransaksiWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountShiftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ShiftWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountRetursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReturWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountStokOprenamesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StokOpnameWhereInput
+export type UserCountOutputTypeCountDeviceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeviceVisitWhereInput
 }
 
 /**
@@ -2862,13 +2827,6 @@ export type UserCountOutputTypeCountPageVisitsArgs<ExtArgs extends runtime.Types
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountDeviceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DeviceVisitWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountPrintersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PrinterWhereInput
 }
@@ -2876,29 +2834,29 @@ export type UserCountOutputTypeCountPrintersArgs<ExtArgs extends runtime.Types.E
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountShiftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ShiftWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTransaksiKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TransaksiWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AccountWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AuditLogWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountPengajuanKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PengajuanPengeluaranWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountPengajuanOwnerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PengajuanPengeluaranWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountNotifikasiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.NotifikasiWhereInput
 }
 
 /**
@@ -2918,6 +2876,48 @@ export type UserCountOutputTypeCountDraftTransaksiReviewerArgs<ExtArgs extends r
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountNotifikasiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotifikasiWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPengajuanKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PengajuanPengeluaranWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPengajuanOwnerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PengajuanPengeluaranWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRetursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReturWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStokOprenamesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StokOpnameWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountTransaksiReviewAuditArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TransaksiReviewAuditWhereInput
 }
@@ -2930,24 +2930,24 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   emailVerified?: boolean
   image?: boolean
   role?: boolean
-  roleManual?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
-  accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
-  transaksiKasir?: boolean | Prisma.User$transaksiKasirArgs<ExtArgs>
-  shifts?: boolean | Prisma.User$shiftsArgs<ExtArgs>
-  returs?: boolean | Prisma.User$retursArgs<ExtArgs>
-  stokOprenames?: boolean | Prisma.User$stokOprenamesArgs<ExtArgs>
-  pageVisits?: boolean | Prisma.User$pageVisitsArgs<ExtArgs>
+  roleManual?: boolean
   deviceVisits?: boolean | Prisma.User$deviceVisitsArgs<ExtArgs>
+  pageVisits?: boolean | Prisma.User$pageVisitsArgs<ExtArgs>
   printers?: boolean | Prisma.User$printersArgs<ExtArgs>
+  shifts?: boolean | Prisma.User$shiftsArgs<ExtArgs>
+  transaksiKasir?: boolean | Prisma.User$transaksiKasirArgs<ExtArgs>
+  accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
-  pengajuanKasir?: boolean | Prisma.User$pengajuanKasirArgs<ExtArgs>
-  pengajuanOwner?: boolean | Prisma.User$pengajuanOwnerArgs<ExtArgs>
-  notifikasi?: boolean | Prisma.User$notifikasiArgs<ExtArgs>
   draftTransaksiKasir?: boolean | Prisma.User$draftTransaksiKasirArgs<ExtArgs>
   draftTransaksiReviewer?: boolean | Prisma.User$draftTransaksiReviewerArgs<ExtArgs>
+  notifikasi?: boolean | Prisma.User$notifikasiArgs<ExtArgs>
+  pengajuanKasir?: boolean | Prisma.User$pengajuanKasirArgs<ExtArgs>
+  pengajuanOwner?: boolean | Prisma.User$pengajuanOwnerArgs<ExtArgs>
+  returs?: boolean | Prisma.User$retursArgs<ExtArgs>
+  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  stokOprenames?: boolean | Prisma.User$stokOprenamesArgs<ExtArgs>
   transaksiReviewAudit?: boolean | Prisma.User$transaksiReviewAuditArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -2959,9 +2959,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerified?: boolean
   image?: boolean
   role?: boolean
-  roleManual?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  roleManual?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2971,9 +2971,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerified?: boolean
   image?: boolean
   role?: boolean
-  roleManual?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  roleManual?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -2983,28 +2983,28 @@ export type UserSelectScalar = {
   emailVerified?: boolean
   image?: boolean
   role?: boolean
-  roleManual?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  roleManual?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "roleManual" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "roleManual", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
-  accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
-  transaksiKasir?: boolean | Prisma.User$transaksiKasirArgs<ExtArgs>
-  shifts?: boolean | Prisma.User$shiftsArgs<ExtArgs>
-  returs?: boolean | Prisma.User$retursArgs<ExtArgs>
-  stokOprenames?: boolean | Prisma.User$stokOprenamesArgs<ExtArgs>
-  pageVisits?: boolean | Prisma.User$pageVisitsArgs<ExtArgs>
   deviceVisits?: boolean | Prisma.User$deviceVisitsArgs<ExtArgs>
+  pageVisits?: boolean | Prisma.User$pageVisitsArgs<ExtArgs>
   printers?: boolean | Prisma.User$printersArgs<ExtArgs>
+  shifts?: boolean | Prisma.User$shiftsArgs<ExtArgs>
+  transaksiKasir?: boolean | Prisma.User$transaksiKasirArgs<ExtArgs>
+  accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
-  pengajuanKasir?: boolean | Prisma.User$pengajuanKasirArgs<ExtArgs>
-  pengajuanOwner?: boolean | Prisma.User$pengajuanOwnerArgs<ExtArgs>
-  notifikasi?: boolean | Prisma.User$notifikasiArgs<ExtArgs>
   draftTransaksiKasir?: boolean | Prisma.User$draftTransaksiKasirArgs<ExtArgs>
   draftTransaksiReviewer?: boolean | Prisma.User$draftTransaksiReviewerArgs<ExtArgs>
+  notifikasi?: boolean | Prisma.User$notifikasiArgs<ExtArgs>
+  pengajuanKasir?: boolean | Prisma.User$pengajuanKasirArgs<ExtArgs>
+  pengajuanOwner?: boolean | Prisma.User$pengajuanOwnerArgs<ExtArgs>
+  returs?: boolean | Prisma.User$retursArgs<ExtArgs>
+  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  stokOprenames?: boolean | Prisma.User$stokOprenamesArgs<ExtArgs>
   transaksiReviewAudit?: boolean | Prisma.User$transaksiReviewAuditArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -3014,21 +3014,21 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    sessions: Prisma.$SessionPayload<ExtArgs>[]
-    accounts: Prisma.$AccountPayload<ExtArgs>[]
-    transaksiKasir: Prisma.$TransaksiPayload<ExtArgs>[]
-    shifts: Prisma.$ShiftPayload<ExtArgs>[]
-    returs: Prisma.$ReturPayload<ExtArgs>[]
-    stokOprenames: Prisma.$StokOpnamePayload<ExtArgs>[]
-    pageVisits: Prisma.$PageVisitPayload<ExtArgs>[]
     deviceVisits: Prisma.$DeviceVisitPayload<ExtArgs>[]
+    pageVisits: Prisma.$PageVisitPayload<ExtArgs>[]
     printers: Prisma.$PrinterPayload<ExtArgs>[]
+    shifts: Prisma.$ShiftPayload<ExtArgs>[]
+    transaksiKasir: Prisma.$TransaksiPayload<ExtArgs>[]
+    accounts: Prisma.$AccountPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
-    pengajuanKasir: Prisma.$PengajuanPengeluaranPayload<ExtArgs>[]
-    pengajuanOwner: Prisma.$PengajuanPengeluaranPayload<ExtArgs>[]
-    notifikasi: Prisma.$NotifikasiPayload<ExtArgs>[]
     draftTransaksiKasir: Prisma.$DraftTransaksiPayload<ExtArgs>[]
     draftTransaksiReviewer: Prisma.$DraftTransaksiPayload<ExtArgs>[]
+    notifikasi: Prisma.$NotifikasiPayload<ExtArgs>[]
+    pengajuanKasir: Prisma.$PengajuanPengeluaranPayload<ExtArgs>[]
+    pengajuanOwner: Prisma.$PengajuanPengeluaranPayload<ExtArgs>[]
+    returs: Prisma.$ReturPayload<ExtArgs>[]
+    sessions: Prisma.$SessionPayload<ExtArgs>[]
+    stokOprenames: Prisma.$StokOpnamePayload<ExtArgs>[]
     transaksiReviewAudit: Prisma.$TransaksiReviewAuditPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -3038,9 +3038,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     emailVerified: boolean
     image: string | null
     role: $Enums.Role
-    roleManual: boolean
     createdAt: Date
     updatedAt: Date
+    roleManual: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -3435,21 +3435,21 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  transaksiKasir<T extends Prisma.User$transaksiKasirArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transaksiKasirArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  shifts<T extends Prisma.User$shiftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shiftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShiftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  returs<T extends Prisma.User$retursArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$retursArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReturPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  stokOprenames<T extends Prisma.User$stokOprenamesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$stokOprenamesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StokOpnamePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  pageVisits<T extends Prisma.User$pageVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pageVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PageVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deviceVisits<T extends Prisma.User$deviceVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pageVisits<T extends Prisma.User$pageVisitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pageVisitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PageVisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   printers<T extends Prisma.User$printersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$printersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrinterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shifts<T extends Prisma.User$shiftsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shiftsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShiftPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  transaksiKasir<T extends Prisma.User$transaksiKasirArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transaksiKasirArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  pengajuanKasir<T extends Prisma.User$pengajuanKasirArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pengajuanKasirArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PengajuanPengeluaranPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  pengajuanOwner<T extends Prisma.User$pengajuanOwnerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pengajuanOwnerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PengajuanPengeluaranPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  notifikasi<T extends Prisma.User$notifikasiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notifikasiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotifikasiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   draftTransaksiKasir<T extends Prisma.User$draftTransaksiKasirArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$draftTransaksiKasirArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DraftTransaksiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   draftTransaksiReviewer<T extends Prisma.User$draftTransaksiReviewerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$draftTransaksiReviewerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DraftTransaksiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifikasi<T extends Prisma.User$notifikasiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notifikasiArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotifikasiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pengajuanKasir<T extends Prisma.User$pengajuanKasirArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pengajuanKasirArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PengajuanPengeluaranPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pengajuanOwner<T extends Prisma.User$pengajuanOwnerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pengajuanOwnerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PengajuanPengeluaranPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  returs<T extends Prisma.User$retursArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$retursArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReturPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stokOprenames<T extends Prisma.User$stokOprenamesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$stokOprenamesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StokOpnamePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   transaksiReviewAudit<T extends Prisma.User$transaksiReviewAuditArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transaksiReviewAuditArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiReviewAuditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3486,9 +3486,9 @@ export interface UserFieldRefs {
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly image: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
-  readonly roleManual: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly roleManual: Prisma.FieldRef<"User", 'Boolean'>
 }
     
 
@@ -3882,147 +3882,27 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.sessions
+ * User.deviceVisits
  */
-export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$deviceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Session
+   * Select specific fields to fetch from the DeviceVisit
    */
-  select?: Prisma.SessionSelect<ExtArgs> | null
+  select?: Prisma.DeviceVisitSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Session
+   * Omit specific fields from the DeviceVisit
    */
-  omit?: Prisma.SessionOmit<ExtArgs> | null
+  omit?: Prisma.DeviceVisitOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SessionInclude<ExtArgs> | null
-  where?: Prisma.SessionWhereInput
-  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
-  cursor?: Prisma.SessionWhereUniqueInput
+  include?: Prisma.DeviceVisitInclude<ExtArgs> | null
+  where?: Prisma.DeviceVisitWhereInput
+  orderBy?: Prisma.DeviceVisitOrderByWithRelationInput | Prisma.DeviceVisitOrderByWithRelationInput[]
+  cursor?: Prisma.DeviceVisitWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
-}
-
-/**
- * User.accounts
- */
-export type User$accountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Account
-   */
-  select?: Prisma.AccountSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Account
-   */
-  omit?: Prisma.AccountOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AccountInclude<ExtArgs> | null
-  where?: Prisma.AccountWhereInput
-  orderBy?: Prisma.AccountOrderByWithRelationInput | Prisma.AccountOrderByWithRelationInput[]
-  cursor?: Prisma.AccountWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
-}
-
-/**
- * User.transaksiKasir
- */
-export type User$transaksiKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Transaksi
-   */
-  select?: Prisma.TransaksiSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Transaksi
-   */
-  omit?: Prisma.TransaksiOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TransaksiInclude<ExtArgs> | null
-  where?: Prisma.TransaksiWhereInput
-  orderBy?: Prisma.TransaksiOrderByWithRelationInput | Prisma.TransaksiOrderByWithRelationInput[]
-  cursor?: Prisma.TransaksiWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TransaksiScalarFieldEnum | Prisma.TransaksiScalarFieldEnum[]
-}
-
-/**
- * User.shifts
- */
-export type User$shiftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Shift
-   */
-  select?: Prisma.ShiftSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Shift
-   */
-  omit?: Prisma.ShiftOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ShiftInclude<ExtArgs> | null
-  where?: Prisma.ShiftWhereInput
-  orderBy?: Prisma.ShiftOrderByWithRelationInput | Prisma.ShiftOrderByWithRelationInput[]
-  cursor?: Prisma.ShiftWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ShiftScalarFieldEnum | Prisma.ShiftScalarFieldEnum[]
-}
-
-/**
- * User.returs
- */
-export type User$retursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Retur
-   */
-  select?: Prisma.ReturSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Retur
-   */
-  omit?: Prisma.ReturOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ReturInclude<ExtArgs> | null
-  where?: Prisma.ReturWhereInput
-  orderBy?: Prisma.ReturOrderByWithRelationInput | Prisma.ReturOrderByWithRelationInput[]
-  cursor?: Prisma.ReturWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ReturScalarFieldEnum | Prisma.ReturScalarFieldEnum[]
-}
-
-/**
- * User.stokOprenames
- */
-export type User$stokOprenamesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StokOpname
-   */
-  select?: Prisma.StokOpnameSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StokOpname
-   */
-  omit?: Prisma.StokOpnameOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StokOpnameInclude<ExtArgs> | null
-  where?: Prisma.StokOpnameWhereInput
-  orderBy?: Prisma.StokOpnameOrderByWithRelationInput | Prisma.StokOpnameOrderByWithRelationInput[]
-  cursor?: Prisma.StokOpnameWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StokOpnameScalarFieldEnum | Prisma.StokOpnameScalarFieldEnum[]
+  distinct?: Prisma.DeviceVisitScalarFieldEnum | Prisma.DeviceVisitScalarFieldEnum[]
 }
 
 /**
@@ -4050,30 +3930,6 @@ export type User$pageVisitsArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * User.deviceVisits
- */
-export type User$deviceVisitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DeviceVisit
-   */
-  select?: Prisma.DeviceVisitSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DeviceVisit
-   */
-  omit?: Prisma.DeviceVisitOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DeviceVisitInclude<ExtArgs> | null
-  where?: Prisma.DeviceVisitWhereInput
-  orderBy?: Prisma.DeviceVisitOrderByWithRelationInput | Prisma.DeviceVisitOrderByWithRelationInput[]
-  cursor?: Prisma.DeviceVisitWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DeviceVisitScalarFieldEnum | Prisma.DeviceVisitScalarFieldEnum[]
-}
-
-/**
  * User.printers
  */
 export type User$printersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4098,6 +3954,78 @@ export type User$printersArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * User.shifts
+ */
+export type User$shiftsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Shift
+   */
+  select?: Prisma.ShiftSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Shift
+   */
+  omit?: Prisma.ShiftOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShiftInclude<ExtArgs> | null
+  where?: Prisma.ShiftWhereInput
+  orderBy?: Prisma.ShiftOrderByWithRelationInput | Prisma.ShiftOrderByWithRelationInput[]
+  cursor?: Prisma.ShiftWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShiftScalarFieldEnum | Prisma.ShiftScalarFieldEnum[]
+}
+
+/**
+ * User.transaksiKasir
+ */
+export type User$transaksiKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Transaksi
+   */
+  select?: Prisma.TransaksiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Transaksi
+   */
+  omit?: Prisma.TransaksiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TransaksiInclude<ExtArgs> | null
+  where?: Prisma.TransaksiWhereInput
+  orderBy?: Prisma.TransaksiOrderByWithRelationInput | Prisma.TransaksiOrderByWithRelationInput[]
+  cursor?: Prisma.TransaksiWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TransaksiScalarFieldEnum | Prisma.TransaksiScalarFieldEnum[]
+}
+
+/**
+ * User.accounts
+ */
+export type User$accountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Account
+   */
+  select?: Prisma.AccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Account
+   */
+  omit?: Prisma.AccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccountInclude<ExtArgs> | null
+  where?: Prisma.AccountWhereInput
+  orderBy?: Prisma.AccountOrderByWithRelationInput | Prisma.AccountOrderByWithRelationInput[]
+  cursor?: Prisma.AccountWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
+}
+
+/**
  * User.auditLogs
  */
 export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4119,6 +4047,78 @@ export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.draftTransaksiKasir
+ */
+export type User$draftTransaksiKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DraftTransaksi
+   */
+  select?: Prisma.DraftTransaksiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DraftTransaksi
+   */
+  omit?: Prisma.DraftTransaksiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DraftTransaksiInclude<ExtArgs> | null
+  where?: Prisma.DraftTransaksiWhereInput
+  orderBy?: Prisma.DraftTransaksiOrderByWithRelationInput | Prisma.DraftTransaksiOrderByWithRelationInput[]
+  cursor?: Prisma.DraftTransaksiWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DraftTransaksiScalarFieldEnum | Prisma.DraftTransaksiScalarFieldEnum[]
+}
+
+/**
+ * User.draftTransaksiReviewer
+ */
+export type User$draftTransaksiReviewerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DraftTransaksi
+   */
+  select?: Prisma.DraftTransaksiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DraftTransaksi
+   */
+  omit?: Prisma.DraftTransaksiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DraftTransaksiInclude<ExtArgs> | null
+  where?: Prisma.DraftTransaksiWhereInput
+  orderBy?: Prisma.DraftTransaksiOrderByWithRelationInput | Prisma.DraftTransaksiOrderByWithRelationInput[]
+  cursor?: Prisma.DraftTransaksiWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DraftTransaksiScalarFieldEnum | Prisma.DraftTransaksiScalarFieldEnum[]
+}
+
+/**
+ * User.notifikasi
+ */
+export type User$notifikasiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notifikasi
+   */
+  select?: Prisma.NotifikasiSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notifikasi
+   */
+  omit?: Prisma.NotifikasiOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotifikasiInclude<ExtArgs> | null
+  where?: Prisma.NotifikasiWhereInput
+  orderBy?: Prisma.NotifikasiOrderByWithRelationInput | Prisma.NotifikasiOrderByWithRelationInput[]
+  cursor?: Prisma.NotifikasiWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotifikasiScalarFieldEnum | Prisma.NotifikasiScalarFieldEnum[]
 }
 
 /**
@@ -4170,75 +4170,75 @@ export type User$pengajuanOwnerArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * User.notifikasi
+ * User.returs
  */
-export type User$notifikasiArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$retursArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Notifikasi
+   * Select specific fields to fetch from the Retur
    */
-  select?: Prisma.NotifikasiSelect<ExtArgs> | null
+  select?: Prisma.ReturSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Notifikasi
+   * Omit specific fields from the Retur
    */
-  omit?: Prisma.NotifikasiOmit<ExtArgs> | null
+  omit?: Prisma.ReturOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.NotifikasiInclude<ExtArgs> | null
-  where?: Prisma.NotifikasiWhereInput
-  orderBy?: Prisma.NotifikasiOrderByWithRelationInput | Prisma.NotifikasiOrderByWithRelationInput[]
-  cursor?: Prisma.NotifikasiWhereUniqueInput
+  include?: Prisma.ReturInclude<ExtArgs> | null
+  where?: Prisma.ReturWhereInput
+  orderBy?: Prisma.ReturOrderByWithRelationInput | Prisma.ReturOrderByWithRelationInput[]
+  cursor?: Prisma.ReturWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.NotifikasiScalarFieldEnum | Prisma.NotifikasiScalarFieldEnum[]
+  distinct?: Prisma.ReturScalarFieldEnum | Prisma.ReturScalarFieldEnum[]
 }
 
 /**
- * User.draftTransaksiKasir
+ * User.sessions
  */
-export type User$draftTransaksiKasirArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the DraftTransaksi
+   * Select specific fields to fetch from the Session
    */
-  select?: Prisma.DraftTransaksiSelect<ExtArgs> | null
+  select?: Prisma.SessionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the DraftTransaksi
+   * Omit specific fields from the Session
    */
-  omit?: Prisma.DraftTransaksiOmit<ExtArgs> | null
+  omit?: Prisma.SessionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.DraftTransaksiInclude<ExtArgs> | null
-  where?: Prisma.DraftTransaksiWhereInput
-  orderBy?: Prisma.DraftTransaksiOrderByWithRelationInput | Prisma.DraftTransaksiOrderByWithRelationInput[]
-  cursor?: Prisma.DraftTransaksiWhereUniqueInput
+  include?: Prisma.SessionInclude<ExtArgs> | null
+  where?: Prisma.SessionWhereInput
+  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
+  cursor?: Prisma.SessionWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.DraftTransaksiScalarFieldEnum | Prisma.DraftTransaksiScalarFieldEnum[]
+  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
 }
 
 /**
- * User.draftTransaksiReviewer
+ * User.stokOprenames
  */
-export type User$draftTransaksiReviewerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$stokOprenamesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the DraftTransaksi
+   * Select specific fields to fetch from the StokOpname
    */
-  select?: Prisma.DraftTransaksiSelect<ExtArgs> | null
+  select?: Prisma.StokOpnameSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the DraftTransaksi
+   * Omit specific fields from the StokOpname
    */
-  omit?: Prisma.DraftTransaksiOmit<ExtArgs> | null
+  omit?: Prisma.StokOpnameOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.DraftTransaksiInclude<ExtArgs> | null
-  where?: Prisma.DraftTransaksiWhereInput
-  orderBy?: Prisma.DraftTransaksiOrderByWithRelationInput | Prisma.DraftTransaksiOrderByWithRelationInput[]
-  cursor?: Prisma.DraftTransaksiWhereUniqueInput
+  include?: Prisma.StokOpnameInclude<ExtArgs> | null
+  where?: Prisma.StokOpnameWhereInput
+  orderBy?: Prisma.StokOpnameOrderByWithRelationInput | Prisma.StokOpnameOrderByWithRelationInput[]
+  cursor?: Prisma.StokOpnameWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.DraftTransaksiScalarFieldEnum | Prisma.DraftTransaksiScalarFieldEnum[]
+  distinct?: Prisma.StokOpnameScalarFieldEnum | Prisma.StokOpnameScalarFieldEnum[]
 }
 
 /**

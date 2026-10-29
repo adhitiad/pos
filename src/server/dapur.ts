@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { nonHapus } from './nonHapus.js'
 import type {
   CetakStrukInput,
   UpdateStatusPesananInput,
@@ -14,7 +15,7 @@ import { batalkanPesananOnline } from './pembayaranPesanan.js'
 
 export async function dapurData() {
   const transaksi = await prisma.transaksi.findMany({
-    where: {
+    where: nonHapus({
       OR: [
         { statusPesanan: { in: ['MENUNGGU', 'DIPROSES'] } },
         // Pesanan online yang sudah selesai di dapur tetap tampil sampai
@@ -25,7 +26,7 @@ export async function dapurData() {
           statusPesanan: { notIn: ['DIBATALKAN', 'LUNAS'] },
         },
       ],
-    },
+    }),
     orderBy: [{ meja: { nomor: 'asc' } }, { tanggal: 'asc' }],
     include: {
       items: {

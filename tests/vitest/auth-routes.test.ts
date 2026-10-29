@@ -15,6 +15,10 @@ vi.mock('#/server/api', () => ({
       { ok: false, error: { code: 'UNKNOWN', message: String(e) } },
       { status: 500 },
     ),
+  denganRequestId: async (
+    _request: Request,
+    handler: () => Promise<Response>,
+  ) => handler(),
 }))
 
 vi.mock('#/server/rateLimit', () => ({

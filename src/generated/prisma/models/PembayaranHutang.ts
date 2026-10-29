@@ -232,8 +232,8 @@ export type PembayaranHutangWhereInput = {
   tanggal?: Prisma.DateTimeFilter<"PembayaranHutang"> | Date | string
   catatan?: Prisma.StringNullableFilter<"PembayaranHutang"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PembayaranHutang"> | Date | string
-  supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
   pembelianBahan?: Prisma.XOR<Prisma.PembelianBahanScalarRelationFilter, Prisma.PembelianBahanWhereInput>
+  supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
 }
 
 export type PembayaranHutangOrderByWithRelationInput = {
@@ -244,8 +244,8 @@ export type PembayaranHutangOrderByWithRelationInput = {
   tanggal?: Prisma.SortOrder
   catatan?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  supplier?: Prisma.SupplierOrderByWithRelationInput
   pembelianBahan?: Prisma.PembelianBahanOrderByWithRelationInput
+  supplier?: Prisma.SupplierOrderByWithRelationInput
 }
 
 export type PembayaranHutangWhereUniqueInput = Prisma.AtLeast<{
@@ -259,8 +259,8 @@ export type PembayaranHutangWhereUniqueInput = Prisma.AtLeast<{
   tanggal?: Prisma.DateTimeFilter<"PembayaranHutang"> | Date | string
   catatan?: Prisma.StringNullableFilter<"PembayaranHutang"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PembayaranHutang"> | Date | string
-  supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
   pembelianBahan?: Prisma.XOR<Prisma.PembelianBahanScalarRelationFilter, Prisma.PembelianBahanWhereInput>
+  supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
 }, "id">
 
 export type PembayaranHutangOrderByWithAggregationInput = {
@@ -297,8 +297,8 @@ export type PembayaranHutangCreateInput = {
   tanggal?: Date | string
   catatan?: string | null
   createdAt?: Date | string
-  supplier: Prisma.SupplierCreateNestedOneWithoutPembayaranHutangInput
   pembelianBahan: Prisma.PembelianBahanCreateNestedOneWithoutPembayaranHutangInput
+  supplier: Prisma.SupplierCreateNestedOneWithoutPembayaranHutangInput
 }
 
 export type PembayaranHutangUncheckedCreateInput = {
@@ -317,8 +317,8 @@ export type PembayaranHutangUpdateInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  supplier?: Prisma.SupplierUpdateOneRequiredWithoutPembayaranHutangNestedInput
   pembelianBahan?: Prisma.PembelianBahanUpdateOneRequiredWithoutPembayaranHutangNestedInput
+  supplier?: Prisma.SupplierUpdateOneRequiredWithoutPembayaranHutangNestedInput
 }
 
 export type PembayaranHutangUncheckedUpdateInput = {
@@ -674,8 +674,8 @@ export type PembayaranHutangSelect<ExtArgs extends runtime.Types.Extensions.Inte
   tanggal?: boolean
   catatan?: boolean
   createdAt?: boolean
-  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   pembelianBahan?: boolean | Prisma.PembelianBahanDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pembayaranHutang"]>
 
 export type PembayaranHutangSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -686,8 +686,8 @@ export type PembayaranHutangSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   tanggal?: boolean
   catatan?: boolean
   createdAt?: boolean
-  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   pembelianBahan?: boolean | Prisma.PembelianBahanDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pembayaranHutang"]>
 
 export type PembayaranHutangSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -698,8 +698,8 @@ export type PembayaranHutangSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   tanggal?: boolean
   catatan?: boolean
   createdAt?: boolean
-  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   pembelianBahan?: boolean | Prisma.PembelianBahanDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pembayaranHutang"]>
 
 export type PembayaranHutangSelectScalar = {
@@ -714,23 +714,23 @@ export type PembayaranHutangSelectScalar = {
 
 export type PembayaranHutangOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "supplierId" | "pembelianBahanId" | "jumlah" | "tanggal" | "catatan" | "createdAt", ExtArgs["result"]["pembayaranHutang"]>
 export type PembayaranHutangInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   pembelianBahan?: boolean | Prisma.PembelianBahanDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
 }
 export type PembayaranHutangIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   pembelianBahan?: boolean | Prisma.PembelianBahanDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
 }
 export type PembayaranHutangIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
   pembelianBahan?: boolean | Prisma.PembelianBahanDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
 }
 
 export type $PembayaranHutangPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PembayaranHutang"
   objects: {
-    supplier: Prisma.$SupplierPayload<ExtArgs>
     pembelianBahan: Prisma.$PembelianBahanPayload<ExtArgs>
+    supplier: Prisma.$SupplierPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1134,8 +1134,8 @@ readonly fields: PembayaranHutangFieldRefs;
  */
 export interface Prisma__PembayaranHutangClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  supplier<T extends Prisma.SupplierDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplierDefaultArgs<ExtArgs>>): Prisma.Prisma__SupplierClient<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   pembelianBahan<T extends Prisma.PembelianBahanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PembelianBahanDefaultArgs<ExtArgs>>): Prisma.Prisma__PembelianBahanClient<runtime.Types.Result.GetResult<Prisma.$PembelianBahanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  supplier<T extends Prisma.SupplierDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplierDefaultArgs<ExtArgs>>): Prisma.Prisma__SupplierClient<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

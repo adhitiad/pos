@@ -7,7 +7,7 @@ import { GalatDomain } from './galat.js'
 // di DB, jadi QR lama otomatis mati saat secret auth dirotasi. Masa berlaku
 // dibuat panjang karena QR ditempel di meja, tetapi tetap dibatasi agar tautan
 // lama tidak berlaku selamanya.
-export const MASA_BERLAKU_MEJA_MS = 30 * 24 * 60 * 60 * 1_000
+export const MASA_BERLAKU_MEJA_MS = 14 * 24 * 60 * 60 * 1_000
 export const MAKS_TOKEN_MEJA = 512
 
 type MuatanTokenMeja = {

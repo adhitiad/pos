@@ -1,6 +1,7 @@
 import { createHmac } from 'node:crypto'
 
 import { expect, test } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
 
 import { prisma } from '../../src/db.js'
 
@@ -16,6 +17,55 @@ function cookieSesi(token: string): string {
   const signature = createHmac('sha256', secret).update(token).digest('base64')
   // Nilai cookie saja (tanpa nama) — Playwright menerima <nama, nilai> terpisah.
   return `${token}.${signature}`
+}
+
+// Pencarian tabel dikirim ke server lewat efek React (debounce 300 ms). Di
+// WebKit, `fill()` kadang jatuh sebelum halaman selesai hidrasi sehingga event
+// tidak pernah sampai dan URL tak berubah. Isi ulang sampai `q` benar-benar
+// masuk ke URL, bukan menebak lewat `waitForTimeout`.
+async function cariTabel(page: Page, placeholder: string, teks: string) {
+  const input = page.getByPlaceholder(placeholder)
+  await expect(input).toBeVisible()
+  await expect
+    .poll(
+      async () => {
+        await input.fill(teks)
+        await page.waitForTimeout(400)
+        return new URL(page.url()).searchParams.get('q')
+      },
+      {
+        message: `pencarian "${teks}" tidak terkirim ke URL`,
+        timeout: 20_000,
+      },
+    )
+    .toBe(teks)
+}
+
+// Urutkan tabel menurun lewat klik header. Jumlah klik tidak bisa ditebak
+// (default `arah` bisa asc/desc, dan klik kedua bisa jatuh sebelum navigasi
+// pertama selesai), jadi klik diulang sampai `arah=desc` benar-benar aktif.
+async function urutkanTurun(page: Page, kolom: Locator) {
+  await expect
+    .poll(
+      async () => {
+        const sekarang = new URL(page.url()).searchParams.get('arah')
+        if (sekarang === 'desc') return sekarang
+        await kolom.click()
+        await page.waitForTimeout(400)
+        return new URL(page.url()).searchParams.get('arah')
+      },
+      { message: 'urutan menurun tidak aktif', timeout: 20_000 },
+    )
+    .toBe('desc')
+}
+
+async function tungguArah(page: Page, arah: 'asc' | 'desc') {
+  await expect
+    .poll(() => new URL(page.url()).searchParams.get('arah'), {
+      message: `arah urut "${arah}" tidak aktif`,
+      timeout: 20_000,
+    })
+    .toBe(arah)
 }
 
 async function buatSesiOwner() {
@@ -84,12 +134,17 @@ test.describe('halaman owner (dengan sesi)', () => {
   let produkTabelNama: string[]
   let memberTabelNama: string[]
   let memberIds: string[]
+  // Awalan pencarian harus unik per worker: retry Playwright menjalankan
+  // beforeAll lagi, jadi awalan generik akan mencocokkan dua set data.
+  let produkCari: string
+  let memberCari: string
 
   test.beforeAll(async () => {
     sesi = await buatSesiOwner()
     sesiKasir = await buatSesiKasir()
     const unik = Date.now()
     produkNama = `Produk E2E Utama ${unik}`
+    produkCari = `Produk E2E Tabel ${unik}`
     produkTabelNama = Array.from(
       { length: 12 },
       (_, i) => `Produk E2E Tabel ${unik} ${String(i + 1).padStart(2, '0')}`,
@@ -122,6 +177,7 @@ test.describe('halaman owner (dengan sesi)', () => {
       { length: 12 },
       (_, i) => `Member E2E Tabel ${unik} ${String(i + 1).padStart(2, '0')}`,
     )
+    memberCari = `Member E2E Tabel ${unik}`
     const members = await Promise.all(
       memberTabelNama.map((nama) => prisma.member.create({ data: { nama } })),
     )
@@ -217,7 +273,7 @@ test.describe('halaman owner (dengan sesi)', () => {
 
   test('produk: form ubah terisi nilai produk', async ({ page }) => {
     await page.goto('/produk', { waitUntil: 'networkidle' })
-    await page.getByPlaceholder('Cari produk...').fill(produkNama)
+    await cariTabel(page, 'Cari produk...', produkNama)
     const baris = page.locator('table tbody tr').filter({ hasText: produkNama })
     await expect(baris).toHaveCount(1)
     await baris.getByRole('button', { name: 'Ubah produk' }).click()
@@ -235,10 +291,11 @@ test.describe('halaman owner (dengan sesi)', () => {
     page,
   }) => {
     await page.goto('/produk', { waitUntil: 'networkidle' })
-    await page.getByPlaceholder('Cari produk...').fill('Produk E2E Tabel')
-
+    await cariTabel(page, 'Cari produk...', produkCari)
     const baris = page.locator('table tbody tr')
-    await expect(baris).toHaveCount(10)
+    // Tunggu hasil saringan benar-benar datang sebelum menghitung baris;
+    // tabel lama (tanpa filter) juga bisa berjumlah 10.
+    await expect(baris.filter({ hasText: produkCari })).toHaveCount(10)
 
     await page.getByRole('link', { name: 'Berikutnya' }).click()
     await expect(baris).toHaveCount(2)
@@ -250,8 +307,7 @@ test.describe('halaman owner (dengan sesi)', () => {
     await expect(baris).toHaveCount(12)
 
     const kolomNama = page.getByRole('button', { name: 'Nama', exact: true })
-    await kolomNama.click()
-    await kolomNama.click()
+    await urutkanTurun(page, kolomNama)
     await expect(baris.first()).toContainText(produkTabelNama[11])
 
     await page.getByRole('combobox', { name: 'Filter status' }).click()
@@ -264,10 +320,10 @@ test.describe('halaman owner (dengan sesi)', () => {
     page,
   }) => {
     await page.goto('/member', { waitUntil: 'networkidle' })
-    await page.getByPlaceholder('Cari member...').fill('Member E2E Tabel')
+    await cariTabel(page, 'Cari member...', memberCari)
 
     const baris = page.locator('table tbody tr')
-    await expect(baris).toHaveCount(10)
+    await expect(baris.filter({ hasText: memberCari })).toHaveCount(10)
     await page.getByRole('link', { name: 'Berikutnya' }).click()
     await expect(baris).toHaveCount(2)
 
@@ -278,10 +334,11 @@ test.describe('halaman owner (dengan sesi)', () => {
     }
 
     const kolomNama = page.getByRole('button', { name: 'Nama', exact: true })
-    await kolomNama.click()
-    await expect(baris.first()).toContainText(memberTabelNama[0])
-    await kolomNama.click()
+    await urutkanTurun(page, kolomNama)
     await expect(baris.first()).toContainText(memberTabelNama[11])
+    await kolomNama.click()
+    await tungguArah(page, 'asc')
+    await expect(baris.first()).toContainText(memberTabelNama[0])
   })
 
   test('owner: tautan pesanan online tidak tampil untuk staf', async ({

@@ -78,6 +78,11 @@ export default function Header() {
             </Link>
           )}
           {isKasir && (
+            <Link to="/dashboard" className="chrome-link">
+              {m.dashboard_title()}
+            </Link>
+          )}
+          {isKasir && (
             <Link to="/kasir" className="chrome-link">
               {m.nav_pos()}
             </Link>

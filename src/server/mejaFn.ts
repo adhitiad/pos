@@ -8,9 +8,11 @@ import {
   qrMeja,
   toggleMeja,
   updateMeja,
+  buatBanyakMeja,
 } from './meja.js'
 import {
   HapusMejaSchema,
+  GenerateMejaSchema,
   MejaInputSchema,
   QrMejaSchema,
   ToggleMejaSchema,
@@ -57,4 +59,11 @@ export const qrMejaFn = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     await requireOwner()
     return qrMeja(data)
+  })
+
+export const buatBanyakMejaFn = createServerFn({ method: 'POST' })
+  .validator((input: unknown) => GenerateMejaSchema.parse(input))
+  .handler(async ({ data }) => {
+    await requireOwner()
+    return buatBanyakMeja(data)
   })

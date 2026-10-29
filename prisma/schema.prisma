@@ -1,64 +1,47 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["partialIndexes"]
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-// ──────────────────────────────
-// Better Auth
-// https://www.better-auth.com/docs/adapters/prisma
-// ──────────────────────────────
-
-// Role sistem akses.
-//   OWNER  — pemilik, akses penuh termasuk buku besar & laporan.
-//   KASIR  — kasir/pegawai toko, boleh transaksi POS.
-//   MEMBER — pelanggan login, tidak boleh mengakses kasir.
-enum Role {
-  OWNER
-  KASIR
-  MEMBER
-}
-
 model User {
-  id                    String                 @id
-  name                  String
-  email                 String
-  emailVerified         Boolean
-  image                 String?
-  role                  Role                   @default(MEMBER)
-  // Peran diubah manual dari halaman /user → otomatisasi env (OWNER_EMAILS /
-  // KASIR_EMAILS) tidak boleh menimpanya lagi.
-  roleManual            Boolean                @default(false)
-  createdAt             DateTime
-  updatedAt             DateTime
-  sessions              Session[]
-  accounts              Account[]
-  transaksiKasir        Transaksi[]
-  shifts                Shift[]
-  returs                Retur[]
-  stokOprenames         StokOpname[]
-  pageVisits            PageVisit[]
-  deviceVisits          DeviceVisit[]
-  printers              Printer[]
-  auditLogs             AuditLog[]             @relation("AuditLogUser")
-  pengajuanKasir PengajuanPengeluaran[]
-  pengajuanOwner PengajuanPengeluaran[] @relation("PengajuanOwner")
-  notifikasi     Notifikasi[]
-  draftTransaksiKasir DraftTransaksi[] @relation("DraftTransaksiKasir")
-  draftTransaksiReviewer DraftTransaksi[] @relation("DraftTransaksiReviewer")
-  transaksiReviewAudit TransaksiReviewAudit[] @relation("TransaksiReviewAuditKasir")
+  id                     String                 @id
+  name                   String
+  email                  String                 @unique
+  emailVerified          Boolean
+  image                  String?
+  role                   Role                   @default(MEMBER)
+  createdAt              DateTime
+  updatedAt              DateTime
+  roleManual             Boolean                @default(false)
+  deviceVisits           DeviceVisit[]
+  pageVisits             PageVisit[]
+  printers               Printer[]
+  shifts                 Shift[]
+  transaksiKasir         Transaksi[]
+  accounts               Account[]
+  auditLogs              AuditLog[]             @relation("AuditLogUser")
+  draftTransaksiKasir    DraftTransaksi[]       @relation("DraftTransaksiKasir")
+  draftTransaksiReviewer DraftTransaksi[]       @relation("DraftTransaksiReviewer")
+  notifikasi             Notifikasi[]
+  pengajuanKasir         PengajuanPengeluaran[]
+  pengajuanOwner         PengajuanPengeluaran[] @relation("PengajuanOwner")
+  returs                 Retur[]
+  sessions               Session[]
+  stokOprenames          StokOpname[]
+  transaksiReviewAudit   TransaksiReviewAudit[] @relation("TransaksiReviewAuditKasir")
 
-  @@unique([email])
   @@map("user")
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
@@ -66,7 +49,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@index([userId])
   @@map("session")
 }
@@ -76,7 +58,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -86,6 +67,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("account")
@@ -102,9 +84,6 @@ model Verification {
   @@map("verification")
 }
 
-// State token bucket rate limit bersama (lintas instance server).
-// `hit` = token x 1.000; `resetAt` = waktu pembaruan/isi ulang terakhir.
-// Baris dikunci FOR UPDATE di src/server/rateLimit.ts.
 model RateLimit {
   key     String   @id
   hit     Int      @default(0)
@@ -114,8 +93,6 @@ model RateLimit {
   @@map("rate_limit")
 }
 
-// Penghitung nomor urut harian (transaksi/jurnal) yang atomik, menggantikan
-// COUNT() di dalam transaksi tulis. Lihat src/server/penomoran.ts.
 model NomorHarian {
   kunci String @id
   nilai Int    @default(0)
@@ -123,65 +100,47 @@ model NomorHarian {
   @@map("nomor_harian")
 }
 
-// ──────────────────────────────
-// Master data POS
-// ──────────────────────────────
-
 model Kategori {
   id        String   @id @default(cuid())
   nama      String
   deskripsi String?
-  produk    Produk[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  produk    Produk[]
 }
 
 model Bahan {
-  id          String  @id @default(cuid())
-  nama        String
-  satuan      String // gr, ml, pcs, kg, liter, biji, sachet, bungkus, ...
-  jenis       String? // jenis/rasa opsional, mis. "Arabica", "Original", "Coklat"
-  stok        Decimal @default(0) @db.Decimal(14, 2)
-  stokMinimum Decimal @default(0) @db.Decimal(14, 2)
-  // Harga per satuan, dipakai untuk hitung HPP produk lewat resep
-  hargaSatuan Decimal @default(0) @db.Decimal(14, 2)
-
-  resep           ProdukBahan[]
+  id              String           @id @default(cuid())
+  nama            String
+  satuan          String
+  jenis           String?
+  stok            Decimal          @default(0) @db.Decimal(14, 2)
+  stokMinimum     Decimal          @default(0) @db.Decimal(14, 2)
+  hargaSatuan     Decimal          @default(0) @db.Decimal(14, 2)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   pembelian       PembelianBahan[]
+  resep           ProdukBahan[]
   stokOpnameItems StokOpnameItem[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
-// Pencatatan pembelian bahan (restok) oleh owner.
 model PembelianBahan {
-  id            String    @id @default(cuid())
-  bahanId       String
-  bahan         Bahan     @relation(fields: [bahanId], references: [id], onDelete: Cascade)
-  supplierId    String? // optional supplier
-  supplier      Supplier? @relation(fields: [supplierId], references: [id])
-  jumlah        Decimal   @db.Decimal(14, 2) // jumlah yang dibeli (sesuai satuan bahan)
-  hargaSatuan   Decimal   @db.Decimal(14, 2) // harga per satuan saat pembelian
-  totalHarga    Decimal   @db.Decimal(14, 2) // jumlah × hargaSatuan
-  tanggal       DateTime  @default(now())
-  catatan       String?
-  // Sisa hutang usaha ke supplier untuk pembelian ini. 0 = sudah dibayar penuh
-  // (bayar di muka / tunai). Nilai > 0 = belum lunas, dikurangi oleh
-  // PembayaranHutang.
-  belumDibayar  Decimal   @default(0) @db.Decimal(14, 2)
-  // Sumber belanja saat pembelian tanpa supplier terdaftar:
-  // "SUPPLIER" (ada supplier), "PASAR_ONLINE", "PASAR_OFFLINE".
-  sumberBelanja String    @default("SUPPLIER")
-  // Nama pasar/toko tempat belanja (mis. "Pasar Kebayoran", "Tokopedia").
-  // Hanya dipakai untuk pembelian pasar.
-  tempatBelanja String?
-
+  id               String             @id @default(cuid())
+  bahanId          String
+  jumlah           Decimal            @db.Decimal(14, 2)
+  hargaSatuan      Decimal            @db.Decimal(14, 2)
+  totalHarga       Decimal            @db.Decimal(14, 2)
+  tanggal          DateTime           @default(now())
+  catatan          String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  supplierId       String?
+  belumDibayar     Decimal            @default(0) @db.Decimal(14, 2)
+  sumberBelanja    String             @default("SUPPLIER")
+  tempatBelanja    String?
+  bahan            Bahan              @relation(fields: [bahanId], references: [id], onDelete: Cascade)
+  supplier         Supplier?          @relation(fields: [supplierId], references: [id])
   pembayaranHutang PembayaranHutang[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@index([bahanId])
   @@index([supplierId])
@@ -190,38 +149,29 @@ model PembelianBahan {
   @@index([supplierId, sumberBelanja, tanggal])
 }
 
-// ──────────────────────────────
-// Supplier & Purchase Order (minimal)
-// ──────────────────────────────
 model Supplier {
-  id      String  @id @default(cuid())
-  nama    String
-  kontak  String? // nama person / nomor telepon / email
-  alamat  String?
-  aktif   Boolean @default(true)
-  // opsional: catatan khusus, ketentuan pembayaran, dll.
-  catatan String?
-
+  id               String             @id @default(cuid())
+  nama             String
+  kontak           String?
+  alamat           String?
+  aktif            Boolean            @default(true)
+  catatan          String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
   pembelian        PembelianBahan[]
   pembayaranHutang PembayaranHutang[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
-// Pembayaran hutang usaha: pelunasan sebagian/total pembelian bahan ke
-// supplier. Setiap pembayaran mengurangi PembelianBahan.belumDibayar.
 model PembayaranHutang {
   id               String         @id @default(cuid())
   supplierId       String
-  supplier         Supplier       @relation(fields: [supplierId], references: [id])
   pembelianBahanId String
-  pembelianBahan   PembelianBahan @relation(fields: [pembelianBahanId], references: [id], onDelete: Cascade)
-  jumlah           Decimal        @db.Decimal(14, 2) // nominal yang dibayar
+  jumlah           Decimal        @db.Decimal(14, 2)
   tanggal          DateTime       @default(now())
   catatan          String?
-
-  createdAt DateTime @default(now())
+  createdAt        DateTime       @default(now())
+  pembelianBahan   PembelianBahan @relation(fields: [pembelianBahanId], references: [id], onDelete: Cascade)
+  supplier         Supplier       @relation(fields: [supplierId], references: [id])
 
   @@index([supplierId])
   @@index([pembelianBahanId])
@@ -230,94 +180,617 @@ model PembayaranHutang {
 }
 
 model Produk {
-  id      String  @id @default(cuid())
-  nama    String
-  sku     String? @unique
-  // Barcode untuk scanner perangkat keras (EAN/UPC/QR internal), opsional
-  barcode String? @unique
-  gambar  String? // URL Cloudinary (secure_url), mis. https://res.cloudinary.com/.../abc123.webp
-  harga   Decimal @db.Decimal(14, 2)
-  stok    Int     @default(0)
-  aktif   Boolean @default(true)
-
-  kategoriId String?
-  kategori   Kategori? @relation(fields: [kategoriId], references: [id])
-
+  id                 String               @id @default(cuid())
+  nama               String
+  sku                String?              @unique
+  barcode            String?              @unique
+  gambar             String?
+  harga              Decimal              @db.Decimal(14, 2)
+  stok               Int                  @default(0)
+  aktif              Boolean              @default(true)
+  kategoriId         String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?
+  kategori           Kategori?            @relation(fields: [kategoriId], references: [id])
   resep              ProdukBahan[]
-  item               TransaksiItem[]
-  // Grup modifier yang tersedia untuk produk ini (mode F&B / restoran)
   produkModifierGrup ProdukModifierGrup[]
+  item               TransaksiItem[]
   returItems         ReturItem[]
   stokOpnameItems    StokOpnameItem[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@index([aktif])
   @@index([kategoriId])
   @@index([nama])
+  @@index([deletedAt])
 }
 
-// Resep / BOM: komposisi bahan untuk 1 satuan produk.
-// Stok bahan dikurangi otomatis saat produk terjual.
 model ProdukBahan {
   produkId String
   bahanId  String
   jumlah   Decimal @db.Decimal(14, 2)
-
-  produk Produk @relation(fields: [produkId], references: [id], onDelete: Cascade)
-  bahan  Bahan  @relation(fields: [bahanId], references: [id], onDelete: Restrict)
+  bahan    Bahan   @relation(fields: [bahanId], references: [id])
+  produk   Produk  @relation(fields: [produkId], references: [id], onDelete: Cascade)
 
   @@id([produkId, bahanId])
 }
 
 model Member {
-  id           String     @id @default(cuid())
+  id           String        @id @default(cuid())
   nama         String
-  telepon      String?    @unique
+  telepon      String?       @unique
   email        String?
   alamat       String?
-  poin         Int        @default(0)
-  // Total nilai transaksi yang pernah dilakukan member (diteruskan ke tier).
-  totalBelanja Decimal    @default(0) @db.Decimal(14, 2)
-  // Diskon persen otomatis yang diberikan member (null = tidak ada).
-  diskonPersen Decimal?   @db.Decimal(5, 2)
-  tier         TierMember @default(BRONZE)
-
-  transaksi Transaksi[]
-  pesananDraf PesananDraf[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  poin         Int           @default(0)
+  totalBelanja Decimal       @default(0) @db.Decimal(14, 2)
+  diskonPersen Decimal?      @db.Decimal(5, 2)
+  tier         TierMember    @default(BRONZE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transaksi    Transaksi[]
+  pesananDraf  PesananDraf[]
 
   @@index([email])
   @@index([nama])
 }
 
-// Tier member diturunkan dari totalBelanja (dihitung ulang tiap transaksi).
-enum TierMember {
-  BRONZE // totalBelanja < 3.000.000
-  SILVER // totalBelanja >= 3.000.000
-  GOLD // totalBelanja >= 10.000.000
+model Delivery {
+  id        String      @id @default(cuid())
+  nama      String
+  tarif     Decimal     @db.Decimal(14, 2)
+  estimasi  String?
+  aktif     Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  transaksi Transaksi[]
 }
 
-// Master kurir / layanan antar
-model Delivery {
-  id       String  @id @default(cuid())
-  nama     String // GoSend, Paxel, Kurir Toko, ...
-  tarif    Decimal @db.Decimal(14, 2)
-  estimasi String? // "1-2 jam"
-  aktif    Boolean @default(true)
+model Transaksi {
+  id                   String                 @id @default(cuid())
+  nomor                String                 @unique
+  tanggal              DateTime               @default(now())
+  memberId             String?
+  kasirId              String?
+  deliveryId           String?
+  ongkir               Decimal                @default(0) @db.Decimal(14, 2)
+  subtotal             Decimal                @db.Decimal(14, 2)
+  diskon               Decimal                @default(0) @db.Decimal(14, 2)
+  pajak                Decimal                @default(0) @db.Decimal(14, 2)
+  pajakJenis           String?
+  total                Decimal                @db.Decimal(14, 2)
+  poinPakai            Int                    @default(0)
+  poinDapat            Int                    @default(0)
+  metodeBayar          MetodeBayar            @default(TUNAI)
+  catatan              String?
+  mejaId               String?
+  statusPesanan        StatusPesanan          @default(MENUNGGU)
+  uangDiterima         Decimal?               @db.Decimal(14, 2)
+  kembalian            Decimal?               @db.Decimal(14, 2)
+  cetakOwner           Int                    @default(0)
+  cetakKasir           Int                    @default(0)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  shiftId              String?
+  dibuatOffline        Boolean                @default(false)
+  diskonMember         Decimal                @default(0) @db.Decimal(14, 2)
+  hpp                  Decimal                @default(0) @db.Decimal(14, 2)
+  idempotencyKey       String?                @unique
+  waktuKlien           DateTime?
+  dibayarPada          DateTime?
+  dibayarVia           ViaPembayaran?
+  paymentRef           String?                @unique
+  stokTerpotong        Boolean                @default(false)
+  sumber               SumberTransaksi        @default(POS)
+  diterimaPada         DateTime               @default(now())
+  alamat               String?
+  statusKasirReview    String                 @default("PENDING")
+  deletedAt            DateTime?
+  jurnal               Jurnal?
+  pembayaran           Pembayaran[]
+  printJobs            PrintJob[]
+  delivery             Delivery?              @relation(fields: [deliveryId], references: [id])
+  kasir                User?                  @relation(fields: [kasirId], references: [id])
+  meja                 Meja?                  @relation(fields: [mejaId], references: [id])
+  member               Member?                @relation(fields: [memberId], references: [id])
+  shift                Shift?                 @relation(fields: [shiftId], references: [id])
+  items                TransaksiItem[]
+  draftHasil           DraftTransaksi?        @relation("DraftTransaksiHasil")
+  pesananDraf          PesananDraf?
+  returs               Retur[]
+  transaksiReviewAudit TransaksiReviewAudit[] @relation("TransaksiReviewAuditTransaksi")
 
-  transaksi Transaksi[]
+  @@index([tanggal])
+  @@index([memberId])
+  @@index([kasirId])
+  @@index([shiftId])
+  @@index([deliveryId])
+  @@index([mejaId])
+  @@index([metodeBayar])
+  @@index([statusPesanan])
+  @@index([statusPesanan, createdAt])
+  @@index([tanggal, kasirId])
+  @@index([sumber, dibayarPada])
+  @@index([memberId, tanggal])
+  @@index([deletedAt])
+  @@index([createdAt], map: "Transaksi_kadaluarsa_idx", where: raw("((\"dibayarPada\" IS NULL) AND (\"statusPesanan\" = ANY (ARRAY['MENUNGGU'::\"StatusPesanan\", 'DIPROSES'::\"StatusPesanan\"])))"))
+  @@index([tanggal], map: "Transaksi_terjual_tanggal_idx", where: raw("((\"dibayarPada\" IS NOT NULL) AND (\"statusPesanan\" <> 'DIBATALKAN'::\"StatusPesanan\"))"))
+}
 
-  createdAt DateTime @default(now())
+model TransaksiItem {
+  id          String                  @id @default(cuid())
+  transaksiId String
+  produkId    String?
+  namaProduk  String
+  harga       Decimal                 @db.Decimal(14, 2)
+  qty         Int
+  subtotal    Decimal                 @db.Decimal(14, 2)
+  produk      Produk?                 @relation(fields: [produkId], references: [id])
+  transaksi   Transaksi               @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+  modifiers   TransaksiItemModifier[]
+  returItems  ReturItem[]
+
+  @@index([transaksiId])
+  @@index([produkId])
+  @@index([produkId, qty])
+}
+
+model Pembayaran {
+  id           String      @id @default(cuid())
+  transaksiId  String
+  metode       MetodeBayar
+  jumlah       Decimal     @db.Decimal(14, 2)
+  uangDiterima Decimal?    @db.Decimal(14, 2)
+  createdAt    DateTime    @default(now())
+  transaksi    Transaksi   @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+
+  @@index([transaksiId])
+  @@index([metode])
+}
+
+model Shift {
+  id         String      @id @default(cuid())
+  // Unik parsial "satu shift terbuka per kasir" ditegakkan index SQL
+  // Shift_kasir_terbuka_key (WHERE waktuTutup IS NULL). Sengaja tidak memakai
+  // @unique di sini: Prisma akan menganggap kasirId unik penuh dan mengubah
+  // relasi jadi 1:1 serta salah menyusun ON CONFLICT.
+  kasirId    String
+  waktuBuka  DateTime    @default(now())
+  waktuTutup DateTime?
+  kasAwal    Decimal     @db.Decimal(14, 2)
+  kasAkhir   Decimal?    @db.Decimal(14, 2)
+  selisih    Decimal?    @db.Decimal(14, 2)
+  catatan    String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  kasir      User        @relation(fields: [kasirId], references: [id])
+  transaksi  Transaksi[]
+
+  @@index([kasirId])
+  @@index([waktuBuka])
+}
+
+model Akun {
+  id        String         @id @default(cuid())
+  kode      String         @unique
+  nama      String
+  tipe      TipeAkun
+  aktif     Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  entri     JurnalDetail[]
+}
+
+model Jurnal {
+  id                    String                 @id @default(cuid())
+  nomor                 String                 @unique
+  tanggal               DateTime               @default(now())
+  keterangan            String?
+  transaksiId           String?                @unique
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  transaksi             Transaksi?             @relation(fields: [transaksiId], references: [id])
+  entri                 JurnalDetail[]
+  pengajuanPengeluarans PengajuanPengeluaran[]
+
+  @@index([tanggal])
+}
+
+model JurnalDetail {
+  id         String   @id @default(cuid())
+  jurnalId   String
+  akunId     String
+  debit      Decimal  @default(0) @db.Decimal(14, 2)
+  kredit     Decimal  @default(0) @db.Decimal(14, 2)
+  keterangan String?
+  createdAt  DateTime @default(now())
+  akun       Akun     @relation(fields: [akunId], references: [id])
+  jurnal     Jurnal   @relation(fields: [jurnalId], references: [id], onDelete: Cascade)
+
+  @@index([jurnalId])
+  @@index([akunId])
+}
+
+model Pengaturan {
+  kunci     String   @id
+  nilai     String
   updatedAt DateTime @updatedAt
 }
 
-// ──────────────────────────────
-// Transaksi POS
-// ──────────────────────────────
+model Meja {
+  id          String        @id @default(cuid())
+  nomor       String        @unique
+  nama        String?
+  aktif       Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+  transaksi   Transaksi[]
+  pesananDraf PesananDraf[]
+
+  @@index([deletedAt])
+}
+
+model ModifierGrup {
+  id        String               @id @default(cuid())
+  nama      String
+  wajib     Boolean              @default(false)
+  min       Int                  @default(0)
+  max       Int                  @default(99)
+  aktif     Boolean              @default(true)
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  modifiers Modifier[]
+  produks   ProdukModifierGrup[]
+}
+
+model Modifier {
+  id            String                  @id @default(cuid())
+  grupId        String
+  nama          String
+  hargaTambahan Decimal                 @default(0) @db.Decimal(14, 2)
+  aktif         Boolean                 @default(true)
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  grup          ModifierGrup            @relation(fields: [grupId], references: [id], onDelete: Cascade)
+  itemTransaksi TransaksiItemModifier[]
+
+  @@index([grupId])
+  @@index([aktif])
+}
+
+model ProdukModifierGrup {
+  id       String       @id @default(cuid())
+  produkId String
+  grupId   String
+  grup     ModifierGrup @relation(fields: [grupId], references: [id], onDelete: Cascade)
+  produk   Produk       @relation(fields: [produkId], references: [id], onDelete: Cascade)
+
+  @@unique([produkId, grupId])
+  @@index([grupId])
+}
+
+model TransaksiItemModifier {
+  id              String        @id @default(cuid())
+  transaksiItemId String
+  modifierId      String
+  qty             Int           @default(1)
+  catatan         String?
+  hargaTambahan   Decimal       @default(0) @db.Decimal(14, 2)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  modifier        Modifier      @relation(fields: [modifierId], references: [id], onDelete: Cascade)
+  transaksiItem   TransaksiItem @relation(fields: [transaksiItemId], references: [id], onDelete: Cascade)
+
+  @@index([transaksiItemId])
+  @@index([modifierId])
+}
+
+model PageVisit {
+  id        String   @id @default(cuid())
+  path      String
+  userId    String?
+  userType  String
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([path])
+  @@index([createdAt])
+  @@index([userId])
+  @@index([userType])
+}
+
+model DeviceVisit {
+  id              String   @id @default(cuid())
+  deviceId        String   @unique
+  deviceName      String?
+  os              String
+  ipv4            String?
+  ipv6            String?
+  dns             String?
+  lokasi          String?
+  klasifikasi     String
+  userId          String?
+  userType        String
+  createdAt       DateTime @default(now())
+  terakhirDilihat DateTime @default(now())
+  jumlahKunjungan Int      @default(1)
+  user            User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([terakhirDilihat])
+  @@index([klasifikasi])
+  @@index([userType])
+}
+
+model Retur {
+  id          String      @id @default(cuid())
+  nomor       String      @unique
+  tanggal     DateTime    @default(now())
+  transaksiId String
+  kasirId     String
+  alasan      String
+  totalRetur  Decimal     @db.Decimal(14, 2)
+  kasir       User        @relation(fields: [kasirId], references: [id])
+  transaksi   Transaksi   @relation(fields: [transaksiId], references: [id])
+  items       ReturItem[]
+
+  @@index([transaksiId])
+  @@index([kasirId])
+  @@index([tanggal])
+  @@map("retur")
+}
+
+model ReturItem {
+  id              String         @id @default(cuid())
+  returId         String
+  produkId        String?
+  namaProduk      String
+  qty             Int
+  hargaSatuan     Decimal        @db.Decimal(14, 2)
+  subtotal        Decimal        @db.Decimal(14, 2)
+  transaksiItemId String?
+  produk          Produk?        @relation(fields: [produkId], references: [id])
+  retur           Retur          @relation(fields: [returId], references: [id], onDelete: Cascade)
+  transaksiItem   TransaksiItem? @relation(fields: [transaksiItemId], references: [id])
+
+  @@index([returId])
+  @@index([transaksiItemId])
+  @@index([produkId])
+  @@map("retur_item")
+}
+
+model StokOpname {
+  id      String           @id @default(cuid())
+  nomor   String           @unique
+  tanggal DateTime         @default(now())
+  kasirId String
+  jenis   String
+  catatan String?
+  kasir   User             @relation(fields: [kasirId], references: [id])
+  items   StokOpnameItem[]
+
+  @@index([kasirId])
+  @@index([tanggal])
+  @@index([jenis])
+  @@map("stok_opname")
+}
+
+model StokOpnameItem {
+  id           String     @id @default(cuid())
+  opnameId     String
+  produkId     String?
+  bahanId      String?
+  stokTercatat Decimal    @db.Decimal(14, 2)
+  stokFisik    Decimal    @db.Decimal(14, 2)
+  selisih      Decimal    @db.Decimal(14, 2)
+  bahan        Bahan?     @relation(fields: [bahanId], references: [id])
+  opname       StokOpname @relation(fields: [opnameId], references: [id], onDelete: Cascade)
+  produk       Produk?    @relation(fields: [produkId], references: [id])
+
+  @@index([opnameId])
+  @@index([produkId])
+  @@index([bahanId])
+  @@map("stok_opname_item")
+}
+
+model Printer {
+  id              String     @id @default(cuid())
+  nama            String
+  tipe            String     @default("ESC_POS")
+  lokasi          String?
+  perangkat       String?
+  // Unik parsial (satu default global, satu default per pengguna) dibuat di
+  // migrasi SQL. Tidak ditandai @unique agar Prisma tidak menganggap nilai ini
+  // unik penuh — findUnique/upsert pada kolom parsial akan gagal (42P10).
+  default         Boolean    @default(false)
+  aktif           Boolean    @default(true)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  userId          String?
+  koneksi         String     @default("USB")
+  vendorId        String?
+  vendorName      String?
+  serialNumber    String?
+  productName     String?
+  dipindaiPada    DateTime?
+  defaultPengguna Boolean    @default(false)
+  terakhirDipakai DateTime?
+  jobs            PrintJob[]
+  user            User?      @relation(fields: [userId], references: [id])
+
+  @@unique([userId, perangkat])
+  @@index([userId, aktif, dipindaiPada])
+  @@index([koneksi])
+}
+
+model PrintJob {
+  id             String     @id @default(cuid())
+  printerId      String?
+  transaksiId    String?
+  tipe           String     @default("STRUK")
+  status         String     @default("MENUNGGU")
+  idempotencyKey String?    @unique
+  payload        Json?
+  percobaan      Int        @default(0)
+  pesanGalat     String?
+  dicetakPada    DateTime?
+  diambilPada    DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  printer        Printer?   @relation(fields: [printerId], references: [id])
+  transaksi      Transaksi? @relation(fields: [transaksiId], references: [id])
+
+  @@index([status, printerId])
+  @@index([transaksiId])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  timestamp DateTime @default(now())
+  catatan   String?
+  user      User?    @relation("AuditLogUser", fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([timestamp])
+  @@index([entity])
+  @@map("audit_log")
+}
+
+model PengajuanPengeluaran {
+  id               String           @id @default(cuid())
+  kasirId          String
+  ownerId          String?
+  nominal          Decimal          @db.Decimal(14, 2)
+  jenis            JenisPengeluaran
+  keterangan       String?
+  status           StatusPengajuan  @default(PENDING)
+  alasanPenolakan  String?
+  jurnalId         String?
+  disetujuiPada    DateTime?
+  ditolakPada      DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  nominalDisetujui Decimal?         @db.Decimal(14, 2)
+  jurnal           Jurnal?          @relation(fields: [jurnalId], references: [id])
+  kasir            User             @relation(fields: [kasirId], references: [id], onDelete: Cascade)
+  owner            User?            @relation("PengajuanOwner", fields: [ownerId], references: [id])
+
+  @@index([kasirId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("pengajuan_pengeluaran")
+}
+
+model DraftTransaksi {
+  id             String                 @id @default(cuid())
+  nomor          String                 @unique
+  kasirId        String
+  subtotal       Decimal                @db.Decimal(14, 2)
+  total          Decimal                @db.Decimal(14, 2)
+  metodeBayar    String
+  catatan        String?
+  waktuKlien     DateTime?
+  dibuatOffline  Boolean                @default(false)
+  idempotencyKey String?                @unique
+  status         StatusDraftTransaksi   @default(MENUNGGU)
+  reviewedById   String?
+  reviewedAt     DateTime?
+  transaksiId    String?                @unique
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  payloadJson    Json
+  kasir          User                   @relation("DraftTransaksiKasir", fields: [kasirId], references: [id])
+  reviewedBy     User?                  @relation("DraftTransaksiReviewer", fields: [reviewedById], references: [id])
+  transaksi      Transaksi?             @relation("DraftTransaksiHasil", fields: [transaksiId], references: [id])
+  reviewAudits   TransaksiReviewAudit[] @relation("TransaksiReviewAuditDraft")
+
+  @@index([kasirId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("draft_transaksi")
+}
+
+model TransaksiReviewAudit {
+  id          String          @id @default(cuid())
+  transaksiId String?
+  kasirId     String
+  status      String
+  catatan     String?
+  createdAt   DateTime        @default(now())
+  draftId     String?
+  draft       DraftTransaksi? @relation("TransaksiReviewAuditDraft", fields: [draftId], references: [id])
+  kasir       User            @relation("TransaksiReviewAuditKasir", fields: [kasirId], references: [id])
+  transaksi   Transaksi?      @relation("TransaksiReviewAuditTransaksi", fields: [transaksiId], references: [id])
+
+  @@index([draftId])
+  @@index([transaksiId])
+  @@index([kasirId])
+  @@index([createdAt])
+  @@map("transaksi_review_audit")
+}
+
+model PesananDraf {
+  id             String            @id @default(cuid())
+  mejaId         String?
+  memberId       String?
+  nama           String?
+  telepon        String?
+  catatan        String?
+  status         StatusPesananDraf @default(MENUNGGU)
+  itemsJson      Json
+  subtotal       Decimal           @db.Decimal(14, 2)
+  finalisasiPada DateTime?
+  transaksiId    String?           @unique
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  meja           Meja?             @relation(fields: [mejaId], references: [id])
+  member         Member?           @relation(fields: [memberId], references: [id])
+  transaksi      Transaksi?        @relation(fields: [transaksiId], references: [id])
+
+  @@index([mejaId])
+  @@index([status, createdAt])
+  @@index([createdAt])
+  @@index([finalisasiPada])
+  @@map("pesanan_draf")
+}
+
+model Notifikasi {
+  id        String   @id @default(cuid())
+  userId    String
+  judul     String
+  pesan     String
+  dibaca    Boolean  @default(false)
+  tipe      String
+  entitasId String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([dibaca])
+  @@index([createdAt])
+  @@map("notifikasi")
+}
+
+enum Role {
+  OWNER
+  KASIR
+  MEMBER
+}
+
+enum TierMember {
+  BRONZE
+  SILVER
+  GOLD
+}
 
 enum MetodeBayar {
   TUNAI
@@ -337,196 +810,13 @@ enum ViaPembayaran {
   WEBHOOK
 }
 
-// Status pesanan dalam mode F&B / restoran.
 enum StatusPesanan {
-  MENUNGGU // baru dibuat, belum diproses dapur
-  DIPROSES // sedang dibuat dapur
-  SELESAI // siap disajikan / telah disajikan
-  DIBATALKAN // pesanan dibatalkan
-  LUNAS // legacy: pembayaran lunas; status bayar baru memakai dibayarPada
+  MENUNGGU
+  DIPROSES
+  SELESAI
+  DIBATALKAN
+  LUNAS
 }
-
-model Transaksi {
-  id      String   @id @default(cuid())
-  nomor   String   @unique // nomor struk, mis. POS-20251016-0001
-  tanggal DateTime @default(now())
-  // Waktu server menerima transaksi. Selalu diisi server; laporan resmi
-  // memakai `tanggal`/`diterimaPada`, bukan `waktuKlien` dari klien (SEC-21).
-  diterimaPada DateTime @default(now())
-
-  memberId String?
-  member   Member? @relation(fields: [memberId], references: [id])
-
-  // Jejak kasir yang memposting (laporan performa kasir)
-  kasirId String?
-  kasir   User?   @relation(fields: [kasirId], references: [id])
-
-  // Shift kasir saat transaksi diposting (diisi otomatis bila kasir
-  // punya shift terbuka; null untuk pesanan online / posting tanpa shift)
-  shiftId String?
-  shift   Shift?  @relation(fields: [shiftId], references: [id])
-
-  deliveryId String?
-  delivery   Delivery? @relation(fields: [deliveryId], references: [id])
-  ongkir     Decimal   @default(0) @db.Decimal(14, 2)
-
-  subtotal   Decimal @db.Decimal(14, 2)
-  diskon     Decimal @default(0) @db.Decimal(14, 2)
-  pajak      Decimal @default(0) @db.Decimal(14, 2)
-  // Jenis pajak yang dibebankan ke pelanggan: "PB1" (restoran/cafe) atau "PPN" (retail).
-  pajakJenis String?
-  total      Decimal @db.Decimal(14, 2)
-
-  // Jejak loyalitas: poin yang ditukar jadi diskon & poin yang didapat
-  poinPakai Int @default(0)
-  poinDapat Int @default(0)
-
-  metodeBayar MetodeBayar @default(TUNAI)
-  catatan     String?
-  // Alamat pengiriman untuk pesanan antar (online/POS). Null = bukan antar.
-  alamat      String?
-
-  // Meja dalam mode F&B / restoran (opsional, kosong = take away / antar)
-  mejaId String?
-  meja   Meja?   @relation(fields: [mejaId], references: [id])
-
-  statusPesanan StatusPesanan @default(MENUNGGU)
-  statusKasirReview String @default("PENDING")
-
-  // Kanal transaksi: POS dibayar saat checkout; ONLINE menunggu konfirmasi.
-  sumber SumberTransaksi @default(POS)
-  // Sumber kebenaran status bayar. Null = belum dibayar.
-  dibayarPada DateTime?
-  dibayarVia  ViaPembayaran?
-  // Referensi pembayaran gateway, unik untuk idempotensi webhook.
-  paymentRef     String? @unique
-  // Mencegah pengembalian stok ganda saat pesanan dibatalkan.
-  stokTerpotong Boolean @default(false)
-
-  // Pembayaran split: rincian per metode. Kosong = pakai metodeBayar tunggal.
-  // Untuk baris TUNAI, uangDiterima menyimpan uang fisik yang diserahkan.
-  uangDiterima Decimal? @db.Decimal(14, 2)
-  kembalian    Decimal? @db.Decimal(14, 2)
-
-  // Pelacakan jumlah cetak struk per role (owner/kasir)
-  cetakOwner Int @default(0)
-  cetakKasir Int @default(0)
-
-  // ─── Offline & idempotensi ───
-  // Kunci idempotensi buatan klien (antrean offline). Unik → retry transaksi
-  // yang sama tak membuat transaksi ganda (stok & pendapatan tak dobel).
-  idempotencyKey String?   @unique
-  // True bila transaksi dibuat dari antrean offline (luring).
-  dibuatOffline  Boolean   @default(false)
-  // Waktu saat klien membuat transaksi. HANYA metadata offline (batas ±24 jam
-  // dari jam server di validations/transaksi.ts); bukan sumber laporan resmi.
-  waktuKlien     DateTime?
-  // HPP & diskon member pada saat transaksi ini — disimpan agar replay
-  // idempoten mengembalikan angka yang sama persis.
-  hpp            Decimal   @default(0) @db.Decimal(14, 2)
-  diskonMember   Decimal   @default(0) @db.Decimal(14, 2)
-
-  items      TransaksiItem[]
-  pembayaran Pembayaran[]
-  returs     Retur[]
-  printJobs  PrintJob[]
-
-  // Jurnal yang terposting otomatis dari transaksi ini
-  jurnal Jurnal?
-
-  // Draft dine-in yang dikonversi ke transaksi ini (jika ada)
-  pesananDraf PesananDraf?
-
-  // Draft transaksi kasir yang diposting dari draft ini (jika ada)
-  draftHasil DraftTransaksi? @relation("DraftTransaksiHasil")
-  // Audit review transaksi terkait
-  transaksiReviewAudit TransaksiReviewAudit[] @relation("TransaksiReviewAuditTransaksi")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([tanggal])
-  @@index([memberId])
-  @@index([kasirId])
-  @@index([shiftId])
-  @@index([deliveryId])
-  @@index([mejaId])
-  @@index([metodeBayar])
-  @@index([statusPesanan])
-  @@index([statusPesanan, createdAt])
-  @@index([tanggal, kasirId])
-  @@index([sumber, dibayarPada])
-  @@index([memberId, tanggal])
-}
-
-model TransaksiItem {
-  id          String    @id @default(cuid())
-  transaksiId String
-  transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
-
-  // Snapshot saat barang dijual — riwayat tetap benar walau
-  // nama/harga produk berubah kemudian
-  produkId   String?
-  produk     Produk? @relation(fields: [produkId], references: [id], onDelete: SetNull)
-  namaProduk String
-  harga      Decimal @db.Decimal(14, 2)
-  qty        Int
-  subtotal   Decimal @db.Decimal(14, 2)
-
-  // Modifier yang dipilih untuk item ini (mode F&B / restoran)
-  modifiers TransaksiItemModifier[]
-  returItems ReturItem[]
-
-  @@index([transaksiId])
-  @@index([produkId])
-  @@index([produkId, qty])
-}
-
-// Rincian pembayaran per metode (mendukung split payment).
-// Jumlah seluruh baris harus sama dengan Transaksi.total.
-model Pembayaran {
-  id          String    @id @default(cuid())
-  transaksiId String
-  transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
-
-  metode       MetodeBayar
-  jumlah       Decimal     @db.Decimal(14, 2)
-  // Uang fisik yang diserahkan (khusus TUNAI); kembalian dihitung di Transaksi
-  uangDiterima Decimal?    @db.Decimal(14, 2)
-
-  createdAt DateTime @default(now())
-
-  @@index([transaksiId])
-  @@index([metode])
-}
-
-// Sesi kerja kasir: buka (kas awal) → tutup (kas akhir + selisih).
-// Selama shift terbuka, transaksi kasir otomatis terikat (Transaksi.shiftId).
-// Satu kasir maksimal satu shift terbuka (unique parsial di migration).
-model Shift {
-  id         String    @id @default(cuid())
-  kasirId    String
-  kasir      User      @relation(fields: [kasirId], references: [id])
-  waktuBuka  DateTime  @default(now())
-  waktuTutup DateTime?
-  kasAwal    Decimal   @db.Decimal(14, 2)
-  kasAkhir   Decimal?  @db.Decimal(14, 2) // uang fisik dihitung saat tutup
-  selisih    Decimal?  @db.Decimal(14, 2) // kasAkhir - (kasAwal + penjualan tunai)
-  catatan    String?
-
-  transaksi Transaksi[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([kasirId])
-  @@index([waktuBuka])
-}
-
-// ──────────────────────────────
-// Buku besar (akuntansi)
-// Setiap transaksi POS memposting satu Jurnal berimbang.
-// ──────────────────────────────
 
 enum TipeAkun {
   ASET
@@ -536,375 +826,12 @@ enum TipeAkun {
   BEBAN
 }
 
-// Chart of Accounts
-model Akun {
-  id    String   @id @default(cuid())
-  kode  String   @unique // 1100, 4100, ...
-  nama  String
-  tipe  TipeAkun
-  aktif Boolean  @default(true)
-
-  entri JurnalDetail[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Jurnal {
-  id         String   @id @default(cuid())
-  nomor      String   @unique // JU-20251016-0001
-  tanggal    DateTime @default(now())
-  keterangan String?
-
-  // Sumber posting otomatis (satu transaksi = satu jurnal)
-  transaksiId String?    @unique
-  transaksi   Transaksi? @relation(fields: [transaksiId], references: [id], onDelete: SetNull)
-
-  entri JurnalDetail[]
-
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @updatedAt
-  pengajuanPengeluarans PengajuanPengeluaran[]
-
-  @@index([tanggal])
-}
-
-model JurnalDetail {
-  id       String @id @default(cuid())
-  jurnalId String
-  jurnal   Jurnal @relation(fields: [jurnalId], references: [id], onDelete: Cascade)
-
-  akunId String
-  akun   Akun   @relation(fields: [akunId], references: [id], onDelete: Restrict)
-
-  debit      Decimal @default(0) @db.Decimal(14, 2)
-  kredit     Decimal @default(0) @db.Decimal(14, 2)
-  keterangan String?
-
-  createdAt DateTime @default(now())
-
-  @@index([jurnalId])
-  @@index([akunId])
-}
-
-// ──────────────────────────────
-// Pengaturan aplikasi (key-value)
-// Contoh: mode_fnb = "true" | "false"
-// ──────────────────────────────
-
-model Pengaturan {
-  kunci     String   @id
-  nilai     String
-  updatedAt DateTime @updatedAt
-}
-
-// ──────────────────────────────
-// Mode F&B / Restoran
-// Meja, modifier, dan status pesanan.
-// ──────────────────────────────
-
-// Meja di restoran / cafe (mis. "1", "A1", "VIP 2").
-model Meja {
-  id        String      @id @default(cuid())
-  nomor     String      @unique // nomor meja, mis. "1", "A1"
-  nama      String? // nama meja opsional, mis. "Meja Sudut"
-  aktif     Boolean     @default(true)
-  transaksi Transaksi[]
-  pesananDraf PesananDraf[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// Grup modifier untuk produk (mis. "Topping", "Tingkat Manis", "Ukuran").
-model ModifierGrup {
-  id    String  @id @default(cuid())
-  nama  String // "Topping", "Tingkat Manis"
-  wajib Boolean @default(false) // wajib memilih minimal satu
-  min   Int     @default(0) // minimal pilihan
-  max   Int     @default(99) // maksimal pilihan
-  aktif Boolean @default(true)
-
-  produks   ProdukModifierGrup[]
-  modifiers Modifier[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// Satu opsi dalam grup modifier (mis. "Extra Keju (+Rp5.000)", "Manis").
-model Modifier {
-  id            String       @id @default(cuid())
-  grupId        String
-  grup          ModifierGrup @relation(fields: [grupId], references: [id], onDelete: Cascade)
-  nama          String // "Extra Keju"
-  hargaTambahan Decimal      @default(0) @db.Decimal(14, 2)
-  aktif         Boolean      @default(true)
-
-  itemTransaksi TransaksiItemModifier[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([grupId])
-  @@index([aktif])
-}
-
-// Hubungan produk ke grup modifier yang tersedia untuk produk itu.
-model ProdukModifierGrup {
-  id       String       @id @default(cuid())
-  produkId String
-  produk   Produk       @relation(fields: [produkId], references: [id], onDelete: Cascade)
-  grupId   String
-  grup     ModifierGrup @relation(fields: [grupId], references: [id], onDelete: Cascade)
-
-  @@unique([produkId, grupId])
-  @@index([grupId])
-}
-
-// Modifier yang dipilih pada satu item transaksi (mode F&B).
-model TransaksiItemModifier {
-  id              String        @id @default(cuid())
-  transaksiItemId String
-  transaksiItem   TransaksiItem @relation(fields: [transaksiItemId], references: [id], onDelete: Cascade)
-  modifierId      String
-  modifier        Modifier      @relation(fields: [modifierId], references: [id], onDelete: Cascade)
-  qty             Int           @default(1)
-  catatan         String?
-  hargaTambahan   Decimal       @default(0) @db.Decimal(14, 2)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([transaksiItemId])
-  @@index([modifierId])
-}
-
-// Kunjungan halaman untuk analitik akses owner (frekuensi kunjungan user).
-model PageVisit {
-  id        String   @id @default(cuid())
-  path      String
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userType  String // member / non-member (owner & kasir dikecualikan)
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime @default(now())
-
-  @@index([path])
-  @@index([createdAt])
-  @@index([userId])
-  @@index([userType])
-}
-
-// Pelacakan perangkat & lokasi user/member.
-model DeviceVisit {
-  id          String   @id @default(cuid())
-  // Identitas perangkat dari token bertanda tangan server (SEC-24), bukan
-  // deviceId kiriman klien. Unik agar satu perangkat hanya punya satu baris.
-  deviceId    String   @unique
-  deviceName  String?
-  os          String // mac/windows/android/ios/linux
-  ipv4        String?
-  ipv6        String?
-  dns         String?
-  lokasi      String?
-  klasifikasi String // hp/tablet/laptop/pc/mobil
-  userId      String?
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  userType    String // member / non-member (owner & kasir dikecualikan)
-  createdAt        DateTime @default(now())
-  terakhirDilihat  DateTime @default(now())
-  jumlahKunjungan  Int      @default(1)
-
-  @@index([userId])
-  @@index([terakhirDilihat])
-  @@index([klasifikasi])
-  @@index([userType])
-}
-
-// ──────────────────────────────
-// Retur & Stok Opname (P1)
-// ──────────────────────────────
-
-// Retur/refund pasca-jual: transaksi asal + item yang dikembalikan + alasan.
-// Stok produk & bahan dikembalikan otomatis (kebalikan postingan) dan jurnal
-// pembalik dicatat di buku besar.
-model Retur {
-  id          String    @id @default(cuid())
-  nomor       String    @unique // RT-20261019-0001
-  tanggal     DateTime  @default(now())
-  transaksiId String
-  transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Restrict)
-  kasirId     String
-  kasir       User      @relation(fields: [kasirId], references: [id])
-  alasan      String
-  totalRetur  Decimal   @db.Decimal(14, 2) // jumlah uang yang dikembalikan ke pelanggan
-
-  items ReturItem[]
-
-  @@index([transaksiId])
-  @@index([kasirId])
-  @@index([tanggal])
-  @@map("retur")
-}
-
-model ReturItem {
-  id          String  @id @default(cuid())
-  returId     String
-  retur       Retur   @relation(fields: [returId], references: [id], onDelete: Cascade)
-  // Identitas baris transaksi asal; membedakan dua baris produk sama.
-  transaksiItemId String?
-  transaksiItem   TransaksiItem? @relation(fields: [transaksiItemId], references: [id], onDelete: SetNull)
-  produkId    String?
-  produk      Produk? @relation(fields: [produkId], references: [id], onDelete: SetNull)
-  namaProduk  String // snapshot nama saat dijual
-  qty         Int
-  hargaSatuan Decimal @db.Decimal(14, 2) // harga jual satuan asli
-  subtotal    Decimal @db.Decimal(14, 2) // qty × hargaSatuan
-
-  @@index([returId])
-  @@index([transaksiItemId])
-  @@index([produkId])
-  @@map("retur_item")
-}
-
-// Stok opname: pencocokan stok tercatat vs stok fisik per produk/bahan,
-// dengan jejak siapa dan kapan melakukan koreksi manual.
-model StokOpname {
-  id      String   @id @default(cuid())
-  nomor   String   @unique // OP-20261019-0001
-  tanggal DateTime @default(now())
-  kasirId String
-  kasir   User     @relation(fields: [kasirId], references: [id])
-  jenis   String // "PRODUK" | "BAHAN"
-  catatan String?
-
-  items StokOpnameItem[]
-
-  @@index([kasirId])
-  @@index([tanggal])
-  @@index([jenis])
-  @@map("stok_opname")
-}
-
-model StokOpnameItem {
-  id           String     @id @default(cuid())
-  opnameId     String
-  opname       StokOpname @relation(fields: [opnameId], references: [id], onDelete: Cascade)
-  produkId     String?
-  produk       Produk?    @relation(fields: [produkId], references: [id], onDelete: SetNull)
-  bahanId      String?
-  bahan        Bahan?     @relation(fields: [bahanId], references: [id], onDelete: SetNull)
-  stokTercatat Decimal    @db.Decimal(14, 2) // stok di sistem sebelum koreksi
-  stokFisik    Decimal    @db.Decimal(14, 2) // stok yang dihitung di lapangan
-  selisih      Decimal    @db.Decimal(14, 2) // stokFisik - stokTercatat
-
-  @@index([opnameId])
-  @@index([produkId])
-  @@index([bahanId])
-  @@map("stok_opname_item")
-}
-
-// ──────────────────────────────
-// Printer & Antrean Cetak (mobile / print bridge)
-// ──────────────────────────────
-// Printer adalah Registered Device (bluetooth/USB/IP). Client pencetak
-// mengambil job dari server lewat polling, lalu reportsesuai selesai.
-model Printer {
-  id              String    @id @default(cuid())
-  // Pemilik pendaftaran perangkat: hanya OWNER/KASIR (dijaga di API).
-  userId          String?
-  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  nama            String
-  // "ESC_POS" (thermal 58mm) atau "RAW" (printer biasa).
-  tipe            String    @default("ESC_POS")
-  lokasi          String? // mis. "Kasir 1", "Dapur"
-  perangkat       String? // id stabil perangkat (MAC, IP, USB path, atau ID Web Serial)
-  // Jalur koneksi perangkat: "USB" | "BLUETOOTH" | "WIFI" | "SERIAL".
-  koneksi         String    @default("USB")
-  // Metadata perangkat bila tersedia dari API native / Web Serial.
-  vendorId        String?
-  vendorName      String?
-  serialNumber    String?
-  productName     String?
-  dipindaiPada    DateTime?
-  terakhirDipakai DateTime?
-  // Printer default: dipakai bila klien tak menyebut printer.
-  default         Boolean   @default(false)
-  // Default per pengguna (perangkat hasil pindai).
-  defaultPengguna Boolean   @default(false)
-  aktif           Boolean   @default(true)
-
-  jobs PrintJob[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, perangkat])
-  @@index([userId, aktif, dipindaiPada])
-  @@index([koneksi])
-}
-
-// Job cetak: dibuat server dari transaksi (atau manual), diambil client
-// pencetak, lalu ditandai DICETAK atau GAGAL.
-model PrintJob {
-  id             String     @id @default(cuid())
-  printerId      String?
-  printer        Printer?   @relation(fields: [printerId], references: [id], onDelete: SetNull)
-  transaksiId    String?
-  transaksi      Transaksi? @relation(fields: [transaksiId], references: [id], onDelete: SetNull)
-  // "STRUK" | "LABEL" | "OPNAME" | ...
-  tipe           String     @default("STRUK")
-  // "MENUNGGU" → "DIPROSES" → "DICETAK" | "GAGAL"
-  status         String     @default("MENUNGGU")
-  // Kunci idempotensi klien (retry tak bikin job ganda).
-  idempotencyKey String?    @unique
-  // Isi struk (JSON) — client pencetak merender sendiri ke ESC/POS.
-  payload        Json?
-  percobaan      Int        @default(0)
-  pesanGalat     String?
-  dicetakPada    DateTime?
-  diambilPada    DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([status, printerId])
-  @@index([transaksiId])
-  @@index([createdAt])
-}
-
-// ──────────────────────────────
-// Audit Trail (P1)
-// ──────────────────────────────
-model AuditLog {
-  id        String   @id @default(cuid())
-  userId    String? // nullable for system actions
-  user      User?    @relation("AuditLogUser", fields: [userId], references: [id])
-  action    String // e.g., CREATE, UPDATE, DELETE, LOGIN, LOGOUT, etc.
-  entity    String // name of the entity (e.g., Produk, Pengaturan, User)
-  entityId  String? // ID of the entity (if applicable)
-  before    Json? // state before change (JSON string)
-  after     Json? // state after change (JSON string)
-  // Alasan tindakan (mis. alasan retur, catatan koreksi stok).
-  catatan   String?
-  timestamp DateTime @default(now())
-
-  @@index([userId])
-  @@index([timestamp])
-  @@index([entity])
-  @@map("audit_log")
-}
-
-// Status ajuan pengeluaran owner.
 enum StatusPengajuan {
   PENDING
   DISETUJUI
   DITOLAK
 }
 
-// Jenis akun pengeluaran yang dipilih kasir via dropdown di dialog.
 enum JenisPengeluaran {
   BELANJA
   OPERASIONAL_KASIR
@@ -914,173 +841,14 @@ enum JenisPengeluaran {
   LAINNYA
 }
 
-// Ajuan pengeluaran kasir yang perlu disetujui owner sebelum dicatat ke jurnal.
-model PengajuanPengeluaran {
-  id      String  @id @default(cuid())
-  kasirId String
-  kasir   User    @relation(fields: [kasirId], references: [id], onDelete: Cascade)
-  ownerId String?
-  owner   User?   @relation("PengajuanOwner", fields: [ownerId], references: [id])
-
-  nominal         Decimal          @db.Decimal(14, 2)
-  // Nominal yang benar-benar disetujui owner (boleh lebih kecil dari ajuan).
-  nominalDisetujui Decimal?        @db.Decimal(14, 2)
-  jenis           JenisPengeluaran
-  keterangan      String?
-  status          StatusPengajuan  @default(PENDING)
-  alasanPenolakan String?
-
-  // Terbuat otomatis saat owner menyetujui (jurnal buku besar).
-  jurnalId String?
-  jurnal   Jurnal? @relation(fields: [jurnalId], references: [id], onDelete: SetNull)
-
-  disetujuiPada DateTime?
-  ditolakPada   DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([kasirId])
-  @@index([status])
-  @@index([createdAt])
-  @@map("pengajuan_pengeluaran")
-}
-
-// ──────────────────────────────
-// Pesanan Draf Dine-In (FIT-01)
-// ─── Draft transaksi POS (kasir): draft → review kasir → post atomik ───
-// Stok & jurnal TIDAK disentuh sampai review disetujui (A1 two-phase, semua sumber).
 enum StatusDraftTransaksi {
-  MENUNGGU   // menunggu review kasir
-  DISETUJUI  // sudah disetujui & diposting ke Transaksi
-  DITOLAK    // ditolak oleh kasir reviewer
+  MENUNGGU
+  DISETUJUI
+  DITOLAK
 }
 
-// Draft transaksi POS umum (bukan dine-in): kasir menyusun, baru setelah
-// review disetujui diposting ke Transaksi (stok & jurnal baru terpotong).
-model DraftTransaksi {
-  id        String   @id @default(cuid())
-  nomor     String   @unique // nomor draft, mis. DRAFT-20251016-0001
-  kasirId   String
-  kasir     User     @relation("DraftTransaksiKasir", fields: [kasirId], references: [id])
-
-  // Lengkap input posting (tanpa statusKasirReview, yang diisi saat review).
-  payloadJson Json
-
-  // Ringkas untuk tampilan daftar draft.
-  subtotal        Decimal @db.Decimal(14, 2)
-  total           Decimal @db.Decimal(14, 2)
-  metodeBayar     String
-  catatan         String?
-
-  // Metadata offline (opsional, sama seperti Transaksi)
-  waktuKlien      DateTime?
-  dibuatOffline   Boolean @default(false)
-  idempotencyKey  String?   @unique
-
-  status          StatusDraftTransaksi @default(MENUNGGU)
-  reviewedById    String?
-  reviewedBy      User?   @relation("DraftTransaksiReviewer", fields: [reviewedById], references: [id])
-  reviewedAt      DateTime?
-  transaksiId String?   @unique // Transaksi hasil posting (jika disetujui)
-  transaksi       Transaksi? @relation("DraftTransaksiHasil", fields: [transaksiId], references: [id])
-  reviewAudits    TransaksiReviewAudit[] @relation("TransaksiReviewAuditDraft")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([kasirId])
-  @@index([status])
-  @@index([createdAt])
-  @@map("draft_transaksi")
-}
-
-// ─── Audit terpisah untuk review transaksi (bukan AuditLog umum) ───
-// Setiap keputusan review (setuju/tolak) dicatat di sini agar terpisah dari
-// AuditLog operasi biasa.
-model TransaksiReviewAudit {
-  id          String          @id @default(cuid())
-  // Draft sumber review (selalu ada, termasuk saat ditolak).
-  draftId     String?
-  draft       DraftTransaksi? @relation("TransaksiReviewAuditDraft", fields: [draftId], references: [id])
-  // Transaksi hasil posting; null bila draft ditolak.
-  transaksiId String?
-  transaksi   Transaksi?      @relation("TransaksiReviewAuditTransaksi", fields: [transaksiId], references: [id])
-  // Peninjau (kasir pembuat atau owner, tergantung kebijakan).
-  kasirId     String
-  kasir       User            @relation("TransaksiReviewAuditKasir", fields: [kasirId], references: [id])
-  status      String          // DISETUJUI | DITOLAK
-  catatan     String?
-  createdAt   DateTime        @default(now())
-
-  @@index([draftId])
-  @@index([transaksiId])
-  @@index([kasirId])
-  @@index([createdAt])
-  @@map("transaksi_review_audit")
-}
-
-// Draft pesanan dine-in yang dikirim customer, direview & difinalisasi
-// oleh kasir sebelum dikonversi ke Transaksi POS.
-// ──────────────────────────────
-
-// Status draft pesanan dine-in.
 enum StatusPesananDraf {
-  MENUNGGU   // menunggu kasir review
-  FINAL      // sudah dikonversi ke Transaksi
-  DIBATALKAN // dibatalkan oleh kasir atau customer
-}
-
-// Draft pesanan dine-in: customer order dari meja, kasir review & finalisasi.
-// Items disimpan sebagai JSON untuk fleksibilitas kasir menambah/kurangi
-// sebelum finalisasi. Setelah finalisasi, items dikonversi ke TransaksiItem.
-model PesananDraf {
-  id        String             @id @default(cuid())
-  mejaId    String?
-  meja      Meja?              @relation(fields: [mejaId], references: [id])
-  memberId  String?
-  member    Member?            @relation(fields: [memberId], references: [id])
-
-  // Identitas pelanggan (untuk member: otomatis dari member; untuk non-member: diisi manual)
-  nama      String?            // nama non-member (atau nama member jika tidak login)
-  telepon   String?            // nomor HP member atau non-member
-
-  catatan   String?
-  status    StatusPesananDraf @default(MENUNGGU)
-
-  // Items: [{produkId, namaProduk, harga, qty, modifiers:[{modifierId,qty,catatan,hargaTambahan}]}]
-  itemsJson Json
-  subtotal  Decimal            @db.Decimal(14, 2)
-
-  // Finalisasi oleh kasir → buat Transaksi POS
-  finalisasiPada  DateTime?
-  transaksi       Transaksi?   @relation(fields: [transaksiId], references: [id])
-  transaksiId     String?      @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([mejaId])
-  @@index([status, createdAt])
-  @@index([createdAt])
-  @@index([finalisasiPada])
-  @@map("pesanan_draf")
-}
-
-// Notifikasi sistem antar pengguna (kasir ↔ owner).
-model Notifikasi {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  judul     String
-  pesan     String
-  dibaca    Boolean  @default(false)
-  tipe      String // PENGAJUAN, SETUJUI, TOLAK, INFO
-  entitasId String? // ID entitas terkait (mis. pengajuanId)
-  createdAt DateTime @default(now())
-
-  @@index([userId, createdAt])
-  @@index([dibaca])
-  @@index([createdAt])
-  @@map("notifikasi")
+  MENUNGGU
+  FINAL
+  DIBATALKAN
 }

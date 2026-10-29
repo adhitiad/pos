@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { nonHapus } from './nonHapus.js'
 
 import { bacaTokenMeja } from './mejaToken.js'
 import { postingTransaksi, ringkasHasil } from '#/server/transaksi'
@@ -11,7 +12,7 @@ import { GalatDomain } from './galat.js'
 export async function pesananData(opsi?: { mejaToken?: string }) {
   const [produk, delivery] = await Promise.all([
     prisma.produk.findMany({
-      where: { aktif: true },
+      where: nonHapus({ aktif: true }),
       orderBy: { nama: 'asc' },
       include: {
         kategori: true,
@@ -45,7 +46,7 @@ export async function pesananData(opsi?: { mejaToken?: string }) {
     try {
       const { mejaId } = bacaTokenMeja(opsi.mejaToken)
       mejaDariToken = await prisma.meja.findFirst({
-        where: { id: mejaId, aktif: true },
+        where: { id: mejaId, aktif: true, deletedAt: null },
         select: { id: true, nomor: true, nama: true },
       })
     } catch {

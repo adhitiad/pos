@@ -1,4 +1,4 @@
-import { prisma } from '#/db'
+import { prismaBaca } from '#/db-read'
 import { Prisma } from '#/generated/prisma/client.js'
 import { GalatDomain } from './galat.js'
 import { LaporanPajakSchema } from '#/validations/laporan-pajak'
@@ -43,7 +43,7 @@ export async function laporanPajak(
         : Prisma.sql`to_char(${tglLokal}, 'YYYY-MM-DD')`
 
   // Agregasi penuh di SQL: satu baris per (periode, jenis pajak).
-  const barisAgg = await prisma.$queryRaw<
+  const barisAgg = await prismaBaca.$queryRaw<
     Array<{
       periode: string
       jenis: string

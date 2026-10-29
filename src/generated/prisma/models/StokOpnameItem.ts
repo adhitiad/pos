@@ -240,9 +240,9 @@ export type StokOpnameItemWhereInput = {
   stokTercatat?: Prisma.DecimalFilter<"StokOpnameItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stokFisik?: Prisma.DecimalFilter<"StokOpnameItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   selisih?: Prisma.DecimalFilter<"StokOpnameItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bahan?: Prisma.XOR<Prisma.BahanNullableScalarRelationFilter, Prisma.BahanWhereInput> | null
   opname?: Prisma.XOR<Prisma.StokOpnameScalarRelationFilter, Prisma.StokOpnameWhereInput>
   produk?: Prisma.XOR<Prisma.ProdukNullableScalarRelationFilter, Prisma.ProdukWhereInput> | null
-  bahan?: Prisma.XOR<Prisma.BahanNullableScalarRelationFilter, Prisma.BahanWhereInput> | null
 }
 
 export type StokOpnameItemOrderByWithRelationInput = {
@@ -253,9 +253,9 @@ export type StokOpnameItemOrderByWithRelationInput = {
   stokTercatat?: Prisma.SortOrder
   stokFisik?: Prisma.SortOrder
   selisih?: Prisma.SortOrder
+  bahan?: Prisma.BahanOrderByWithRelationInput
   opname?: Prisma.StokOpnameOrderByWithRelationInput
   produk?: Prisma.ProdukOrderByWithRelationInput
-  bahan?: Prisma.BahanOrderByWithRelationInput
 }
 
 export type StokOpnameItemWhereUniqueInput = Prisma.AtLeast<{
@@ -269,9 +269,9 @@ export type StokOpnameItemWhereUniqueInput = Prisma.AtLeast<{
   stokTercatat?: Prisma.DecimalFilter<"StokOpnameItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   stokFisik?: Prisma.DecimalFilter<"StokOpnameItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   selisih?: Prisma.DecimalFilter<"StokOpnameItem"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bahan?: Prisma.XOR<Prisma.BahanNullableScalarRelationFilter, Prisma.BahanWhereInput> | null
   opname?: Prisma.XOR<Prisma.StokOpnameScalarRelationFilter, Prisma.StokOpnameWhereInput>
   produk?: Prisma.XOR<Prisma.ProdukNullableScalarRelationFilter, Prisma.ProdukWhereInput> | null
-  bahan?: Prisma.XOR<Prisma.BahanNullableScalarRelationFilter, Prisma.BahanWhereInput> | null
 }, "id">
 
 export type StokOpnameItemOrderByWithAggregationInput = {
@@ -307,9 +307,9 @@ export type StokOpnameItemCreateInput = {
   stokTercatat: runtime.Decimal | runtime.DecimalJsLike | number | string
   stokFisik: runtime.Decimal | runtime.DecimalJsLike | number | string
   selisih: runtime.Decimal | runtime.DecimalJsLike | number | string
+  bahan?: Prisma.BahanCreateNestedOneWithoutStokOpnameItemsInput
   opname: Prisma.StokOpnameCreateNestedOneWithoutItemsInput
   produk?: Prisma.ProdukCreateNestedOneWithoutStokOpnameItemsInput
-  bahan?: Prisma.BahanCreateNestedOneWithoutStokOpnameItemsInput
 }
 
 export type StokOpnameItemUncheckedCreateInput = {
@@ -327,9 +327,9 @@ export type StokOpnameItemUpdateInput = {
   stokTercatat?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stokFisik?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   selisih?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  bahan?: Prisma.BahanUpdateOneWithoutStokOpnameItemsNestedInput
   opname?: Prisma.StokOpnameUpdateOneRequiredWithoutItemsNestedInput
   produk?: Prisma.ProdukUpdateOneWithoutStokOpnameItemsNestedInput
-  bahan?: Prisma.BahanUpdateOneWithoutStokOpnameItemsNestedInput
 }
 
 export type StokOpnameItemUncheckedUpdateInput = {
@@ -609,8 +609,8 @@ export type StokOpnameItemCreateWithoutProdukInput = {
   stokTercatat: runtime.Decimal | runtime.DecimalJsLike | number | string
   stokFisik: runtime.Decimal | runtime.DecimalJsLike | number | string
   selisih: runtime.Decimal | runtime.DecimalJsLike | number | string
-  opname: Prisma.StokOpnameCreateNestedOneWithoutItemsInput
   bahan?: Prisma.BahanCreateNestedOneWithoutStokOpnameItemsInput
+  opname: Prisma.StokOpnameCreateNestedOneWithoutItemsInput
 }
 
 export type StokOpnameItemUncheckedCreateWithoutProdukInput = {
@@ -653,8 +653,8 @@ export type StokOpnameItemCreateWithoutOpnameInput = {
   stokTercatat: runtime.Decimal | runtime.DecimalJsLike | number | string
   stokFisik: runtime.Decimal | runtime.DecimalJsLike | number | string
   selisih: runtime.Decimal | runtime.DecimalJsLike | number | string
-  produk?: Prisma.ProdukCreateNestedOneWithoutStokOpnameItemsInput
   bahan?: Prisma.BahanCreateNestedOneWithoutStokOpnameItemsInput
+  produk?: Prisma.ProdukCreateNestedOneWithoutStokOpnameItemsInput
 }
 
 export type StokOpnameItemUncheckedCreateWithoutOpnameInput = {
@@ -742,8 +742,8 @@ export type StokOpnameItemUpdateWithoutProdukInput = {
   stokTercatat?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stokFisik?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   selisih?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  opname?: Prisma.StokOpnameUpdateOneRequiredWithoutItemsNestedInput
   bahan?: Prisma.BahanUpdateOneWithoutStokOpnameItemsNestedInput
+  opname?: Prisma.StokOpnameUpdateOneRequiredWithoutItemsNestedInput
 }
 
 export type StokOpnameItemUncheckedUpdateWithoutProdukInput = {
@@ -778,8 +778,8 @@ export type StokOpnameItemUpdateWithoutOpnameInput = {
   stokTercatat?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   stokFisik?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   selisih?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  produk?: Prisma.ProdukUpdateOneWithoutStokOpnameItemsNestedInput
   bahan?: Prisma.BahanUpdateOneWithoutStokOpnameItemsNestedInput
+  produk?: Prisma.ProdukUpdateOneWithoutStokOpnameItemsNestedInput
 }
 
 export type StokOpnameItemUncheckedUpdateWithoutOpnameInput = {
@@ -810,9 +810,9 @@ export type StokOpnameItemSelect<ExtArgs extends runtime.Types.Extensions.Intern
   stokTercatat?: boolean
   stokFisik?: boolean
   selisih?: boolean
+  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
   opname?: boolean | Prisma.StokOpnameDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.StokOpnameItem$produkArgs<ExtArgs>
-  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
 }, ExtArgs["result"]["stokOpnameItem"]>
 
 export type StokOpnameItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -823,9 +823,9 @@ export type StokOpnameItemSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   stokTercatat?: boolean
   stokFisik?: boolean
   selisih?: boolean
+  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
   opname?: boolean | Prisma.StokOpnameDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.StokOpnameItem$produkArgs<ExtArgs>
-  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
 }, ExtArgs["result"]["stokOpnameItem"]>
 
 export type StokOpnameItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -836,9 +836,9 @@ export type StokOpnameItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   stokTercatat?: boolean
   stokFisik?: boolean
   selisih?: boolean
+  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
   opname?: boolean | Prisma.StokOpnameDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.StokOpnameItem$produkArgs<ExtArgs>
-  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
 }, ExtArgs["result"]["stokOpnameItem"]>
 
 export type StokOpnameItemSelectScalar = {
@@ -853,27 +853,27 @@ export type StokOpnameItemSelectScalar = {
 
 export type StokOpnameItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "opnameId" | "produkId" | "bahanId" | "stokTercatat" | "stokFisik" | "selisih", ExtArgs["result"]["stokOpnameItem"]>
 export type StokOpnameItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
   opname?: boolean | Prisma.StokOpnameDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.StokOpnameItem$produkArgs<ExtArgs>
-  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
 }
 export type StokOpnameItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
   opname?: boolean | Prisma.StokOpnameDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.StokOpnameItem$produkArgs<ExtArgs>
-  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
 }
 export type StokOpnameItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
   opname?: boolean | Prisma.StokOpnameDefaultArgs<ExtArgs>
   produk?: boolean | Prisma.StokOpnameItem$produkArgs<ExtArgs>
-  bahan?: boolean | Prisma.StokOpnameItem$bahanArgs<ExtArgs>
 }
 
 export type $StokOpnameItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StokOpnameItem"
   objects: {
+    bahan: Prisma.$BahanPayload<ExtArgs> | null
     opname: Prisma.$StokOpnamePayload<ExtArgs>
     produk: Prisma.$ProdukPayload<ExtArgs> | null
-    bahan: Prisma.$BahanPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1277,9 +1277,9 @@ readonly fields: StokOpnameItemFieldRefs;
  */
 export interface Prisma__StokOpnameItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  bahan<T extends Prisma.StokOpnameItem$bahanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StokOpnameItem$bahanArgs<ExtArgs>>): Prisma.Prisma__BahanClient<runtime.Types.Result.GetResult<Prisma.$BahanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   opname<T extends Prisma.StokOpnameDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StokOpnameDefaultArgs<ExtArgs>>): Prisma.Prisma__StokOpnameClient<runtime.Types.Result.GetResult<Prisma.$StokOpnamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   produk<T extends Prisma.StokOpnameItem$produkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StokOpnameItem$produkArgs<ExtArgs>>): Prisma.Prisma__ProdukClient<runtime.Types.Result.GetResult<Prisma.$ProdukPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  bahan<T extends Prisma.StokOpnameItem$bahanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StokOpnameItem$bahanArgs<ExtArgs>>): Prisma.Prisma__BahanClient<runtime.Types.Result.GetResult<Prisma.$BahanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1717,25 +1717,6 @@ export type StokOpnameItemDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
- * StokOpnameItem.produk
- */
-export type StokOpnameItem$produkArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Produk
-   */
-  select?: Prisma.ProdukSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Produk
-   */
-  omit?: Prisma.ProdukOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProdukInclude<ExtArgs> | null
-  where?: Prisma.ProdukWhereInput
-}
-
-/**
  * StokOpnameItem.bahan
  */
 export type StokOpnameItem$bahanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1752,6 +1733,25 @@ export type StokOpnameItem$bahanArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.BahanInclude<ExtArgs> | null
   where?: Prisma.BahanWhereInput
+}
+
+/**
+ * StokOpnameItem.produk
+ */
+export type StokOpnameItem$produkArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Produk
+   */
+  select?: Prisma.ProdukSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Produk
+   */
+  omit?: Prisma.ProdukOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProdukInclude<ExtArgs> | null
+  where?: Prisma.ProdukWhereInput
 }
 
 /**

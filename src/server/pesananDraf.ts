@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { nonHapus } from './nonHapus.js'
 
 import { bacaTokenMeja } from './mejaToken.js'
 import { postingTransaksi, ringkasHasil } from '#/server/transaksi'
@@ -38,7 +39,7 @@ const rupiah = (n: number) =>
 // Menunjukkan berapa banyak meja terisi vs tersedia (tanpa data sensitif).
 export async function mejaKetersediaan() {
   const semuaMeja = await prisma.meja.findMany({
-    where: { aktif: true },
+    where: nonHapus({ aktif: true }),
     orderBy: { nomor: 'asc' },
     select: { id: true, nomor: true, nama: true },
   })
@@ -46,9 +47,11 @@ export async function mejaKetersediaan() {
   // Meja yang sedang ada pesanan aktif (bukan SELESAI/DIBATALKAN)
   const mejaTerisi = await prisma.meja.findMany({
     where: {
+      deletedAt: null,
       aktif: true,
       transaksi: {
         some: {
+          deletedAt: null,
           statusPesanan: { notIn: ['SELESAI', 'DIBATALKAN'] },
         },
       },
@@ -293,7 +296,7 @@ export async function finalisasiPesananDraf(
   let mejaId = draft.mejaId ?? undefined
   if (data.mejaId) {
     const meja = await prisma.meja.findFirst({
-      where: { id: data.mejaId, aktif: true },
+      where: { id: data.mejaId, aktif: true, deletedAt: null },
       select: { id: true },
     })
     if (!meja) throw new GalatDomain('Meja tidak ditemukan atau tidak aktif')
@@ -384,7 +387,7 @@ async function lookupItemPrices(
 
   const [produk, modifier] = await Promise.all([
     prisma.produk.findMany({
-      where: { id: { in: produkIds } },
+      where: nonHapus({ id: { in: produkIds } }),
       select: { id: true, nama: true, harga: true },
     }),
     prisma.modifier.findMany({

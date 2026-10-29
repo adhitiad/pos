@@ -5,8 +5,10 @@ import { m } from '#/paraglide/messages'
 import { getSessionFn } from '#/server/authFn'
 import { punyaAkses } from '#/server/peran'
 import { dashboardDataFn } from '#/server/dashboardFn'
+import { pengaturanDataFn } from '#/server/pengaturanFn'
 
 import DashboardLayout from '#/components/DashboardLayout'
+import StatusToko from '#/components/dashboard/StatusToko'
 import { Card, CardContent, CardHeader, CardTitle } from '#/components/ui/card'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
@@ -43,14 +45,18 @@ export const Route = createFileRoute('/dashboard')({
     if (!punyaAkses(user.role, 'operasional')) throw redirect({ to: '/' })
   },
   loader: async () => {
-    const [data, user] = await Promise.all([dashboardDataFn(), getSessionFn()])
-    return { data, user }
+    const [data, user, pengaturan] = await Promise.all([
+      dashboardDataFn(),
+      getSessionFn(),
+      pengaturanDataFn(),
+    ])
+    return { data, user, tokoAktif: pengaturan.tokoAktif }
   },
   component: Dashboard,
 })
 
 function Dashboard() {
-  const { data, user } = Route.useLoaderData()
+  const { data, user, tokoAktif } = Route.useLoaderData()
   const stokMenipis = data.stokMenipis
 
   const [urutan, setUrutan] = useState<'baru' | 'lama' | 'besar' | 'kecil'>(
@@ -90,6 +96,8 @@ function Dashboard() {
 
   return (
     <DashboardLayout peran={user!.role} judul={m.dashboard_title()}>
+      <StatusToko awalAktif={tokoAktif} />
+
       {/* Keuntungan */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2 border-primary/20">

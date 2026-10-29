@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
-import { QrCode } from 'lucide-react'
+import { QrCode, LayoutGrid } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { m } from '#/paraglide/messages'
@@ -17,6 +17,7 @@ import {
 } from '#/server/mejaFn'
 
 import MejaGrid from '#/components/meja/MejaGrid'
+import { GenerateMejaDialog } from '#/components/meja/GenerateMejaDialog'
 import { Button } from '#/components/ui/button'
 import DashboardLayout from '#/components/DashboardLayout'
 import HapusDialog from '#/components/HapusDialog'
@@ -80,6 +81,7 @@ function Meja() {
   const [panel, setPanel] = useState<null | { id: string | null }>(null)
   const [hapusId, setHapusId] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
+  const [generateOpen, setGenerateOpen] = useState(false)
   const [filterStatus, setFilterStatus] = useState('SEMUA')
   const [qr, setQr] = useState<QrMeja | null>(null)
   const [pendingQr, setPendingQr] = useState<string | null>(null)
@@ -108,6 +110,11 @@ function Meja() {
 
   const gagal = (e: unknown) => {
     toast.error(e instanceof Error ? e.message : 'Operasi gagal')
+  }
+
+  const selesaiGenerate = async () => {
+    setGenerateOpen(false)
+    await muatUlang()
   }
 
   const bukaQr = (id: string) => {
@@ -157,15 +164,26 @@ function Meja() {
       peran="OWNER"
       judul={m.meja_title()}
       aksi={
-        <Button
-          className="h-11"
-          onClick={() => {
-            form.reset()
-            setPanel({ id: null })
-          }}
-        >
-          {m.meja_tambah()}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            className="h-11"
+            onClick={() => {
+              form.reset()
+              setPanel({ id: null })
+            }}
+          >
+            {m.meja_tambah()}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setGenerateOpen(true)}
+            className="h-10 rounded-lg border-[#002037] bg-[#002037]/5 px-3 text-xs font-medium text-[#002037] hover:bg-[#002037]/10 dark:text-[#e8dccb] dark:bg-[#e8dccb]/10"
+          >
+            <LayoutGrid className="mr-1.5 size-3.5" />
+            {m.meja_generate()}
+          </Button>
+        </div>
       }
     >
       <MejaGrid data={baris} />
@@ -415,6 +433,12 @@ function Meja() {
           </>
         )}
       </div>
+
+      <GenerateMejaDialog
+        terbuka={generateOpen}
+        onTutup={() => setGenerateOpen(false)}
+        onSelesai={selesaiGenerate}
+      />
     </DashboardLayout>
   )
 }

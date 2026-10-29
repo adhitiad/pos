@@ -1,4 +1,5 @@
-import { prisma } from '#/db'
+import { prismaBaca } from '#/db-read'
+import { nonHapus } from './nonHapus.js'
 import { GalatDomain } from './galat.js'
 import { LaporanPenjualanSchema } from '#/validations/laporan-penjualan'
 import type {
@@ -203,7 +204,7 @@ export async function laporanPenjualan(
   const filterTerjual = { ...rentang, ...FILTER_TRANSAKSI_TERJUAL }
 
   // Bangun where clause dengan filter dimensi opsional.
-  const where: Record<string, unknown> = { ...filterTerjual }
+  const where: Record<string, unknown> = { ...filterTerjual, deletedAt: null }
   if (data.kategoriId) {
     where.items = {
       some: { produk: { kategoriId: data.kategoriId } },
@@ -220,7 +221,7 @@ export async function laporanPenjualan(
   if (data.pajakJenis) where.pajakJenis = data.pajakJenis
 
   const [transaksi, produk, produkGroup, kasirGroup] = await Promise.all([
-    prisma.transaksi.findMany({
+    prismaBaca.transaksi.findMany({
       where,
       orderBy: { tanggal: 'asc' },
       select: {
@@ -256,7 +257,8 @@ export async function laporanPenjualan(
         },
       },
     }),
-    prisma.produk.findMany({
+    prismaBaca.produk.findMany({
+      where: nonHapus({}),
       select: {
         id: true,
         resep: {
@@ -264,12 +266,12 @@ export async function laporanPenjualan(
         },
       },
     }),
-    prisma.transaksiItem.groupBy({
+    prismaBaca.transaksiItem.groupBy({
       by: ['produkId', 'namaProduk'],
       where: { transaksi: where },
       _sum: { qty: true, subtotal: true },
     }),
-    prisma.transaksi.groupBy({
+    prismaBaca.transaksi.groupBy({
       by: ['kasirId'],
       where,
       _sum: { total: true },
@@ -364,7 +366,7 @@ export async function laporanPenjualan(
     .filter((id): id is string => id != null)
   const akunKasir =
     idKasir.length > 0
-      ? await prisma.user.findMany({
+      ? await prismaBaca.user.findMany({
           where: { id: { in: idKasir } },
           select: { id: true, name: true },
         })

@@ -244,8 +244,8 @@ export type ModifierGrupWhereInput = {
   aktif?: Prisma.BoolFilter<"ModifierGrup"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ModifierGrup"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ModifierGrup"> | Date | string
-  produks?: Prisma.ProdukModifierGrupListRelationFilter
   modifiers?: Prisma.ModifierListRelationFilter
+  produks?: Prisma.ProdukModifierGrupListRelationFilter
 }
 
 export type ModifierGrupOrderByWithRelationInput = {
@@ -257,8 +257,8 @@ export type ModifierGrupOrderByWithRelationInput = {
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  produks?: Prisma.ProdukModifierGrupOrderByRelationAggregateInput
   modifiers?: Prisma.ModifierOrderByRelationAggregateInput
+  produks?: Prisma.ProdukModifierGrupOrderByRelationAggregateInput
 }
 
 export type ModifierGrupWhereUniqueInput = Prisma.AtLeast<{
@@ -273,8 +273,8 @@ export type ModifierGrupWhereUniqueInput = Prisma.AtLeast<{
   aktif?: Prisma.BoolFilter<"ModifierGrup"> | boolean
   createdAt?: Prisma.DateTimeFilter<"ModifierGrup"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ModifierGrup"> | Date | string
-  produks?: Prisma.ProdukModifierGrupListRelationFilter
   modifiers?: Prisma.ModifierListRelationFilter
+  produks?: Prisma.ProdukModifierGrupListRelationFilter
 }, "id">
 
 export type ModifierGrupOrderByWithAggregationInput = {
@@ -316,8 +316,8 @@ export type ModifierGrupCreateInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  produks?: Prisma.ProdukModifierGrupCreateNestedManyWithoutGrupInput
   modifiers?: Prisma.ModifierCreateNestedManyWithoutGrupInput
+  produks?: Prisma.ProdukModifierGrupCreateNestedManyWithoutGrupInput
 }
 
 export type ModifierGrupUncheckedCreateInput = {
@@ -329,8 +329,8 @@ export type ModifierGrupUncheckedCreateInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  produks?: Prisma.ProdukModifierGrupUncheckedCreateNestedManyWithoutGrupInput
   modifiers?: Prisma.ModifierUncheckedCreateNestedManyWithoutGrupInput
+  produks?: Prisma.ProdukModifierGrupUncheckedCreateNestedManyWithoutGrupInput
 }
 
 export type ModifierGrupUpdateInput = {
@@ -342,8 +342,8 @@ export type ModifierGrupUpdateInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  produks?: Prisma.ProdukModifierGrupUpdateManyWithoutGrupNestedInput
   modifiers?: Prisma.ModifierUpdateManyWithoutGrupNestedInput
+  produks?: Prisma.ProdukModifierGrupUpdateManyWithoutGrupNestedInput
 }
 
 export type ModifierGrupUncheckedUpdateInput = {
@@ -355,8 +355,8 @@ export type ModifierGrupUncheckedUpdateInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  produks?: Prisma.ProdukModifierGrupUncheckedUpdateManyWithoutGrupNestedInput
   modifiers?: Prisma.ModifierUncheckedUpdateManyWithoutGrupNestedInput
+  produks?: Prisma.ProdukModifierGrupUncheckedUpdateManyWithoutGrupNestedInput
 }
 
 export type ModifierGrupCreateManyInput = {
@@ -602,13 +602,13 @@ export type ModifierGrupUncheckedUpdateWithoutProduksInput = {
  */
 
 export type ModifierGrupCountOutputType = {
-  produks: number
   modifiers: number
+  produks: number
 }
 
 export type ModifierGrupCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  produks?: boolean | ModifierGrupCountOutputTypeCountProduksArgs
   modifiers?: boolean | ModifierGrupCountOutputTypeCountModifiersArgs
+  produks?: boolean | ModifierGrupCountOutputTypeCountProduksArgs
 }
 
 /**
@@ -624,15 +624,15 @@ export type ModifierGrupCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types
 /**
  * ModifierGrupCountOutputType without action
  */
-export type ModifierGrupCountOutputTypeCountProduksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProdukModifierGrupWhereInput
+export type ModifierGrupCountOutputTypeCountModifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ModifierWhereInput
 }
 
 /**
  * ModifierGrupCountOutputType without action
  */
-export type ModifierGrupCountOutputTypeCountModifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ModifierWhereInput
+export type ModifierGrupCountOutputTypeCountProduksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProdukModifierGrupWhereInput
 }
 
 
@@ -645,8 +645,8 @@ export type ModifierGrupSelect<ExtArgs extends runtime.Types.Extensions.Internal
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  produks?: boolean | Prisma.ModifierGrup$produksArgs<ExtArgs>
   modifiers?: boolean | Prisma.ModifierGrup$modifiersArgs<ExtArgs>
+  produks?: boolean | Prisma.ModifierGrup$produksArgs<ExtArgs>
   _count?: boolean | Prisma.ModifierGrupCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["modifierGrup"]>
 
@@ -685,8 +685,8 @@ export type ModifierGrupSelectScalar = {
 
 export type ModifierGrupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "wajib" | "min" | "max" | "aktif" | "createdAt" | "updatedAt", ExtArgs["result"]["modifierGrup"]>
 export type ModifierGrupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  produks?: boolean | Prisma.ModifierGrup$produksArgs<ExtArgs>
   modifiers?: boolean | Prisma.ModifierGrup$modifiersArgs<ExtArgs>
+  produks?: boolean | Prisma.ModifierGrup$produksArgs<ExtArgs>
   _count?: boolean | Prisma.ModifierGrupCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ModifierGrupIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -695,8 +695,8 @@ export type ModifierGrupIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types
 export type $ModifierGrupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ModifierGrup"
   objects: {
-    produks: Prisma.$ProdukModifierGrupPayload<ExtArgs>[]
     modifiers: Prisma.$ModifierPayload<ExtArgs>[]
+    produks: Prisma.$ProdukModifierGrupPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1101,8 +1101,8 @@ readonly fields: ModifierGrupFieldRefs;
  */
 export interface Prisma__ModifierGrupClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  produks<T extends Prisma.ModifierGrup$produksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ModifierGrup$produksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProdukModifierGrupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   modifiers<T extends Prisma.ModifierGrup$modifiersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ModifierGrup$modifiersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModifierPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  produks<T extends Prisma.ModifierGrup$produksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ModifierGrup$produksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProdukModifierGrupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1533,30 +1533,6 @@ export type ModifierGrupDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * ModifierGrup.produks
- */
-export type ModifierGrup$produksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ProdukModifierGrup
-   */
-  select?: Prisma.ProdukModifierGrupSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ProdukModifierGrup
-   */
-  omit?: Prisma.ProdukModifierGrupOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProdukModifierGrupInclude<ExtArgs> | null
-  where?: Prisma.ProdukModifierGrupWhereInput
-  orderBy?: Prisma.ProdukModifierGrupOrderByWithRelationInput | Prisma.ProdukModifierGrupOrderByWithRelationInput[]
-  cursor?: Prisma.ProdukModifierGrupWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ProdukModifierGrupScalarFieldEnum | Prisma.ProdukModifierGrupScalarFieldEnum[]
-}
-
-/**
  * ModifierGrup.modifiers
  */
 export type ModifierGrup$modifiersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1578,6 +1554,30 @@ export type ModifierGrup$modifiersArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.ModifierScalarFieldEnum | Prisma.ModifierScalarFieldEnum[]
+}
+
+/**
+ * ModifierGrup.produks
+ */
+export type ModifierGrup$produksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProdukModifierGrup
+   */
+  select?: Prisma.ProdukModifierGrupSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProdukModifierGrup
+   */
+  omit?: Prisma.ProdukModifierGrupOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProdukModifierGrupInclude<ExtArgs> | null
+  where?: Prisma.ProdukModifierGrupWhereInput
+  orderBy?: Prisma.ProdukModifierGrupOrderByWithRelationInput | Prisma.ProdukModifierGrupOrderByWithRelationInput[]
+  cursor?: Prisma.ProdukModifierGrupWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProdukModifierGrupScalarFieldEnum | Prisma.ProdukModifierGrupScalarFieldEnum[]
 }
 
 /**

@@ -1,6 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { apiError, apiPengguna, gagal, ok } from '#/server/api'
+import {
+  apiError,
+  apiPengguna,
+  bacaJsonTerbatas,
+  gagal,
+  ok,
+} from '#/server/api'
 import { AKSES } from '#/server/peran'
 import {
   createPrinter,
@@ -35,9 +41,10 @@ export const Route = createFileRoute('/api/v1/printer/')({
           if (pengguna instanceof Response) return pengguna
           const batas = await rateLimitPrinter(pengguna.id, 'printer:post', 20)
           if (batas) return batas
+          const body = await bacaJsonTerbatas(request, 1024)
           return ok(
             await createPrinter(
-              PrinterInputSchema.parse(await request.json()),
+              PrinterInputSchema.parse(body),
               pengguna.id,
               pengguna.id,
             ),
@@ -53,11 +60,9 @@ export const Route = createFileRoute('/api/v1/printer/')({
           if (pengguna instanceof Response) return pengguna
           const batas = await rateLimitPrinter(pengguna.id, 'printer:put', 20)
           if (batas) return batas
+          const body = await bacaJsonTerbatas(request, 1024)
           return ok(
-            await updatePrinter(
-              UpdatePrinterSchema.parse(await request.json()),
-              pengguna.id,
-            ),
+            await updatePrinter(UpdatePrinterSchema.parse(body), pengguna.id),
           )
         } catch (e) {
           return apiError(e)

@@ -7,8 +7,7 @@
     "scripts/**/*.ts",
     "tests/**/*.{ts,tsx}",
     "prisma/**/*.ts",
-    "mcp-expo.ts",
-    "mcp-server.ts",
+    "mcp/**/*.ts",
     "prisma.config.ts",
     "vite.config.ts",
     "vitest.config.ts",
@@ -19,8 +18,7 @@
     "scripts/**/*.ts",
     "tests/**/*.{ts,tsx}",
     "prisma/**/*.ts",
-    "mcp-expo.ts",
-    "mcp-server.ts"
+    "mcp/**/*.ts"
   ],
   "ignoreIssues": {
     "src/components/ui/**": ["exports"],
@@ -30,8 +28,10 @@
   "ignoreDependencies": [
     "tailwindcss",
     "tw-animate-css",
-    "@tailwindcss/typography"
+    "@tailwindcss/typography",
+    "@fontsource/fraunces",
+    "@fontsource/manrope"
   ],
-  "ignoreBinaries": ["run"],
+  "ignoreBinaries": ["run", "k6"],
   "ignoreExportsUsedInFile": true
 }

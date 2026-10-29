@@ -26,64 +26,64 @@ export type AggregateTransaksiReviewAudit = {
 
 export type TransaksiReviewAuditMinAggregateOutputType = {
   id: string | null
-  draftId: string | null
   transaksiId: string | null
   kasirId: string | null
   status: string | null
   catatan: string | null
   createdAt: Date | null
+  draftId: string | null
 }
 
 export type TransaksiReviewAuditMaxAggregateOutputType = {
   id: string | null
-  draftId: string | null
   transaksiId: string | null
   kasirId: string | null
   status: string | null
   catatan: string | null
   createdAt: Date | null
+  draftId: string | null
 }
 
 export type TransaksiReviewAuditCountAggregateOutputType = {
   id: number
-  draftId: number
   transaksiId: number
   kasirId: number
   status: number
   catatan: number
   createdAt: number
+  draftId: number
   _all: number
 }
 
 
 export type TransaksiReviewAuditMinAggregateInputType = {
   id?: true
-  draftId?: true
   transaksiId?: true
   kasirId?: true
   status?: true
   catatan?: true
   createdAt?: true
+  draftId?: true
 }
 
 export type TransaksiReviewAuditMaxAggregateInputType = {
   id?: true
-  draftId?: true
   transaksiId?: true
   kasirId?: true
   status?: true
   catatan?: true
   createdAt?: true
+  draftId?: true
 }
 
 export type TransaksiReviewAuditCountAggregateInputType = {
   id?: true
-  draftId?: true
   transaksiId?: true
   kasirId?: true
   status?: true
   catatan?: true
   createdAt?: true
+  draftId?: true
   _all?: true
 }
 
@@ -161,12 +161,12 @@ export type TransaksiReviewAuditGroupByArgs<ExtArgs extends runtime.Types.Extens
 
 export type TransaksiReviewAuditGroupByOutputType = {
   id: string
-  draftId: string | null
   transaksiId: string | null
   kasirId: string
   status: string
   catatan: string | null
   createdAt: Date
+  draftId: string | null
   _count: TransaksiReviewAuditCountAggregateOutputType | null
   _min: TransaksiReviewAuditMinAggregateOutputType | null
   _max: TransaksiReviewAuditMaxAggregateOutputType | null
@@ -192,28 +192,28 @@ export type TransaksiReviewAuditWhereInput = {
   OR?: Prisma.TransaksiReviewAuditWhereInput[]
   NOT?: Prisma.TransaksiReviewAuditWhereInput | Prisma.TransaksiReviewAuditWhereInput[]
   id?: Prisma.StringFilter<"TransaksiReviewAudit"> | string
-  draftId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   transaksiId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   kasirId?: Prisma.StringFilter<"TransaksiReviewAudit"> | string
   status?: Prisma.StringFilter<"TransaksiReviewAudit"> | string
   catatan?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TransaksiReviewAudit"> | Date | string
+  draftId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   draft?: Prisma.XOR<Prisma.DraftTransaksiNullableScalarRelationFilter, Prisma.DraftTransaksiWhereInput> | null
-  transaksi?: Prisma.XOR<Prisma.TransaksiNullableScalarRelationFilter, Prisma.TransaksiWhereInput> | null
   kasir?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  transaksi?: Prisma.XOR<Prisma.TransaksiNullableScalarRelationFilter, Prisma.TransaksiWhereInput> | null
 }
 
 export type TransaksiReviewAuditOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  draftId?: Prisma.SortOrderInput | Prisma.SortOrder
   transaksiId?: Prisma.SortOrderInput | Prisma.SortOrder
   kasirId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   catatan?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  draftId?: Prisma.SortOrderInput | Prisma.SortOrder
   draft?: Prisma.DraftTransaksiOrderByWithRelationInput
-  transaksi?: Prisma.TransaksiOrderByWithRelationInput
   kasir?: Prisma.UserOrderByWithRelationInput
+  transaksi?: Prisma.TransaksiOrderByWithRelationInput
 }
 
 export type TransaksiReviewAuditWhereUniqueInput = Prisma.AtLeast<{
@@ -221,25 +221,25 @@ export type TransaksiReviewAuditWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.TransaksiReviewAuditWhereInput | Prisma.TransaksiReviewAuditWhereInput[]
   OR?: Prisma.TransaksiReviewAuditWhereInput[]
   NOT?: Prisma.TransaksiReviewAuditWhereInput | Prisma.TransaksiReviewAuditWhereInput[]
-  draftId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   transaksiId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   kasirId?: Prisma.StringFilter<"TransaksiReviewAudit"> | string
   status?: Prisma.StringFilter<"TransaksiReviewAudit"> | string
   catatan?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TransaksiReviewAudit"> | Date | string
+  draftId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   draft?: Prisma.XOR<Prisma.DraftTransaksiNullableScalarRelationFilter, Prisma.DraftTransaksiWhereInput> | null
-  transaksi?: Prisma.XOR<Prisma.TransaksiNullableScalarRelationFilter, Prisma.TransaksiWhereInput> | null
   kasir?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  transaksi?: Prisma.XOR<Prisma.TransaksiNullableScalarRelationFilter, Prisma.TransaksiWhereInput> | null
 }, "id">
 
 export type TransaksiReviewAuditOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  draftId?: Prisma.SortOrderInput | Prisma.SortOrder
   transaksiId?: Prisma.SortOrderInput | Prisma.SortOrder
   kasirId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   catatan?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  draftId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TransaksiReviewAuditCountOrderByAggregateInput
   _max?: Prisma.TransaksiReviewAuditMaxOrderByAggregateInput
   _min?: Prisma.TransaksiReviewAuditMinOrderByAggregateInput
@@ -250,12 +250,12 @@ export type TransaksiReviewAuditScalarWhereWithAggregatesInput = {
   OR?: Prisma.TransaksiReviewAuditScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TransaksiReviewAuditScalarWhereWithAggregatesInput | Prisma.TransaksiReviewAuditScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"TransaksiReviewAudit"> | string
-  draftId?: Prisma.StringNullableWithAggregatesFilter<"TransaksiReviewAudit"> | string | null
   transaksiId?: Prisma.StringNullableWithAggregatesFilter<"TransaksiReviewAudit"> | string | null
   kasirId?: Prisma.StringWithAggregatesFilter<"TransaksiReviewAudit"> | string
   status?: Prisma.StringWithAggregatesFilter<"TransaksiReviewAudit"> | string
   catatan?: Prisma.StringNullableWithAggregatesFilter<"TransaksiReviewAudit"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TransaksiReviewAudit"> | Date | string
+  draftId?: Prisma.StringNullableWithAggregatesFilter<"TransaksiReviewAudit"> | string | null
 }
 
 export type TransaksiReviewAuditCreateInput = {
@@ -264,18 +264,18 @@ export type TransaksiReviewAuditCreateInput = {
   catatan?: string | null
   createdAt?: Date | string
   draft?: Prisma.DraftTransaksiCreateNestedOneWithoutReviewAuditsInput
-  transaksi?: Prisma.TransaksiCreateNestedOneWithoutTransaksiReviewAuditInput
   kasir: Prisma.UserCreateNestedOneWithoutTransaksiReviewAuditInput
+  transaksi?: Prisma.TransaksiCreateNestedOneWithoutTransaksiReviewAuditInput
 }
 
 export type TransaksiReviewAuditUncheckedCreateInput = {
   id?: string
-  draftId?: string | null
   transaksiId?: string | null
   kasirId: string
   status: string
   catatan?: string | null
   createdAt?: Date | string
+  draftId?: string | null
 }
 
 export type TransaksiReviewAuditUpdateInput = {
@@ -284,28 +284,28 @@ export type TransaksiReviewAuditUpdateInput = {
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   draft?: Prisma.DraftTransaksiUpdateOneWithoutReviewAuditsNestedInput
-  transaksi?: Prisma.TransaksiUpdateOneWithoutTransaksiReviewAuditNestedInput
   kasir?: Prisma.UserUpdateOneRequiredWithoutTransaksiReviewAuditNestedInput
+  transaksi?: Prisma.TransaksiUpdateOneWithoutTransaksiReviewAuditNestedInput
 }
 
 export type TransaksiReviewAuditUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TransaksiReviewAuditCreateManyInput = {
   id?: string
-  draftId?: string | null
   transaksiId?: string | null
   kasirId: string
   status: string
   catatan?: string | null
   createdAt?: Date | string
+  draftId?: string | null
 }
 
 export type TransaksiReviewAuditUpdateManyMutationInput = {
@@ -317,12 +317,12 @@ export type TransaksiReviewAuditUpdateManyMutationInput = {
 
 export type TransaksiReviewAuditUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TransaksiReviewAuditListRelationFilter = {
@@ -337,32 +337,32 @@ export type TransaksiReviewAuditOrderByRelationAggregateInput = {
 
 export type TransaksiReviewAuditCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  draftId?: Prisma.SortOrder
   transaksiId?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  draftId?: Prisma.SortOrder
 }
 
 export type TransaksiReviewAuditMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  draftId?: Prisma.SortOrder
   transaksiId?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  draftId?: Prisma.SortOrder
 }
 
 export type TransaksiReviewAuditMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  draftId?: Prisma.SortOrder
   transaksiId?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  draftId?: Prisma.SortOrder
 }
 
 export type TransaksiReviewAuditCreateNestedManyWithoutKasirInput = {
@@ -502,11 +502,11 @@ export type TransaksiReviewAuditCreateWithoutKasirInput = {
 
 export type TransaksiReviewAuditUncheckedCreateWithoutKasirInput = {
   id?: string
-  draftId?: string | null
   transaksiId?: string | null
   status: string
   catatan?: string | null
   createdAt?: Date | string
+  draftId?: string | null
 }
 
 export type TransaksiReviewAuditCreateOrConnectWithoutKasirInput = {
@@ -540,12 +540,12 @@ export type TransaksiReviewAuditScalarWhereInput = {
   OR?: Prisma.TransaksiReviewAuditScalarWhereInput[]
   NOT?: Prisma.TransaksiReviewAuditScalarWhereInput | Prisma.TransaksiReviewAuditScalarWhereInput[]
   id?: Prisma.StringFilter<"TransaksiReviewAudit"> | string
-  draftId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   transaksiId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   kasirId?: Prisma.StringFilter<"TransaksiReviewAudit"> | string
   status?: Prisma.StringFilter<"TransaksiReviewAudit"> | string
   catatan?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
   createdAt?: Prisma.DateTimeFilter<"TransaksiReviewAudit"> | Date | string
+  draftId?: Prisma.StringNullableFilter<"TransaksiReviewAudit"> | string | null
 }
 
 export type TransaksiReviewAuditCreateWithoutTransaksiInput = {
@@ -559,11 +559,11 @@ export type TransaksiReviewAuditCreateWithoutTransaksiInput = {
 
 export type TransaksiReviewAuditUncheckedCreateWithoutTransaksiInput = {
   id?: string
-  draftId?: string | null
   kasirId: string
   status: string
   catatan?: string | null
   createdAt?: Date | string
+  draftId?: string | null
 }
 
 export type TransaksiReviewAuditCreateOrConnectWithoutTransaksiInput = {
@@ -597,8 +597,8 @@ export type TransaksiReviewAuditCreateWithoutDraftInput = {
   status: string
   catatan?: string | null
   createdAt?: Date | string
-  transaksi?: Prisma.TransaksiCreateNestedOneWithoutTransaksiReviewAuditInput
   kasir: Prisma.UserCreateNestedOneWithoutTransaksiReviewAuditInput
+  transaksi?: Prisma.TransaksiCreateNestedOneWithoutTransaksiReviewAuditInput
 }
 
 export type TransaksiReviewAuditUncheckedCreateWithoutDraftInput = {
@@ -638,11 +638,11 @@ export type TransaksiReviewAuditUpdateManyWithWhereWithoutDraftInput = {
 
 export type TransaksiReviewAuditCreateManyKasirInput = {
   id?: string
-  draftId?: string | null
   transaksiId?: string | null
   status: string
   catatan?: string | null
   createdAt?: Date | string
+  draftId?: string | null
 }
 
 export type TransaksiReviewAuditUpdateWithoutKasirInput = {
@@ -656,29 +656,29 @@ export type TransaksiReviewAuditUpdateWithoutKasirInput = {
 
 export type TransaksiReviewAuditUncheckedUpdateWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TransaksiReviewAuditUncheckedUpdateManyWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TransaksiReviewAuditCreateManyTransaksiInput = {
   id?: string
-  draftId?: string | null
   kasirId: string
   status: string
   catatan?: string | null
   createdAt?: Date | string
+  draftId?: string | null
 }
 
 export type TransaksiReviewAuditUpdateWithoutTransaksiInput = {
@@ -692,20 +692,20 @@ export type TransaksiReviewAuditUpdateWithoutTransaksiInput = {
 
 export type TransaksiReviewAuditUncheckedUpdateWithoutTransaksiInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TransaksiReviewAuditUncheckedUpdateManyWithoutTransaksiInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  draftId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TransaksiReviewAuditCreateManyDraftInput = {
@@ -722,8 +722,8 @@ export type TransaksiReviewAuditUpdateWithoutDraftInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  transaksi?: Prisma.TransaksiUpdateOneWithoutTransaksiReviewAuditNestedInput
   kasir?: Prisma.UserUpdateOneRequiredWithoutTransaksiReviewAuditNestedInput
+  transaksi?: Prisma.TransaksiUpdateOneWithoutTransaksiReviewAuditNestedInput
 }
 
 export type TransaksiReviewAuditUncheckedUpdateWithoutDraftInput = {
@@ -748,85 +748,85 @@ export type TransaksiReviewAuditUncheckedUpdateManyWithoutDraftInput = {
 
 export type TransaksiReviewAuditSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  draftId?: boolean
   transaksiId?: boolean
   kasirId?: boolean
   status?: boolean
   catatan?: boolean
   createdAt?: boolean
+  draftId?: boolean
   draft?: boolean | Prisma.TransaksiReviewAudit$draftArgs<ExtArgs>
-  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
 }, ExtArgs["result"]["transaksiReviewAudit"]>
 
 export type TransaksiReviewAuditSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  draftId?: boolean
   transaksiId?: boolean
   kasirId?: boolean
   status?: boolean
   catatan?: boolean
   createdAt?: boolean
+  draftId?: boolean
   draft?: boolean | Prisma.TransaksiReviewAudit$draftArgs<ExtArgs>
-  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
 }, ExtArgs["result"]["transaksiReviewAudit"]>
 
 export type TransaksiReviewAuditSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  draftId?: boolean
   transaksiId?: boolean
   kasirId?: boolean
   status?: boolean
   catatan?: boolean
   createdAt?: boolean
+  draftId?: boolean
   draft?: boolean | Prisma.TransaksiReviewAudit$draftArgs<ExtArgs>
-  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
 }, ExtArgs["result"]["transaksiReviewAudit"]>
 
 export type TransaksiReviewAuditSelectScalar = {
   id?: boolean
-  draftId?: boolean
   transaksiId?: boolean
   kasirId?: boolean
   status?: boolean
   catatan?: boolean
   createdAt?: boolean
+  draftId?: boolean
 }
 
-export type TransaksiReviewAuditOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "draftId" | "transaksiId" | "kasirId" | "status" | "catatan" | "createdAt", ExtArgs["result"]["transaksiReviewAudit"]>
+export type TransaksiReviewAuditOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transaksiId" | "kasirId" | "status" | "catatan" | "createdAt" | "draftId", ExtArgs["result"]["transaksiReviewAudit"]>
 export type TransaksiReviewAuditInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   draft?: boolean | Prisma.TransaksiReviewAudit$draftArgs<ExtArgs>
-  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
 }
 export type TransaksiReviewAuditIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   draft?: boolean | Prisma.TransaksiReviewAudit$draftArgs<ExtArgs>
-  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
 }
 export type TransaksiReviewAuditIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   draft?: boolean | Prisma.TransaksiReviewAudit$draftArgs<ExtArgs>
-  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>
 }
 
 export type $TransaksiReviewAuditPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TransaksiReviewAudit"
   objects: {
     draft: Prisma.$DraftTransaksiPayload<ExtArgs> | null
-    transaksi: Prisma.$TransaksiPayload<ExtArgs> | null
     kasir: Prisma.$UserPayload<ExtArgs>
+    transaksi: Prisma.$TransaksiPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    draftId: string | null
     transaksiId: string | null
     kasirId: string
     status: string
     catatan: string | null
     createdAt: Date
+    draftId: string | null
   }, ExtArgs["result"]["transaksiReviewAudit"]>
   composites: {}
 }
@@ -1222,8 +1222,8 @@ readonly fields: TransaksiReviewAuditFieldRefs;
 export interface Prisma__TransaksiReviewAuditClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   draft<T extends Prisma.TransaksiReviewAudit$draftArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiReviewAudit$draftArgs<ExtArgs>>): Prisma.Prisma__DraftTransaksiClient<runtime.Types.Result.GetResult<Prisma.$DraftTransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  transaksi<T extends Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>>): Prisma.Prisma__TransaksiClient<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   kasir<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  transaksi<T extends Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiReviewAudit$transaksiArgs<ExtArgs>>): Prisma.Prisma__TransaksiClient<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1254,12 +1254,12 @@ export interface Prisma__TransaksiReviewAuditClient<T, Null = never, ExtArgs ext
  */
 export interface TransaksiReviewAuditFieldRefs {
   readonly id: Prisma.FieldRef<"TransaksiReviewAudit", 'String'>
-  readonly draftId: Prisma.FieldRef<"TransaksiReviewAudit", 'String'>
   readonly transaksiId: Prisma.FieldRef<"TransaksiReviewAudit", 'String'>
   readonly kasirId: Prisma.FieldRef<"TransaksiReviewAudit", 'String'>
   readonly status: Prisma.FieldRef<"TransaksiReviewAudit", 'String'>
   readonly catatan: Prisma.FieldRef<"TransaksiReviewAudit", 'String'>
   readonly createdAt: Prisma.FieldRef<"TransaksiReviewAudit", 'DateTime'>
+  readonly draftId: Prisma.FieldRef<"TransaksiReviewAudit", 'String'>
 }
     
 

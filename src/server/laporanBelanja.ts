@@ -1,4 +1,4 @@
-import { prisma } from '#/db'
+import { prismaBaca } from '#/db-read'
 import { Prisma } from '#/generated/prisma/client.js'
 import { GalatDomain } from './galat.js'
 import { LaporanBelanjaSchema } from '#/validations/laporan-belanja'
@@ -38,14 +38,14 @@ export async function laporanBelanja(
 
   const [perSumberAgg, perBulanAgg, pembelian] = await Promise.all([
     // Rekap per sumber diagregasi SQL (jumlah, total, hutang).
-    prisma.pembelianBahan.groupBy({
+    prismaBaca.pembelianBahan.groupBy({
       by: ['supplierId', 'sumberBelanja'],
       where,
       _sum: { totalHarga: true, belumDibayar: true },
       _count: { _all: true },
     }),
     // Rekap bulanan diagregasi SQL di zona waktu laporan.
-    prisma.$queryRaw<
+    prismaBaca.$queryRaw<
       Array<{ periode: string; total: Prisma.Decimal }>
     >(Prisma.sql`
       SELECT to_char(
@@ -60,7 +60,7 @@ export async function laporanBelanja(
       GROUP BY 1
       ORDER BY 1 ASC
     `),
-    prisma.pembelianBahan.findMany({
+    prismaBaca.pembelianBahan.findMany({
       where,
       orderBy: { tanggal: 'asc' },
       select: {
@@ -89,7 +89,7 @@ export async function laporanBelanja(
   ]
   const suppliers =
     idSuppliers.length > 0
-      ? await prisma.supplier.findMany({
+      ? await prismaBaca.supplier.findMany({
           where: { id: { in: idSuppliers } },
           select: { id: true, nama: true },
         })

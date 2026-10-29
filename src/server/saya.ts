@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { nonHapus } from './nonHapus.js'
 import { pengaturanData } from './pengaturan.js'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 
@@ -31,7 +32,7 @@ export async function profilSaya(input: { email: string }) {
 
   const transaksi = riwayatAktif
     ? await prisma.transaksi.findMany({
-        where: { memberId: member.id, ...FILTER_TRANSAKSI_TERJUAL },
+        where: nonHapus({ memberId: member.id, ...FILTER_TRANSAKSI_TERJUAL }),
         orderBy: { tanggal: 'desc' },
         take: 50,
         select: {

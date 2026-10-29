@@ -13,6 +13,9 @@ const trustProxyDefault = process.env.VERCEL === '1'
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
+    // URL koneksi baca terpisah (read replica siap pakai). Bila kosong, fallback
+    // ke DATABASE_URL sehingga perilaku sama seperti satu DB.
+    DATABASE_URL_READ: z.string().url().optional(),
     // URL koneksi langsung (non-pooler) untuk operasi CLI Prisma
     // (db push/migrate/seed). Di Neon ini host tanpa akhiran "-pooler".
     DATABASE_URL_UNPOOLED: z.string().url().optional(),
@@ -95,6 +98,7 @@ export const env = createEnv({
   runtimeEnv: {
     ...import.meta.env,
     DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL_READ: process.env.DATABASE_URL_READ,
     DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
     DB_POOL_MAX: process.env.DB_POOL_MAX,
     DB_IDLE_TIMEOUT_MS: process.env.DB_IDLE_TIMEOUT_MS,

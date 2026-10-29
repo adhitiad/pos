@@ -20,7 +20,7 @@ export async function muatPayloadStruk(
   transaksiId: string,
 ): Promise<StrukPayload | null> {
   const transaksi = await prisma.transaksi.findUnique({
-    where: { id: transaksiId },
+    where: { id: transaksiId, deletedAt: null },
     select: {
       nomor: true,
       tanggal: true,

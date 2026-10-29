@@ -4,6 +4,7 @@
 // pengguna diarahkan memindai.
 
 import { dukunganSerial as dukungan, portUntukCetak } from './printer-scan'
+import { dapatkanSirkuit } from './circuit-breaker'
 import type { PortSerial } from '#/types/printer'
 
 export function dukunganSerial(): boolean {
@@ -12,44 +13,53 @@ export function dukunganSerial(): boolean {
 
 const ESC = '\x1b'
 
+// Sirpi untuk operasi printer: bila printer mati/kertas habis, tunggu 30 detik
+// sebelum mencoba kembali agar tidak menunda alur kasir.
+const sirkuitPrinter = dapatkanSirkuit('printer-escpos', {
+  ambangKegagalan: 3,
+  jedaPemulihanMs: 30_000,
+})
+
 export async function cetakEscpos(
   baris: string[],
   portPilihan?: PortSerial,
   lebarKolom = 32,
 ): Promise<void> {
-  if (!dukunganSerial()) {
-    throw new Error('Web Serial tidak didukung browser ini')
-  }
-  let port = portPilihan
-  if (!port) {
-    const hasil = await portUntukCetak()
-    if (!hasil) {
-      throw new Error(
-        'Printer belum dipindai. Buka menu Pindai printer lalu hubungkan printer thermal.',
-      )
+  return sirkuitPrinter.jalankan(async () => {
+    if (!dukunganSerial()) {
+      throw new Error('Web Serial tidak didukung browser ini')
     }
-    port = hasil.port
-  }
-  await port.open({ baudRate: 9600 })
-  if (!port.writable) {
-    await port.close()
-    throw new Error('Port printer tidak bisa ditulis')
-  }
-  const writer = port.writable.getWriter()
-  try {
-    const enc = new TextEncoder()
-    const muatan: Uint8Array[] = []
-    muatan.push(enc.encode(`${ESC}@`)) // inisialisasi printer
-    for (const b of baris) {
-      muatan.push(enc.encode(b.padEnd(lebarKolom) + '\n'))
+    let port = portPilihan
+    if (!port) {
+      const hasil = await portUntukCetak()
+      if (!hasil) {
+        throw new Error(
+          'Printer belum dipindai. Buka menu Pindai printer lalu hubungkan printer thermal.',
+        )
+      }
+      port = hasil.port
     }
-    muatan.push(enc.encode('\n\n\n')) // advance kertas
-    muatan.push(enc.encode(`${ESC}i`)) // potong kertas (full cut)
-    for (const chunk of muatan) {
-      await writer.write(chunk)
+    await port.open({ baudRate: 9600 })
+    if (!port.writable) {
+      await port.close()
+      throw new Error('Port printer tidak bisa ditulis')
     }
-  } finally {
-    writer.releaseLock()
-    await port.close()
-  }
+    const writer = port.writable.getWriter()
+    try {
+      const enc = new TextEncoder()
+      const muatan: Uint8Array[] = []
+      muatan.push(enc.encode(`${ESC}@`)) // inisialisasi printer
+      for (const b of baris) {
+        muatan.push(enc.encode(b.padEnd(lebarKolom) + '\n'))
+      }
+      muatan.push(enc.encode('\n\n\n')) // advance kertas
+      muatan.push(enc.encode(`${ESC}i`)) // potong kertas (full cut)
+      for (const chunk of muatan) {
+        await writer.write(chunk)
+      }
+    } finally {
+      writer.releaseLock()
+      await port.close()
+    }
+  })
 }

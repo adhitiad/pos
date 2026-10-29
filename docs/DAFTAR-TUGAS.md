@@ -209,6 +209,11 @@ use-posting-transaksi}.ts`, `src/app/_layout.tsx` (inisialisasi tabel).
 - [x] **CLN-03** Hapus dependensi tak terpakai: `@faker-js/faker`, `@tanstack/react-db`, `@tanstack/query-db-collection`
 - [x] **CLN-04** Hapus artefak root: `build-output.txt`, `654e2754…avif`
 - [x] **CLN-05** Jalankan gate penuh: `tsc --noEmit`, `lint`, `check` (prettier), `test` (71 lulus), `test:e2e` (15 lulus), `build` — semua hijau
+- [x] **CLN-06** Scheduled cleanup data kadaluwarsa (>30 hari): `src/server/bersihkanData.ts` (`bersihkanPrintJobKadaluarsa`, `bersihkanDraftTransaksiKadaluarsa`), route cron `/api/cron/bersihkan-data` (dijadwalkan Vercel 03:00 UTC harian via `vercel.json`), guard `CRON_SECRET` via `cronAuth`, dokumentasi di `docs/API.md`
+- [x] **SEC-11 (Medium)** Batasan ukuran payload pada endpoint printer/pemindai: `bacaJsonTerbatas` (1–64 KB tergantung endpoint) + validasi skema Zod ketat sebelum `request.json()` di `/api/v1/printer/*` dan `/api/v1/percetakan/*`; mencegah body raksasa dari perangkat keras (`src/server/api.ts`)
+- [x] **NEW-09** Generate meja bulk: skema `GenerateMejaSchema` (`src/validations/meja.ts`), server fn `buatBanyakMeja` (`src/server/meja.ts`), server fn `buatBanyakMejaFn` (`src/server/mejaFn.ts`), route `POST /api/v1/meja/generate` (guard manajerial, payload limit 1 KB, maks 200 meja per batch, nomor duplikat dilewati), dialog UI/UX `GenerateMejaDialog` (`src/components/meja/GenerateMejaDialog.tsx`) mobile-first dengan form rentang nomor, toggle aktif/cetak A4, dan preview lembar A4 dengan 2 meja per lembar + garis potong; integrasi tombol generate di halaman `/meja` (`src/routes/meja.tsx`)
+- [x] **NEW-10** Koneksi baca terpisah (read replica siap pakai): `src/db-read.ts` (PrismaClient terpisah via `DATABASE_URL_READ`, fallback ke `DATABASE_URL`), `src/database-url.ts` (`getDatabaseUrlRead()`), query laporan diarahkan ke `prismaBaca` (`laporanPenjualan.ts`, `laporanPajak.ts`, `laporanBelanja.ts`), env baru di `.env.example` + `src/env.ts`
+- [x] **NEW-11** Navigasi akun staf: login dan sesi OWNER/KASIR diarahkan ke `/dashboard`, tautan Dashboard dipindah ke urutan teratas sidebar serta ditambahkan ke navbar desktop, dan sakelar buka/tutup toko (`toko_aktif`) tersedia di `/dashboard` (tersimpan langsung) di samping yang sudah ada di `/pengaturan`
 - [x] **AUD-01** Audit menyeluruh (dead code, security, performa, health) → `audit-2026-10-18-2140.md`
 - [x] **AUD-02** Perbaiki `.gitignore` (hapus ignore `.env.example`, tambah `.env.*` + `coverage/`, hanya template env yang di-commit) & rapikan `README.md`
 
@@ -853,14 +858,25 @@ setengah-setengah.
 - [x] **BIZ-01** Keputusan bisnis M-01: `POST /api/v1/pesan` publik mengurangi stok —
       diputuskan stok dipotong **saat pembayaran dikonfirmasi**, bukan saat order.
       Implementasi dan pengujian ada di **SEC-15** (2026-10-23).
-- [x] **MCP-01** MCP Server `mcp-expo.ts` untuk integrasi Expo — mengekspor 7 tool
+- [x] **MCP-01** MCP Server `mcp/server-expo.ts` untuk integrasi Expo — mengekspor 7 tool
       (expo_api_docs, expo_expo_docs, expo_prd_ai, expo_operasional, expo_readme,
       expo_barriers, expo_all_docs) yang membaca docs/API.md, EXPO.md, PRD-AI.md,
       OPERASIONAL.md + barriers keamanan mobile. JSON-RPC over stdio; typecheck lulus.
 - [x] **MCP-02** Konfigurasi klien OpenCode — `opencode.json` (project) +
       `C:\Users\humas\.config\opencode\opencode.json` (global) terdaftar 5 server MCP:
-      pos-expo, pos-backend (stdio/Bun), firecrawl, tavily, exa (http). API key via
-      `{env:VAR_NAME}` (tidak hardcode). Verifikasi JSON valid.
+      pos-expo, pos-backend (stdio/Bun), firecrawl, tavily, exa (remote). API key
+      remote tersimpan di konfigurasi global, bukan di repo ini. Verifikasi JSON valid.
+- [x] **MCP-03** Perbaiki MCP gagal konek (`failed: Request timed out`) + tool baca
+      repo backend: transport stdio dipusatkan di `mcp/stdio.ts` (satu pesan JSON per
+      baris; framing `Content-Length` ala LSP dihapus), tool `repo_list_files`,
+      `repo_read_file`, `repo_search` di `mcp/repo.ts` (allowlist `docs/`, `src/`,
+      `prisma/`, `tests/`, `scripts/`, `messages/`, `.agents/`; tolak path absolut,
+      `..`, symlink, `.env*`), dipakai `pos-expo` + `pos-backend`; konfigurasi V2
+      dirapikan (`type` + `command` array) di project, `pos_mobile/opencode.json`,
+      dan global; regresi `tests/vitest/mcp.test.ts`; `opencode mcp list` semua
+      connected. Semua kode MCP dikonsolidasi ke `mcp/**`, dan `mcp/` + tes MCP
+      di-`.gitignore` (dev-only, dilarang commit). API key remote dipindah ke
+      `~/.config/opencode/secrets/` via substitusi `{file:...}`.
 - [x] **MOBIL-04 / SEC-28** Perbaiki autentikasi klien Expo — ganti
       `POST /api/v1/auth-social` → `POST /api/v1/auth-native`, ganti cookie header →
       `Authorization: Bearer <token>`, hapus `x-client: expo` (bukan security boundary),

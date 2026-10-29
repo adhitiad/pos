@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { nonHapus } from './nonHapus.js'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 import type {
   Notifikasi,
@@ -166,7 +167,7 @@ async function notifikasiKasir(sekarang: Date): Promise<Notifikasi[]> {
   const [stok, pesanan] = await Promise.all([
     notifikasiStok(sekarang),
     prisma.transaksi.findMany({
-      where: { sumber: 'ONLINE', statusPesanan: 'MENUNGGU' },
+      where: nonHapus({ sumber: 'ONLINE', statusPesanan: 'MENUNGGU' }),
       orderBy: { tanggal: 'desc' },
       take: 20,
       select: {
@@ -207,10 +208,10 @@ async function notifikasiMember(email: string): Promise<Notifikasi[]> {
 
   const [transaksi, pesanan] = await Promise.all([
     prisma.transaksi.findMany({
-      where: {
+      where: nonHapus({
         memberId: member.id,
         ...FILTER_TRANSAKSI_TERJUAL,
-      },
+      }),
       orderBy: { tanggal: 'desc' },
       take: 5,
       select: {
@@ -222,7 +223,7 @@ async function notifikasiMember(email: string): Promise<Notifikasi[]> {
       },
     }),
     prisma.transaksi.findMany({
-      where: { memberId: member.id, sumber: 'ONLINE' },
+      where: nonHapus({ memberId: member.id, sumber: 'ONLINE' }),
       orderBy: { tanggal: 'desc' },
       take: 5,
       select: {

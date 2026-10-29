@@ -78,7 +78,6 @@ export type DraftTransaksiCountAggregateOutputType = {
   id: number
   nomor: number
   kasirId: number
-  payloadJson: number
   subtotal: number
   total: number
   metodeBayar: number
@@ -92,6 +91,7 @@ export type DraftTransaksiCountAggregateOutputType = {
   transaksiId: number
   createdAt: number
   updatedAt: number
+  payloadJson: number
   _all: number
 }
 
@@ -148,7 +148,6 @@ export type DraftTransaksiCountAggregateInputType = {
   id?: true
   nomor?: true
   kasirId?: true
-  payloadJson?: true
   subtotal?: true
   total?: true
   metodeBayar?: true
@@ -162,6 +161,7 @@ export type DraftTransaksiCountAggregateInputType = {
   transaksiId?: true
   createdAt?: true
   updatedAt?: true
+  payloadJson?: true
   _all?: true
 }
 
@@ -255,7 +255,6 @@ export type DraftTransaksiGroupByOutputType = {
   id: string
   nomor: string
   kasirId: string
-  payloadJson: runtime.JsonValue
   subtotal: runtime.Decimal
   total: runtime.Decimal
   metodeBayar: string
@@ -269,6 +268,7 @@ export type DraftTransaksiGroupByOutputType = {
   transaksiId: string | null
   createdAt: Date
   updatedAt: Date
+  payloadJson: runtime.JsonValue
   _count: DraftTransaksiCountAggregateOutputType | null
   _avg: DraftTransaksiAvgAggregateOutputType | null
   _sum: DraftTransaksiSumAggregateOutputType | null
@@ -298,7 +298,6 @@ export type DraftTransaksiWhereInput = {
   id?: Prisma.StringFilter<"DraftTransaksi"> | string
   nomor?: Prisma.StringFilter<"DraftTransaksi"> | string
   kasirId?: Prisma.StringFilter<"DraftTransaksi"> | string
-  payloadJson?: Prisma.JsonFilter<"DraftTransaksi">
   subtotal?: Prisma.DecimalFilter<"DraftTransaksi"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"DraftTransaksi"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFilter<"DraftTransaksi"> | string
@@ -312,6 +311,7 @@ export type DraftTransaksiWhereInput = {
   transaksiId?: Prisma.StringNullableFilter<"DraftTransaksi"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DraftTransaksi"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DraftTransaksi"> | Date | string
+  payloadJson?: Prisma.JsonFilter<"DraftTransaksi">
   kasir?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   transaksi?: Prisma.XOR<Prisma.TransaksiNullableScalarRelationFilter, Prisma.TransaksiWhereInput> | null
@@ -322,7 +322,6 @@ export type DraftTransaksiOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   nomor?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
-  payloadJson?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   total?: Prisma.SortOrder
   metodeBayar?: Prisma.SortOrder
@@ -336,6 +335,7 @@ export type DraftTransaksiOrderByWithRelationInput = {
   transaksiId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  payloadJson?: Prisma.SortOrder
   kasir?: Prisma.UserOrderByWithRelationInput
   reviewedBy?: Prisma.UserOrderByWithRelationInput
   transaksi?: Prisma.TransaksiOrderByWithRelationInput
@@ -351,7 +351,6 @@ export type DraftTransaksiWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DraftTransaksiWhereInput[]
   NOT?: Prisma.DraftTransaksiWhereInput | Prisma.DraftTransaksiWhereInput[]
   kasirId?: Prisma.StringFilter<"DraftTransaksi"> | string
-  payloadJson?: Prisma.JsonFilter<"DraftTransaksi">
   subtotal?: Prisma.DecimalFilter<"DraftTransaksi"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"DraftTransaksi"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFilter<"DraftTransaksi"> | string
@@ -363,6 +362,7 @@ export type DraftTransaksiWhereUniqueInput = Prisma.AtLeast<{
   reviewedAt?: Prisma.DateTimeNullableFilter<"DraftTransaksi"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DraftTransaksi"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DraftTransaksi"> | Date | string
+  payloadJson?: Prisma.JsonFilter<"DraftTransaksi">
   kasir?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviewedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   transaksi?: Prisma.XOR<Prisma.TransaksiNullableScalarRelationFilter, Prisma.TransaksiWhereInput> | null
@@ -373,7 +373,6 @@ export type DraftTransaksiOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   nomor?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
-  payloadJson?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   total?: Prisma.SortOrder
   metodeBayar?: Prisma.SortOrder
@@ -387,6 +386,7 @@ export type DraftTransaksiOrderByWithAggregationInput = {
   transaksiId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  payloadJson?: Prisma.SortOrder
   _count?: Prisma.DraftTransaksiCountOrderByAggregateInput
   _avg?: Prisma.DraftTransaksiAvgOrderByAggregateInput
   _max?: Prisma.DraftTransaksiMaxOrderByAggregateInput
@@ -401,7 +401,6 @@ export type DraftTransaksiScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"DraftTransaksi"> | string
   nomor?: Prisma.StringWithAggregatesFilter<"DraftTransaksi"> | string
   kasirId?: Prisma.StringWithAggregatesFilter<"DraftTransaksi"> | string
-  payloadJson?: Prisma.JsonWithAggregatesFilter<"DraftTransaksi">
   subtotal?: Prisma.DecimalWithAggregatesFilter<"DraftTransaksi"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalWithAggregatesFilter<"DraftTransaksi"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringWithAggregatesFilter<"DraftTransaksi"> | string
@@ -415,12 +414,12 @@ export type DraftTransaksiScalarWhereWithAggregatesInput = {
   transaksiId?: Prisma.StringNullableWithAggregatesFilter<"DraftTransaksi"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DraftTransaksi"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DraftTransaksi"> | Date | string
+  payloadJson?: Prisma.JsonWithAggregatesFilter<"DraftTransaksi">
 }
 
 export type DraftTransaksiCreateInput = {
   id?: string
   nomor: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -432,6 +431,7 @@ export type DraftTransaksiCreateInput = {
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   kasir: Prisma.UserCreateNestedOneWithoutDraftTransaksiKasirInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDraftTransaksiReviewerInput
   transaksi?: Prisma.TransaksiCreateNestedOneWithoutDraftHasilInput
@@ -442,7 +442,6 @@ export type DraftTransaksiUncheckedCreateInput = {
   id?: string
   nomor: string
   kasirId: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -456,13 +455,13 @@ export type DraftTransaksiUncheckedCreateInput = {
   transaksiId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewAudits?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutDraftInput
 }
 
 export type DraftTransaksiUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -474,6 +473,7 @@ export type DraftTransaksiUpdateInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   kasir?: Prisma.UserUpdateOneRequiredWithoutDraftTransaksiKasirNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutDraftTransaksiReviewerNestedInput
   transaksi?: Prisma.TransaksiUpdateOneWithoutDraftHasilNestedInput
@@ -484,7 +484,6 @@ export type DraftTransaksiUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -498,6 +497,7 @@ export type DraftTransaksiUncheckedUpdateInput = {
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewAudits?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutDraftNestedInput
 }
 
@@ -505,7 +505,6 @@ export type DraftTransaksiCreateManyInput = {
   id?: string
   nomor: string
   kasirId: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -519,12 +518,12 @@ export type DraftTransaksiCreateManyInput = {
   transaksiId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type DraftTransaksiUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -536,13 +535,13 @@ export type DraftTransaksiUpdateManyMutationInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type DraftTransaksiUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -556,6 +555,7 @@ export type DraftTransaksiUncheckedUpdateManyInput = {
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type DraftTransaksiListRelationFilter = {
@@ -577,7 +577,6 @@ export type DraftTransaksiCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nomor?: Prisma.SortOrder
   kasirId?: Prisma.SortOrder
-  payloadJson?: Prisma.SortOrder
   subtotal?: Prisma.SortOrder
   total?: Prisma.SortOrder
   metodeBayar?: Prisma.SortOrder
@@ -591,6 +590,7 @@ export type DraftTransaksiCountOrderByAggregateInput = {
   transaksiId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  payloadJson?: Prisma.SortOrder
 }
 
 export type DraftTransaksiAvgOrderByAggregateInput = {
@@ -780,7 +780,6 @@ export type DraftTransaksiUpdateOneWithoutReviewAuditsNestedInput = {
 export type DraftTransaksiCreateWithoutKasirInput = {
   id?: string
   nomor: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -792,6 +791,7 @@ export type DraftTransaksiCreateWithoutKasirInput = {
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDraftTransaksiReviewerInput
   transaksi?: Prisma.TransaksiCreateNestedOneWithoutDraftHasilInput
   reviewAudits?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutDraftInput
@@ -800,7 +800,6 @@ export type DraftTransaksiCreateWithoutKasirInput = {
 export type DraftTransaksiUncheckedCreateWithoutKasirInput = {
   id?: string
   nomor: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -814,6 +813,7 @@ export type DraftTransaksiUncheckedCreateWithoutKasirInput = {
   transaksiId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewAudits?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutDraftInput
 }
 
@@ -830,7 +830,6 @@ export type DraftTransaksiCreateManyKasirInputEnvelope = {
 export type DraftTransaksiCreateWithoutReviewedByInput = {
   id?: string
   nomor: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -842,6 +841,7 @@ export type DraftTransaksiCreateWithoutReviewedByInput = {
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   kasir: Prisma.UserCreateNestedOneWithoutDraftTransaksiKasirInput
   transaksi?: Prisma.TransaksiCreateNestedOneWithoutDraftHasilInput
   reviewAudits?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutDraftInput
@@ -851,7 +851,6 @@ export type DraftTransaksiUncheckedCreateWithoutReviewedByInput = {
   id?: string
   nomor: string
   kasirId: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -864,6 +863,7 @@ export type DraftTransaksiUncheckedCreateWithoutReviewedByInput = {
   transaksiId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewAudits?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutDraftInput
 }
 
@@ -900,7 +900,6 @@ export type DraftTransaksiScalarWhereInput = {
   id?: Prisma.StringFilter<"DraftTransaksi"> | string
   nomor?: Prisma.StringFilter<"DraftTransaksi"> | string
   kasirId?: Prisma.StringFilter<"DraftTransaksi"> | string
-  payloadJson?: Prisma.JsonFilter<"DraftTransaksi">
   subtotal?: Prisma.DecimalFilter<"DraftTransaksi"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFilter<"DraftTransaksi"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFilter<"DraftTransaksi"> | string
@@ -914,6 +913,7 @@ export type DraftTransaksiScalarWhereInput = {
   transaksiId?: Prisma.StringNullableFilter<"DraftTransaksi"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DraftTransaksi"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DraftTransaksi"> | Date | string
+  payloadJson?: Prisma.JsonFilter<"DraftTransaksi">
 }
 
 export type DraftTransaksiUpsertWithWhereUniqueWithoutReviewedByInput = {
@@ -935,7 +935,6 @@ export type DraftTransaksiUpdateManyWithWhereWithoutReviewedByInput = {
 export type DraftTransaksiCreateWithoutTransaksiInput = {
   id?: string
   nomor: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -947,6 +946,7 @@ export type DraftTransaksiCreateWithoutTransaksiInput = {
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   kasir: Prisma.UserCreateNestedOneWithoutDraftTransaksiKasirInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDraftTransaksiReviewerInput
   reviewAudits?: Prisma.TransaksiReviewAuditCreateNestedManyWithoutDraftInput
@@ -956,7 +956,6 @@ export type DraftTransaksiUncheckedCreateWithoutTransaksiInput = {
   id?: string
   nomor: string
   kasirId: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -969,6 +968,7 @@ export type DraftTransaksiUncheckedCreateWithoutTransaksiInput = {
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewAudits?: Prisma.TransaksiReviewAuditUncheckedCreateNestedManyWithoutDraftInput
 }
 
@@ -991,7 +991,6 @@ export type DraftTransaksiUpdateToOneWithWhereWithoutTransaksiInput = {
 export type DraftTransaksiUpdateWithoutTransaksiInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1003,6 +1002,7 @@ export type DraftTransaksiUpdateWithoutTransaksiInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   kasir?: Prisma.UserUpdateOneRequiredWithoutDraftTransaksiKasirNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutDraftTransaksiReviewerNestedInput
   reviewAudits?: Prisma.TransaksiReviewAuditUpdateManyWithoutDraftNestedInput
@@ -1012,7 +1012,6 @@ export type DraftTransaksiUncheckedUpdateWithoutTransaksiInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1025,13 +1024,13 @@ export type DraftTransaksiUncheckedUpdateWithoutTransaksiInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewAudits?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutDraftNestedInput
 }
 
 export type DraftTransaksiCreateWithoutReviewAuditsInput = {
   id?: string
   nomor: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -1043,6 +1042,7 @@ export type DraftTransaksiCreateWithoutReviewAuditsInput = {
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   kasir: Prisma.UserCreateNestedOneWithoutDraftTransaksiKasirInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutDraftTransaksiReviewerInput
   transaksi?: Prisma.TransaksiCreateNestedOneWithoutDraftHasilInput
@@ -1052,7 +1052,6 @@ export type DraftTransaksiUncheckedCreateWithoutReviewAuditsInput = {
   id?: string
   nomor: string
   kasirId: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -1066,6 +1065,7 @@ export type DraftTransaksiUncheckedCreateWithoutReviewAuditsInput = {
   transaksiId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type DraftTransaksiCreateOrConnectWithoutReviewAuditsInput = {
@@ -1087,7 +1087,6 @@ export type DraftTransaksiUpdateToOneWithWhereWithoutReviewAuditsInput = {
 export type DraftTransaksiUpdateWithoutReviewAuditsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1099,6 +1098,7 @@ export type DraftTransaksiUpdateWithoutReviewAuditsInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   kasir?: Prisma.UserUpdateOneRequiredWithoutDraftTransaksiKasirNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutDraftTransaksiReviewerNestedInput
   transaksi?: Prisma.TransaksiUpdateOneWithoutDraftHasilNestedInput
@@ -1108,7 +1108,6 @@ export type DraftTransaksiUncheckedUpdateWithoutReviewAuditsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1122,12 +1121,12 @@ export type DraftTransaksiUncheckedUpdateWithoutReviewAuditsInput = {
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type DraftTransaksiCreateManyKasirInput = {
   id?: string
   nomor: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -1141,13 +1140,13 @@ export type DraftTransaksiCreateManyKasirInput = {
   transaksiId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type DraftTransaksiCreateManyReviewedByInput = {
   id?: string
   nomor: string
   kasirId: string
-  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar: string
@@ -1160,12 +1159,12 @@ export type DraftTransaksiCreateManyReviewedByInput = {
   transaksiId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  payloadJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type DraftTransaksiUpdateWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1177,6 +1176,7 @@ export type DraftTransaksiUpdateWithoutKasirInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewedBy?: Prisma.UserUpdateOneWithoutDraftTransaksiReviewerNestedInput
   transaksi?: Prisma.TransaksiUpdateOneWithoutDraftHasilNestedInput
   reviewAudits?: Prisma.TransaksiReviewAuditUpdateManyWithoutDraftNestedInput
@@ -1185,7 +1185,6 @@ export type DraftTransaksiUpdateWithoutKasirInput = {
 export type DraftTransaksiUncheckedUpdateWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1199,13 +1198,13 @@ export type DraftTransaksiUncheckedUpdateWithoutKasirInput = {
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewAudits?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutDraftNestedInput
 }
 
 export type DraftTransaksiUncheckedUpdateManyWithoutKasirInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1219,12 +1218,12 @@ export type DraftTransaksiUncheckedUpdateManyWithoutKasirInput = {
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 export type DraftTransaksiUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1236,6 +1235,7 @@ export type DraftTransaksiUpdateWithoutReviewedByInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   kasir?: Prisma.UserUpdateOneRequiredWithoutDraftTransaksiKasirNestedInput
   transaksi?: Prisma.TransaksiUpdateOneWithoutDraftHasilNestedInput
   reviewAudits?: Prisma.TransaksiReviewAuditUpdateManyWithoutDraftNestedInput
@@ -1245,7 +1245,6 @@ export type DraftTransaksiUncheckedUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1258,6 +1257,7 @@ export type DraftTransaksiUncheckedUpdateWithoutReviewedByInput = {
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   reviewAudits?: Prisma.TransaksiReviewAuditUncheckedUpdateManyWithoutDraftNestedInput
 }
 
@@ -1265,7 +1265,6 @@ export type DraftTransaksiUncheckedUpdateManyWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nomor?: Prisma.StringFieldUpdateOperationsInput | string
   kasirId?: Prisma.StringFieldUpdateOperationsInput | string
-  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   subtotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   metodeBayar?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1278,6 +1277,7 @@ export type DraftTransaksiUncheckedUpdateManyWithoutReviewedByInput = {
   transaksiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payloadJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -1315,7 +1315,6 @@ export type DraftTransaksiSelect<ExtArgs extends runtime.Types.Extensions.Intern
   id?: boolean
   nomor?: boolean
   kasirId?: boolean
-  payloadJson?: boolean
   subtotal?: boolean
   total?: boolean
   metodeBayar?: boolean
@@ -1329,6 +1328,7 @@ export type DraftTransaksiSelect<ExtArgs extends runtime.Types.Extensions.Intern
   transaksiId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  payloadJson?: boolean
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DraftTransaksi$reviewedByArgs<ExtArgs>
   transaksi?: boolean | Prisma.DraftTransaksi$transaksiArgs<ExtArgs>
@@ -1340,7 +1340,6 @@ export type DraftTransaksiSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   nomor?: boolean
   kasirId?: boolean
-  payloadJson?: boolean
   subtotal?: boolean
   total?: boolean
   metodeBayar?: boolean
@@ -1354,6 +1353,7 @@ export type DraftTransaksiSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   transaksiId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  payloadJson?: boolean
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DraftTransaksi$reviewedByArgs<ExtArgs>
   transaksi?: boolean | Prisma.DraftTransaksi$transaksiArgs<ExtArgs>
@@ -1363,7 +1363,6 @@ export type DraftTransaksiSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   id?: boolean
   nomor?: boolean
   kasirId?: boolean
-  payloadJson?: boolean
   subtotal?: boolean
   total?: boolean
   metodeBayar?: boolean
@@ -1377,6 +1376,7 @@ export type DraftTransaksiSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   transaksiId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  payloadJson?: boolean
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DraftTransaksi$reviewedByArgs<ExtArgs>
   transaksi?: boolean | Prisma.DraftTransaksi$transaksiArgs<ExtArgs>
@@ -1386,7 +1386,6 @@ export type DraftTransaksiSelectScalar = {
   id?: boolean
   nomor?: boolean
   kasirId?: boolean
-  payloadJson?: boolean
   subtotal?: boolean
   total?: boolean
   metodeBayar?: boolean
@@ -1400,9 +1399,10 @@ export type DraftTransaksiSelectScalar = {
   transaksiId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  payloadJson?: boolean
 }
 
-export type DraftTransaksiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "kasirId" | "payloadJson" | "subtotal" | "total" | "metodeBayar" | "catatan" | "waktuKlien" | "dibuatOffline" | "idempotencyKey" | "status" | "reviewedById" | "reviewedAt" | "transaksiId" | "createdAt" | "updatedAt", ExtArgs["result"]["draftTransaksi"]>
+export type DraftTransaksiOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "kasirId" | "subtotal" | "total" | "metodeBayar" | "catatan" | "waktuKlien" | "dibuatOffline" | "idempotencyKey" | "status" | "reviewedById" | "reviewedAt" | "transaksiId" | "createdAt" | "updatedAt" | "payloadJson", ExtArgs["result"]["draftTransaksi"]>
 export type DraftTransaksiInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.DraftTransaksi$reviewedByArgs<ExtArgs>
@@ -1433,7 +1433,6 @@ export type $DraftTransaksiPayload<ExtArgs extends runtime.Types.Extensions.Inte
     id: string
     nomor: string
     kasirId: string
-    payloadJson: runtime.JsonValue
     subtotal: runtime.Decimal
     total: runtime.Decimal
     metodeBayar: string
@@ -1447,6 +1446,7 @@ export type $DraftTransaksiPayload<ExtArgs extends runtime.Types.Extensions.Inte
     transaksiId: string | null
     createdAt: Date
     updatedAt: Date
+    payloadJson: runtime.JsonValue
   }, ExtArgs["result"]["draftTransaksi"]>
   composites: {}
 }
@@ -1877,7 +1877,6 @@ export interface DraftTransaksiFieldRefs {
   readonly id: Prisma.FieldRef<"DraftTransaksi", 'String'>
   readonly nomor: Prisma.FieldRef<"DraftTransaksi", 'String'>
   readonly kasirId: Prisma.FieldRef<"DraftTransaksi", 'String'>
-  readonly payloadJson: Prisma.FieldRef<"DraftTransaksi", 'Json'>
   readonly subtotal: Prisma.FieldRef<"DraftTransaksi", 'Decimal'>
   readonly total: Prisma.FieldRef<"DraftTransaksi", 'Decimal'>
   readonly metodeBayar: Prisma.FieldRef<"DraftTransaksi", 'String'>
@@ -1891,6 +1890,7 @@ export interface DraftTransaksiFieldRefs {
   readonly transaksiId: Prisma.FieldRef<"DraftTransaksi", 'String'>
   readonly createdAt: Prisma.FieldRef<"DraftTransaksi", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DraftTransaksi", 'DateTime'>
+  readonly payloadJson: Prisma.FieldRef<"DraftTransaksi", 'Json'>
 }
     
 

@@ -200,16 +200,16 @@ export type ProdukBahanWhereInput = {
   produkId?: Prisma.StringFilter<"ProdukBahan"> | string
   bahanId?: Prisma.StringFilter<"ProdukBahan"> | string
   jumlah?: Prisma.DecimalFilter<"ProdukBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  produk?: Prisma.XOR<Prisma.ProdukScalarRelationFilter, Prisma.ProdukWhereInput>
   bahan?: Prisma.XOR<Prisma.BahanScalarRelationFilter, Prisma.BahanWhereInput>
+  produk?: Prisma.XOR<Prisma.ProdukScalarRelationFilter, Prisma.ProdukWhereInput>
 }
 
 export type ProdukBahanOrderByWithRelationInput = {
   produkId?: Prisma.SortOrder
   bahanId?: Prisma.SortOrder
   jumlah?: Prisma.SortOrder
-  produk?: Prisma.ProdukOrderByWithRelationInput
   bahan?: Prisma.BahanOrderByWithRelationInput
+  produk?: Prisma.ProdukOrderByWithRelationInput
 }
 
 export type ProdukBahanWhereUniqueInput = Prisma.AtLeast<{
@@ -220,8 +220,8 @@ export type ProdukBahanWhereUniqueInput = Prisma.AtLeast<{
   produkId?: Prisma.StringFilter<"ProdukBahan"> | string
   bahanId?: Prisma.StringFilter<"ProdukBahan"> | string
   jumlah?: Prisma.DecimalFilter<"ProdukBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  produk?: Prisma.XOR<Prisma.ProdukScalarRelationFilter, Prisma.ProdukWhereInput>
   bahan?: Prisma.XOR<Prisma.BahanScalarRelationFilter, Prisma.BahanWhereInput>
+  produk?: Prisma.XOR<Prisma.ProdukScalarRelationFilter, Prisma.ProdukWhereInput>
 }, "produkId_bahanId">
 
 export type ProdukBahanOrderByWithAggregationInput = {
@@ -246,8 +246,8 @@ export type ProdukBahanScalarWhereWithAggregatesInput = {
 
 export type ProdukBahanCreateInput = {
   jumlah: runtime.Decimal | runtime.DecimalJsLike | number | string
-  produk: Prisma.ProdukCreateNestedOneWithoutResepInput
   bahan: Prisma.BahanCreateNestedOneWithoutResepInput
+  produk: Prisma.ProdukCreateNestedOneWithoutResepInput
 }
 
 export type ProdukBahanUncheckedCreateInput = {
@@ -258,8 +258,8 @@ export type ProdukBahanUncheckedCreateInput = {
 
 export type ProdukBahanUpdateInput = {
   jumlah?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  produk?: Prisma.ProdukUpdateOneRequiredWithoutResepNestedInput
   bahan?: Prisma.BahanUpdateOneRequiredWithoutResepNestedInput
+  produk?: Prisma.ProdukUpdateOneRequiredWithoutResepNestedInput
 }
 
 export type ProdukBahanUncheckedUpdateInput = {
@@ -536,24 +536,24 @@ export type ProdukBahanSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   produkId?: boolean
   bahanId?: boolean
   jumlah?: boolean
-  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
+  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["produkBahan"]>
 
 export type ProdukBahanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   produkId?: boolean
   bahanId?: boolean
   jumlah?: boolean
-  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
+  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["produkBahan"]>
 
 export type ProdukBahanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   produkId?: boolean
   bahanId?: boolean
   jumlah?: boolean
-  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
+  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["produkBahan"]>
 
 export type ProdukBahanSelectScalar = {
@@ -564,23 +564,23 @@ export type ProdukBahanSelectScalar = {
 
 export type ProdukBahanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"produkId" | "bahanId" | "jumlah", ExtArgs["result"]["produkBahan"]>
 export type ProdukBahanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
+  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
 }
 export type ProdukBahanIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
+  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
 }
 export type ProdukBahanIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
+  produk?: boolean | Prisma.ProdukDefaultArgs<ExtArgs>
 }
 
 export type $ProdukBahanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ProdukBahan"
   objects: {
-    produk: Prisma.$ProdukPayload<ExtArgs>
     bahan: Prisma.$BahanPayload<ExtArgs>
+    produk: Prisma.$ProdukPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     produkId: string
@@ -980,8 +980,8 @@ readonly fields: ProdukBahanFieldRefs;
  */
 export interface Prisma__ProdukBahanClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  produk<T extends Prisma.ProdukDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProdukDefaultArgs<ExtArgs>>): Prisma.Prisma__ProdukClient<runtime.Types.Result.GetResult<Prisma.$ProdukPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   bahan<T extends Prisma.BahanDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BahanDefaultArgs<ExtArgs>>): Prisma.Prisma__BahanClient<runtime.Types.Result.GetResult<Prisma.$BahanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  produk<T extends Prisma.ProdukDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProdukDefaultArgs<ExtArgs>>): Prisma.Prisma__ProdukClient<runtime.Types.Result.GetResult<Prisma.$ProdukPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

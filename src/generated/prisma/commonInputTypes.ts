@@ -277,18 +277,18 @@ export type EnumStatusPesananFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumStatusPesananFilter<$PrismaModel> | $Enums.StatusPesanan
 }
 
-export type EnumSumberTransaksiFilter<$PrismaModel = never> = {
-  equals?: $Enums.SumberTransaksi | Prisma.EnumSumberTransaksiFieldRefInput<$PrismaModel>
-  in?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
-  notIn?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel> | $Enums.SumberTransaksi
-}
-
 export type EnumViaPembayaranNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.ViaPembayaran | Prisma.EnumViaPembayaranFieldRefInput<$PrismaModel> | null
   in?: $Enums.ViaPembayaran[] | Prisma.ListEnumViaPembayaranFieldRefInput<$PrismaModel> | null
   notIn?: $Enums.ViaPembayaran[] | Prisma.ListEnumViaPembayaranFieldRefInput<$PrismaModel> | null
   not?: Prisma.NestedEnumViaPembayaranNullableFilter<$PrismaModel> | $Enums.ViaPembayaran | null
+}
+
+export type EnumSumberTransaksiFilter<$PrismaModel = never> = {
+  equals?: $Enums.SumberTransaksi | Prisma.EnumSumberTransaksiFieldRefInput<$PrismaModel>
+  in?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel> | $Enums.SumberTransaksi
 }
 
 export type EnumMetodeBayarWithAggregatesFilter<$PrismaModel = never> = {
@@ -311,16 +311,6 @@ export type EnumStatusPesananWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumStatusPesananFilter<$PrismaModel>
 }
 
-export type EnumSumberTransaksiWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.SumberTransaksi | Prisma.EnumSumberTransaksiFieldRefInput<$PrismaModel>
-  in?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
-  notIn?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumSumberTransaksiWithAggregatesFilter<$PrismaModel> | $Enums.SumberTransaksi
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel>
-}
-
 export type EnumViaPembayaranNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ViaPembayaran | Prisma.EnumViaPembayaranFieldRefInput<$PrismaModel> | null
   in?: $Enums.ViaPembayaran[] | Prisma.ListEnumViaPembayaranFieldRefInput<$PrismaModel> | null
@@ -329,6 +319,16 @@ export type EnumViaPembayaranNullableWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumViaPembayaranNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumViaPembayaranNullableFilter<$PrismaModel>
+}
+
+export type EnumSumberTransaksiWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SumberTransaksi | Prisma.EnumSumberTransaksiFieldRefInput<$PrismaModel>
+  in?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSumberTransaksiWithAggregatesFilter<$PrismaModel> | $Enums.SumberTransaksi
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel>
 }
 
 export type EnumTipeAkunFilter<$PrismaModel = never> = {
@@ -433,6 +433,13 @@ export type EnumStatusPengajuanWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumStatusPengajuanFilter<$PrismaModel>
 }
 
+export type EnumStatusDraftTransaksiFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatusDraftTransaksi | Prisma.EnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
+  in?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel> | $Enums.StatusDraftTransaksi
+}
+
 export type JsonFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -457,11 +464,14 @@ export type JsonFilterBase<$PrismaModel = never> = {
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
 }
 
-export type EnumStatusDraftTransaksiFilter<$PrismaModel = never> = {
+export type EnumStatusDraftTransaksiWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.StatusDraftTransaksi | Prisma.EnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
   in?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
   notIn?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel> | $Enums.StatusDraftTransaksi
+  not?: Prisma.NestedEnumStatusDraftTransaksiWithAggregatesFilter<$PrismaModel> | $Enums.StatusDraftTransaksi
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel>
 }
 
 export type JsonWithAggregatesFilter<$PrismaModel = never> =
@@ -489,16 +499,6 @@ export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedJsonFilter<$PrismaModel>
   _max?: Prisma.NestedJsonFilter<$PrismaModel>
-}
-
-export type EnumStatusDraftTransaksiWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.StatusDraftTransaksi | Prisma.EnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
-  in?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
-  notIn?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumStatusDraftTransaksiWithAggregatesFilter<$PrismaModel> | $Enums.StatusDraftTransaksi
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel>
 }
 
 export type EnumStatusPesananDrafFilter<$PrismaModel = never> = {
@@ -794,18 +794,18 @@ export type NestedEnumStatusPesananFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumStatusPesananFilter<$PrismaModel> | $Enums.StatusPesanan
 }
 
-export type NestedEnumSumberTransaksiFilter<$PrismaModel = never> = {
-  equals?: $Enums.SumberTransaksi | Prisma.EnumSumberTransaksiFieldRefInput<$PrismaModel>
-  in?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
-  notIn?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel> | $Enums.SumberTransaksi
-}
-
 export type NestedEnumViaPembayaranNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.ViaPembayaran | Prisma.EnumViaPembayaranFieldRefInput<$PrismaModel> | null
   in?: $Enums.ViaPembayaran[] | Prisma.ListEnumViaPembayaranFieldRefInput<$PrismaModel> | null
   notIn?: $Enums.ViaPembayaran[] | Prisma.ListEnumViaPembayaranFieldRefInput<$PrismaModel> | null
   not?: Prisma.NestedEnumViaPembayaranNullableFilter<$PrismaModel> | $Enums.ViaPembayaran | null
+}
+
+export type NestedEnumSumberTransaksiFilter<$PrismaModel = never> = {
+  equals?: $Enums.SumberTransaksi | Prisma.EnumSumberTransaksiFieldRefInput<$PrismaModel>
+  in?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel> | $Enums.SumberTransaksi
 }
 
 export type NestedEnumMetodeBayarWithAggregatesFilter<$PrismaModel = never> = {
@@ -828,16 +828,6 @@ export type NestedEnumStatusPesananWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumStatusPesananFilter<$PrismaModel>
 }
 
-export type NestedEnumSumberTransaksiWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.SumberTransaksi | Prisma.EnumSumberTransaksiFieldRefInput<$PrismaModel>
-  in?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
-  notIn?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumSumberTransaksiWithAggregatesFilter<$PrismaModel> | $Enums.SumberTransaksi
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel>
-}
-
 export type NestedEnumViaPembayaranNullableWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ViaPembayaran | Prisma.EnumViaPembayaranFieldRefInput<$PrismaModel> | null
   in?: $Enums.ViaPembayaran[] | Prisma.ListEnumViaPembayaranFieldRefInput<$PrismaModel> | null
@@ -846,6 +836,16 @@ export type NestedEnumViaPembayaranNullableWithAggregatesFilter<$PrismaModel = n
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumViaPembayaranNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumViaPembayaranNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumSumberTransaksiWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SumberTransaksi | Prisma.EnumSumberTransaksiFieldRefInput<$PrismaModel>
+  in?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SumberTransaksi[] | Prisma.ListEnumSumberTransaksiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSumberTransaksiWithAggregatesFilter<$PrismaModel> | $Enums.SumberTransaksi
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSumberTransaksiFilter<$PrismaModel>
 }
 
 export type NestedEnumTipeAkunFilter<$PrismaModel = never> = {
@@ -930,6 +930,16 @@ export type NestedEnumStatusDraftTransaksiFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel> | $Enums.StatusDraftTransaksi
 }
 
+export type NestedEnumStatusDraftTransaksiWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatusDraftTransaksi | Prisma.EnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
+  in?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatusDraftTransaksiWithAggregatesFilter<$PrismaModel> | $Enums.StatusDraftTransaksi
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel>
+}
+
 export type NestedJsonFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -952,16 +962,6 @@ export type NestedJsonFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
-}
-
-export type NestedEnumStatusDraftTransaksiWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.StatusDraftTransaksi | Prisma.EnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
-  in?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
-  notIn?: $Enums.StatusDraftTransaksi[] | Prisma.ListEnumStatusDraftTransaksiFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumStatusDraftTransaksiWithAggregatesFilter<$PrismaModel> | $Enums.StatusDraftTransaksi
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumStatusDraftTransaksiFilter<$PrismaModel>
 }
 
 export type NestedEnumStatusPesananDrafFilter<$PrismaModel = never> = {

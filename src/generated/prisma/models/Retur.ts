@@ -232,8 +232,8 @@ export type ReturWhereInput = {
   kasirId?: Prisma.StringFilter<"Retur"> | string
   alasan?: Prisma.StringFilter<"Retur"> | string
   totalRetur?: Prisma.DecimalFilter<"Retur"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   kasir?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   items?: Prisma.ReturItemListRelationFilter
 }
 
@@ -245,8 +245,8 @@ export type ReturOrderByWithRelationInput = {
   kasirId?: Prisma.SortOrder
   alasan?: Prisma.SortOrder
   totalRetur?: Prisma.SortOrder
-  transaksi?: Prisma.TransaksiOrderByWithRelationInput
   kasir?: Prisma.UserOrderByWithRelationInput
+  transaksi?: Prisma.TransaksiOrderByWithRelationInput
   items?: Prisma.ReturItemOrderByRelationAggregateInput
 }
 
@@ -261,8 +261,8 @@ export type ReturWhereUniqueInput = Prisma.AtLeast<{
   kasirId?: Prisma.StringFilter<"Retur"> | string
   alasan?: Prisma.StringFilter<"Retur"> | string
   totalRetur?: Prisma.DecimalFilter<"Retur"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   kasir?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  transaksi?: Prisma.XOR<Prisma.TransaksiScalarRelationFilter, Prisma.TransaksiWhereInput>
   items?: Prisma.ReturItemListRelationFilter
 }, "id" | "nomor">
 
@@ -300,8 +300,8 @@ export type ReturCreateInput = {
   tanggal?: Date | string
   alasan: string
   totalRetur: runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi: Prisma.TransaksiCreateNestedOneWithoutRetursInput
   kasir: Prisma.UserCreateNestedOneWithoutRetursInput
+  transaksi: Prisma.TransaksiCreateNestedOneWithoutRetursInput
   items?: Prisma.ReturItemCreateNestedManyWithoutReturInput
 }
 
@@ -322,8 +322,8 @@ export type ReturUpdateInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alasan?: Prisma.StringFieldUpdateOperationsInput | string
   totalRetur?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutRetursNestedInput
   kasir?: Prisma.UserUpdateOneRequiredWithoutRetursNestedInput
+  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutRetursNestedInput
   items?: Prisma.ReturItemUpdateManyWithoutReturNestedInput
 }
 
@@ -628,8 +628,8 @@ export type ReturCreateWithoutItemsInput = {
   tanggal?: Date | string
   alasan: string
   totalRetur: runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi: Prisma.TransaksiCreateNestedOneWithoutRetursInput
   kasir: Prisma.UserCreateNestedOneWithoutRetursInput
+  transaksi: Prisma.TransaksiCreateNestedOneWithoutRetursInput
 }
 
 export type ReturUncheckedCreateWithoutItemsInput = {
@@ -664,8 +664,8 @@ export type ReturUpdateWithoutItemsInput = {
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   alasan?: Prisma.StringFieldUpdateOperationsInput | string
   totalRetur?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutRetursNestedInput
   kasir?: Prisma.UserUpdateOneRequiredWithoutRetursNestedInput
+  transaksi?: Prisma.TransaksiUpdateOneRequiredWithoutRetursNestedInput
 }
 
 export type ReturUncheckedUpdateWithoutItemsInput = {
@@ -793,8 +793,8 @@ export type ReturSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   kasirId?: boolean
   alasan?: boolean
   totalRetur?: boolean
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Retur$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.ReturCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["retur"]>
@@ -807,8 +807,8 @@ export type ReturSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   kasirId?: boolean
   alasan?: boolean
   totalRetur?: boolean
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["retur"]>
 
 export type ReturSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -819,8 +819,8 @@ export type ReturSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   kasirId?: boolean
   alasan?: boolean
   totalRetur?: boolean
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["retur"]>
 
 export type ReturSelectScalar = {
@@ -835,25 +835,25 @@ export type ReturSelectScalar = {
 
 export type ReturOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "tanggal" | "transaksiId" | "kasirId" | "alasan" | "totalRetur", ExtArgs["result"]["retur"]>
 export type ReturInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Retur$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.ReturCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ReturIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
 }
 export type ReturIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
   kasir?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  transaksi?: boolean | Prisma.TransaksiDefaultArgs<ExtArgs>
 }
 
 export type $ReturPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Retur"
   objects: {
-    transaksi: Prisma.$TransaksiPayload<ExtArgs>
     kasir: Prisma.$UserPayload<ExtArgs>
+    transaksi: Prisma.$TransaksiPayload<ExtArgs>
     items: Prisma.$ReturItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1258,8 +1258,8 @@ readonly fields: ReturFieldRefs;
  */
 export interface Prisma__ReturClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  transaksi<T extends Prisma.TransaksiDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiDefaultArgs<ExtArgs>>): Prisma.Prisma__TransaksiClient<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   kasir<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  transaksi<T extends Prisma.TransaksiDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TransaksiDefaultArgs<ExtArgs>>): Prisma.Prisma__TransaksiClient<runtime.Types.Result.GetResult<Prisma.$TransaksiPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Retur$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Retur$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReturItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.

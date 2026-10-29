@@ -24,7 +24,7 @@ export async function muatHasilTransaksi(
   replay = false,
 ): Promise<HasilTransaksiRingkas | null> {
   const transaksi = await prisma.transaksi.findUnique({
-    where: { id: transaksiId },
+    where: { id: transaksiId, deletedAt: null },
     include: {
       items: { include: { modifiers: { include: { modifier: true } } } },
       pembayaran: true,

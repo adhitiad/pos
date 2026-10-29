@@ -13,7 +13,7 @@ import type {
 // Token analytics ditandatangani HMAC-SHA256. Identitas perangkat diturunkan
 // server dari IP + User-Agent, jadi klien tidak bisa mengarang deviceId baru
 // hanya dengan mengubah body (SEC-24).
-const MASA_BERLAKU_MS = 30 * 24 * 60 * 60 * 1_000
+const MASA_BERLAKU_MS = 14 * 24 * 60 * 60 * 1_000
 
 const rahasia = () => env.BETTER_AUTH_SECRET
 

@@ -3612,9 +3612,9 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   role: 'role',
-  roleManual: 'roleManual',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  roleManual: 'roleManual'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -3711,17 +3711,17 @@ export type BahanScalarFieldEnum = (typeof BahanScalarFieldEnum)[keyof typeof Ba
 export const PembelianBahanScalarFieldEnum = {
   id: 'id',
   bahanId: 'bahanId',
-  supplierId: 'supplierId',
   jumlah: 'jumlah',
   hargaSatuan: 'hargaSatuan',
   totalHarga: 'totalHarga',
   tanggal: 'tanggal',
   catatan: 'catatan',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  supplierId: 'supplierId',
   belumDibayar: 'belumDibayar',
   sumberBelanja: 'sumberBelanja',
-  tempatBelanja: 'tempatBelanja',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  tempatBelanja: 'tempatBelanja'
 } as const
 
 export type PembelianBahanScalarFieldEnum = (typeof PembelianBahanScalarFieldEnum)[keyof typeof PembelianBahanScalarFieldEnum]
@@ -3765,7 +3765,8 @@ export const ProdukScalarFieldEnum = {
   aktif: 'aktif',
   kategoriId: 'kategoriId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type ProdukScalarFieldEnum = (typeof ProdukScalarFieldEnum)[keyof typeof ProdukScalarFieldEnum]
@@ -3814,10 +3815,8 @@ export const TransaksiScalarFieldEnum = {
   id: 'id',
   nomor: 'nomor',
   tanggal: 'tanggal',
-  diterimaPada: 'diterimaPada',
   memberId: 'memberId',
   kasirId: 'kasirId',
-  shiftId: 'shiftId',
   deliveryId: 'deliveryId',
   ongkir: 'ongkir',
   subtotal: 'subtotal',
@@ -3829,26 +3828,29 @@ export const TransaksiScalarFieldEnum = {
   poinDapat: 'poinDapat',
   metodeBayar: 'metodeBayar',
   catatan: 'catatan',
-  alamat: 'alamat',
   mejaId: 'mejaId',
   statusPesanan: 'statusPesanan',
-  statusKasirReview: 'statusKasirReview',
-  sumber: 'sumber',
-  dibayarPada: 'dibayarPada',
-  dibayarVia: 'dibayarVia',
-  paymentRef: 'paymentRef',
-  stokTerpotong: 'stokTerpotong',
   uangDiterima: 'uangDiterima',
   kembalian: 'kembalian',
   cetakOwner: 'cetakOwner',
   cetakKasir: 'cetakKasir',
-  idempotencyKey: 'idempotencyKey',
-  dibuatOffline: 'dibuatOffline',
-  waktuKlien: 'waktuKlien',
-  hpp: 'hpp',
-  diskonMember: 'diskonMember',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  shiftId: 'shiftId',
+  dibuatOffline: 'dibuatOffline',
+  diskonMember: 'diskonMember',
+  hpp: 'hpp',
+  idempotencyKey: 'idempotencyKey',
+  waktuKlien: 'waktuKlien',
+  dibayarPada: 'dibayarPada',
+  dibayarVia: 'dibayarVia',
+  paymentRef: 'paymentRef',
+  stokTerpotong: 'stokTerpotong',
+  sumber: 'sumber',
+  diterimaPada: 'diterimaPada',
+  alamat: 'alamat',
+  statusKasirReview: 'statusKasirReview',
+  deletedAt: 'deletedAt'
 } as const
 
 export type TransaksiScalarFieldEnum = (typeof TransaksiScalarFieldEnum)[keyof typeof TransaksiScalarFieldEnum]
@@ -3949,7 +3951,8 @@ export const MejaScalarFieldEnum = {
   nama: 'nama',
   aktif: 'aktif',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type MejaScalarFieldEnum = (typeof MejaScalarFieldEnum)[keyof typeof MejaScalarFieldEnum]
@@ -4054,12 +4057,12 @@ export type ReturScalarFieldEnum = (typeof ReturScalarFieldEnum)[keyof typeof Re
 export const ReturItemScalarFieldEnum = {
   id: 'id',
   returId: 'returId',
-  transaksiItemId: 'transaksiItemId',
   produkId: 'produkId',
   namaProduk: 'namaProduk',
   qty: 'qty',
   hargaSatuan: 'hargaSatuan',
-  subtotal: 'subtotal'
+  subtotal: 'subtotal',
+  transaksiItemId: 'transaksiItemId'
 } as const
 
 export type ReturItemScalarFieldEnum = (typeof ReturItemScalarFieldEnum)[keyof typeof ReturItemScalarFieldEnum]
@@ -4092,23 +4095,23 @@ export type StokOpnameItemScalarFieldEnum = (typeof StokOpnameItemScalarFieldEnu
 
 export const PrinterScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
   nama: 'nama',
   tipe: 'tipe',
   lokasi: 'lokasi',
   perangkat: 'perangkat',
+  default: 'default',
+  aktif: 'aktif',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
   koneksi: 'koneksi',
   vendorId: 'vendorId',
   vendorName: 'vendorName',
   serialNumber: 'serialNumber',
   productName: 'productName',
   dipindaiPada: 'dipindaiPada',
-  terakhirDipakai: 'terakhirDipakai',
-  default: 'default',
   defaultPengguna: 'defaultPengguna',
-  aktif: 'aktif',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  terakhirDipakai: 'terakhirDipakai'
 } as const
 
 export type PrinterScalarFieldEnum = (typeof PrinterScalarFieldEnum)[keyof typeof PrinterScalarFieldEnum]
@@ -4141,8 +4144,8 @@ export const AuditLogScalarFieldEnum = {
   entityId: 'entityId',
   before: 'before',
   after: 'after',
-  catatan: 'catatan',
-  timestamp: 'timestamp'
+  timestamp: 'timestamp',
+  catatan: 'catatan'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
@@ -4153,7 +4156,6 @@ export const PengajuanPengeluaranScalarFieldEnum = {
   kasirId: 'kasirId',
   ownerId: 'ownerId',
   nominal: 'nominal',
-  nominalDisetujui: 'nominalDisetujui',
   jenis: 'jenis',
   keterangan: 'keterangan',
   status: 'status',
@@ -4162,7 +4164,8 @@ export const PengajuanPengeluaranScalarFieldEnum = {
   disetujuiPada: 'disetujuiPada',
   ditolakPada: 'ditolakPada',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  nominalDisetujui: 'nominalDisetujui'
 } as const
 
 export type PengajuanPengeluaranScalarFieldEnum = (typeof PengajuanPengeluaranScalarFieldEnum)[keyof typeof PengajuanPengeluaranScalarFieldEnum]
@@ -4172,7 +4175,6 @@ export const DraftTransaksiScalarFieldEnum = {
   id: 'id',
   nomor: 'nomor',
   kasirId: 'kasirId',
-  payloadJson: 'payloadJson',
   subtotal: 'subtotal',
   total: 'total',
   metodeBayar: 'metodeBayar',
@@ -4185,7 +4187,8 @@ export const DraftTransaksiScalarFieldEnum = {
   reviewedAt: 'reviewedAt',
   transaksiId: 'transaksiId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  payloadJson: 'payloadJson'
 } as const
 
 export type DraftTransaksiScalarFieldEnum = (typeof DraftTransaksiScalarFieldEnum)[keyof typeof DraftTransaksiScalarFieldEnum]
@@ -4193,12 +4196,12 @@ export type DraftTransaksiScalarFieldEnum = (typeof DraftTransaksiScalarFieldEnu
 
 export const TransaksiReviewAuditScalarFieldEnum = {
   id: 'id',
-  draftId: 'draftId',
   transaksiId: 'transaksiId',
   kasirId: 'kasirId',
   status: 'status',
   catatan: 'catatan',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  draftId: 'draftId'
 } as const
 
 export type TransaksiReviewAuditScalarFieldEnum = (typeof TransaksiReviewAuditScalarFieldEnum)[keyof typeof TransaksiReviewAuditScalarFieldEnum]
@@ -4411,20 +4414,6 @@ export type ListEnumStatusPesananFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'SumberTransaksi'
- */
-export type EnumSumberTransaksiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SumberTransaksi'>
-    
-
-
-/**
- * Reference to a field of type 'SumberTransaksi[]'
- */
-export type ListEnumSumberTransaksiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SumberTransaksi[]'>
-    
-
-
-/**
  * Reference to a field of type 'ViaPembayaran'
  */
 export type EnumViaPembayaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ViaPembayaran'>
@@ -4435,6 +4424,20 @@ export type EnumViaPembayaranFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'ViaPembayaran[]'
  */
 export type ListEnumViaPembayaranFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ViaPembayaran[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SumberTransaksi'
+ */
+export type EnumSumberTransaksiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SumberTransaksi'>
+    
+
+
+/**
+ * Reference to a field of type 'SumberTransaksi[]'
+ */
+export type ListEnumSumberTransaksiFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SumberTransaksi[]'>
     
 
 

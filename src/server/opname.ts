@@ -3,6 +3,7 @@ import { catatAudit } from './audit.js'
 import type { SimpanOpnameInput, DataOpnameInput } from '#/validations/opname'
 import { SimpanOpnameSchema, DataOpnameSchema } from '#/validations/opname'
 import { GalatDomain } from './galat.js'
+import { nonHapus } from './nonHapus.js'
 import { kodeHarian, nomorBerikut } from './penomoran.js'
 
 // ─── Stok Opname ───
@@ -102,7 +103,7 @@ export async function simpanOpname(kasirId: string, input: SimpanOpnameInput) {
 export async function daftarMasterAktif(jenis: 'PRODUK' | 'BAHAN') {
   if (jenis === 'PRODUK') {
     const rows = await prisma.produk.findMany({
-      where: { aktif: true },
+      where: nonHapus({ aktif: true }),
       orderBy: { nama: 'asc' },
       select: { id: true, nama: true, stok: true },
     })

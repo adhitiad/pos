@@ -13,6 +13,7 @@ import type {
 } from '#/validations/member'
 import { pengaturanData } from './pengaturan.js'
 import { GalatDomain } from './galat.js'
+import { nonHapus } from './nonHapus.js'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 
 const kosongKeNull = (v: string | undefined) =>
@@ -174,7 +175,7 @@ export async function memberRiwayat(id: string) {
   })
   if (!member) throw new GalatDomain('Member tidak ditemukan')
   const transaksi = await prisma.transaksi.findMany({
-    where: { memberId: id, ...FILTER_TRANSAKSI_TERJUAL },
+    where: nonHapus({ memberId: id, ...FILTER_TRANSAKSI_TERJUAL }),
     orderBy: { tanggal: 'desc' },
     select: {
       id: true,

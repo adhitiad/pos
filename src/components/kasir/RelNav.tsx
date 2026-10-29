@@ -39,6 +39,12 @@ import {
 
 const TAUTAN_DASAR = [
   {
+    ke: '/dashboard',
+    ikon: Layout,
+    label: m.dashboard_title(),
+    peran: AKSES.operasional,
+  },
+  {
     ke: '/',
     ikon: Home,
     label: m.nav_home(),
@@ -72,12 +78,6 @@ const TAUTAN_DASAR = [
     ke: '/shift',
     ikon: Wallet,
     label: m.nav_shift(),
-    peran: AKSES.operasional,
-  },
-  {
-    ke: '/dashboard',
-    ikon: Layout,
-    label: m.dashboard_title(),
     peran: AKSES.operasional,
   },
   {

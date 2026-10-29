@@ -178,6 +178,69 @@ export async function setPengaturan(
   return { kunci: data.kunci, nilai: data.nilai }
 }
 
+// ─── Feature flag via tabel pengaturan ───
+// Fitur disimpan sebagai kunci `fitur_<nama> = "true"|"false"`.
+// Opsional per-peran: `fitur_<nama>_<peran_lower>` (mis. fitur_promo_kasir),
+// yang hadir prioritas lebih tinggi daripada kunci global.
+// Tanpa deploy ulang, owner dapat menampilkan/sembunyikan fitur baru.
+export const PREFEKSI_FITUR = 'fitur_'
+
+export function kunciFitur(kunci: string): string {
+  return `${PREFEKSI_FITUR}${kunci}`
+}
+
+export function kunciFiturPeran(kunci: string, peran: Role): string {
+  return `${PREFEKSI_FITUR}${kunci}_${peran.toLowerCase()}`
+}
+
+// Daftar semua fitur + status aktif/inaktif.
+export async function daftarFitur(): Promise<Record<string, boolean>> {
+  const rows = await prisma.pengaturan.findMany({
+    where: { kunci: { startsWith: PREFEKSI_FITUR } },
+    select: { kunci: true, nilai: true },
+  })
+  const hasil: Record<string, boolean> = {}
+  for (const r of rows) {
+    const nama = r.kunci.slice(PREFEKSI_FITUR.length)
+    hasil[nama] = r.nilai === 'true'
+  }
+  return hasil
+}
+
+// Set/perbarui status fitur (hanya owner). Nilai harus 'true' atau 'false'.
+// Opsional `peran` menyimpan kunci per-role.
+export async function setFitur(
+  input: {
+    kunci: string
+    nilai: boolean
+    peran?: Role
+  },
+  aktorId?: string,
+) {
+  const { kunci, nilai, peran } = input
+  const kunciDb = peran ? kunciFiturPeran(kunci, peran) : kunciFitur(kunci)
+  const lama = await prisma.pengaturan.findUnique({
+    where: { kunci: kunciDb },
+    select: { nilai: true },
+  })
+  await prisma.pengaturan.upsert({
+    where: { kunci: kunciDb },
+    update: { nilai: String(nilai) },
+    create: { kunci: kunciDb, nilai: String(nilai) },
+  })
+  if (lama?.nilai !== String(nilai)) {
+    await catatAudit({
+      aktorId,
+      aksi: 'pengaturan.fitur.ubah',
+      entitas: 'Pengaturan',
+      entitasId: kunciDb,
+      sebelum: { kunci: kunciDb, nilai: lama?.nilai ?? null },
+      sesudah: { kunci: kunciDb, nilai: String(nilai) },
+    })
+  }
+  return { kunci: kunciDb, nilai: String(nilai) }
+}
+
 // ─── Cek status buka/tutup toko ───
 // Mengambil pengaturan jam buka/tutup dan mengecek apakah waktu sekarang
 // berada dalam rentang buka. `toko_aktif = false` selalu menutup.

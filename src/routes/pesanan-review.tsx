@@ -11,7 +11,7 @@ export const Route = createFileRoute('/pesanan-review')({
   beforeLoad: async () => {
     const user = await getSessionFn()
     if (!user) throw redirect({ to: '/login' })
-    if (!punyaAkses(user.role, 'kasir'))
+    if (!punyaAkses(user.role, 'operasional'))
       throw redirect({ to: user.role === 'OWNER' ? '/dashboard' : '/' })
   },
   loader: async () => {

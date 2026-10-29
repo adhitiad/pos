@@ -1,17 +1,104 @@
 import { auth } from '#/lib/auth'
+import { createHash } from 'node:crypto'
 import { prisma } from '#/db'
 import { GalatPayload, terjemahGalat } from './galat.js'
+import {
+  rateLimit,
+  KAPASITAS_DEFAULT,
+  JENDELA_DEFAULT_MS,
+} from './rateLimit.js'
 import type { Role } from '#/generated/prisma/enums.js'
 import type { Pengguna } from '#/types/auth'
+
+import { AsyncLocalStorage } from 'node:async_hooks'
+
+const konteksPermintaan = new AsyncLocalStorage<{ requestId: string }>()
+
+function buatRequestId(request: Request): string {
+  const existing = request.headers.get('x-request-id')
+  if (existing) return existing
+  return typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.floor(Math.random() * 1e9)}`
+}
+
+// ─── Request ID / correlation ID untuk setiap response API ───
+// Bungkus handler dengan `denganRequestId(request, async () => { ... })`.
+// Header `X-Request-ID` otomatis ditambahkan ke setiap respons via ok/gagal/apiError.
+export function denganRequestId(
+  request: Request,
+  handler: () => Promise<Response>,
+): Promise<Response> {
+  const requestId = buatRequestId(request)
+  return konteksPermintaan.run({ requestId }, handler)
+}
+
+export function ambilRequestId(): string | undefined {
+  const store = konteksPermintaan.getStore()
+  return store?.requestId
+}
+
+function lampirkanRequestId(response: Response): Response {
+  const requestId = ambilRequestId()
+  if (!requestId) return response
+  const headers = new Headers(response.headers)
+  headers.set('X-Request-ID', requestId)
+  const body = response.body
+  if (body === null) {
+    return new Response(null, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    })
+  }
+  return new Response(body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  })
+}
 
 // ─── Envelope JSON standar untuk SEMUA API (web & mobile/Expo) ───// Sukses: { ok: true, data: ... }
 // Gagal : { ok: false, error: { code, message } }
 export function ok<T>(data: T, status = 200): Response {
-  return Response.json({ ok: true, data }, { status })
+  return lampirkanRequestId(Response.json({ ok: true, data }, { status }))
 }
 
 export function gagal(code: string, message: string, status: number): Response {
-  return Response.json({ ok: false, error: { code, message } }, { status })
+  return lampirkanRequestId(
+    Response.json({ ok: false, error: { code, message } }, { status }),
+  )
+}
+
+// ─── ETag / conditional GET untuk endpoint baca ───
+// `etag(data)` menghasilkan weak ETag (`W/"..."`) dari payload JSON.
+// `okEtag(data, request)` memeriksa header `If-None-Match`; bila cocok,
+// kembalikan 304 Not Modified (tanpa body). Bila tidak, kembalikan 200 dengan
+// header ETag agar klien bisa cache.
+export function etag(data: unknown): string {
+  const payload = JSON.stringify(data)
+  const hash = createHash('sha1').update(payload).digest('hex').slice(0, 16)
+  return `W/"${hash}"`
+}
+
+export function okEtag(
+  data: unknown,
+  request: Request,
+  status = 200,
+): Response {
+  const tag = etag(data)
+  const ifNoneMatch = request.headers.get('if-none-match')
+  if (ifNoneMatch === tag) {
+    return lampirkanRequestId(
+      new Response(null, {
+        status: 304,
+        headers: { ETag: tag },
+      }),
+    )
+  }
+  return lampirkanRequestId(
+    Response.json({ ok: true, data }, { status, headers: { ETag: tag } }),
+  )
 }
 
 // ─── Guard sesi via header request (cookie Better Auth) ───
@@ -51,6 +138,20 @@ export async function apiPengguna(
 export function apiError(e: unknown): Response {
   const aman = terjemahGalat(e)
   return gagal(aman.code, aman.message, aman.status)
+}
+
+// ─── Rate limit wrapper untuk handler route REST ───
+// Panggil di awal handler: `return denganRateLimit(request, async () => { ... })`.
+// Mengembalikan Response 429 bila melebihi kuota, selanjutnya jalankan handler.
+export async function denganRateLimit(
+  request: Request,
+  handler: () => Promise<Response>,
+  max = KAPASITAS_DEFAULT,
+  windowMs = JENDELA_DEFAULT_MS,
+): Promise<Response> {
+  const batas = await rateLimit(request, max, windowMs)
+  if (batas) return batas
+  return handler()
 }
 
 // Baca body teks dengan batas ukuran, sebelum JSON.parse. Content-Length

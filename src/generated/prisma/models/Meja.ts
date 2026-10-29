@@ -31,6 +31,7 @@ export type MejaMinAggregateOutputType = {
   aktif: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type MejaMaxAggregateOutputType = {
@@ -40,6 +41,7 @@ export type MejaMaxAggregateOutputType = {
   aktif: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type MejaCountAggregateOutputType = {
@@ -49,6 +51,7 @@ export type MejaCountAggregateOutputType = {
   aktif: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -60,6 +63,7 @@ export type MejaMinAggregateInputType = {
   aktif?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
 }
 
 export type MejaMaxAggregateInputType = {
@@ -69,6 +73,7 @@ export type MejaMaxAggregateInputType = {
   aktif?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
 }
 
 export type MejaCountAggregateInputType = {
@@ -78,6 +83,7 @@ export type MejaCountAggregateInputType = {
   aktif?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -160,6 +166,7 @@ export type MejaGroupByOutputType = {
   aktif: boolean
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   _count: MejaCountAggregateOutputType | null
   _min: MejaMinAggregateOutputType | null
   _max: MejaMaxAggregateOutputType | null
@@ -190,6 +197,7 @@ export type MejaWhereInput = {
   aktif?: Prisma.BoolFilter<"Meja"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Meja"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Meja"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Meja"> | Date | string | null
   transaksi?: Prisma.TransaksiListRelationFilter
   pesananDraf?: Prisma.PesananDrafListRelationFilter
 }
@@ -201,6 +209,7 @@ export type MejaOrderByWithRelationInput = {
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   transaksi?: Prisma.TransaksiOrderByRelationAggregateInput
   pesananDraf?: Prisma.PesananDrafOrderByRelationAggregateInput
 }
@@ -215,6 +224,7 @@ export type MejaWhereUniqueInput = Prisma.AtLeast<{
   aktif?: Prisma.BoolFilter<"Meja"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Meja"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Meja"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Meja"> | Date | string | null
   transaksi?: Prisma.TransaksiListRelationFilter
   pesananDraf?: Prisma.PesananDrafListRelationFilter
 }, "id" | "nomor">
@@ -226,6 +236,7 @@ export type MejaOrderByWithAggregationInput = {
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MejaCountOrderByAggregateInput
   _max?: Prisma.MejaMaxOrderByAggregateInput
   _min?: Prisma.MejaMinOrderByAggregateInput
@@ -241,6 +252,7 @@ export type MejaScalarWhereWithAggregatesInput = {
   aktif?: Prisma.BoolWithAggregatesFilter<"Meja"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Meja"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Meja"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Meja"> | Date | string | null
 }
 
 export type MejaCreateInput = {
@@ -250,6 +262,7 @@ export type MejaCreateInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   transaksi?: Prisma.TransaksiCreateNestedManyWithoutMejaInput
   pesananDraf?: Prisma.PesananDrafCreateNestedManyWithoutMejaInput
 }
@@ -261,6 +274,7 @@ export type MejaUncheckedCreateInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   transaksi?: Prisma.TransaksiUncheckedCreateNestedManyWithoutMejaInput
   pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedManyWithoutMejaInput
 }
@@ -272,6 +286,7 @@ export type MejaUpdateInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaksi?: Prisma.TransaksiUpdateManyWithoutMejaNestedInput
   pesananDraf?: Prisma.PesananDrafUpdateManyWithoutMejaNestedInput
 }
@@ -283,6 +298,7 @@ export type MejaUncheckedUpdateInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaksi?: Prisma.TransaksiUncheckedUpdateManyWithoutMejaNestedInput
   pesananDraf?: Prisma.PesananDrafUncheckedUpdateManyWithoutMejaNestedInput
 }
@@ -294,6 +310,7 @@ export type MejaCreateManyInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type MejaUpdateManyMutationInput = {
@@ -303,6 +320,7 @@ export type MejaUpdateManyMutationInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type MejaUncheckedUpdateManyInput = {
@@ -312,6 +330,7 @@ export type MejaUncheckedUpdateManyInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type MejaNullableScalarRelationFilter = {
@@ -326,6 +345,7 @@ export type MejaCountOrderByAggregateInput = {
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type MejaMaxOrderByAggregateInput = {
@@ -335,6 +355,7 @@ export type MejaMaxOrderByAggregateInput = {
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type MejaMinOrderByAggregateInput = {
@@ -344,6 +365,7 @@ export type MejaMinOrderByAggregateInput = {
   aktif?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type MejaCreateNestedOneWithoutTransaksiInput = {
@@ -385,6 +407,7 @@ export type MejaCreateWithoutTransaksiInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   pesananDraf?: Prisma.PesananDrafCreateNestedManyWithoutMejaInput
 }
 
@@ -395,6 +418,7 @@ export type MejaUncheckedCreateWithoutTransaksiInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   pesananDraf?: Prisma.PesananDrafUncheckedCreateNestedManyWithoutMejaInput
 }
 
@@ -421,6 +445,7 @@ export type MejaUpdateWithoutTransaksiInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pesananDraf?: Prisma.PesananDrafUpdateManyWithoutMejaNestedInput
 }
 
@@ -431,6 +456,7 @@ export type MejaUncheckedUpdateWithoutTransaksiInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pesananDraf?: Prisma.PesananDrafUncheckedUpdateManyWithoutMejaNestedInput
 }
 
@@ -441,6 +467,7 @@ export type MejaCreateWithoutPesananDrafInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   transaksi?: Prisma.TransaksiCreateNestedManyWithoutMejaInput
 }
 
@@ -451,6 +478,7 @@ export type MejaUncheckedCreateWithoutPesananDrafInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   transaksi?: Prisma.TransaksiUncheckedCreateNestedManyWithoutMejaInput
 }
 
@@ -477,6 +505,7 @@ export type MejaUpdateWithoutPesananDrafInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaksi?: Prisma.TransaksiUpdateManyWithoutMejaNestedInput
 }
 
@@ -487,6 +516,7 @@ export type MejaUncheckedUpdateWithoutPesananDrafInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   transaksi?: Prisma.TransaksiUncheckedUpdateManyWithoutMejaNestedInput
 }
 
@@ -537,6 +567,7 @@ export type MejaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   transaksi?: boolean | Prisma.Meja$transaksiArgs<ExtArgs>
   pesananDraf?: boolean | Prisma.Meja$pesananDrafArgs<ExtArgs>
   _count?: boolean | Prisma.MejaCountOutputTypeDefaultArgs<ExtArgs>
@@ -549,6 +580,7 @@ export type MejaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["meja"]>
 
 export type MejaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -558,6 +590,7 @@ export type MejaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["meja"]>
 
 export type MejaSelectScalar = {
@@ -567,9 +600,10 @@ export type MejaSelectScalar = {
   aktif?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type MejaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "nama" | "aktif" | "createdAt" | "updatedAt", ExtArgs["result"]["meja"]>
+export type MejaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nomor" | "nama" | "aktif" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["meja"]>
 export type MejaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   transaksi?: boolean | Prisma.Meja$transaksiArgs<ExtArgs>
   pesananDraf?: boolean | Prisma.Meja$pesananDrafArgs<ExtArgs>
@@ -591,6 +625,7 @@ export type $MejaPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     aktif: boolean
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["meja"]>
   composites: {}
 }
@@ -1022,6 +1057,7 @@ export interface MejaFieldRefs {
   readonly aktif: Prisma.FieldRef<"Meja", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Meja", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Meja", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Meja", 'DateTime'>
 }
     
 

@@ -18,7 +18,7 @@ export const Route = createFileRoute('/api/v1/pembayaran/webhook')({
     handlers: {
       POST: async ({ request }) => {
         try {
-          const rl = await rateLimit(request, 120)
+          const rl = await rateLimit(request, 30)
           if (rl) return rl
 
           const secret = env.PAYMENT_WEBHOOK_SECRET

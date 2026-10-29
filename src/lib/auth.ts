@@ -46,7 +46,6 @@ export async function sinkronPeranUser(
     if (user.roleManual) return
     const target = peranDariEnv(user.email, daftar)
     if (!target || target === user.role) return
-    if (user.role === 'OWNER') return
     // Sesi lama tidak boleh mewarisi peran baru. Sesi yang baru dibuat
     // dikecualikan agar login yang sedang berjalan tidak ikut terhapus.
     const sesiDicabut = await prisma.$transaction(async (tx) => {

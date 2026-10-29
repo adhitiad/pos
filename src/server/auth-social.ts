@@ -2,13 +2,19 @@ import { auth } from '#/lib/auth'
 import type { AuthContext } from '@better-auth/core'
 import { dispatchAuthEndpoint } from 'better-auth/api'
 
-import { headerAuthNative } from './auth-native.js'
+import { env } from '#/env'
+import { headerAuthNative, idTokenUntukKlienNative } from './auth-native.js'
 import type { SignInSocialInput } from '#/validations/auth-social'
 import type { SignInSocialResult } from '#/types/auth'
 
 export async function signInSocial(
   input: SignInSocialInput,
 ): Promise<SignInSocialResult> {
+  // Endpoint web tidak boleh menerima ID token yang diterbitkan untuk
+  // client native. Tolak bila audiensnya client native.
+  if (idTokenUntukKlienNative(input.idToken, env.GOOGLE_NATIVE_CLIENT_ID)) {
+    throw new Error('FORBIDDEN')
+  }
   const ctx = (await auth.$context) as unknown as AuthContext
   let response: unknown
   try {

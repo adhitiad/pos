@@ -236,8 +236,8 @@ export type JurnalDetailWhereInput = {
   kredit?: Prisma.DecimalFilter<"JurnalDetail"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   keterangan?: Prisma.StringNullableFilter<"JurnalDetail"> | string | null
   createdAt?: Prisma.DateTimeFilter<"JurnalDetail"> | Date | string
-  jurnal?: Prisma.XOR<Prisma.JurnalScalarRelationFilter, Prisma.JurnalWhereInput>
   akun?: Prisma.XOR<Prisma.AkunScalarRelationFilter, Prisma.AkunWhereInput>
+  jurnal?: Prisma.XOR<Prisma.JurnalScalarRelationFilter, Prisma.JurnalWhereInput>
 }
 
 export type JurnalDetailOrderByWithRelationInput = {
@@ -248,8 +248,8 @@ export type JurnalDetailOrderByWithRelationInput = {
   kredit?: Prisma.SortOrder
   keterangan?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  jurnal?: Prisma.JurnalOrderByWithRelationInput
   akun?: Prisma.AkunOrderByWithRelationInput
+  jurnal?: Prisma.JurnalOrderByWithRelationInput
 }
 
 export type JurnalDetailWhereUniqueInput = Prisma.AtLeast<{
@@ -263,8 +263,8 @@ export type JurnalDetailWhereUniqueInput = Prisma.AtLeast<{
   kredit?: Prisma.DecimalFilter<"JurnalDetail"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   keterangan?: Prisma.StringNullableFilter<"JurnalDetail"> | string | null
   createdAt?: Prisma.DateTimeFilter<"JurnalDetail"> | Date | string
-  jurnal?: Prisma.XOR<Prisma.JurnalScalarRelationFilter, Prisma.JurnalWhereInput>
   akun?: Prisma.XOR<Prisma.AkunScalarRelationFilter, Prisma.AkunWhereInput>
+  jurnal?: Prisma.XOR<Prisma.JurnalScalarRelationFilter, Prisma.JurnalWhereInput>
 }, "id">
 
 export type JurnalDetailOrderByWithAggregationInput = {
@@ -301,8 +301,8 @@ export type JurnalDetailCreateInput = {
   kredit?: runtime.Decimal | runtime.DecimalJsLike | number | string
   keterangan?: string | null
   createdAt?: Date | string
-  jurnal: Prisma.JurnalCreateNestedOneWithoutEntriInput
   akun: Prisma.AkunCreateNestedOneWithoutEntriInput
+  jurnal: Prisma.JurnalCreateNestedOneWithoutEntriInput
 }
 
 export type JurnalDetailUncheckedCreateInput = {
@@ -321,8 +321,8 @@ export type JurnalDetailUpdateInput = {
   kredit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   keterangan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  jurnal?: Prisma.JurnalUpdateOneRequiredWithoutEntriNestedInput
   akun?: Prisma.AkunUpdateOneRequiredWithoutEntriNestedInput
+  jurnal?: Prisma.JurnalUpdateOneRequiredWithoutEntriNestedInput
 }
 
 export type JurnalDetailUncheckedUpdateInput = {
@@ -680,8 +680,8 @@ export type JurnalDetailSelect<ExtArgs extends runtime.Types.Extensions.Internal
   kredit?: boolean
   keterangan?: boolean
   createdAt?: boolean
-  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
   akun?: boolean | Prisma.AkunDefaultArgs<ExtArgs>
+  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jurnalDetail"]>
 
 export type JurnalDetailSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -692,8 +692,8 @@ export type JurnalDetailSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   kredit?: boolean
   keterangan?: boolean
   createdAt?: boolean
-  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
   akun?: boolean | Prisma.AkunDefaultArgs<ExtArgs>
+  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jurnalDetail"]>
 
 export type JurnalDetailSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -704,8 +704,8 @@ export type JurnalDetailSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   kredit?: boolean
   keterangan?: boolean
   createdAt?: boolean
-  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
   akun?: boolean | Prisma.AkunDefaultArgs<ExtArgs>
+  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["jurnalDetail"]>
 
 export type JurnalDetailSelectScalar = {
@@ -720,23 +720,23 @@ export type JurnalDetailSelectScalar = {
 
 export type JurnalDetailOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "jurnalId" | "akunId" | "debit" | "kredit" | "keterangan" | "createdAt", ExtArgs["result"]["jurnalDetail"]>
 export type JurnalDetailInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
   akun?: boolean | Prisma.AkunDefaultArgs<ExtArgs>
+  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
 }
 export type JurnalDetailIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
   akun?: boolean | Prisma.AkunDefaultArgs<ExtArgs>
+  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
 }
 export type JurnalDetailIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
   akun?: boolean | Prisma.AkunDefaultArgs<ExtArgs>
+  jurnal?: boolean | Prisma.JurnalDefaultArgs<ExtArgs>
 }
 
 export type $JurnalDetailPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "JurnalDetail"
   objects: {
-    jurnal: Prisma.$JurnalPayload<ExtArgs>
     akun: Prisma.$AkunPayload<ExtArgs>
+    jurnal: Prisma.$JurnalPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1140,8 +1140,8 @@ readonly fields: JurnalDetailFieldRefs;
  */
 export interface Prisma__JurnalDetailClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  jurnal<T extends Prisma.JurnalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JurnalDefaultArgs<ExtArgs>>): Prisma.Prisma__JurnalClient<runtime.Types.Result.GetResult<Prisma.$JurnalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   akun<T extends Prisma.AkunDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AkunDefaultArgs<ExtArgs>>): Prisma.Prisma__AkunClient<runtime.Types.Result.GetResult<Prisma.$AkunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  jurnal<T extends Prisma.JurnalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JurnalDefaultArgs<ExtArgs>>): Prisma.Prisma__JurnalClient<runtime.Types.Result.GetResult<Prisma.$JurnalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

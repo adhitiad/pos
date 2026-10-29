@@ -43,49 +43,49 @@ export type PembelianBahanSumAggregateOutputType = {
 export type PembelianBahanMinAggregateOutputType = {
   id: string | null
   bahanId: string | null
-  supplierId: string | null
   jumlah: runtime.Decimal | null
   hargaSatuan: runtime.Decimal | null
   totalHarga: runtime.Decimal | null
   tanggal: Date | null
   catatan: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  supplierId: string | null
   belumDibayar: runtime.Decimal | null
   sumberBelanja: string | null
   tempatBelanja: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type PembelianBahanMaxAggregateOutputType = {
   id: string | null
   bahanId: string | null
-  supplierId: string | null
   jumlah: runtime.Decimal | null
   hargaSatuan: runtime.Decimal | null
   totalHarga: runtime.Decimal | null
   tanggal: Date | null
   catatan: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  supplierId: string | null
   belumDibayar: runtime.Decimal | null
   sumberBelanja: string | null
   tempatBelanja: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type PembelianBahanCountAggregateOutputType = {
   id: number
   bahanId: number
-  supplierId: number
   jumlah: number
   hargaSatuan: number
   totalHarga: number
   tanggal: number
   catatan: number
+  createdAt: number
+  updatedAt: number
+  supplierId: number
   belumDibayar: number
   sumberBelanja: number
   tempatBelanja: number
-  createdAt: number
-  updatedAt: number
   _all: number
 }
 
@@ -107,49 +107,49 @@ export type PembelianBahanSumAggregateInputType = {
 export type PembelianBahanMinAggregateInputType = {
   id?: true
   bahanId?: true
-  supplierId?: true
   jumlah?: true
   hargaSatuan?: true
   totalHarga?: true
   tanggal?: true
   catatan?: true
+  createdAt?: true
+  updatedAt?: true
+  supplierId?: true
   belumDibayar?: true
   sumberBelanja?: true
   tempatBelanja?: true
-  createdAt?: true
-  updatedAt?: true
 }
 
 export type PembelianBahanMaxAggregateInputType = {
   id?: true
   bahanId?: true
-  supplierId?: true
   jumlah?: true
   hargaSatuan?: true
   totalHarga?: true
   tanggal?: true
   catatan?: true
+  createdAt?: true
+  updatedAt?: true
+  supplierId?: true
   belumDibayar?: true
   sumberBelanja?: true
   tempatBelanja?: true
-  createdAt?: true
-  updatedAt?: true
 }
 
 export type PembelianBahanCountAggregateInputType = {
   id?: true
   bahanId?: true
-  supplierId?: true
   jumlah?: true
   hargaSatuan?: true
   totalHarga?: true
   tanggal?: true
   catatan?: true
+  createdAt?: true
+  updatedAt?: true
+  supplierId?: true
   belumDibayar?: true
   sumberBelanja?: true
   tempatBelanja?: true
-  createdAt?: true
-  updatedAt?: true
   _all?: true
 }
 
@@ -242,17 +242,17 @@ export type PembelianBahanGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type PembelianBahanGroupByOutputType = {
   id: string
   bahanId: string
-  supplierId: string | null
   jumlah: runtime.Decimal
   hargaSatuan: runtime.Decimal
   totalHarga: runtime.Decimal
   tanggal: Date
   catatan: string | null
+  createdAt: Date
+  updatedAt: Date
+  supplierId: string | null
   belumDibayar: runtime.Decimal
   sumberBelanja: string
   tempatBelanja: string | null
-  createdAt: Date
-  updatedAt: Date
   _count: PembelianBahanCountAggregateOutputType | null
   _avg: PembelianBahanAvgAggregateOutputType | null
   _sum: PembelianBahanSumAggregateOutputType | null
@@ -281,17 +281,17 @@ export type PembelianBahanWhereInput = {
   NOT?: Prisma.PembelianBahanWhereInput | Prisma.PembelianBahanWhereInput[]
   id?: Prisma.StringFilter<"PembelianBahan"> | string
   bahanId?: Prisma.StringFilter<"PembelianBahan"> | string
-  supplierId?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
   jumlah?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
   catatan?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
+  supplierId?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
   belumDibayar?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFilter<"PembelianBahan"> | string
   tempatBelanja?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
   bahan?: Prisma.XOR<Prisma.BahanScalarRelationFilter, Prisma.BahanWhereInput>
   supplier?: Prisma.XOR<Prisma.SupplierNullableScalarRelationFilter, Prisma.SupplierWhereInput> | null
   pembayaranHutang?: Prisma.PembayaranHutangListRelationFilter
@@ -300,17 +300,17 @@ export type PembelianBahanWhereInput = {
 export type PembelianBahanOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   bahanId?: Prisma.SortOrder
-  supplierId?: Prisma.SortOrderInput | Prisma.SortOrder
   jumlah?: Prisma.SortOrder
   hargaSatuan?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   catatan?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrderInput | Prisma.SortOrder
   belumDibayar?: Prisma.SortOrder
   sumberBelanja?: Prisma.SortOrder
   tempatBelanja?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   bahan?: Prisma.BahanOrderByWithRelationInput
   supplier?: Prisma.SupplierOrderByWithRelationInput
   pembayaranHutang?: Prisma.PembayaranHutangOrderByRelationAggregateInput
@@ -322,17 +322,17 @@ export type PembelianBahanWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PembelianBahanWhereInput[]
   NOT?: Prisma.PembelianBahanWhereInput | Prisma.PembelianBahanWhereInput[]
   bahanId?: Prisma.StringFilter<"PembelianBahan"> | string
-  supplierId?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
   jumlah?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
   catatan?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
+  supplierId?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
   belumDibayar?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFilter<"PembelianBahan"> | string
   tempatBelanja?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
   bahan?: Prisma.XOR<Prisma.BahanScalarRelationFilter, Prisma.BahanWhereInput>
   supplier?: Prisma.XOR<Prisma.SupplierNullableScalarRelationFilter, Prisma.SupplierWhereInput> | null
   pembayaranHutang?: Prisma.PembayaranHutangListRelationFilter
@@ -341,17 +341,17 @@ export type PembelianBahanWhereUniqueInput = Prisma.AtLeast<{
 export type PembelianBahanOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   bahanId?: Prisma.SortOrder
-  supplierId?: Prisma.SortOrderInput | Prisma.SortOrder
   jumlah?: Prisma.SortOrder
   hargaSatuan?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   catatan?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrderInput | Prisma.SortOrder
   belumDibayar?: Prisma.SortOrder
   sumberBelanja?: Prisma.SortOrder
   tempatBelanja?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   _count?: Prisma.PembelianBahanCountOrderByAggregateInput
   _avg?: Prisma.PembelianBahanAvgOrderByAggregateInput
   _max?: Prisma.PembelianBahanMaxOrderByAggregateInput
@@ -365,17 +365,17 @@ export type PembelianBahanScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PembelianBahanScalarWhereWithAggregatesInput | Prisma.PembelianBahanScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PembelianBahan"> | string
   bahanId?: Prisma.StringWithAggregatesFilter<"PembelianBahan"> | string
-  supplierId?: Prisma.StringNullableWithAggregatesFilter<"PembelianBahan"> | string | null
   jumlah?: Prisma.DecimalWithAggregatesFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalWithAggregatesFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalWithAggregatesFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeWithAggregatesFilter<"PembelianBahan"> | Date | string
   catatan?: Prisma.StringNullableWithAggregatesFilter<"PembelianBahan"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"PembelianBahan"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PembelianBahan"> | Date | string
+  supplierId?: Prisma.StringNullableWithAggregatesFilter<"PembelianBahan"> | string | null
   belumDibayar?: Prisma.DecimalWithAggregatesFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringWithAggregatesFilter<"PembelianBahan"> | string
   tempatBelanja?: Prisma.StringNullableWithAggregatesFilter<"PembelianBahan"> | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"PembelianBahan"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PembelianBahan"> | Date | string
 }
 
 export type PembelianBahanCreateInput = {
@@ -385,11 +385,11 @@ export type PembelianBahanCreateInput = {
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   bahan: Prisma.BahanCreateNestedOneWithoutPembelianInput
   supplier?: Prisma.SupplierCreateNestedOneWithoutPembelianInput
   pembayaranHutang?: Prisma.PembayaranHutangCreateNestedManyWithoutPembelianBahanInput
@@ -398,17 +398,17 @@ export type PembelianBahanCreateInput = {
 export type PembelianBahanUncheckedCreateInput = {
   id?: string
   bahanId: string
-  supplierId?: string | null
   jumlah: runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierId?: string | null
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   pembayaranHutang?: Prisma.PembayaranHutangUncheckedCreateNestedManyWithoutPembelianBahanInput
 }
 
@@ -419,11 +419,11 @@ export type PembelianBahanUpdateInput = {
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bahan?: Prisma.BahanUpdateOneRequiredWithoutPembelianNestedInput
   supplier?: Prisma.SupplierUpdateOneWithoutPembelianNestedInput
   pembayaranHutang?: Prisma.PembayaranHutangUpdateManyWithoutPembelianBahanNestedInput
@@ -432,34 +432,34 @@ export type PembelianBahanUpdateInput = {
 export type PembelianBahanUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bahanId?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jumlah?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pembayaranHutang?: Prisma.PembayaranHutangUncheckedUpdateManyWithoutPembelianBahanNestedInput
 }
 
 export type PembelianBahanCreateManyInput = {
   id?: string
   bahanId: string
-  supplierId?: string | null
   jumlah: runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierId?: string | null
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type PembelianBahanUpdateManyMutationInput = {
@@ -469,27 +469,27 @@ export type PembelianBahanUpdateManyMutationInput = {
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PembelianBahanUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bahanId?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jumlah?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PembelianBahanListRelationFilter = {
@@ -505,17 +505,17 @@ export type PembelianBahanOrderByRelationAggregateInput = {
 export type PembelianBahanCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   bahanId?: Prisma.SortOrder
-  supplierId?: Prisma.SortOrder
   jumlah?: Prisma.SortOrder
   hargaSatuan?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrder
   belumDibayar?: Prisma.SortOrder
   sumberBelanja?: Prisma.SortOrder
   tempatBelanja?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type PembelianBahanAvgOrderByAggregateInput = {
@@ -528,33 +528,33 @@ export type PembelianBahanAvgOrderByAggregateInput = {
 export type PembelianBahanMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   bahanId?: Prisma.SortOrder
-  supplierId?: Prisma.SortOrder
   jumlah?: Prisma.SortOrder
   hargaSatuan?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrder
   belumDibayar?: Prisma.SortOrder
   sumberBelanja?: Prisma.SortOrder
   tempatBelanja?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type PembelianBahanMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   bahanId?: Prisma.SortOrder
-  supplierId?: Prisma.SortOrder
   jumlah?: Prisma.SortOrder
   hargaSatuan?: Prisma.SortOrder
   totalHarga?: Prisma.SortOrder
   tanggal?: Prisma.SortOrder
   catatan?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrder
   belumDibayar?: Prisma.SortOrder
   sumberBelanja?: Prisma.SortOrder
   tempatBelanja?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type PembelianBahanSumOrderByAggregateInput = {
@@ -674,28 +674,28 @@ export type PembelianBahanCreateWithoutBahanInput = {
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   supplier?: Prisma.SupplierCreateNestedOneWithoutPembelianInput
   pembayaranHutang?: Prisma.PembayaranHutangCreateNestedManyWithoutPembelianBahanInput
 }
 
 export type PembelianBahanUncheckedCreateWithoutBahanInput = {
   id?: string
-  supplierId?: string | null
   jumlah: runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierId?: string | null
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   pembayaranHutang?: Prisma.PembayaranHutangUncheckedCreateNestedManyWithoutPembelianBahanInput
 }
 
@@ -731,17 +731,17 @@ export type PembelianBahanScalarWhereInput = {
   NOT?: Prisma.PembelianBahanScalarWhereInput | Prisma.PembelianBahanScalarWhereInput[]
   id?: Prisma.StringFilter<"PembelianBahan"> | string
   bahanId?: Prisma.StringFilter<"PembelianBahan"> | string
-  supplierId?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
   jumlah?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
   catatan?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
+  supplierId?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
   belumDibayar?: Prisma.DecimalFilter<"PembelianBahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFilter<"PembelianBahan"> | string
   tempatBelanja?: Prisma.StringNullableFilter<"PembelianBahan"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"PembelianBahan"> | Date | string
 }
 
 export type PembelianBahanCreateWithoutSupplierInput = {
@@ -751,11 +751,11 @@ export type PembelianBahanCreateWithoutSupplierInput = {
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   bahan: Prisma.BahanCreateNestedOneWithoutPembelianInput
   pembayaranHutang?: Prisma.PembayaranHutangCreateNestedManyWithoutPembelianBahanInput
 }
@@ -768,11 +768,11 @@ export type PembelianBahanUncheckedCreateWithoutSupplierInput = {
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   pembayaranHutang?: Prisma.PembayaranHutangUncheckedCreateNestedManyWithoutPembelianBahanInput
 }
 
@@ -809,11 +809,11 @@ export type PembelianBahanCreateWithoutPembayaranHutangInput = {
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   bahan: Prisma.BahanCreateNestedOneWithoutPembelianInput
   supplier?: Prisma.SupplierCreateNestedOneWithoutPembelianInput
 }
@@ -821,17 +821,17 @@ export type PembelianBahanCreateWithoutPembayaranHutangInput = {
 export type PembelianBahanUncheckedCreateWithoutPembayaranHutangInput = {
   id?: string
   bahanId: string
-  supplierId?: string | null
   jumlah: runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierId?: string | null
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type PembelianBahanCreateOrConnectWithoutPembayaranHutangInput = {
@@ -857,11 +857,11 @@ export type PembelianBahanUpdateWithoutPembayaranHutangInput = {
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bahan?: Prisma.BahanUpdateOneRequiredWithoutPembelianNestedInput
   supplier?: Prisma.SupplierUpdateOneWithoutPembelianNestedInput
 }
@@ -869,32 +869,32 @@ export type PembelianBahanUpdateWithoutPembayaranHutangInput = {
 export type PembelianBahanUncheckedUpdateWithoutPembayaranHutangInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bahanId?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jumlah?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PembelianBahanCreateManyBahanInput = {
   id?: string
-  supplierId?: string | null
   jumlah: runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  supplierId?: string | null
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type PembelianBahanUpdateWithoutBahanInput = {
@@ -904,44 +904,44 @@ export type PembelianBahanUpdateWithoutBahanInput = {
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   supplier?: Prisma.SupplierUpdateOneWithoutPembelianNestedInput
   pembayaranHutang?: Prisma.PembayaranHutangUpdateManyWithoutPembelianBahanNestedInput
 }
 
 export type PembelianBahanUncheckedUpdateWithoutBahanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jumlah?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pembayaranHutang?: Prisma.PembayaranHutangUncheckedUpdateManyWithoutPembelianBahanNestedInput
 }
 
 export type PembelianBahanUncheckedUpdateManyWithoutBahanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jumlah?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PembelianBahanCreateManySupplierInput = {
@@ -952,11 +952,11 @@ export type PembelianBahanCreateManySupplierInput = {
   totalHarga: runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Date | string
   catatan?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   belumDibayar?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: string
   tempatBelanja?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type PembelianBahanUpdateWithoutSupplierInput = {
@@ -966,11 +966,11 @@ export type PembelianBahanUpdateWithoutSupplierInput = {
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bahan?: Prisma.BahanUpdateOneRequiredWithoutPembelianNestedInput
   pembayaranHutang?: Prisma.PembayaranHutangUpdateManyWithoutPembelianBahanNestedInput
 }
@@ -983,11 +983,11 @@ export type PembelianBahanUncheckedUpdateWithoutSupplierInput = {
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pembayaranHutang?: Prisma.PembayaranHutangUncheckedUpdateManyWithoutPembelianBahanNestedInput
 }
 
@@ -999,11 +999,11 @@ export type PembelianBahanUncheckedUpdateManyWithoutSupplierInput = {
   totalHarga?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   tanggal?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   catatan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belumDibayar?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sumberBelanja?: Prisma.StringFieldUpdateOperationsInput | string
   tempatBelanja?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1040,17 +1040,17 @@ export type PembelianBahanCountOutputTypeCountPembayaranHutangArgs<ExtArgs exten
 export type PembelianBahanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   bahanId?: boolean
-  supplierId?: boolean
   jumlah?: boolean
   hargaSatuan?: boolean
   totalHarga?: boolean
   tanggal?: boolean
   catatan?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  supplierId?: boolean
   belumDibayar?: boolean
   sumberBelanja?: boolean
   tempatBelanja?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PembelianBahan$supplierArgs<ExtArgs>
   pembayaranHutang?: boolean | Prisma.PembelianBahan$pembayaranHutangArgs<ExtArgs>
@@ -1060,17 +1060,17 @@ export type PembelianBahanSelect<ExtArgs extends runtime.Types.Extensions.Intern
 export type PembelianBahanSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   bahanId?: boolean
-  supplierId?: boolean
   jumlah?: boolean
   hargaSatuan?: boolean
   totalHarga?: boolean
   tanggal?: boolean
   catatan?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  supplierId?: boolean
   belumDibayar?: boolean
   sumberBelanja?: boolean
   tempatBelanja?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PembelianBahan$supplierArgs<ExtArgs>
 }, ExtArgs["result"]["pembelianBahan"]>
@@ -1078,17 +1078,17 @@ export type PembelianBahanSelectCreateManyAndReturn<ExtArgs extends runtime.Type
 export type PembelianBahanSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   bahanId?: boolean
-  supplierId?: boolean
   jumlah?: boolean
   hargaSatuan?: boolean
   totalHarga?: boolean
   tanggal?: boolean
   catatan?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  supplierId?: boolean
   belumDibayar?: boolean
   sumberBelanja?: boolean
   tempatBelanja?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PembelianBahan$supplierArgs<ExtArgs>
 }, ExtArgs["result"]["pembelianBahan"]>
@@ -1096,20 +1096,20 @@ export type PembelianBahanSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type PembelianBahanSelectScalar = {
   id?: boolean
   bahanId?: boolean
-  supplierId?: boolean
   jumlah?: boolean
   hargaSatuan?: boolean
   totalHarga?: boolean
   tanggal?: boolean
   catatan?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  supplierId?: boolean
   belumDibayar?: boolean
   sumberBelanja?: boolean
   tempatBelanja?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
 }
 
-export type PembelianBahanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bahanId" | "supplierId" | "jumlah" | "hargaSatuan" | "totalHarga" | "tanggal" | "catatan" | "belumDibayar" | "sumberBelanja" | "tempatBelanja" | "createdAt" | "updatedAt", ExtArgs["result"]["pembelianBahan"]>
+export type PembelianBahanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bahanId" | "jumlah" | "hargaSatuan" | "totalHarga" | "tanggal" | "catatan" | "createdAt" | "updatedAt" | "supplierId" | "belumDibayar" | "sumberBelanja" | "tempatBelanja", ExtArgs["result"]["pembelianBahan"]>
 export type PembelianBahanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   bahan?: boolean | Prisma.BahanDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.PembelianBahan$supplierArgs<ExtArgs>
@@ -1135,17 +1135,17 @@ export type $PembelianBahanPayload<ExtArgs extends runtime.Types.Extensions.Inte
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     bahanId: string
-    supplierId: string | null
     jumlah: runtime.Decimal
     hargaSatuan: runtime.Decimal
     totalHarga: runtime.Decimal
     tanggal: Date
     catatan: string | null
+    createdAt: Date
+    updatedAt: Date
+    supplierId: string | null
     belumDibayar: runtime.Decimal
     sumberBelanja: string
     tempatBelanja: string | null
-    createdAt: Date
-    updatedAt: Date
   }, ExtArgs["result"]["pembelianBahan"]>
   composites: {}
 }
@@ -1574,17 +1574,17 @@ export interface Prisma__PembelianBahanClient<T, Null = never, ExtArgs extends r
 export interface PembelianBahanFieldRefs {
   readonly id: Prisma.FieldRef<"PembelianBahan", 'String'>
   readonly bahanId: Prisma.FieldRef<"PembelianBahan", 'String'>
-  readonly supplierId: Prisma.FieldRef<"PembelianBahan", 'String'>
   readonly jumlah: Prisma.FieldRef<"PembelianBahan", 'Decimal'>
   readonly hargaSatuan: Prisma.FieldRef<"PembelianBahan", 'Decimal'>
   readonly totalHarga: Prisma.FieldRef<"PembelianBahan", 'Decimal'>
   readonly tanggal: Prisma.FieldRef<"PembelianBahan", 'DateTime'>
   readonly catatan: Prisma.FieldRef<"PembelianBahan", 'String'>
+  readonly createdAt: Prisma.FieldRef<"PembelianBahan", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"PembelianBahan", 'DateTime'>
+  readonly supplierId: Prisma.FieldRef<"PembelianBahan", 'String'>
   readonly belumDibayar: Prisma.FieldRef<"PembelianBahan", 'Decimal'>
   readonly sumberBelanja: Prisma.FieldRef<"PembelianBahan", 'String'>
   readonly tempatBelanja: Prisma.FieldRef<"PembelianBahan", 'String'>
-  readonly createdAt: Prisma.FieldRef<"PembelianBahan", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"PembelianBahan", 'DateTime'>
 }
     
 

@@ -1,15 +1,25 @@
 # Integrasi POS ↔ Expo Mobile — Status, Perbaikan & Langkah Selanjutnya
 
 > Backend: `E:\code\pos` · Aplikasi mobile: `E:\code\pos_mobile` (Expo SDK 58, expo-router).
-> Kontrak resmi: `docs/API.md` · Panduan mobile: `docs/EXPO.md` · Guardrails: `mcp-expo.ts` (`expo_barriers`).
+> Kontrak resmi: `docs/API.md` · Panduan mobile: `docs/EXPO.md` · Guardrails: `mcp/server-expo.ts` (`expo_barriers`).
 
 ---
 
 ## 1. Konfigurasi Klien OpenCode (MCP)
 
-Dua server MCP terdaftar untuk membantu agen/LLM membaca dokumen + barriers:
+Dua server MCP lokal membaca repo ini langsung, sehingga pengembang
+`pos_mobile` tidak perlu menebak path dokumen atau kode backend:
 
-### Project-level: `E:\code\pos/opencode.json` (baru)
+| Server        | Isi                                                                                       |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| `pos-backend` | `docs/**`, `src/**` (khususnya `src/server/**`), skema Prisma, daftar endpoint            |
+| `pos-expo`    | Dokumen kontrak + barriers Expo, DAN tool baca repo yang sama (`docs/**`, `src/**`, dll.) |
+
+### Bentuk konfigurasi yang benar (OpenCode V2)
+
+Setiap server ada di bawah `mcp.servers`, wajib punya `type`, dan `command`
+berupa **array** (executable + argumen) — `args` terpisah ala V1 tidak dikenali
+dan server dilewati dengan peringatan `skipped malformed recognized value`.
 
 ```json
 {
@@ -17,23 +27,33 @@ Dua server MCP terdaftar untuk membantu agen/LLM membaca dokumen + barriers:
   "mcp": {
     "servers": {
       "pos-expo": {
-        "command": "bun",
-        "args": ["run", "E:/code/pos/mcp-expo.ts"]
+        "type": "local",
+        "command": ["bun", "run", "E:/code/pos/mcp/server-expo.ts"]
       },
       "pos-backend": {
-        "command": "bun",
-        "args": ["run", "E:/code/pos/mcp-server.ts"]
+        "type": "local",
+        "command": ["bun", "run", "E:/code/pos/mcp/server-backend.ts"]
       }
     }
   }
 }
 ```
 
-### Global: `C:\Users\humas\.config\opencode\opencode.json` (ditambahkan)
+Konfigurasi yang sama ada di:
 
-Bagian `mcp.servers` ditambahkan ke konfigurasi global yang sama (dua server di atas).
+- `E:\code\pos\opencode.json` (project backend)
+- `E:\code\pos_mobile\opencode.json` (project mobile — dipakai saat mengembangkan Expo)
+- `C:\Users\humas\.config\opencode\opencode.json` (global, untuk proyek lain)
 
-### Tool yang tersedia lewat MCP `pos-expo`
+Kode MCP ada di `E:\code\pos\mcp\` (`stdio.ts` = transport, `repo.ts` = tool
+berkas, `server-backend.ts`, `server-expo.ts`). Direktori `mcp/` beserta
+`tests/vitest/mcp.test.ts` **tidak di-commit** (`.gitignore`) — keduanya
+khusus dev. API key remote (`firecrawl`, `tavily`, `exa`) dibaca dari berkas
+terpisah di `~/.config/opencode/secrets/` lewat substitusi `{file:...}`.
+
+### Tool yang tersedia
+
+Tool dokumen (server `pos-expo`):
 
 | Tool               | Berguna untuk                                                             |
 | ------------------ | ------------------------------------------------------------------------- |
@@ -45,7 +65,44 @@ Bagian `mcp.servers` ditambahkan ke konfigurasi global yang sama (dua server di 
 | `expo_barriers`    | Baca guardrails keamanan Expo (peran, auth, rate limit, offline, printer) |
 | `expo_all_docs`    | Semua di atas dalam satu respons                                          |
 
-Verifikasi: `bunx tsc --noEmit` lulus, dan MCP merespons `initialize`/`tools/list`/`tools/call` dengan benar.
+Tool baca repo (tersedia di `pos-expo` dan `pos-backend`):
+
+| Tool              | Fungsi                                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| `repo_list_files` | Daftar berkas di `docs/`, `src/`, `prisma/`, `tests/`, `scripts/`, `messages/`, `.agents/` |
+| `repo_read_file`  | Baca satu berkas relatif akar repo, mis. `src/server/kasir.ts`                             |
+| `repo_search`     | Cari teks (case-insensitive) dan kembalikan `path:baris`                                   |
+
+Tool dokumen/skema backend (`pos-backend`): `pos_schema`, `pos_schema_summary`,
+`pos_api_docs`, `pos_server_files`, `pos_server_file`, `pos_env`,
+`pos_project_info`.
+
+Batas keamanan tool repo: path absolut, `..`, symlink, dan berkas `.env*`
+(di luar `.env.example`) ditolak; berkas > 512 KB dipotong.
+
+### Verifikasi dan troubleshooting
+
+```bash
+opencode mcp list          # semua server harus "connected"
+bunx vitest run tests/vitest/mcp.test.ts   # regresi framing + tool repo
+```
+
+Penyebab kegagalan yang sudah diperbaiki (MCP-03):
+
+1. **Framing salah** — server membalas dengan `Content-Length: N\r\n\r\n{…}`
+   (framing LSP). MCP stdio wajib satu pesan JSON per baris, sehingga klien
+   tidak pernah menerima balasan `initialize` dan koneksi berakhir
+   `failed: Request timed out`. Transport bersama sekarang ada di
+   `mcp/stdio.ts`; jangan menambahkan header apa pun ke stdout.
+2. **Bentuk konfigurasi V1** — `command` string + `args`, atau entri `url`
+   tanpa `type: "remote"`, dilewati OpenCode; lihat
+   `configuration normalization diagnostic` di
+   `~/.local/share/opencode/log/opencode.log`.
+3. **Trailing comma** di `pos_mobile/opencode.json` membuat entri `playwright`
+   dianggap malformed.
+4. **Nama paket salah** — `sequential-thinking` memakai
+   `@anthropic/sequential-thinking-mcp` (404 di npm); diganti
+   `@modelcontextprotocol/server-sequential-thinking`.
 
 ---
 
@@ -176,18 +233,27 @@ bun run perf:budget
 
 ## 8. Cara Menggunakan MCP dari Agen/LLM
 
+Saat Code Mode aktif (default), tool MCP dipanggil lewat `tools.<server>.<tool>`
+di dalam `execute`; nama pada katalog mengikuti `<server>_<tool>`.
+
 ```
 # Baca kontrak API untuk menambahkan endpoint baru ke Expo:
-mcp__pos-expo__expo_api_docs
+tools["pos-expo"].expo_api_docs()
 
 # Baca barriers sebelum mengubah fitur mobile:
-mcp__pos-expo__expo_barriers
+tools["pos-expo"].expo_barriers()
 
 # Baca semua dokumen sekaligus:
-mcp__pos-expo__expo_all_docs
+tools["pos-expo"].expo_all_docs()
 
 # Baca skema Prisma (backend):
-mcp__pos-backend__pos_schema
+tools["pos-backend"].pos_schema()
+
+# Cari implementasi endpoint di backend:
+tools["pos-backend"].repo_search({ query: "auth-native", dir: "src/routes/api/v1" })
+
+# Baca berkas sumber tertentu:
+tools["pos-expo"].repo_read_file({ path: "src/server/auth-native.ts" })
 ```
 
 ---

@@ -26,130 +26,130 @@ export type AggregatePrinter = {
 
 export type PrinterMinAggregateOutputType = {
   id: string | null
-  userId: string | null
   nama: string | null
   tipe: string | null
   lokasi: string | null
   perangkat: string | null
+  default: boolean | null
+  aktif: boolean | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  userId: string | null
   koneksi: string | null
   vendorId: string | null
   vendorName: string | null
   serialNumber: string | null
   productName: string | null
   dipindaiPada: Date | null
-  terakhirDipakai: Date | null
-  default: boolean | null
   defaultPengguna: boolean | null
-  aktif: boolean | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  terakhirDipakai: Date | null
 }
 
 export type PrinterMaxAggregateOutputType = {
   id: string | null
-  userId: string | null
   nama: string | null
   tipe: string | null
   lokasi: string | null
   perangkat: string | null
+  default: boolean | null
+  aktif: boolean | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  userId: string | null
   koneksi: string | null
   vendorId: string | null
   vendorName: string | null
   serialNumber: string | null
   productName: string | null
   dipindaiPada: Date | null
-  terakhirDipakai: Date | null
-  default: boolean | null
   defaultPengguna: boolean | null
-  aktif: boolean | null
-  createdAt: Date | null
-  updatedAt: Date | null
+  terakhirDipakai: Date | null
 }
 
 export type PrinterCountAggregateOutputType = {
   id: number
-  userId: number
   nama: number
   tipe: number
   lokasi: number
   perangkat: number
+  default: number
+  aktif: number
+  createdAt: number
+  updatedAt: number
+  userId: number
   koneksi: number
   vendorId: number
   vendorName: number
   serialNumber: number
   productName: number
   dipindaiPada: number
-  terakhirDipakai: number
-  default: number
   defaultPengguna: number
-  aktif: number
-  createdAt: number
-  updatedAt: number
+  terakhirDipakai: number
   _all: number
 }
 
 
 export type PrinterMinAggregateInputType = {
   id?: true
-  userId?: true
   nama?: true
   tipe?: true
   lokasi?: true
   perangkat?: true
+  default?: true
+  aktif?: true
+  createdAt?: true
+  updatedAt?: true
+  userId?: true
   koneksi?: true
   vendorId?: true
   vendorName?: true
   serialNumber?: true
   productName?: true
   dipindaiPada?: true
-  terakhirDipakai?: true
-  default?: true
   defaultPengguna?: true
-  aktif?: true
-  createdAt?: true
-  updatedAt?: true
+  terakhirDipakai?: true
 }
 
 export type PrinterMaxAggregateInputType = {
   id?: true
-  userId?: true
   nama?: true
   tipe?: true
   lokasi?: true
   perangkat?: true
+  default?: true
+  aktif?: true
+  createdAt?: true
+  updatedAt?: true
+  userId?: true
   koneksi?: true
   vendorId?: true
   vendorName?: true
   serialNumber?: true
   productName?: true
   dipindaiPada?: true
-  terakhirDipakai?: true
-  default?: true
   defaultPengguna?: true
-  aktif?: true
-  createdAt?: true
-  updatedAt?: true
+  terakhirDipakai?: true
 }
 
 export type PrinterCountAggregateInputType = {
   id?: true
-  userId?: true
   nama?: true
   tipe?: true
   lokasi?: true
   perangkat?: true
+  default?: true
+  aktif?: true
+  createdAt?: true
+  updatedAt?: true
+  userId?: true
   koneksi?: true
   vendorId?: true
   vendorName?: true
   serialNumber?: true
   productName?: true
   dipindaiPada?: true
-  terakhirDipakai?: true
-  default?: true
   defaultPengguna?: true
-  aktif?: true
-  createdAt?: true
-  updatedAt?: true
+  terakhirDipakai?: true
   _all?: true
 }
 
@@ -227,23 +227,23 @@ export type PrinterGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type PrinterGroupByOutputType = {
   id: string
-  userId: string | null
   nama: string
   tipe: string
   lokasi: string | null
   perangkat: string | null
+  default: boolean
+  aktif: boolean
+  createdAt: Date
+  updatedAt: Date
+  userId: string | null
   koneksi: string
   vendorId: string | null
   vendorName: string | null
   serialNumber: string | null
   productName: string | null
   dipindaiPada: Date | null
-  terakhirDipakai: Date | null
-  default: boolean
   defaultPengguna: boolean
-  aktif: boolean
-  createdAt: Date
-  updatedAt: Date
+  terakhirDipakai: Date | null
   _count: PrinterCountAggregateOutputType | null
   _min: PrinterMinAggregateOutputType | null
   _max: PrinterMaxAggregateOutputType | null
@@ -269,48 +269,48 @@ export type PrinterWhereInput = {
   OR?: Prisma.PrinterWhereInput[]
   NOT?: Prisma.PrinterWhereInput | Prisma.PrinterWhereInput[]
   id?: Prisma.StringFilter<"Printer"> | string
-  userId?: Prisma.StringNullableFilter<"Printer"> | string | null
   nama?: Prisma.StringFilter<"Printer"> | string
   tipe?: Prisma.StringFilter<"Printer"> | string
   lokasi?: Prisma.StringNullableFilter<"Printer"> | string | null
   perangkat?: Prisma.StringNullableFilter<"Printer"> | string | null
+  default?: Prisma.BoolFilter<"Printer"> | boolean
+  aktif?: Prisma.BoolFilter<"Printer"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
+  userId?: Prisma.StringNullableFilter<"Printer"> | string | null
   koneksi?: Prisma.StringFilter<"Printer"> | string
   vendorId?: Prisma.StringNullableFilter<"Printer"> | string | null
   vendorName?: Prisma.StringNullableFilter<"Printer"> | string | null
   serialNumber?: Prisma.StringNullableFilter<"Printer"> | string | null
   productName?: Prisma.StringNullableFilter<"Printer"> | string | null
   dipindaiPada?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
-  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
-  default?: Prisma.BoolFilter<"Printer"> | boolean
   defaultPengguna?: Prisma.BoolFilter<"Printer"> | boolean
-  aktif?: Prisma.BoolFilter<"Printer"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
   jobs?: Prisma.PrintJobListRelationFilter
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type PrinterOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   nama?: Prisma.SortOrder
   tipe?: Prisma.SortOrder
   lokasi?: Prisma.SortOrderInput | Prisma.SortOrder
   perangkat?: Prisma.SortOrderInput | Prisma.SortOrder
+  default?: Prisma.SortOrder
+  aktif?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   koneksi?: Prisma.SortOrder
   vendorId?: Prisma.SortOrderInput | Prisma.SortOrder
   vendorName?: Prisma.SortOrderInput | Prisma.SortOrder
   serialNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   productName?: Prisma.SortOrderInput | Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrderInput | Prisma.SortOrder
-  terakhirDipakai?: Prisma.SortOrderInput | Prisma.SortOrder
-  default?: Prisma.SortOrder
   defaultPengguna?: Prisma.SortOrder
-  aktif?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
+  terakhirDipakai?: Prisma.SortOrderInput | Prisma.SortOrder
   jobs?: Prisma.PrintJobOrderByRelationAggregateInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PrinterWhereUniqueInput = Prisma.AtLeast<{
@@ -319,46 +319,46 @@ export type PrinterWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PrinterWhereInput | Prisma.PrinterWhereInput[]
   OR?: Prisma.PrinterWhereInput[]
   NOT?: Prisma.PrinterWhereInput | Prisma.PrinterWhereInput[]
-  userId?: Prisma.StringNullableFilter<"Printer"> | string | null
   nama?: Prisma.StringFilter<"Printer"> | string
   tipe?: Prisma.StringFilter<"Printer"> | string
   lokasi?: Prisma.StringNullableFilter<"Printer"> | string | null
   perangkat?: Prisma.StringNullableFilter<"Printer"> | string | null
+  default?: Prisma.BoolFilter<"Printer"> | boolean
+  aktif?: Prisma.BoolFilter<"Printer"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
+  userId?: Prisma.StringNullableFilter<"Printer"> | string | null
   koneksi?: Prisma.StringFilter<"Printer"> | string
   vendorId?: Prisma.StringNullableFilter<"Printer"> | string | null
   vendorName?: Prisma.StringNullableFilter<"Printer"> | string | null
   serialNumber?: Prisma.StringNullableFilter<"Printer"> | string | null
   productName?: Prisma.StringNullableFilter<"Printer"> | string | null
   dipindaiPada?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
-  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
-  default?: Prisma.BoolFilter<"Printer"> | boolean
   defaultPengguna?: Prisma.BoolFilter<"Printer"> | boolean
-  aktif?: Prisma.BoolFilter<"Printer"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
   jobs?: Prisma.PrintJobListRelationFilter
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "userId_perangkat">
 
 export type PrinterOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   nama?: Prisma.SortOrder
   tipe?: Prisma.SortOrder
   lokasi?: Prisma.SortOrderInput | Prisma.SortOrder
   perangkat?: Prisma.SortOrderInput | Prisma.SortOrder
+  default?: Prisma.SortOrder
+  aktif?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   koneksi?: Prisma.SortOrder
   vendorId?: Prisma.SortOrderInput | Prisma.SortOrder
   vendorName?: Prisma.SortOrderInput | Prisma.SortOrder
   serialNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   productName?: Prisma.SortOrderInput | Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrderInput | Prisma.SortOrder
-  terakhirDipakai?: Prisma.SortOrderInput | Prisma.SortOrder
-  default?: Prisma.SortOrder
   defaultPengguna?: Prisma.SortOrder
-  aktif?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PrinterCountOrderByAggregateInput
   _max?: Prisma.PrinterMaxOrderByAggregateInput
   _min?: Prisma.PrinterMinOrderByAggregateInput
@@ -369,23 +369,23 @@ export type PrinterScalarWhereWithAggregatesInput = {
   OR?: Prisma.PrinterScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PrinterScalarWhereWithAggregatesInput | Prisma.PrinterScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Printer"> | string
-  userId?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   nama?: Prisma.StringWithAggregatesFilter<"Printer"> | string
   tipe?: Prisma.StringWithAggregatesFilter<"Printer"> | string
   lokasi?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   perangkat?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
+  default?: Prisma.BoolWithAggregatesFilter<"Printer"> | boolean
+  aktif?: Prisma.BoolWithAggregatesFilter<"Printer"> | boolean
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Printer"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Printer"> | Date | string
+  userId?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   koneksi?: Prisma.StringWithAggregatesFilter<"Printer"> | string
   vendorId?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   vendorName?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   serialNumber?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   productName?: Prisma.StringNullableWithAggregatesFilter<"Printer"> | string | null
   dipindaiPada?: Prisma.DateTimeNullableWithAggregatesFilter<"Printer"> | Date | string | null
-  terakhirDipakai?: Prisma.DateTimeNullableWithAggregatesFilter<"Printer"> | Date | string | null
-  default?: Prisma.BoolWithAggregatesFilter<"Printer"> | boolean
   defaultPengguna?: Prisma.BoolWithAggregatesFilter<"Printer"> | boolean
-  aktif?: Prisma.BoolWithAggregatesFilter<"Printer"> | boolean
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Printer"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Printer"> | Date | string
+  terakhirDipakai?: Prisma.DateTimeNullableWithAggregatesFilter<"Printer"> | Date | string | null
 }
 
 export type PrinterCreateInput = {
@@ -394,41 +394,41 @@ export type PrinterCreateInput = {
   tipe?: string
   lokasi?: string | null
   perangkat?: string | null
+  default?: boolean
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   koneksi?: string
   vendorId?: string | null
   vendorName?: string | null
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
-  terakhirDipakai?: Date | string | null
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutPrintersInput
+  terakhirDipakai?: Date | string | null
   jobs?: Prisma.PrintJobCreateNestedManyWithoutPrinterInput
+  user?: Prisma.UserCreateNestedOneWithoutPrintersInput
 }
 
 export type PrinterUncheckedCreateInput = {
   id?: string
-  userId?: string | null
   nama: string
   tipe?: string
   lokasi?: string | null
   perangkat?: string | null
+  default?: boolean
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId?: string | null
   koneksi?: string
   vendorId?: string | null
   vendorName?: string | null
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
-  terakhirDipakai?: Date | string | null
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  terakhirDipakai?: Date | string | null
   jobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutPrinterInput
 }
 
@@ -438,63 +438,63 @@ export type PrinterUpdateInput = {
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutPrintersNestedInput
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   jobs?: Prisma.PrintJobUpdateManyWithoutPrinterNestedInput
+  user?: Prisma.UserUpdateOneWithoutPrintersNestedInput
 }
 
 export type PrinterUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   jobs?: Prisma.PrintJobUncheckedUpdateManyWithoutPrinterNestedInput
 }
 
 export type PrinterCreateManyInput = {
   id?: string
-  userId?: string | null
   nama: string
   tipe?: string
   lokasi?: string | null
   perangkat?: string | null
+  default?: boolean
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId?: string | null
   koneksi?: string
   vendorId?: string | null
   vendorName?: string | null
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
-  terakhirDipakai?: Date | string | null
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  terakhirDipakai?: Date | string | null
 }
 
 export type PrinterUpdateManyMutationInput = {
@@ -503,39 +503,39 @@ export type PrinterUpdateManyMutationInput = {
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PrinterUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PrinterListRelationFilter = {
@@ -555,65 +555,65 @@ export type PrinterUserIdPerangkatCompoundUniqueInput = {
 
 export type PrinterCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   nama?: Prisma.SortOrder
   tipe?: Prisma.SortOrder
   lokasi?: Prisma.SortOrder
   perangkat?: Prisma.SortOrder
+  default?: Prisma.SortOrder
+  aktif?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   koneksi?: Prisma.SortOrder
   vendorId?: Prisma.SortOrder
   vendorName?: Prisma.SortOrder
   serialNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrder
-  terakhirDipakai?: Prisma.SortOrder
-  default?: Prisma.SortOrder
   defaultPengguna?: Prisma.SortOrder
-  aktif?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrder
 }
 
 export type PrinterMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   nama?: Prisma.SortOrder
   tipe?: Prisma.SortOrder
   lokasi?: Prisma.SortOrder
   perangkat?: Prisma.SortOrder
+  default?: Prisma.SortOrder
+  aktif?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   koneksi?: Prisma.SortOrder
   vendorId?: Prisma.SortOrder
   vendorName?: Prisma.SortOrder
   serialNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrder
-  terakhirDipakai?: Prisma.SortOrder
-  default?: Prisma.SortOrder
   defaultPengguna?: Prisma.SortOrder
-  aktif?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrder
 }
 
 export type PrinterMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
   nama?: Prisma.SortOrder
   tipe?: Prisma.SortOrder
   lokasi?: Prisma.SortOrder
   perangkat?: Prisma.SortOrder
+  default?: Prisma.SortOrder
+  aktif?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   koneksi?: Prisma.SortOrder
   vendorId?: Prisma.SortOrder
   vendorName?: Prisma.SortOrder
   serialNumber?: Prisma.SortOrder
   productName?: Prisma.SortOrder
   dipindaiPada?: Prisma.SortOrder
-  terakhirDipakai?: Prisma.SortOrder
-  default?: Prisma.SortOrder
   defaultPengguna?: Prisma.SortOrder
-  aktif?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+  terakhirDipakai?: Prisma.SortOrder
 }
 
 export type PrinterNullableScalarRelationFilter = {
@@ -685,18 +685,18 @@ export type PrinterCreateWithoutUserInput = {
   tipe?: string
   lokasi?: string | null
   perangkat?: string | null
+  default?: boolean
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   koneksi?: string
   vendorId?: string | null
   vendorName?: string | null
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
-  terakhirDipakai?: Date | string | null
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  terakhirDipakai?: Date | string | null
   jobs?: Prisma.PrintJobCreateNestedManyWithoutPrinterInput
 }
 
@@ -706,18 +706,18 @@ export type PrinterUncheckedCreateWithoutUserInput = {
   tipe?: string
   lokasi?: string | null
   perangkat?: string | null
+  default?: boolean
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   koneksi?: string
   vendorId?: string | null
   vendorName?: string | null
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
-  terakhirDipakai?: Date | string | null
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  terakhirDipakai?: Date | string | null
   jobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutPrinterInput
 }
 
@@ -752,23 +752,23 @@ export type PrinterScalarWhereInput = {
   OR?: Prisma.PrinterScalarWhereInput[]
   NOT?: Prisma.PrinterScalarWhereInput | Prisma.PrinterScalarWhereInput[]
   id?: Prisma.StringFilter<"Printer"> | string
-  userId?: Prisma.StringNullableFilter<"Printer"> | string | null
   nama?: Prisma.StringFilter<"Printer"> | string
   tipe?: Prisma.StringFilter<"Printer"> | string
   lokasi?: Prisma.StringNullableFilter<"Printer"> | string | null
   perangkat?: Prisma.StringNullableFilter<"Printer"> | string | null
+  default?: Prisma.BoolFilter<"Printer"> | boolean
+  aktif?: Prisma.BoolFilter<"Printer"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
+  userId?: Prisma.StringNullableFilter<"Printer"> | string | null
   koneksi?: Prisma.StringFilter<"Printer"> | string
   vendorId?: Prisma.StringNullableFilter<"Printer"> | string | null
   vendorName?: Prisma.StringNullableFilter<"Printer"> | string | null
   serialNumber?: Prisma.StringNullableFilter<"Printer"> | string | null
   productName?: Prisma.StringNullableFilter<"Printer"> | string | null
   dipindaiPada?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
-  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
-  default?: Prisma.BoolFilter<"Printer"> | boolean
   defaultPengguna?: Prisma.BoolFilter<"Printer"> | boolean
-  aktif?: Prisma.BoolFilter<"Printer"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Printer"> | Date | string
+  terakhirDipakai?: Prisma.DateTimeNullableFilter<"Printer"> | Date | string | null
 }
 
 export type PrinterCreateWithoutJobsInput = {
@@ -777,40 +777,40 @@ export type PrinterCreateWithoutJobsInput = {
   tipe?: string
   lokasi?: string | null
   perangkat?: string | null
+  default?: boolean
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   koneksi?: string
   vendorId?: string | null
   vendorName?: string | null
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
-  terakhirDipakai?: Date | string | null
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  terakhirDipakai?: Date | string | null
   user?: Prisma.UserCreateNestedOneWithoutPrintersInput
 }
 
 export type PrinterUncheckedCreateWithoutJobsInput = {
   id?: string
-  userId?: string | null
   nama: string
   tipe?: string
   lokasi?: string | null
   perangkat?: string | null
+  default?: boolean
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId?: string | null
   koneksi?: string
   vendorId?: string | null
   vendorName?: string | null
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
-  terakhirDipakai?: Date | string | null
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  terakhirDipakai?: Date | string | null
 }
 
 export type PrinterCreateOrConnectWithoutJobsInput = {
@@ -835,40 +835,40 @@ export type PrinterUpdateWithoutJobsInput = {
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneWithoutPrintersNestedInput
 }
 
 export type PrinterUncheckedUpdateWithoutJobsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PrinterCreateManyUserInput = {
@@ -877,18 +877,18 @@ export type PrinterCreateManyUserInput = {
   tipe?: string
   lokasi?: string | null
   perangkat?: string | null
+  default?: boolean
+  aktif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
   koneksi?: string
   vendorId?: string | null
   vendorName?: string | null
   serialNumber?: string | null
   productName?: string | null
   dipindaiPada?: Date | string | null
-  terakhirDipakai?: Date | string | null
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
+  terakhirDipakai?: Date | string | null
 }
 
 export type PrinterUpdateWithoutUserInput = {
@@ -897,18 +897,18 @@ export type PrinterUpdateWithoutUserInput = {
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   jobs?: Prisma.PrintJobUpdateManyWithoutPrinterNestedInput
 }
 
@@ -918,18 +918,18 @@ export type PrinterUncheckedUpdateWithoutUserInput = {
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   jobs?: Prisma.PrintJobUncheckedUpdateManyWithoutPrinterNestedInput
 }
 
@@ -939,18 +939,18 @@ export type PrinterUncheckedUpdateManyWithoutUserInput = {
   tipe?: Prisma.StringFieldUpdateOperationsInput | string
   lokasi?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   perangkat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   koneksi?: Prisma.StringFieldUpdateOperationsInput | string
   vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   vendorName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dipindaiPada?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  default?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPengguna?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  terakhirDipakai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -986,97 +986,97 @@ export type PrinterCountOutputTypeCountJobsArgs<ExtArgs extends runtime.Types.Ex
 
 export type PrinterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
   nama?: boolean
   tipe?: boolean
   lokasi?: boolean
   perangkat?: boolean
+  default?: boolean
+  aktif?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  userId?: boolean
   koneksi?: boolean
   vendorId?: boolean
   vendorName?: boolean
   serialNumber?: boolean
   productName?: boolean
   dipindaiPada?: boolean
-  terakhirDipakai?: boolean
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  user?: boolean | Prisma.Printer$userArgs<ExtArgs>
+  terakhirDipakai?: boolean
   jobs?: boolean | Prisma.Printer$jobsArgs<ExtArgs>
+  user?: boolean | Prisma.Printer$userArgs<ExtArgs>
   _count?: boolean | Prisma.PrinterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["printer"]>
 
 export type PrinterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
   nama?: boolean
   tipe?: boolean
   lokasi?: boolean
   perangkat?: boolean
+  default?: boolean
+  aktif?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  userId?: boolean
   koneksi?: boolean
   vendorId?: boolean
   vendorName?: boolean
   serialNumber?: boolean
   productName?: boolean
   dipindaiPada?: boolean
-  terakhirDipakai?: boolean
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  terakhirDipakai?: boolean
   user?: boolean | Prisma.Printer$userArgs<ExtArgs>
 }, ExtArgs["result"]["printer"]>
 
 export type PrinterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
   nama?: boolean
   tipe?: boolean
   lokasi?: boolean
   perangkat?: boolean
+  default?: boolean
+  aktif?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  userId?: boolean
   koneksi?: boolean
   vendorId?: boolean
   vendorName?: boolean
   serialNumber?: boolean
   productName?: boolean
   dipindaiPada?: boolean
-  terakhirDipakai?: boolean
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  terakhirDipakai?: boolean
   user?: boolean | Prisma.Printer$userArgs<ExtArgs>
 }, ExtArgs["result"]["printer"]>
 
 export type PrinterSelectScalar = {
   id?: boolean
-  userId?: boolean
   nama?: boolean
   tipe?: boolean
   lokasi?: boolean
   perangkat?: boolean
+  default?: boolean
+  aktif?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  userId?: boolean
   koneksi?: boolean
   vendorId?: boolean
   vendorName?: boolean
   serialNumber?: boolean
   productName?: boolean
   dipindaiPada?: boolean
-  terakhirDipakai?: boolean
-  default?: boolean
   defaultPengguna?: boolean
-  aktif?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
+  terakhirDipakai?: boolean
 }
 
-export type PrinterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "nama" | "tipe" | "lokasi" | "perangkat" | "koneksi" | "vendorId" | "vendorName" | "serialNumber" | "productName" | "dipindaiPada" | "terakhirDipakai" | "default" | "defaultPengguna" | "aktif" | "createdAt" | "updatedAt", ExtArgs["result"]["printer"]>
+export type PrinterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "tipe" | "lokasi" | "perangkat" | "default" | "aktif" | "createdAt" | "updatedAt" | "userId" | "koneksi" | "vendorId" | "vendorName" | "serialNumber" | "productName" | "dipindaiPada" | "defaultPengguna" | "terakhirDipakai", ExtArgs["result"]["printer"]>
 export type PrinterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.Printer$userArgs<ExtArgs>
   jobs?: boolean | Prisma.Printer$jobsArgs<ExtArgs>
+  user?: boolean | Prisma.Printer$userArgs<ExtArgs>
   _count?: boolean | Prisma.PrinterCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PrinterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1089,28 +1089,28 @@ export type PrinterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $PrinterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Printer"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs> | null
     jobs: Prisma.$PrintJobPayload<ExtArgs>[]
+    user: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    userId: string | null
     nama: string
     tipe: string
     lokasi: string | null
     perangkat: string | null
+    default: boolean
+    aktif: boolean
+    createdAt: Date
+    updatedAt: Date
+    userId: string | null
     koneksi: string
     vendorId: string | null
     vendorName: string | null
     serialNumber: string | null
     productName: string | null
     dipindaiPada: Date | null
-    terakhirDipakai: Date | null
-    default: boolean
     defaultPengguna: boolean
-    aktif: boolean
-    createdAt: Date
-    updatedAt: Date
+    terakhirDipakai: Date | null
   }, ExtArgs["result"]["printer"]>
   composites: {}
 }
@@ -1505,8 +1505,8 @@ readonly fields: PrinterFieldRefs;
  */
 export interface Prisma__PrinterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.Printer$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Printer$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   jobs<T extends Prisma.Printer$jobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Printer$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  user<T extends Prisma.Printer$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Printer$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1537,23 +1537,23 @@ export interface Prisma__PrinterClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface PrinterFieldRefs {
   readonly id: Prisma.FieldRef<"Printer", 'String'>
-  readonly userId: Prisma.FieldRef<"Printer", 'String'>
   readonly nama: Prisma.FieldRef<"Printer", 'String'>
   readonly tipe: Prisma.FieldRef<"Printer", 'String'>
   readonly lokasi: Prisma.FieldRef<"Printer", 'String'>
   readonly perangkat: Prisma.FieldRef<"Printer", 'String'>
+  readonly default: Prisma.FieldRef<"Printer", 'Boolean'>
+  readonly aktif: Prisma.FieldRef<"Printer", 'Boolean'>
+  readonly createdAt: Prisma.FieldRef<"Printer", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Printer", 'DateTime'>
+  readonly userId: Prisma.FieldRef<"Printer", 'String'>
   readonly koneksi: Prisma.FieldRef<"Printer", 'String'>
   readonly vendorId: Prisma.FieldRef<"Printer", 'String'>
   readonly vendorName: Prisma.FieldRef<"Printer", 'String'>
   readonly serialNumber: Prisma.FieldRef<"Printer", 'String'>
   readonly productName: Prisma.FieldRef<"Printer", 'String'>
   readonly dipindaiPada: Prisma.FieldRef<"Printer", 'DateTime'>
-  readonly terakhirDipakai: Prisma.FieldRef<"Printer", 'DateTime'>
-  readonly default: Prisma.FieldRef<"Printer", 'Boolean'>
   readonly defaultPengguna: Prisma.FieldRef<"Printer", 'Boolean'>
-  readonly aktif: Prisma.FieldRef<"Printer", 'Boolean'>
-  readonly createdAt: Prisma.FieldRef<"Printer", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"Printer", 'DateTime'>
+  readonly terakhirDipakai: Prisma.FieldRef<"Printer", 'DateTime'>
 }
     
 
@@ -1955,25 +1955,6 @@ export type PrinterDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Printer.user
- */
-export type Printer$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the User
-   */
-  select?: Prisma.UserSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the User
-   */
-  omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
-}
-
-/**
  * Printer.jobs
  */
 export type Printer$jobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1995,6 +1976,25 @@ export type Printer$jobsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.PrintJobScalarFieldEnum | Prisma.PrintJobScalarFieldEnum[]
+}
+
+/**
+ * Printer.user
+ */
+export type Printer$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

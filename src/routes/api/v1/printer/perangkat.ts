@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { apiError, apiPengguna, ok } from '#/server/api'
+import { apiError, apiPengguna, bacaJsonTerbatas, ok } from '#/server/api'
 import { AKSES } from '#/server/peran'
 import {
   daftarkanPrinterPerangkat,
@@ -33,7 +33,8 @@ export const Route = createFileRoute('/api/v1/printer/perangkat')({
             20,
           )
           if (batas) return batas
-          const data = PrinterDeviceInputSchema.parse(await request.json())
+          const body = await bacaJsonTerbatas(request, 2048)
+          const data = PrinterDeviceInputSchema.parse(body)
           return ok(
             await daftarkanPrinterPerangkat(data, pengguna.id, pengguna.id),
             201,

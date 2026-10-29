@@ -256,8 +256,8 @@ export type BahanWhereInput = {
   hargaSatuan?: Prisma.DecimalFilter<"Bahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Bahan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Bahan"> | Date | string
-  resep?: Prisma.ProdukBahanListRelationFilter
   pembelian?: Prisma.PembelianBahanListRelationFilter
+  resep?: Prisma.ProdukBahanListRelationFilter
   stokOpnameItems?: Prisma.StokOpnameItemListRelationFilter
 }
 
@@ -271,8 +271,8 @@ export type BahanOrderByWithRelationInput = {
   hargaSatuan?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  resep?: Prisma.ProdukBahanOrderByRelationAggregateInput
   pembelian?: Prisma.PembelianBahanOrderByRelationAggregateInput
+  resep?: Prisma.ProdukBahanOrderByRelationAggregateInput
   stokOpnameItems?: Prisma.StokOpnameItemOrderByRelationAggregateInput
 }
 
@@ -289,8 +289,8 @@ export type BahanWhereUniqueInput = Prisma.AtLeast<{
   hargaSatuan?: Prisma.DecimalFilter<"Bahan"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"Bahan"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Bahan"> | Date | string
-  resep?: Prisma.ProdukBahanListRelationFilter
   pembelian?: Prisma.PembelianBahanListRelationFilter
+  resep?: Prisma.ProdukBahanListRelationFilter
   stokOpnameItems?: Prisma.StokOpnameItemListRelationFilter
 }, "id">
 
@@ -336,8 +336,8 @@ export type BahanCreateInput = {
   hargaSatuan?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  resep?: Prisma.ProdukBahanCreateNestedManyWithoutBahanInput
   pembelian?: Prisma.PembelianBahanCreateNestedManyWithoutBahanInput
+  resep?: Prisma.ProdukBahanCreateNestedManyWithoutBahanInput
   stokOpnameItems?: Prisma.StokOpnameItemCreateNestedManyWithoutBahanInput
 }
 
@@ -351,8 +351,8 @@ export type BahanUncheckedCreateInput = {
   hargaSatuan?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutBahanInput
   pembelian?: Prisma.PembelianBahanUncheckedCreateNestedManyWithoutBahanInput
+  resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutBahanInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedCreateNestedManyWithoutBahanInput
 }
 
@@ -366,8 +366,8 @@ export type BahanUpdateInput = {
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  resep?: Prisma.ProdukBahanUpdateManyWithoutBahanNestedInput
   pembelian?: Prisma.PembelianBahanUpdateManyWithoutBahanNestedInput
+  resep?: Prisma.ProdukBahanUpdateManyWithoutBahanNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUpdateManyWithoutBahanNestedInput
 }
 
@@ -381,8 +381,8 @@ export type BahanUncheckedUpdateInput = {
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutBahanNestedInput
   pembelian?: Prisma.PembelianBahanUncheckedUpdateManyWithoutBahanNestedInput
+  resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutBahanNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedUpdateManyWithoutBahanNestedInput
 }
 
@@ -686,8 +686,8 @@ export type BahanCreateWithoutStokOpnameItemsInput = {
   hargaSatuan?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  resep?: Prisma.ProdukBahanCreateNestedManyWithoutBahanInput
   pembelian?: Prisma.PembelianBahanCreateNestedManyWithoutBahanInput
+  resep?: Prisma.ProdukBahanCreateNestedManyWithoutBahanInput
 }
 
 export type BahanUncheckedCreateWithoutStokOpnameItemsInput = {
@@ -700,8 +700,8 @@ export type BahanUncheckedCreateWithoutStokOpnameItemsInput = {
   hargaSatuan?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutBahanInput
   pembelian?: Prisma.PembelianBahanUncheckedCreateNestedManyWithoutBahanInput
+  resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutBahanInput
 }
 
 export type BahanCreateOrConnectWithoutStokOpnameItemsInput = {
@@ -730,8 +730,8 @@ export type BahanUpdateWithoutStokOpnameItemsInput = {
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  resep?: Prisma.ProdukBahanUpdateManyWithoutBahanNestedInput
   pembelian?: Prisma.PembelianBahanUpdateManyWithoutBahanNestedInput
+  resep?: Prisma.ProdukBahanUpdateManyWithoutBahanNestedInput
 }
 
 export type BahanUncheckedUpdateWithoutStokOpnameItemsInput = {
@@ -744,8 +744,8 @@ export type BahanUncheckedUpdateWithoutStokOpnameItemsInput = {
   hargaSatuan?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutBahanNestedInput
   pembelian?: Prisma.PembelianBahanUncheckedUpdateManyWithoutBahanNestedInput
+  resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutBahanNestedInput
 }
 
 
@@ -754,14 +754,14 @@ export type BahanUncheckedUpdateWithoutStokOpnameItemsInput = {
  */
 
 export type BahanCountOutputType = {
-  resep: number
   pembelian: number
+  resep: number
   stokOpnameItems: number
 }
 
 export type BahanCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  resep?: boolean | BahanCountOutputTypeCountResepArgs
   pembelian?: boolean | BahanCountOutputTypeCountPembelianArgs
+  resep?: boolean | BahanCountOutputTypeCountResepArgs
   stokOpnameItems?: boolean | BahanCountOutputTypeCountStokOpnameItemsArgs
 }
 
@@ -778,15 +778,15 @@ export type BahanCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
 /**
  * BahanCountOutputType without action
  */
-export type BahanCountOutputTypeCountResepArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProdukBahanWhereInput
+export type BahanCountOutputTypeCountPembelianArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PembelianBahanWhereInput
 }
 
 /**
  * BahanCountOutputType without action
  */
-export type BahanCountOutputTypeCountPembelianArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PembelianBahanWhereInput
+export type BahanCountOutputTypeCountResepArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProdukBahanWhereInput
 }
 
 /**
@@ -807,8 +807,8 @@ export type BahanSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   hargaSatuan?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  resep?: boolean | Prisma.Bahan$resepArgs<ExtArgs>
   pembelian?: boolean | Prisma.Bahan$pembelianArgs<ExtArgs>
+  resep?: boolean | Prisma.Bahan$resepArgs<ExtArgs>
   stokOpnameItems?: boolean | Prisma.Bahan$stokOpnameItemsArgs<ExtArgs>
   _count?: boolean | Prisma.BahanCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["bahan"]>
@@ -851,8 +851,8 @@ export type BahanSelectScalar = {
 
 export type BahanOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "satuan" | "jenis" | "stok" | "stokMinimum" | "hargaSatuan" | "createdAt" | "updatedAt", ExtArgs["result"]["bahan"]>
 export type BahanInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  resep?: boolean | Prisma.Bahan$resepArgs<ExtArgs>
   pembelian?: boolean | Prisma.Bahan$pembelianArgs<ExtArgs>
+  resep?: boolean | Prisma.Bahan$resepArgs<ExtArgs>
   stokOpnameItems?: boolean | Prisma.Bahan$stokOpnameItemsArgs<ExtArgs>
   _count?: boolean | Prisma.BahanCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -862,8 +862,8 @@ export type BahanIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type $BahanPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Bahan"
   objects: {
-    resep: Prisma.$ProdukBahanPayload<ExtArgs>[]
     pembelian: Prisma.$PembelianBahanPayload<ExtArgs>[]
+    resep: Prisma.$ProdukBahanPayload<ExtArgs>[]
     stokOpnameItems: Prisma.$StokOpnameItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1270,8 +1270,8 @@ readonly fields: BahanFieldRefs;
  */
 export interface Prisma__BahanClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  resep<T extends Prisma.Bahan$resepArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bahan$resepArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProdukBahanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pembelian<T extends Prisma.Bahan$pembelianArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bahan$pembelianArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PembelianBahanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  resep<T extends Prisma.Bahan$resepArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bahan$resepArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProdukBahanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stokOpnameItems<T extends Prisma.Bahan$stokOpnameItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Bahan$stokOpnameItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StokOpnameItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1704,30 +1704,6 @@ export type BahanDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Bahan.resep
- */
-export type Bahan$resepArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ProdukBahan
-   */
-  select?: Prisma.ProdukBahanSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ProdukBahan
-   */
-  omit?: Prisma.ProdukBahanOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ProdukBahanInclude<ExtArgs> | null
-  where?: Prisma.ProdukBahanWhereInput
-  orderBy?: Prisma.ProdukBahanOrderByWithRelationInput | Prisma.ProdukBahanOrderByWithRelationInput[]
-  cursor?: Prisma.ProdukBahanWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ProdukBahanScalarFieldEnum | Prisma.ProdukBahanScalarFieldEnum[]
-}
-
-/**
  * Bahan.pembelian
  */
 export type Bahan$pembelianArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1749,6 +1725,30 @@ export type Bahan$pembelianArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.PembelianBahanScalarFieldEnum | Prisma.PembelianBahanScalarFieldEnum[]
+}
+
+/**
+ * Bahan.resep
+ */
+export type Bahan$resepArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProdukBahan
+   */
+  select?: Prisma.ProdukBahanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProdukBahan
+   */
+  omit?: Prisma.ProdukBahanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProdukBahanInclude<ExtArgs> | null
+  where?: Prisma.ProdukBahanWhereInput
+  orderBy?: Prisma.ProdukBahanOrderByWithRelationInput | Prisma.ProdukBahanOrderByWithRelationInput[]
+  cursor?: Prisma.ProdukBahanWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProdukBahanScalarFieldEnum | Prisma.ProdukBahanScalarFieldEnum[]
 }
 
 /**

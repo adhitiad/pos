@@ -1,4 +1,5 @@
 import { prisma } from '#/db'
+import { nonHapus } from './nonHapus.js'
 import { normalisasiBatasDiskon, KUNCI_DISKON_KASIR } from './diskon.js'
 import { GalatDomain } from './galat.js'
 import { KUNCI_PAJAK_SEMUA, tarifPajak } from './pajak.js'
@@ -26,7 +27,7 @@ export async function kasirData(kasirId?: string) {
       select: { id: true, nama: true },
     }),
     prisma.produk.findMany({
-      where: { aktif: true },
+      where: nonHapus({ aktif: true }),
       orderBy: { nama: 'asc' },
       select: {
         id: true,
@@ -83,12 +84,18 @@ export async function kasirData(kasirId?: string) {
       select: { id: true, nama: true, tarif: true, estimasi: true },
     }),
     prisma.transaksi.aggregate({
-      where: { tanggal: { gte: awalHari }, ...FILTER_TRANSAKSI_TERJUAL },
+      where: nonHapus({
+        tanggal: { gte: awalHari },
+        ...FILTER_TRANSAKSI_TERJUAL,
+      }),
       _sum: { total: true },
       _count: { id: true },
     }),
     prisma.transaksi.findMany({
-      where: { tanggal: { gte: awalHari }, ...FILTER_TRANSAKSI_TERJUAL },
+      where: nonHapus({
+        tanggal: { gte: awalHari },
+        ...FILTER_TRANSAKSI_TERJUAL,
+      }),
       orderBy: { tanggal: 'desc' },
       take: 50,
       select: {

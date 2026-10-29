@@ -318,5 +318,3 @@ export function usePesanan({
     ajukanPesanan,
   }
 }
-
-export type PesananState = ReturnType<typeof usePesanan>

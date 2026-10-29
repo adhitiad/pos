@@ -48,6 +48,7 @@ export type ProdukMinAggregateOutputType = {
   kategoriId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type ProdukMaxAggregateOutputType = {
@@ -62,6 +63,7 @@ export type ProdukMaxAggregateOutputType = {
   kategoriId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type ProdukCountAggregateOutputType = {
@@ -76,6 +78,7 @@ export type ProdukCountAggregateOutputType = {
   kategoriId: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -102,6 +105,7 @@ export type ProdukMinAggregateInputType = {
   kategoriId?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
 }
 
 export type ProdukMaxAggregateInputType = {
@@ -116,6 +120,7 @@ export type ProdukMaxAggregateInputType = {
   kategoriId?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
 }
 
 export type ProdukCountAggregateInputType = {
@@ -130,6 +135,7 @@ export type ProdukCountAggregateInputType = {
   kategoriId?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -231,6 +237,7 @@ export type ProdukGroupByOutputType = {
   kategoriId: string | null
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
   _count: ProdukCountAggregateOutputType | null
   _avg: ProdukAvgAggregateOutputType | null
   _sum: ProdukSumAggregateOutputType | null
@@ -268,10 +275,11 @@ export type ProdukWhereInput = {
   kategoriId?: Prisma.StringNullableFilter<"Produk"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Produk"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Produk"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Produk"> | Date | string | null
   kategori?: Prisma.XOR<Prisma.KategoriNullableScalarRelationFilter, Prisma.KategoriWhereInput> | null
   resep?: Prisma.ProdukBahanListRelationFilter
-  item?: Prisma.TransaksiItemListRelationFilter
   produkModifierGrup?: Prisma.ProdukModifierGrupListRelationFilter
+  item?: Prisma.TransaksiItemListRelationFilter
   returItems?: Prisma.ReturItemListRelationFilter
   stokOpnameItems?: Prisma.StokOpnameItemListRelationFilter
 }
@@ -288,10 +296,11 @@ export type ProdukOrderByWithRelationInput = {
   kategoriId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   kategori?: Prisma.KategoriOrderByWithRelationInput
   resep?: Prisma.ProdukBahanOrderByRelationAggregateInput
-  item?: Prisma.TransaksiItemOrderByRelationAggregateInput
   produkModifierGrup?: Prisma.ProdukModifierGrupOrderByRelationAggregateInput
+  item?: Prisma.TransaksiItemOrderByRelationAggregateInput
   returItems?: Prisma.ReturItemOrderByRelationAggregateInput
   stokOpnameItems?: Prisma.StokOpnameItemOrderByRelationAggregateInput
 }
@@ -311,10 +320,11 @@ export type ProdukWhereUniqueInput = Prisma.AtLeast<{
   kategoriId?: Prisma.StringNullableFilter<"Produk"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Produk"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Produk"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Produk"> | Date | string | null
   kategori?: Prisma.XOR<Prisma.KategoriNullableScalarRelationFilter, Prisma.KategoriWhereInput> | null
   resep?: Prisma.ProdukBahanListRelationFilter
-  item?: Prisma.TransaksiItemListRelationFilter
   produkModifierGrup?: Prisma.ProdukModifierGrupListRelationFilter
+  item?: Prisma.TransaksiItemListRelationFilter
   returItems?: Prisma.ReturItemListRelationFilter
   stokOpnameItems?: Prisma.StokOpnameItemListRelationFilter
 }, "id" | "sku" | "barcode">
@@ -331,6 +341,7 @@ export type ProdukOrderByWithAggregationInput = {
   kategoriId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ProdukCountOrderByAggregateInput
   _avg?: Prisma.ProdukAvgOrderByAggregateInput
   _max?: Prisma.ProdukMaxOrderByAggregateInput
@@ -353,6 +364,7 @@ export type ProdukScalarWhereWithAggregatesInput = {
   kategoriId?: Prisma.StringNullableWithAggregatesFilter<"Produk"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Produk"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Produk"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Produk"> | Date | string | null
 }
 
 export type ProdukCreateInput = {
@@ -366,10 +378,11 @@ export type ProdukCreateInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   kategori?: Prisma.KategoriCreateNestedOneWithoutProdukInput
   resep?: Prisma.ProdukBahanCreateNestedManyWithoutProdukInput
-  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemCreateNestedManyWithoutProdukInput
   stokOpnameItems?: Prisma.StokOpnameItemCreateNestedManyWithoutProdukInput
 }
@@ -386,9 +399,10 @@ export type ProdukUncheckedCreateInput = {
   kategoriId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutProdukInput
-  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutProdukInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedCreateNestedManyWithoutProdukInput
 }
@@ -404,10 +418,11 @@ export type ProdukUpdateInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kategori?: Prisma.KategoriUpdateOneWithoutProdukNestedInput
   resep?: Prisma.ProdukBahanUpdateManyWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUpdateManyWithoutProdukNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUpdateManyWithoutProdukNestedInput
 }
@@ -424,9 +439,10 @@ export type ProdukUncheckedUpdateInput = {
   kategoriId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutProdukNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedUpdateManyWithoutProdukNestedInput
 }
@@ -443,6 +459,7 @@ export type ProdukCreateManyInput = {
   kategoriId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ProdukUpdateManyMutationInput = {
@@ -456,6 +473,7 @@ export type ProdukUpdateManyMutationInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ProdukUncheckedUpdateManyInput = {
@@ -470,6 +488,7 @@ export type ProdukUncheckedUpdateManyInput = {
   kategoriId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ProdukListRelationFilter = {
@@ -494,6 +513,7 @@ export type ProdukCountOrderByAggregateInput = {
   kategoriId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type ProdukAvgOrderByAggregateInput = {
@@ -513,6 +533,7 @@ export type ProdukMaxOrderByAggregateInput = {
   kategoriId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type ProdukMinOrderByAggregateInput = {
@@ -527,6 +548,7 @@ export type ProdukMinOrderByAggregateInput = {
   kategoriId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type ProdukSumOrderByAggregateInput = {
@@ -673,9 +695,10 @@ export type ProdukCreateWithoutKategoriInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   resep?: Prisma.ProdukBahanCreateNestedManyWithoutProdukInput
-  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemCreateNestedManyWithoutProdukInput
   stokOpnameItems?: Prisma.StokOpnameItemCreateNestedManyWithoutProdukInput
 }
@@ -691,9 +714,10 @@ export type ProdukUncheckedCreateWithoutKategoriInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutProdukInput
-  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutProdukInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedCreateNestedManyWithoutProdukInput
 }
@@ -739,6 +763,7 @@ export type ProdukScalarWhereInput = {
   kategoriId?: Prisma.StringNullableFilter<"Produk"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Produk"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Produk"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Produk"> | Date | string | null
 }
 
 export type ProdukCreateWithoutResepInput = {
@@ -752,9 +777,10 @@ export type ProdukCreateWithoutResepInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   kategori?: Prisma.KategoriCreateNestedOneWithoutProdukInput
-  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemCreateNestedManyWithoutProdukInput
   stokOpnameItems?: Prisma.StokOpnameItemCreateNestedManyWithoutProdukInput
 }
@@ -771,8 +797,9 @@ export type ProdukUncheckedCreateWithoutResepInput = {
   kategoriId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
+  deletedAt?: Date | string | null
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutProdukInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedCreateNestedManyWithoutProdukInput
 }
@@ -804,9 +831,10 @@ export type ProdukUpdateWithoutResepInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kategori?: Prisma.KategoriUpdateOneWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUpdateManyWithoutProdukNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUpdateManyWithoutProdukNestedInput
 }
@@ -823,8 +851,9 @@ export type ProdukUncheckedUpdateWithoutResepInput = {
   kategoriId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutProdukNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedUpdateManyWithoutProdukNestedInput
 }
@@ -840,6 +869,7 @@ export type ProdukCreateWithoutItemInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   kategori?: Prisma.KategoriCreateNestedOneWithoutProdukInput
   resep?: Prisma.ProdukBahanCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupCreateNestedManyWithoutProdukInput
@@ -859,6 +889,7 @@ export type ProdukUncheckedCreateWithoutItemInput = {
   kategoriId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutProdukInput
@@ -892,6 +923,7 @@ export type ProdukUpdateWithoutItemInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kategori?: Prisma.KategoriUpdateOneWithoutProdukNestedInput
   resep?: Prisma.ProdukBahanUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUpdateManyWithoutProdukNestedInput
@@ -911,6 +943,7 @@ export type ProdukUncheckedUpdateWithoutItemInput = {
   kategoriId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutProdukNestedInput
@@ -928,6 +961,7 @@ export type ProdukCreateWithoutProdukModifierGrupInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   kategori?: Prisma.KategoriCreateNestedOneWithoutProdukInput
   resep?: Prisma.ProdukBahanCreateNestedManyWithoutProdukInput
   item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
@@ -947,6 +981,7 @@ export type ProdukUncheckedCreateWithoutProdukModifierGrupInput = {
   kategoriId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutProdukInput
   item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutProdukInput
@@ -980,6 +1015,7 @@ export type ProdukUpdateWithoutProdukModifierGrupInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kategori?: Prisma.KategoriUpdateOneWithoutProdukNestedInput
   resep?: Prisma.ProdukBahanUpdateManyWithoutProdukNestedInput
   item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
@@ -999,6 +1035,7 @@ export type ProdukUncheckedUpdateWithoutProdukModifierGrupInput = {
   kategoriId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutProdukNestedInput
   item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutProdukNestedInput
@@ -1016,10 +1053,11 @@ export type ProdukCreateWithoutReturItemsInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   kategori?: Prisma.KategoriCreateNestedOneWithoutProdukInput
   resep?: Prisma.ProdukBahanCreateNestedManyWithoutProdukInput
-  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   stokOpnameItems?: Prisma.StokOpnameItemCreateNestedManyWithoutProdukInput
 }
 
@@ -1035,9 +1073,10 @@ export type ProdukUncheckedCreateWithoutReturItemsInput = {
   kategoriId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutProdukInput
-  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedCreateNestedManyWithoutProdukInput
 }
 
@@ -1068,10 +1107,11 @@ export type ProdukUpdateWithoutReturItemsInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kategori?: Prisma.KategoriUpdateOneWithoutProdukNestedInput
   resep?: Prisma.ProdukBahanUpdateManyWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUpdateManyWithoutProdukNestedInput
 }
 
@@ -1087,9 +1127,10 @@ export type ProdukUncheckedUpdateWithoutReturItemsInput = {
   kategoriId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedUpdateManyWithoutProdukNestedInput
 }
 
@@ -1104,10 +1145,11 @@ export type ProdukCreateWithoutStokOpnameItemsInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   kategori?: Prisma.KategoriCreateNestedOneWithoutProdukInput
   resep?: Prisma.ProdukBahanCreateNestedManyWithoutProdukInput
-  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemCreateNestedManyWithoutProdukInput
 }
 
@@ -1123,9 +1165,10 @@ export type ProdukUncheckedCreateWithoutStokOpnameItemsInput = {
   kategoriId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
   resep?: Prisma.ProdukBahanUncheckedCreateNestedManyWithoutProdukInput
-  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedCreateNestedManyWithoutProdukInput
+  item?: Prisma.TransaksiItemUncheckedCreateNestedManyWithoutProdukInput
   returItems?: Prisma.ReturItemUncheckedCreateNestedManyWithoutProdukInput
 }
 
@@ -1156,10 +1199,11 @@ export type ProdukUpdateWithoutStokOpnameItemsInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   kategori?: Prisma.KategoriUpdateOneWithoutProdukNestedInput
   resep?: Prisma.ProdukBahanUpdateManyWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUpdateManyWithoutProdukNestedInput
 }
 
@@ -1175,9 +1219,10 @@ export type ProdukUncheckedUpdateWithoutStokOpnameItemsInput = {
   kategoriId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutProdukNestedInput
 }
 
@@ -1192,6 +1237,7 @@ export type ProdukCreateManyKategoriInput = {
   aktif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ProdukUpdateWithoutKategoriInput = {
@@ -1205,9 +1251,10 @@ export type ProdukUpdateWithoutKategoriInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   resep?: Prisma.ProdukBahanUpdateManyWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUpdateManyWithoutProdukNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUpdateManyWithoutProdukNestedInput
 }
@@ -1223,9 +1270,10 @@ export type ProdukUncheckedUpdateWithoutKategoriInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   resep?: Prisma.ProdukBahanUncheckedUpdateManyWithoutProdukNestedInput
-  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   produkModifierGrup?: Prisma.ProdukModifierGrupUncheckedUpdateManyWithoutProdukNestedInput
+  item?: Prisma.TransaksiItemUncheckedUpdateManyWithoutProdukNestedInput
   returItems?: Prisma.ReturItemUncheckedUpdateManyWithoutProdukNestedInput
   stokOpnameItems?: Prisma.StokOpnameItemUncheckedUpdateManyWithoutProdukNestedInput
 }
@@ -1241,6 +1289,7 @@ export type ProdukUncheckedUpdateManyWithoutKategoriInput = {
   aktif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1250,16 +1299,16 @@ export type ProdukUncheckedUpdateManyWithoutKategoriInput = {
 
 export type ProdukCountOutputType = {
   resep: number
-  item: number
   produkModifierGrup: number
+  item: number
   returItems: number
   stokOpnameItems: number
 }
 
 export type ProdukCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   resep?: boolean | ProdukCountOutputTypeCountResepArgs
-  item?: boolean | ProdukCountOutputTypeCountItemArgs
   produkModifierGrup?: boolean | ProdukCountOutputTypeCountProdukModifierGrupArgs
+  item?: boolean | ProdukCountOutputTypeCountItemArgs
   returItems?: boolean | ProdukCountOutputTypeCountReturItemsArgs
   stokOpnameItems?: boolean | ProdukCountOutputTypeCountStokOpnameItemsArgs
 }
@@ -1284,15 +1333,15 @@ export type ProdukCountOutputTypeCountResepArgs<ExtArgs extends runtime.Types.Ex
 /**
  * ProdukCountOutputType without action
  */
-export type ProdukCountOutputTypeCountItemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TransaksiItemWhereInput
+export type ProdukCountOutputTypeCountProdukModifierGrupArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProdukModifierGrupWhereInput
 }
 
 /**
  * ProdukCountOutputType without action
  */
-export type ProdukCountOutputTypeCountProdukModifierGrupArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ProdukModifierGrupWhereInput
+export type ProdukCountOutputTypeCountItemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TransaksiItemWhereInput
 }
 
 /**
@@ -1322,10 +1371,11 @@ export type ProdukSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   kategoriId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   kategori?: boolean | Prisma.Produk$kategoriArgs<ExtArgs>
   resep?: boolean | Prisma.Produk$resepArgs<ExtArgs>
-  item?: boolean | Prisma.Produk$itemArgs<ExtArgs>
   produkModifierGrup?: boolean | Prisma.Produk$produkModifierGrupArgs<ExtArgs>
+  item?: boolean | Prisma.Produk$itemArgs<ExtArgs>
   returItems?: boolean | Prisma.Produk$returItemsArgs<ExtArgs>
   stokOpnameItems?: boolean | Prisma.Produk$stokOpnameItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ProdukCountOutputTypeDefaultArgs<ExtArgs>
@@ -1343,6 +1393,7 @@ export type ProdukSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   kategoriId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   kategori?: boolean | Prisma.Produk$kategoriArgs<ExtArgs>
 }, ExtArgs["result"]["produk"]>
 
@@ -1358,6 +1409,7 @@ export type ProdukSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   kategoriId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
   kategori?: boolean | Prisma.Produk$kategoriArgs<ExtArgs>
 }, ExtArgs["result"]["produk"]>
 
@@ -1373,14 +1425,15 @@ export type ProdukSelectScalar = {
   kategoriId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type ProdukOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "sku" | "barcode" | "gambar" | "harga" | "stok" | "aktif" | "kategoriId" | "createdAt" | "updatedAt", ExtArgs["result"]["produk"]>
+export type ProdukOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "sku" | "barcode" | "gambar" | "harga" | "stok" | "aktif" | "kategoriId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["produk"]>
 export type ProdukInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   kategori?: boolean | Prisma.Produk$kategoriArgs<ExtArgs>
   resep?: boolean | Prisma.Produk$resepArgs<ExtArgs>
-  item?: boolean | Prisma.Produk$itemArgs<ExtArgs>
   produkModifierGrup?: boolean | Prisma.Produk$produkModifierGrupArgs<ExtArgs>
+  item?: boolean | Prisma.Produk$itemArgs<ExtArgs>
   returItems?: boolean | Prisma.Produk$returItemsArgs<ExtArgs>
   stokOpnameItems?: boolean | Prisma.Produk$stokOpnameItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ProdukCountOutputTypeDefaultArgs<ExtArgs>
@@ -1397,8 +1450,8 @@ export type $ProdukPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     kategori: Prisma.$KategoriPayload<ExtArgs> | null
     resep: Prisma.$ProdukBahanPayload<ExtArgs>[]
-    item: Prisma.$TransaksiItemPayload<ExtArgs>[]
     produkModifierGrup: Prisma.$ProdukModifierGrupPayload<ExtArgs>[]
+    item: Prisma.$TransaksiItemPayload<ExtArgs>[]
     returItems: Prisma.$ReturItemPayload<ExtArgs>[]
     stokOpnameItems: Prisma.$StokOpnameItemPayload<ExtArgs>[]
   }
@@ -1414,6 +1467,7 @@ export type $ProdukPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     kategoriId: string | null
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["produk"]>
   composites: {}
 }
@@ -1810,8 +1864,8 @@ export interface Prisma__ProdukClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   kategori<T extends Prisma.Produk$kategoriArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Produk$kategoriArgs<ExtArgs>>): Prisma.Prisma__KategoriClient<runtime.Types.Result.GetResult<Prisma.$KategoriPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   resep<T extends Prisma.Produk$resepArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Produk$resepArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProdukBahanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  item<T extends Prisma.Produk$itemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Produk$itemArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   produkModifierGrup<T extends Prisma.Produk$produkModifierGrupArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Produk$produkModifierGrupArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProdukModifierGrupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  item<T extends Prisma.Produk$itemArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Produk$itemArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransaksiItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   returItems<T extends Prisma.Produk$returItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Produk$returItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReturItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stokOpnameItems<T extends Prisma.Produk$stokOpnameItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Produk$stokOpnameItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StokOpnameItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1854,6 +1908,7 @@ export interface ProdukFieldRefs {
   readonly kategoriId: Prisma.FieldRef<"Produk", 'String'>
   readonly createdAt: Prisma.FieldRef<"Produk", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Produk", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Produk", 'DateTime'>
 }
     
 
@@ -2298,30 +2353,6 @@ export type Produk$resepArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 /**
- * Produk.item
- */
-export type Produk$itemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TransaksiItem
-   */
-  select?: Prisma.TransaksiItemSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TransaksiItem
-   */
-  omit?: Prisma.TransaksiItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TransaksiItemInclude<ExtArgs> | null
-  where?: Prisma.TransaksiItemWhereInput
-  orderBy?: Prisma.TransaksiItemOrderByWithRelationInput | Prisma.TransaksiItemOrderByWithRelationInput[]
-  cursor?: Prisma.TransaksiItemWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TransaksiItemScalarFieldEnum | Prisma.TransaksiItemScalarFieldEnum[]
-}
-
-/**
  * Produk.produkModifierGrup
  */
 export type Produk$produkModifierGrupArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2343,6 +2374,30 @@ export type Produk$produkModifierGrupArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.ProdukModifierGrupScalarFieldEnum | Prisma.ProdukModifierGrupScalarFieldEnum[]
+}
+
+/**
+ * Produk.item
+ */
+export type Produk$itemArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TransaksiItem
+   */
+  select?: Prisma.TransaksiItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TransaksiItem
+   */
+  omit?: Prisma.TransaksiItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TransaksiItemInclude<ExtArgs> | null
+  where?: Prisma.TransaksiItemWhereInput
+  orderBy?: Prisma.TransaksiItemOrderByWithRelationInput | Prisma.TransaksiItemOrderByWithRelationInput[]
+  cursor?: Prisma.TransaksiItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TransaksiItemScalarFieldEnum | Prisma.TransaksiItemScalarFieldEnum[]
 }
 
 /**

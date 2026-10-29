@@ -23,6 +23,7 @@ bun run test:load          # k6 checkout bersamaan (butuh k6 + server hidup)
 bun run test               # alias test:vitest
 bun run test:e2e            # playwright (tests/e2e/*.spec.ts, chromium)
 bunx tsc --noEmit          # typecheck
+opencode mcp list           # status MCP; pos-expo & pos-backend wajib "connected"
 ```
 
 ## Gate definisi-selesai
@@ -74,3 +75,18 @@ AGENTS.md → docs/DAFTAR-TUGAS.md → .agents/rules/** → docs/PRD.md
 - Git/deploy: **jangan commit/push/deploy tanpa perintah eksplisit** — commit
   hanya setelah "ok Commit", push hanya setelah "ok push"; detail di
   `15-git-dan-deploy.md`.
+
+## MCP (agen lintas repo)
+
+`pos-expo` + `pos-backend` (`mcp/server-expo.ts`, `mcp/server-backend.ts`, transport di
+`mcp/stdio.ts`, tool berkas di `mcp/repo.ts`) memberi agen akses baca
+`docs/**` + `src/**` saat mengembangkan `E:/code/pos_mobile`. Transport wajib
+satu pesan JSON per baris (standar MCP stdio) — jangan menambahkan header
+`Content-Length`; regresi: `bunx vitest run tests/vitest/mcp.test.ts`.
+Direktori `./mcp/` dan tes MCP-nya **tidak di-commit** (`.gitignore`) — hanya
+ada di mesin developer.
+
+Server tambahan (global, bukan bagian repo): `agentweb` (remote
+`https://api.agentweb.live/mcp`, key di `~/.config/opencode/secrets/`).
+Hanya 4 tool yang diizinkan lewat `permissions`: `web_search`, `web_fetch`,
+`time_now`, `weather_forecast`.

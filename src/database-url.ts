@@ -12,3 +12,9 @@ export function getDatabaseUrl() {
 export function getDatabaseUrlCli() {
   return normalisasiSslMode(env.DATABASE_URL_UNPOOLED ?? env.DATABASE_URL)
 }
+
+// URL baca (read replica). Bila DATABASE_URL_READ tidak diisi, fallback ke
+// DATABASE_URL agar aplikasi tetap berjalan dengan satu database tunggal.
+export function getDatabaseUrlRead() {
+  return normalisasiSslMode(env.DATABASE_URL_READ ?? env.DATABASE_URL)
+}
