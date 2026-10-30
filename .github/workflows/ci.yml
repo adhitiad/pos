@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-bun-
       - name: Install (lockfile beku)
         run: bun install --frozen-lockfile
-      - name: Generate Paraglide
+      - name: Generate Paraglide (src/paraglide di-gitignore, perlu compile untuk tsc/lint)
         run: bun run i18n:compile
       - name: Typecheck
         run: bunx tsc --noEmit

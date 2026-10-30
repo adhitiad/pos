@@ -31,9 +31,7 @@ export default function ParaglideLocaleSwitcher() {
         >
           <Globe className="size-4 mr-1.5" />
           <span className="sr-only">{m.language_label()}</span>
-          <span className="text-xs font-medium">
-            {BENDERA[currentLocale] ?? currentLocale.toUpperCase()}
-          </span>
+          <span className="text-xs font-medium">{BENDERA[currentLocale]}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -43,7 +41,7 @@ export default function ParaglideLocaleSwitcher() {
             onClick={() => setLocale(locale)}
             className="flex items-center justify-between gap-2"
           >
-            <span>{BENDERA[locale] ?? locale.toUpperCase()}</span>
+            <span>{BENDERA[locale]}</span>
             <span className="text-sm">{m.current_locale({ locale })}</span>
           </DropdownMenuItem>
         ))}
