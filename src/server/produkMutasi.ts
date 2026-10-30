@@ -1,5 +1,6 @@
 import { prisma } from '#/db'
 import { Prisma } from '#/generated/prisma/client.js'
+import { cacheHapusPola } from '#/lib/redisCache'
 import { catatAudit, selisihField } from './audit.js'
 import { hapusAset } from './cloudinary.js'
 import { GalatDomain } from './galat.js'
@@ -91,7 +92,7 @@ export async function createProduk(input: ProdukInput) {
   await pastikanKategoriAda(data.kategoriId)
   await pastikanBahanResepAda(data.resep)
   try {
-    return await prisma.produk.create({
+    const hasil = await prisma.produk.create({
       data: {
         nama: data.nama,
         sku: kosongKeNull(data.sku),
@@ -110,6 +111,9 @@ export async function createProduk(input: ProdukInput) {
       },
       select: { id: true },
     })
+    // Invalidasi cache landing/search — data produk berubah.
+    void cacheHapusPola('produk:')
+    return hasil
   } catch (e) {
     throw pesanUnik(e, 'SKU/barcode')
   }
@@ -150,6 +154,8 @@ export async function updateProduk(input: UpdateProdukInput, aktorId?: string) {
     if (lama.gambar && lama.gambar !== gambarBaru)
       await bersihkanGambar(lama.gambar)
     await catatPerubahanProduk(data.id, lama, data, aktorId)
+    // Invalidasi cache landing/search — data produk berubah.
+    void cacheHapusPola('produk:')
     return { id: data.id }
   } catch (e) {
     throw pesanUnik(e, 'SKU/barcode')
@@ -177,6 +183,8 @@ export async function toggleProduk(
       sesudah: { aktif: data.aktif },
     })
   }
+  // Invalidasi cache landing/search — status produk berubah.
+  void cacheHapusPola('produk:')
   return { id: data.id }
 }
 
@@ -198,6 +206,8 @@ export async function hapusProduk(input: { id: string }, aktorId?: string) {
       stok: lama.stok,
     },
   })
+  // Invalidasi cache landing/search — produk dihapus.
+  void cacheHapusPola('produk:')
   return { id: data.id }
 }
 
@@ -206,13 +216,15 @@ export async function hapusProduk(input: { id: string }, aktorId?: string) {
 export async function createKategori(input: KategoriInput) {
   const data = KategoriInputSchema.parse(input)
   try {
-    return await prisma.kategori.create({
+    const hasil = await prisma.kategori.create({
       data: {
         nama: data.nama,
         deskripsi: kosongKeNull(data.deskripsi) ?? undefined,
       },
       select: { id: true },
     })
+    void cacheHapusPola('produk:')
+    return hasil
   } catch (e) {
     throw pesanUnik(e, 'Kategori')
   }
@@ -238,5 +250,6 @@ export async function hapusKategori(input: { id: string }, aktorId?: string) {
     entitasId: data.id,
     sesudah: { nama: lama.nama, deskripsi: lama.deskripsi },
   })
+  void cacheHapusPola('produk:')
   return { id: data.id }
 }

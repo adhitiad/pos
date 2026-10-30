@@ -87,6 +87,15 @@ export const env = createEnv({
     // Tidak pernah digunakan oleh runtime aplikasi.
     BACKUP_RESTORE_USER: z.string().min(1).optional(),
     BACKUP_RESTORE_PASS: z.string().min(1).optional(),
+
+    // ── Upstash Redis (rate limiting login/logout, caching search) ──
+    UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
+
+    // ── QStash (cron scheduling & background tasks) ──
+    QSTASH_URL: z.string().url().default('https://qstash-upstash-com'),
+    QSTASH_TOKEN: z.string().min(1).optional(),
+    QSTASH_CURRENT_ENV: z.string().optional(),
   },
 
   clientPrefix: 'VITE_',
@@ -126,6 +135,11 @@ export const env = createEnv({
     FRAUD_WEBHOOK_URL: process.env.FRAUD_WEBHOOK_URL,
     BACKUP_RESTORE_USER: process.env.BACKUP_RESTORE_USER,
     BACKUP_RESTORE_PASS: process.env.BACKUP_RESTORE_PASS,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    QSTASH_URL: process.env.QSTASH_URL,
+    QSTASH_TOKEN: process.env.QSTASH_TOKEN,
+    QSTASH_CURRENT_ENV: process.env.QSTASH_CURRENT_ENV,
   },
 
   emptyStringAsUndefined: true,

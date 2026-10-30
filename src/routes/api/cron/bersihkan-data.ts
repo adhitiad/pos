@@ -2,29 +2,28 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { env } from '#/env'
 import { apiError, gagal, ok } from '#/server/api'
-import { tokenCronSah } from '#/server/cronAuth'
+import { tokenCronSahQstash } from '#/lib/qstashCron'
 import { bersihkanDataKadaluarsa } from '#/server/bersihkanData'
 import { rateLimit } from '#/server/rateLimit'
 
-// Cron Vercel: hapus print job & draft transaksi yang kadaluwarsa (>30 hari)
-// untuk higiene penyimpanan. Vercel mengirim Authorization: Bearer <CRON_SECRET>
-// bila env itu diisi.
+// Cron: hapus print job & draft transaksi yang kadaluwarsa (>30 hari)
+// untuk higiene penyimpanan.
+// Didukung 2 scheduler: Vercel Crons (Bearer CRON_SECRET) atau QStash
+// (Bearer QSTASH_TOKEN). Salah satu harus dikonfigurasi agar cron aktif.
 export const Route = createFileRoute('/api/cron/bersihkan-data')({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const batas = await rateLimit(request, 10)
         if (batas) return batas
-        if (!env.CRON_SECRET) {
+        if (!env.CRON_SECRET && !env.QSTASH_TOKEN) {
           return gagal(
             'CRON_DISABLED',
             'Cron belum dikonfigurasi di server',
             503,
           )
         }
-        if (
-          !tokenCronSah(request.headers.get('authorization'), env.CRON_SECRET)
-        )
+        if (!tokenCronSahQstash(request))
           return gagal('UNAUTHORIZED', 'Token cron tidak valid', 401)
         try {
           return ok(await bersihkanDataKadaluarsa())

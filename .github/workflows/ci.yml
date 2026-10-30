@@ -157,6 +157,13 @@ jobs:
           BETTER_AUTH_SECRET=ci-secret-ci-secret-ci-secret-1234567890
           TRUSTED_ORIGINS=http://localhost:3000
           TRUST_PROXY=false
+          # Upstash Redis/QStash: dikosongkan → rate limiter login/logout & cache
+          # search pakai PostgreSQL, cron pakai CRON_SECRET/Vercel. Isi untuk
+          # mengaktifkan integrasi Upstash di CI.
+          UPSTASH_REDIS_REST_URL=
+          UPSTASH_REDIS_REST_TOKEN=
+          QSTASH_URL=https://qstash-upstash-com
+          QSTASH_TOKEN=
           EOF
       - name: Apply migrations (migrate deploy)
         run: bun run db:migrate:deploy
@@ -173,7 +180,7 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock') }}
           restore-keys: |
             ${{ runner.os }}-playwright-
-      - name: Install Playwright browser
+      - name: Install Playwright browser (chromium + webkit)
         run: |
           for attempt in 1 2 3; do
             bunx playwright install --with-deps chromium webkit && exit 0
@@ -182,6 +189,10 @@ jobs:
           done
           exit 1
       - name: Run Playwright tests
+        # webServer di playwright.config.ts memakai port 3100 & reuseExistingServer
+        # = !CI, sehingga di CI dev server selalu di-start sendiri oleh Playwright.
+        env:
+          CI: true
         run: bunx playwright test
       - name: Upload Playwright artifacts
         if: failure()

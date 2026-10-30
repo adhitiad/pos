@@ -1,5 +1,6 @@
 import { prisma } from '#/db'
 import type { Prisma } from '#/generated/prisma/client.js'
+import { redisCacheKey, cacheGet, cacheSet } from '#/lib/redisCache'
 import { nonHapus } from './nonHapus.js'
 import { FILTER_TRANSAKSI_TERJUAL } from './transaksiTerjual.js'
 import type { ProdukKartu } from '#/types/produk'
@@ -281,6 +282,16 @@ function selangSeling(
 }
 
 export async function produkLanding(limit = BATAS_PRODUK_LANDING) {
+  // Cache hasil landing page di Redis (5 menit) — data relatif statis,
+  // diinvalidasi otomatis ketika produk/barang dibuat/dihapus/diubah.
+  const kunciCache = redisCacheKey(`landing:${limit}`)
+  const tercache = await cacheGet<{
+    populer: ProdukKartu[]
+    baru: ProdukKartu[]
+    campuran: ProdukKartu[]
+  }>(kunciCache)
+  if (tercache) return tercache
+
   const batas = Math.min(Math.max(limit, 1), 24)
   const aktif = await prisma.produk.findMany({
     where: nonHapus({ aktif: true }),
@@ -305,7 +316,7 @@ export async function produkLanding(limit = BATAS_PRODUK_LANDING) {
   const minimum = Math.min(MIN_PRODUK_BARIS, semua.length)
   const populer = lengkapiDenganAcak(populerMentah, semua, minimum)
 
-  return {
+  const hasil = {
     populer,
     baru,
     campuran: lengkapiDenganAcak(
@@ -314,4 +325,8 @@ export async function produkLanding(limit = BATAS_PRODUK_LANDING) {
       minimum,
     ),
   }
+
+  // Cache hasil (best-effort, jangan block request bila Redis down).
+  await cacheSet(kunciCache, hasil, 300)
+  return hasil
 }
